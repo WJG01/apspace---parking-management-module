@@ -307,9 +307,9 @@ export class MorePage implements OnInit {
       tags: ['message', 'sms', 'email', 'push', 'notification', 'announce']
     },
     {
-      title: 'E-Orientaton',
+      title: 'E-Orientation',
       group: 'Academic Operation',
-      url: 'orientaton-student-portal',
+      url: 'orientation-student-portal',
       attachTicket: true,
       img: 'assets/img/counseling.png',
       role: Role.Lecturer | Role.Admin,
@@ -345,7 +345,7 @@ export class MorePage implements OnInit {
       url: 'mentorship',
       img: 'assets/img/mentorship.png',
       role: Role.Lecturer | Role.Admin,
-      tags: ['mentor', 'mentee', 'performance', 'attendance', 'results', 'my students']
+      tags: ['mentor', 'performance', 'attendance', 'results', 'my students']
     },
     {
       title: 'Monthly Returns',
