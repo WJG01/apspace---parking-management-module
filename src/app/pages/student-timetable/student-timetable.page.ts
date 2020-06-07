@@ -205,14 +205,17 @@ export class StudentTimetablePage implements OnInit {
         tap(_ => this.groupingList = []),
         tap(tt => {
           tt.forEach(timetableInfo => {
-            if (timetableInfo.INTAKE === this.intake && this.groupingList.indexOf(timetableInfo.GROUPING) === -1) {
-              this.groupingList.push(timetableInfo.GROUPING.toUpperCase()); // we do not trust the response
+            if (timetableInfo.GROUPING) { // handle empty groupings
+              if (timetableInfo.INTAKE === this.intake && this.groupingList.indexOf(timetableInfo.GROUPING) === -1) {
+                this.groupingList.push(timetableInfo.GROUPING.toUpperCase()); // we do not trust the response
+              }
             }
           });
           this.changeDetectorRef.detectChanges();
         }),
-        tap(_ => this.changeGrouping(this.settings.get('intakeGroup') || this.groupingList.sort()[0])),
-        tap(_ => this.groupingList.push('All')) // add it to the end of the list
+        tap(_ => this.groupingList.sort()[0]),
+        tap(_ => this.groupingList.push('All')), // add it to the end of the list
+        tap(_ => this.changeDetectorRef.detectChanges())
       ).subscribe();
     }
   }
@@ -248,7 +251,7 @@ export class StudentTimetablePage implements OnInit {
 
   /** Refresh timetable, forcefully if refresher is passed. */
   doRefresh(refresher?: IonRefresher) {
-    const timetable$ = this.tt.get(Boolean(refresher)).pipe(
+    const timetable$ = this.tt.get(true).pipe( // force refersh for now
       finalize(() => refresher && refresher.complete())
     );
     this.timetable$ = combineLatest([timetable$, this.userSettings.timetable.asObservable()]).pipe(
@@ -260,14 +263,16 @@ export class StudentTimetablePage implements OnInit {
       tap(_ => this.groupingList = []),
       tap(tt => {
         tt.forEach(timetableInfo => {
-          if (timetableInfo.INTAKE === this.intake && this.groupingList.indexOf(timetableInfo.GROUPING) === -1) {
-            this.groupingList.push(timetableInfo.GROUPING.toUpperCase()); // we do not trust the response
+          if (timetableInfo.GROUPING) { // handle empty groupings
+            if (timetableInfo.INTAKE === this.intake && this.groupingList.indexOf(timetableInfo.GROUPING) === -1) {
+              this.groupingList.push(timetableInfo.GROUPING.toUpperCase()); // we do not trust the response
+            }
           }
         });
-        this.changeDetectorRef.detectChanges();
       }),
       tap(_ => this.changeGrouping(this.settings.get('intakeGroup') || this.groupingList.sort()[0])),
-      tap(_ => this.groupingList.push('All')) // add it to the end of the list
+      tap(_ => this.groupingList.push('All')), // add it to the end of the list
+      tap(_ => this.changeDetectorRef.detectChanges())
     );
   }
 
