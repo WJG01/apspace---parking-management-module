@@ -9,7 +9,7 @@ import {
   CourseDetails, DashboardCardComponentConfigurations, EventComponentConfigurations, ExamSchedule, FeesTotalSummary,
   Holiday, Holidays, News, OrientationStudentDetails, StaffDirectory, StudentPhoto, StudentProfile, StudentTimetable
 } from 'src/app/interfaces';
-import { NewsService, NotificationService, StudentTimetableService, UserSettingsService, WsApiService } from 'src/app/services';
+import { NewsService, NotificationService, SettingsService, StudentTimetableService, UserSettingsService, WsApiService } from 'src/app/services';
 
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import * as moment from 'moment';
@@ -70,6 +70,7 @@ export class StudentDashboardPage implements OnInit, OnDestroy, AfterViewInit {
     withOptionsButton: false,
     cardTitle: 'Today\'s Schedule',
   };
+  intakeGroup = '';
 
   // UPCOMING EVENTS
   upcomingEvent$: Observable<EventComponentConfigurations[]> | any;
@@ -273,6 +274,7 @@ export class StudentDashboardPage implements OnInit, OnDestroy, AfterViewInit {
     private platform: Platform,
     private firebaseX: FirebaseX,
     private toastCtrl: ToastController,
+    private settingsService: SettingsService
   ) {
     // Create the dragula group (drag and drop)
     this.dragulaService.createGroup('editable-list', {
@@ -558,6 +560,16 @@ export class StudentDashboardPage implements OnInit, OnDestroy, AfterViewInit {
 
       // FILTER THE LIST OF TIMETABLES TO GET THE TIMETABLE FOR THE SELECTED INTAKE ONLY
       map(timetables => timetables.filter(timetable => timetable.INTAKE === intake)),
+
+      // FILTER GROUPING
+      map(timetables => {
+        this.intakeGroup = this.settingsService.get('intakeGroup') || '';
+        if (this.intakeGroup && this.intakeGroup !== 'All') {
+          return timetables.filter(timetable => (timetable.GROUPING === this.intakeGroup));
+        } else {
+          return timetables;
+        }
+      }),
 
       // GET TODAYS CLASSES ONLY
       map(intakeTimetable => intakeTimetable.filter(timetable => this.eventIsToday(new Date(timetable.DATESTAMP_ISO), dateNow))),
