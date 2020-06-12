@@ -27,6 +27,7 @@ import { RequestCache, RequestCacheWithMapStorage } from './services';
 
 import { Badge } from '@ionic-native/badge/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
+import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { DocumentViewer } from '@ionic-native/document-viewer/ngx';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { File } from '@ionic-native/file/ngx';
@@ -76,6 +77,7 @@ import { NotificationModalModule } from './pages/notifications/notification-moda
     // tslint:disable-next-line
     FileTransfer,
     DocumentViewer,
+    Deeplinks,
     Vibration,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: RequestCache, useClass: RequestCacheWithMapStorage },
