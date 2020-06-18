@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Deeplinks } from '@ionic-native/deeplinks/ngx';
 import { Network } from '@ionic-native/network/ngx';
 import {
   ActionSheetController, LoadingController, MenuController, ModalController, NavController,
   Platform, PopoverController, ToastController
 } from '@ionic/angular';
-import { ApcardPage } from './pages/apcard/apcard.page';
 import { UserSettingsService, VersionService } from './services';
 import { ShakespearFeedbackService } from './services/shakespear-feedback.service';
 
@@ -42,7 +40,6 @@ export class AppComponent {
     private popoverCtrl: PopoverController,
     private loadingCtrl: LoadingController,
     private shakespear: ShakespearFeedbackService,
-    private deeplinks: Deeplinks
   ) {
     this.versionService.checkForUpdate().subscribe();
 
@@ -55,18 +52,19 @@ export class AppComponent {
     // this.statusBar.backgroundColorByName('black');
 
     platform.ready().then(() => { // Do not remove this, this is needed for shake plugin to work
-
-      this.deeplinks.route({
-        '/apcard': ApcardPage
-      }).subscribe(match => {
-        // match.$route - the route we matched, which is the matched entry from the arguments to route()
-        // match.$args - the args passed in the link
-        // match.$link - the full link data
-        console.log('Successfully matched route', match);
-      }, nomatch => {
-        // nomatch.$link - the full link data
-        console.error('Got a deeplink that didn\'t match', nomatch);
-      });
+      // deeplinks settings
+      // this.deeplinks.route({
+      //   '/apcard': ApcardPage,
+      //   '/staffs': StaffDirectoryPage
+      // }).subscribe(match => {
+      //   // match.$route - the route we matched, which is the matched entry from the arguments to route()
+      //   // match.$args - the args passed in the link
+      //   // match.$link - the full link data
+      //   console.log('Successfully matched route', match);
+      // }, nomatch => {
+      //   // nomatch.$link - the full link data
+      //   console.error('Got a deeplink that didn\'t match', nomatch);
+      // });
       this.getUserSettings();
       if (this.platform.is('cordova')) {
         if (this.network.type === 'none') {
