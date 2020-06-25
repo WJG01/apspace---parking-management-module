@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { CovidVisitorFormPageRoutingModule } from './covid-visitor-form-routing.module';
 
+import { QRScanner } from '@ionic-native/qr-scanner/ngx';
 import { CovidVisitorFormPage } from './covid-visitor-form.page';
 import { VisitHistoryModalPage } from './visit-history/visit-history-modal';
 
@@ -17,6 +18,7 @@ import { VisitHistoryModalPage } from './visit-history/visit-history-modal';
     CovidVisitorFormPageRoutingModule
   ],
   declarations: [CovidVisitorFormPage, VisitHistoryModalPage],
-  entryComponents: [VisitHistoryModalPage]
+  entryComponents: [VisitHistoryModalPage],
+  providers: [QRScanner]
 })
 export class CovidVisitorFormPageModule {}

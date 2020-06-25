@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { LoadingController, ModalController, ToastController } from '@ionic/angular';
+import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner/ngx';
+import { AlertController, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import * as moment from 'moment';
 import { Observable, Subscription, of, timer } from 'rxjs';
 import { map, shareReplay, tap } from 'rxjs/operators';
@@ -13,9 +14,12 @@ import { VisitHistoryModalPage } from './visit-history/visit-history-modal';
   templateUrl: './covid-visitor-form.page.html',
   styleUrls: ['./covid-visitor-form.page.scss'],
 })
-export class CovidVisitorFormPage implements OnInit {
+export class CovidVisitorFormPage implements OnInit, OnDestroy {
   // THIS REGULAR EXPERSSION FOLLOWS THE RFC 2822 STANDARD
   // tslint:disable-next-line: max-line-length
+  // digits = new Array(3);
+  status: QRScannerStatus;  // scan availability
+
   emailValidationPattern = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
   phoneNumberValidationPattern = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4,5})$/;
   loading: HTMLIonLoadingElement;
@@ -40,6 +44,7 @@ export class CovidVisitorFormPage implements OnInit {
     'APU Student/Staff'
   ];
   userName$: Observable<string>;
+  declarationId: number;
 
   response = {
     name: '',
@@ -59,11 +64,19 @@ export class CovidVisitorFormPage implements OnInit {
     private loadingCtrl: LoadingController,
     private route: ActivatedRoute,
     private modalCtrl: ModalController,
-    private changeDetRef: ChangeDetectorRef
+    private changeDetRef: ChangeDetectorRef,
+    public qrScanner: QRScanner,
+    private alertCtrl: AlertController,
+    private alertController: AlertController
   ) { }
 
   ngOnInit() {
     this.getData();
+  }
+
+  ngOnDestroy() {
+    this.scanSub.unsubscribe();
+    this.qrScanner.destroy();
   }
 
   getData() {
@@ -75,6 +88,7 @@ export class CovidVisitorFormPage implements OnInit {
           tap(res => {
             console.log(res);
             if (res && res.is_valid) {
+              this.declarationId = res.id;
               const validUntil = new Date(res.valid_time);
               const currentDate = new Date();
               this.startTimer(moment(validUntil).diff(moment(currentDate), 'seconds'));
@@ -159,9 +173,65 @@ export class CovidVisitorFormPage implements OnInit {
     this.getData();
     this.changeDetRef.detectChanges();
   }
+  // tslint:disable-next-line: member-ordering
+  scanSub: Subscription;
+  // tslint:disable-next-line: member-ordering
+  sending = false;
+  // tslint:disable-next-line: member-ordering
+  scan = false;
 
   scanQrCode() {
+    this.qrScanner.prepare().then(status => {
+      console.log('prepared');
+      console.assert(status.authorized);
+      // scanning only takes the first valid code
+      this.scanSub = this.qrScanner.scan().subscribe((text: string) => {
+        if (this.sending) {
+          return;
+        } else {
+          this.sendRoomRequest(text);
+        }
+      });
+      this.scan = true;
+      this.qrScanner.show();
+    }).catch(err => {
+      this.scan = false;
+      this.presentToast(err.name, 7000, 'danger');
+      if (err.name === 'CAMERA_ACCESS_DENIED') {
+        this.requestPerm();
+      } else {
+        console.error('Unknown error', err.name);
+      }
+    });
+  }
 
+  sendRoomRequest(roomName: string) {
+    const body = {
+      room_name: roomName,
+      declaration_id: this.declarationId
+    };
+    this.ws.post('/covid/room_attendance', { body }).subscribe(
+      res => console.log(res),
+      err => this.presentToast(`Error: ${err}`, 7000, 'danger'),
+      () => {
+        this.presentAlert(roomName);
+        this.scan = false;
+        this.scanSub.unsubscribe();
+        this.qrScanner.destroy();
+      }
+    );
+  }
+
+  async presentAlert(roomName: string) {
+    const alert = await this.alertController.create({
+      cssClass: 'success-alert',
+      header: 'Confirm!',
+      subHeader: 'QR Code Scanned',
+      message: `You may enter the room <span class="text-bold">"${roomName}"</span> Now.`,
+      buttons: ['OK']
+    });
+
+    await alert.present();
   }
 
   async viewHistory() {
@@ -269,6 +339,26 @@ export class CovidVisitorFormPage implements OnInit {
 
   async dismissLoading() {
     return await this.loading.dismiss();
+  }
+
+  /** Request for permission. */
+  requestPerm() {
+    this.alertCtrl.create({
+      header: 'Permission denied',
+      message: 'Please provide access to camera.',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => { }
+        },
+        {
+          text: 'Okay',
+          handler: () => this.qrScanner.openSettings()
+        }
+      ]
+    }).then(alert => alert.present());
   }
 
 }
