@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner/ngx';
 import { AlertController, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import * as moment from 'moment';
@@ -67,14 +67,19 @@ export class CovidVisitorFormPage implements OnInit, OnDestroy {
     private changeDetRef: ChangeDetectorRef,
     public qrScanner: QRScanner,
     private alertCtrl: AlertController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private router: Router
   ) { }
 
   ngOnInit() {
+  }
+
+  ionViewDidEnter() {
     this.getData();
   }
 
   ngOnDestroy() {
+    console.log('destroyed');
     if (this.scanSub) {
       this.scanSub.unsubscribe();
     }
@@ -227,7 +232,10 @@ export class CovidVisitorFormPage implements OnInit, OnDestroy {
     };
     this.ws.post('/covid/room_attendance', { body }).subscribe(
       res => console.log(res),
-      err => this.presentToast(`Error: ${err}`, 7000, 'danger'),
+      err => {
+        this.presentToast(`Error: ${err}`, 7000, 'danger');
+        this.dismissLoading();
+      },
       () => {
         this.dismissLoading();
         this.presentAlert(roomName);
@@ -305,7 +313,10 @@ export class CovidVisitorFormPage implements OnInit, OnDestroy {
         }
         this.ws.post('/covid/visitor', { body, auth: false }).subscribe(
           res => console.log(res),
-          err => console.log(err),
+          err => {
+            console.log(err);
+            this.dismissLoading();
+          },
           () => {
             this.dismissLoading();
             this.presentToast('Form Submitted Successfully!', 6000, 'success');
@@ -373,6 +384,50 @@ export class CovidVisitorFormPage implements OnInit, OnDestroy {
         }
       ]
     }).then(alert => alert.present());
+  }
+
+  endSession() {
+    this.alertCtrl.create({
+      header: 'Are you sure you want to end the session?',
+      subHeader: `** By ending this session, you declare that you are leaving the campus.`,
+      buttons: [
+        {
+          text: 'No',
+          cssClass: 'secondary-txt-color',
+          role: 'cancel'
+        },
+        {
+          text: 'Yes',
+          cssClass: 'alert-logout',
+          handler: () => {
+            this.presentLoading();
+            const body = {
+              id: this.declarationId
+            };
+            this.ws.put('/covid/declaration', { body }).subscribe(
+              res => console.log(res),
+              err => {
+                this.presentToast(`Error: ${err}`, 7000, 'danger');
+                this.dismissLoading();
+              },
+              () => {
+                this.sessionExpired = true;
+                this.dismissLoading();
+                this.clearForm(this.response.role, this.response.station);
+                this.presentToast('Thank you for checking-out. Stay Safe!', 6000, 'success');
+                this.getData();
+                this.changeDetRef.detectChanges();
+              }
+            );
+          }
+        }
+      ]
+    }).then(alert => alert.present());
+  }
+
+  goToLogin() {
+    const queryParams = {redirect: 'visitor-form'};
+    this.router.navigate(['/', 'login'], {queryParams} );
   }
 
 }
