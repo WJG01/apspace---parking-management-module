@@ -219,6 +219,8 @@ export class CovidVisitorFormPage implements OnInit, OnDestroy {
   }
 
   sendRoomRequest(roomName: string) {
+    this.sending = true;
+    this.presentLoading();
     const body = {
       room_name: roomName,
       declaration_id: this.declarationId
@@ -227,6 +229,7 @@ export class CovidVisitorFormPage implements OnInit, OnDestroy {
       res => console.log(res),
       err => this.presentToast(`Error: ${err}`, 7000, 'danger'),
       () => {
+        this.dismissLoading();
         this.presentAlert(roomName);
         this.scan = false;
         this.scanSub.unsubscribe();
