@@ -82,6 +82,18 @@
       </ion-card>
     </div>
 
+    <div class="masonry-item no-drag">
+      <ion-card color="primary" class="ion-no-margin ion-padding ion-text-center" tappable
+        [routerLink]="['/visitor-form']">
+        <ion-card-content class="ion-no-padding" style="background: var(--ion-color-primary)">
+          <p>COVID-19 Declaration</p>
+          <h1 class="ion-margin-top">
+            <ion-icon name="clipboard"></ion-icon>
+          </h1>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
     <!-- ion-select hidden behind the shown dashboard sections item  -->
     <ion-item [hidden]="true">
       <ion-label>Choose Section(s):</ion-label>
