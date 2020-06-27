@@ -81,6 +81,9 @@ export class CovidVisitorFormPage implements OnInit, OnDestroy {
     if (this.scanSub) {
       this.scanSub.unsubscribe();
     }
+    if (this.timerSubscription$) {
+      this.timerSubscription$.unsubscribe();
+    }
     this.qrScanner.destroy();
   }
 
@@ -153,7 +156,7 @@ export class CovidVisitorFormPage implements OnInit, OnDestroy {
       this.emailValid = this.response.email.match(this.emailValidationPattern) !== null;
     } else if (itemToCheck === 'temperature') {
       this.temperatureValid =
-      +this.response.temperature > 30 && +this.response.temperature <= 45 && /^[0-9]+$/.test(this.response.temperature);
+        +this.response.temperature > 30 && +this.response.temperature <= 45 && /^[0-9]+$/.test(this.response.temperature);
     }
   }
 
@@ -229,7 +232,7 @@ export class CovidVisitorFormPage implements OnInit, OnDestroy {
       declaration_id: this.declarationId
     };
     this.ws.post('/covid/room_attendance', { body }).subscribe(
-      _ => {},
+      _ => { },
       err => {
         this.presentToast(`Error: ${err.error.Error}`, 7000, 'danger');
         this.sending = false;
@@ -302,7 +305,7 @@ export class CovidVisitorFormPage implements OnInit, OnDestroy {
           body['sam_account_name'] = this.response.id;
         }
         this.ws.post('/covid/visitor', { body, auth: false }).subscribe(
-          _ => {},
+          _ => { },
           err => {
             console.error(err);
             this.dismissLoading();
@@ -317,9 +320,10 @@ export class CovidVisitorFormPage implements OnInit, OnDestroy {
       } else {
         this.presentLoading();
         this.ws.post('/covid/declaration').subscribe(
-          _ => {},
+          _ => { },
           err => console.error(err),
           () => {
+            this.sessionExpired = false;
             this.dismissLoading();
             this.clearForm(this.response.role, this.response.station);
             this.presentToast('Form Submitted Successfully!', 6000, 'success');
@@ -395,13 +399,14 @@ export class CovidVisitorFormPage implements OnInit, OnDestroy {
               id: this.declarationId
             };
             this.ws.put('/covid/declaration', { body }).subscribe(
-              _ => {},
+              _ => { },
               err => {
                 this.presentToast(`Error: ${err}`, 7000, 'danger');
                 this.dismissLoading();
               },
               () => {
                 this.sessionExpired = true;
+                this.timerSubscription$.unsubscribe();
                 this.dismissLoading();
                 this.clearForm(this.response.role, this.response.station);
                 this.presentToast('Thank you for checking-out. Stay Safe!', 6000, 'success');
@@ -416,8 +421,8 @@ export class CovidVisitorFormPage implements OnInit, OnDestroy {
   }
 
   goToLogin() {
-    const queryParams = {redirect: 'visitor-form'};
-    this.router.navigate(['/', 'login'], {queryParams} );
+    const queryParams = { redirect: 'visitor-form' };
+    this.router.navigate(['/', 'login'], { queryParams });
   }
 
 }
