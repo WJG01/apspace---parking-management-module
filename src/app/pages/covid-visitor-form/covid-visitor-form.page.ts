@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner/ngx';
-import { AlertController, LoadingController, ModalController, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, ModalController, Platform, ToastController } from '@ionic/angular';
 import * as moment from 'moment';
 import { Observable, Subscription, of, timer } from 'rxjs';
 import { map, shareReplay, tap } from 'rxjs/operators';
@@ -30,7 +30,7 @@ export class CovidVisitorFormPage implements OnInit, OnDestroy {
   showWelcomeMessage = false;
   declarationLog$: Observable<any>;
   showLocationOption = false;
-
+  isCordova: boolean;
   timer$ = timer(0, 1000);
   timerSubscription$: Subscription;
   counter: Date;
@@ -67,10 +67,12 @@ export class CovidVisitorFormPage implements OnInit, OnDestroy {
     private changeDetRef: ChangeDetectorRef,
     public qrScanner: QRScanner,
     private alertCtrl: AlertController,
-    private router: Router
+    private router: Router,
+    private plt: Platform
   ) { }
 
   ngOnInit() {
+    this.isCordova = this.plt.is('cordova');
   }
 
   ionViewDidEnter() {
