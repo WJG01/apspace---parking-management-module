@@ -44,7 +44,7 @@ export class StudentDashboardPage implements OnInit, OnDestroy, AfterViewInit {
   dragulaModelArray = this.allDashboardSections;
   // shownDashboardSections get the data from local storage and hide/show elements based on that
   shownDashboardSections: string[];
-
+  isCordova: boolean;
   activeAccentColor = '';
   lowAttendanceChart: any;
   editableList = null;
@@ -287,6 +287,7 @@ export class StudentDashboardPage implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
+    this.isCordova = this.platform.is('cordova');
     this.userSettings.getShownDashboardSections().subscribe(
       {
         next: data => this.shownDashboardSections = data,

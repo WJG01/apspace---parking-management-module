@@ -32,7 +32,7 @@ export class StaffDashboardPage implements OnInit, AfterViewInit, OnDestroy {
     'apcard',
     'noticeBoard'
   ];
-
+  isCordova: boolean;
   // dragulaModelArray will be modified whenever there is a change to the order of the dashboard sections
   dragulaModelArray = this.allDashboardSections;
   // shownDashboardSections get the data from local storage and hide/show elements based on that
@@ -249,6 +249,7 @@ export class StaffDashboardPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.isCordova = this.platform.is('cordova');
     this.userSettings.getShownDashboardSections().subscribe(
       {
         next: data => this.shownDashboardSections = data,

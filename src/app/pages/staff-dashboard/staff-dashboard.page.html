@@ -82,16 +82,11 @@
       </ion-card>
     </div>
 
-    <div class="masonry-item no-drag">
-      <ion-card color="primary" class="ion-no-margin ion-padding ion-text-center" tappable
-        [routerLink]="['/visitor-form']">
-        <ion-card-content class="ion-no-padding" style="background: var(--ion-color-primary)">
-          <p>Health Declaration</p>
-          <h1 class="ion-margin-top">
-            <ion-icon name="clipboard"></ion-icon>
-          </h1>
-        </ion-card-content>
-      </ion-card>
+    <div class="masonry-item no-drag" *ngIf="!isCordova">
+      <ion-button expand="full" size="large" style="--background: #E41567; font-size: 1em;" [routerLink]="['/visitor-form']">
+        <ion-icon name="qr-scanner" slot="end" size="large"></ion-icon>
+        Update your location
+      </ion-button>
     </div>
 
     <!-- ion-select hidden behind the shown dashboard sections item  -->

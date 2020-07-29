@@ -93,25 +93,19 @@
     <div class="masonry-item no-drag">
       <ion-grid class="ion-no-padding">
         <ion-row class="ion-no-padding">
-          <ion-col>
-            <ion-card color="success" class="ion-no-margin ion-padding ion-text-center" tappable [routerLink]="['/attendix/update']">
-              <ion-card-content class="ion-no-padding" style="background: var(--ion-color-success)">
-                <p>Sign Attendance</p>
-                <h1 class="ion-margin-top">
-                  <ion-icon name="checkmark-circle-outline"></ion-icon>
-                </h1>
-              </ion-card-content>
-            </ion-card>
+          <ion-col class="ion-no-padding">
+            <ion-button expand="full" size="large" style="--background: #E41567; font-size: .9em;"
+              [routerLink]="['/visitor-form']">
+              <ion-icon name="qr-scanner" slot="end"></ion-icon>
+              Update your location
+            </ion-button>
           </ion-col>
-          <ion-col class="ion-padding-end">
-            <ion-card color="primary" class="ion-no-margin ion-padding ion-text-center" tappable [routerLink]="['/visitor-form']">
-              <ion-card-content class="ion-no-padding" style="background: var(--ion-color-primary)">
-                <p>Health Declaration</p>
-                <h1 class="ion-margin-top">
-                  <ion-icon name="clipboard"></ion-icon>
-                </h1>
-              </ion-card-content>
-            </ion-card>
+          <ion-col class="ion-no-padding">
+            <ion-button expand="full" size="large" style="font-size: .9em;" color="success"
+              [routerLink]="['/attendix/update']">
+              <ion-icon name="checkmark-circle-outline" slot="end"></ion-icon>
+              Sign Attendance
+            </ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
