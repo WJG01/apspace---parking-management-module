@@ -66,17 +66,16 @@ export class CovidVisitorFormPage implements OnInit, OnDestroy {
     });
   }
 
-  sendRoomRequest(roomName: string) {
+  sendRoomRequest(qrValue: string) {
     this.sending = true;
     this.presentLoading();
     const body = {
-      room_name: roomName,
-      // declaration_id: this.declarationId
+      id_value: qrValue,
     };
-    this.ws.post('/covid/room_attendance', { body }).subscribe(
+    this.ws.post('/qr_code/check_in', { body }).subscribe(
       _ => { },
       err => {
-        this.presentToast(`Error: ${err.error.Error}`, 7000, 'danger');
+        this.presentToast(`Error: ${err.error.error}`, 7000, 'danger');
         this.sending = false;
         this.scan = false;
         this.dismissLoading();
@@ -86,7 +85,7 @@ export class CovidVisitorFormPage implements OnInit, OnDestroy {
       },
       () => {
         this.dismissLoading();
-        this.presentAlert('Confirm!', 'QR Code Scanned', `You may enter the room <span class="text-bold">"${roomName}"</span> Now.`, 'success-alert');
+        this.presentAlert('Confirm!', 'QR Code Scanned', `You have successfully scanned the QR code.`, 'success-alert');
         this.scan = false;
         this.sending = false;
         this.scanSub.unsubscribe();
@@ -111,11 +110,7 @@ export class CovidVisitorFormPage implements OnInit, OnDestroy {
   async viewHistory() {
     const modal = await this.modalCtrl.create({
       component: VisitHistoryModalPage,
-      cssClass: 'custom-modal-style',
-      componentProps: {
-        show: 'history',
-        // declarationId: this.declarationId
-      }
+      cssClass: 'custom-modal-style'
     });
     await modal.present();
     await modal.onDidDismiss();
