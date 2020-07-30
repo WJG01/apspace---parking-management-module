@@ -9,10 +9,7 @@ import { WsApiService } from 'src/app/services';
 })
 
 export class VisitHistoryModalPage implements OnInit {
-  show: 'history' | 'symptoms';
-  declarationId: number | any;
   roomsList$: Observable<any>;
-  generalInformation$: Observable<any>;
   skeletons = new Array(7);
   constructor(
     private modalCtrl: ModalController,
@@ -20,8 +17,7 @@ export class VisitHistoryModalPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.roomsList$ = this.ws.get(`/covid/room_attendance_log?declaration_id=${this.declarationId}`);
-    this.generalInformation$ = this.ws.get('/covid/general_information', {auth: false});
+    this.roomsList$ = this.ws.get('/qr_code/attendee');
   }
 
   dismiss() {
