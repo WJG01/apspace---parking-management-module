@@ -96,7 +96,9 @@
           <ion-col class="ion-no-padding" *ngIf="isCordova">
             <ion-button expand="full" size="large" style="--background: #E41567; --background-activated: #E41567; --background-hover: #E41567; font-size: .9em;"
               [routerLink]="['/visitor-form']">
-              <ion-icon name="qr-scanner" slot="end"></ion-icon>
+              <ion-avatar slot="end" style="max-height: 30px;max-width: 30px;margin-left: 15px;">
+                <img src="assets/img/qr.png">
+              </ion-avatar>
               Update your location
             </ion-button>
           </ion-col>

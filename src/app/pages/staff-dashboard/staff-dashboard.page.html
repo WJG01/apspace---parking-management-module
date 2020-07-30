@@ -83,9 +83,13 @@
     </div>
 
     <div class="masonry-item no-drag" *ngIf="isCordova">
-      <ion-button expand="full" size="large" style="--background: #E41567; --background-activated: #E41567; --background-hover: #E41567; font-size: .9em;" [routerLink]="['/visitor-form']">
-        <ion-icon name="qr-scanner" slot="end" size="large"></ion-icon>
+      <ion-button expand="full" size="large"
+        style="--background: #E41567; --background-activated: #E41567; --background-hover: #E41567; font-size: .9em;"
+        [routerLink]="['/visitor-form']">
         Update your location
+        <ion-avatar slot="end" style="max-height: 30px;max-width: 30px;margin-left: 15px;">
+          <img src="assets/img/qr.png">
+        </ion-avatar>
       </ion-button>
     </div>
 
