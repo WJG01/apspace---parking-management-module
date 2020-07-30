@@ -16,7 +16,7 @@
     </ng-container>
 
     <!-- PROFILE SECTION (Not included in the drag and drop list) -->
-    <div id="profile" class="masonry-item no-drag">
+    <div id="profile" class="masonry-item no-drag" style="padding-bottom: 0;">
       <ion-card class="ion-no-margin">
         <ion-card-header class="ion-no-padding">
           <ion-grid>
@@ -93,8 +93,8 @@
     <div class="masonry-item no-drag">
       <ion-grid class="ion-no-padding">
         <ion-row class="ion-no-padding">
-          <ion-col class="ion-no-padding">
-            <ion-button expand="full" size="large" style="--background: #E41567; font-size: .9em;"
+          <ion-col class="ion-no-padding" *ngIf="isCordova">
+            <ion-button expand="full" size="large" style="--background: #E41567; --background-activated: #E41567; --background-hover: #E41567; font-size: .9em;"
               [routerLink]="['/visitor-form']">
               <ion-icon name="qr-scanner" slot="end"></ion-icon>
               Update your location
@@ -157,7 +157,7 @@
             </ion-col> -->
 
             <!-- QUICK ACCESS ITEM: APCARD BALANCE -->
-            <ion-col *ngIf="shownDashboardSections.includes('quickAccess')">
+            <ion-col class="ion-padding-start" *ngIf="shownDashboardSections.includes('quickAccess')">
               <div [class.edit-overlay]="editableList" [class.hide]="!editableList">
                 <ion-icon name="move" class="handle"></ion-icon>
               </div>
