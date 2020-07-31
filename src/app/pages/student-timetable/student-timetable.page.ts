@@ -24,6 +24,14 @@ export class StudentTimetablePage implements OnInit {
 
   legends = [
     {
+      name: 'Location: NEW CAMPUS',
+      desc: 'APU Campus',
+    },
+    {
+      name: 'Location: TPM',
+      desc: 'APIIT Campus',
+    },
+    {
       name: 'L',
       desc: 'Lecture',
     },
@@ -58,10 +66,6 @@ export class StudentTimetablePage implements OnInit {
     {
       name: 'TPM',
       desc: 'APIIT/APLC Campus',
-    },
-    {
-      name: 'New Campus',
-      desc: 'APU Campus',
     },
     {
       name: 'B',
