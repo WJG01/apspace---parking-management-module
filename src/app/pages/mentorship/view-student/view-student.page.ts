@@ -111,7 +111,7 @@ export class ViewStudentPage {
   async presentModal(moduleCode: string) {
     const modal = await this.modalCtrl.create({
       component: ShowDetailsPage,
-      cssClass: 'add-min-height-width',
+      cssClass: 'glob-partial-page-modal',
       componentProps: {
         intake: this.selectedIntake,
         module: moduleCode,
