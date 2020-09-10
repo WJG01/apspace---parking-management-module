@@ -4,26 +4,35 @@
   position: absolute;
   overflow-y: scroll;
   max-height: 90vh;
-  border-top: 56px solid transparent;
   background-color: var(--ion-tab-bar-background, var(--ion-background-color, #444));
   padding: 0 32px;
   width: 100%;
 
+
+  &.with-border-top {
+    border-top: 56px solid transparent;
+  }
+
+
+  &.with-border-bottom {
+    border-bottom: 56px solid transparent;
+  }
+
+  &.search-bar-open{
+    max-height: 85vh;
+  }
+
   a {
     text-decoration: none;
-    color: #eee;
+    color: var(--ion-text-color);
   }
 
   a:hover {
-    color: #fff;
-  }
-
-  .parent {
-    color: #eee6;
+    color: var(--ion-color-tertiary);
   }
 
   .parent::after {
-    content: ' »';
+    content: ' » ';
   }
 
   @media screen and (max-width: 600px) {
@@ -101,9 +110,3 @@
     display: none;
   }
 }
-
-
-// 720px with 3 extra tabs
-// 976px with 2 extra tabs
-// 1240px with 1 extra tab
-// 1425px with 0 extra tabs + 16px left
