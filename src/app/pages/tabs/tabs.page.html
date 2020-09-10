@@ -52,7 +52,7 @@
     </ion-tab-bar>
 
     <div class="menu" [class.with-border-top]="!smallScreen" [class.with-border-bottom]="smallScreen"
-      [style.display]="term ? 'block' : 'none'">
+      [style.display]="term && searching ? 'block' : 'none'">
       <ion-grid>
         <ion-row class="ion-justify-content-center">
           <ng-container *ngIf="(menuFiltered | fuse:term:options | byGroup | keyvalue:noop) as filteredMenu">
