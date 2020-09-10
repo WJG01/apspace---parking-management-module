@@ -16,7 +16,7 @@
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar *ngIf="shownSearchBar">
-    <ion-searchbar [(ngModel)]="term" (ionFocus)="searching = true">
+    <ion-searchbar [(ngModel)]="term" (ionFocus)="searching = true" (ionBlur)="stopSearching()">
     </ion-searchbar>
   </ion-toolbar>
 </ion-header>
@@ -51,8 +51,8 @@
       </ion-tab-button>
     </ion-tab-bar>
 
-    <div clickOutside="true" (clickOutside)="term = ''" class="menu" [class.with-border-top]="!smallScreen"
-      [class.with-border-bottom]="!shownSearchBar && smallScreen" [class.search-bar-open]="shownSearchBar && smallScreen" [style.display]="term && searching ? 'block' : 'none'">
+    <div class="menu" [class.with-border-top]="!smallScreen" [class.with-border-bottom]="smallScreen"
+      [style.display]="term ? 'block' : 'none'">
       <ion-grid>
         <ion-row class="ion-justify-content-center">
           <ng-container *ngIf="(menuFiltered | fuse:term:options | byGroup | keyvalue:noop) as filteredMenu">
@@ -73,7 +73,7 @@
                         </a>
                       </ng-container>
                       <ng-template #internalLink>
-                        <a [routerLink]="'/' + item.url" (click)="term = ''">
+                        <a [routerLink]="'/' + item.url">
                           <p>
                             <span *ngFor="let parent of item.parents" class="parent">{{ menusTitle[parent] }}</span>
                             <ion-text [color]="item.parents.length > 0 ? 'medium' : ''">{{ item.title }}</ion-text>
