@@ -1,50 +1,28 @@
-.unread {
-  position: relative;
-  &::before,
-  &::after {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    content: "";
-    z-index: 10;
-    margin: 0;
-    box-shadow: inset 0 0 0 2px;
-    animation: clipMe 8s linear infinite;
-    color: var(--primary-color);
-  }
-  &::before {
-    animation-delay: 8s * -0.5;
-  }
-}
-
-ion-badge {
-  --color: #ffffff;
-  &.category {
-    float: right;
-  }
-  &.new {
-    --background: var(--primary-color) !important;
-  }
+.dot {
+  height: 8px;
+  width: 8px;
+  background-color: var(--ion-color-primary);
+  border-radius: 50%;
+  display: inline-block;
+  margin: 5px;
+  position: absolute;
+  top: 1px;
+  right: 14px;
 }
 
 ion-card.notification ion-card-title h3 {
-  color: var(--secondary-txt-color) !important;
+  color: var(--ion-color-secondary) !important;
 }
 ion-card.notification.unread ion-card-title h3 {
-  color: var(--primary-color) !important;
+  color: var(--ion-color-primary) !important;
 }
 
-@keyframes clipMe {
-  0%,
-  100% {
-    clip: rect(0px, 1200px * (1 + 0.05 * 2), 2px, 0px);
-  }
-  25% {
-    clip: rect(0px, 2px, 1200px * (1 + 0.05 * 2), 0px);
-  }
-  75% {
-    clip: rect(0px, 1200px * (1 + 0.05 * 2), 1200px * (1 + 0.05 * 2), 1200px * (1 + 0.05 * 2) - 2px);
-  }
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.list-txt-color {
+  color: var(--ion-color-tertiary)
 }

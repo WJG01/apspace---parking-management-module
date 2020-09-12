@@ -4,49 +4,9 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
-    <ion-buttons slot="end">
-      <ion-button class="animated anim-scale" (click)="openPreferences()" *ngIf="!isStudent">
-        <ion-icon name="settings"></ion-icon>
-      </ion-button>
-
-      <ion-button class="animated anim-scale" (click)="openMenu()">
-        <ion-icon name="options"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-
-<ion-menu side="end" contentId="content" menuId="notifications-filter-menu" type="overlay">
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>Filter</ion-title>
-      <ion-buttons slot="end">
-        <ion-button class="animated anim-rotate-360-deg" shape="round" (click)="closeMenu()">
-          <ion-icon name="close"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content>
-    <ion-list>
-      <ion-item>
-        <ion-label>Show Unread Only</ion-label>
-        <ion-toggle [(ngModel)]="filterObject.upcoming"></ion-toggle>
-      </ion-item>
-      <ion-item>
-        <ion-label>Category</ion-label>
-        <ion-select multiple="true" [(ngModel)]="filterObject.categories">
-          <ion-select-option selected="true" *ngFor="let category of categories" [value]="category">
-            {{ category }}
-          </ion-select-option>
-        </ion-select>
-      </ion-item>
-      <div class="ion-padding">
-      </div>
-    </ion-list>
-  </ion-content>
-</ion-menu>
 
 <ion-content id="content">
   <!-- refresher -->
@@ -57,42 +17,74 @@
     <ion-grid>
       <ion-row>
         <ion-col size-xs="12" size-md="6" offset-md="3">
+          <ion-list lines="none">
+            <ion-item>
+              <ion-searchbar [(ngModel)]="searchTerm" placeholder="Title, category..." showCancelButton="focus">
+              </ion-searchbar>
+            </ion-item>
+            <ion-item>
+              <ion-label>Unread Only</ion-label>
+              <ion-toggle [(ngModel)]="filterObject.upcoming"></ion-toggle>
+            </ion-item>
+            <ion-item>
+              <ion-label>Category</ion-label>
+              <ion-select multiple="true" [(ngModel)]="filterObject.categories">
+                <ion-select-option selected="true" *ngFor="let category of categories" [value]="category">
+                  {{ category }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-list>
+
+
           <ng-container *ngIf="(messages$ | async) as messages; else loading">
-            <div class="ion-margin-top"
+            <div
               *ngIf="(messages.history | unreadMessagesOnly: filterObject.upcoming | notificationCategory: filterObject.categories).length > 0; else noNotifications">
               <div
-                *ngFor="let message of messages.history | unreadMessagesOnly: filterObject.upcoming | notificationCategory: filterObject.categories">
-
-                <ion-card (click)="openModal(message)" class="notification ion-margin"
-                  [class.unread]="(!message.read && openedMessages.indexOf(message.message_id) === -1)">
-                  <ion-card-header>
-                    <ion-card-title>
-                      <h3>
-                        {{message.title}}
-                      </h3>
-                    </ion-card-title>
-                  </ion-card-header>
-                  <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end ion-padding-bottom">
-                    <p><span class="glob-text-bold">Sender:</span> {{message.staff_name}}</p>
-                    <p><span class="glob-text-bold">Sent on:</span>
-                      {{message.sent_on | dateWithTimezone: 'EEEE, dd MMMM y'}}
-                    </p>
-                    <p><span class="glob-text-bold">Sent at:</span> {{message.sent_on | dateWithTimezone: 'hh:mm aaa'}}
-                    </p>
-                    <ion-badge class="new" style="float: left; margin-top: 5px"
-                      *ngIf="(!message.read && openedMessages.indexOf(message.message_id) === -1)">
-                      New
-                    </ion-badge>
-                    <ion-badge class="category"
-                      [attr.style]="'--background: ' + getCategoryColor(message.category) | safe: 'bypassStyle'"
-                      style="margin-top: 5px">
+                *ngIf="(messages.history | unreadMessagesOnly: filterObject.upcoming | notificationCategory: filterObject.categories | fuse:searchTerm:optionsNotifications).length > 0, else notFound">
+                <ion-virtual-scroll
+                  [items]="messages.history | unreadMessagesOnly: filterObject.upcoming | notificationCategory: filterObject.categories | fuse:searchTerm:optionsNotifications"
+                  approxItemHeight="68px">
+                  <ion-item *virtualItem="let message" (click)="openModal(message)" button="true">
+                    <ion-label>
+                      <ion-text color="primary">
+                        <h3 class="glob-text-bold ion-no-padding">
+                          {{message.title}}
+                        </h3>
+                      </ion-text>
+                      <p class="ion-no-padding">
+                        {{ message.sent_on | dateWithTimezone: 'dd MMMM y hh:mm aaa' }}
+                      </p>
+                    </ion-label>
+                    <span class="dot" *ngIf="(!message.read && openedMessages.indexOf(message.message_id) === -1)">
+                    </span>
+                    <ion-badge slot="end"
+                      [attr.style]="'--background: ' + getCategoryColor(message.category) | safe: 'bypassStyle'">
                       {{message.category}}
                     </ion-badge>
-                    <div class="glob-clearfix"></div>
-                  </ion-card-content>
-                </ion-card>
+                  </ion-item>
+                </ion-virtual-scroll>
               </div>
             </div>
+
+            <ng-template #notFound>
+              <app-message-with-svg imageUrl="assets/img/search-not-found.svg" messageTitle="Opps! Item not found."
+                messageContent="Perhaps you can try this:" wrapperSize="4" wrapperMarginTop="30px" wrapperOffset="4"
+                [advancedMode]="true">
+                <div class="flex-container">
+                  <ul class="list-txt-color">
+                    <li>Make sure the keyword is matched with one of the items</li>
+                    <li>Make sure you have typed a valid item code.</li>
+                    <li>Make sure there is no special characters included.</li>
+                  </ul>
+
+                  <p>Still having trouble? No worries! Just click <a [routerLink]="'/feedback'">here</a> and
+                    report to
+                    us for this issue.</p>
+                </div>
+              </app-message-with-svg>
+            </ng-template>
+
             <ng-template #noNotifications>
               <app-message-with-svg
                 messageTitle="No {{filterObject.upcoming ? 'Unread' : ''}} Messages To Show{{filterObject.categories.length > 0 ? ' with the category/categories (' + filterObject.categories.toString() + ')' : ''}}!"
@@ -101,41 +93,30 @@
               </app-message-with-svg>
             </ng-template>
           </ng-container>
+
           <ng-template #loading>
-            <div class="ion-margin-top">
-              <div *ngFor="let _ of skeletons">
-                <ion-card class="notification ion-no-margin">
-                  <ion-card-header>
-                    <ion-card-title>
-                      <h3>
-                        <ion-skeleton-text animated style="width: 70%; line-height: 25px;"></ion-skeleton-text>
-                      </h3>
-                    </ion-card-title>
-                  </ion-card-header>
-                  <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end ion-padding-bottom">
-                    <p>
-                      <ion-skeleton-text animated style="width: 90%; height: 15px;"></ion-skeleton-text>
-                    </p>
-                    <p>
-                      <ion-skeleton-text animated style="width: 35%; height: 15px;"></ion-skeleton-text>
-                    </p>
-                    <p>
-                      <ion-skeleton-text animated style="width: 70%; height: 15px;"></ion-skeleton-text>
-                    </p>
-                    <p class="small-margin-top new" style="float: left;font-weight: 300">
-                      <ion-skeleton-text animated style="width: 60px; height: 15px;"></ion-skeleton-text>
-                    </p>
-                    <p class="small-margin-top" style="float: right;font-weight: 300" color="primary">
-                      <ion-skeleton-text animated style="width: 40px; height: 15px;"></ion-skeleton-text>
-                    </p>
-                    <div class="glob-clearfix"></div>
-                  </ion-card-content>
-                </ion-card>
-              </div>
-            </div>
+            <ion-item *ngFor="let _ of skeletons" style="padding-top: 1px">
+              <ion-label>
+                <h2>
+                  <ion-skeleton-text animated style="line-height: 20px; width: 70%;"></ion-skeleton-text>
+                </h2>
+                <p>
+                  <ion-skeleton-text animated style="line-height: 10px; width: 40%;"></ion-skeleton-text>
+                </p>
+              </ion-label>
+              <ion-skeleton-text slot="end" animated style="line-height: 15px; width: 20%;"></ion-skeleton-text>
+            </ion-item>
           </ng-template>
         </ion-col>
       </ion-row>
     </ion-grid>
   </div>
 </ion-content>
+
+<ion-footer *ngIf="!isStudent">
+  <ion-toolbar>
+    <ion-title class="ion-text-center" size="small">
+      Click <a (click)="openPreferences()" style="cursor: pointer;">here</a> to unsubscribe from our emails
+    </ion-title>
+  </ion-toolbar>
+</ion-footer>

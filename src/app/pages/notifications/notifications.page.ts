@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+import Fuse from 'fuse.js';
 import { Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 
@@ -19,11 +20,20 @@ export class NotificationsPage implements OnInit {
   messages$: Observable<NotificationHistory>;
   categories = [];
   allCategories = {};
-  skeletons = new Array(3);
+  skeletons = new Array(6);
   openedMessages = [];
   filterObject = {
     categories: [],
     upcoming: false
+  };
+
+  searchTerm = '';
+
+  optionsNotifications: Fuse.IFuseOptions<NotificationHistory> = {
+    keys: [
+      { name: 'title', weight: 0.2 },
+      { name: 'category', weight: 0.1 },
+    ]
   };
 
   constructor(
@@ -69,7 +79,7 @@ export class NotificationsPage implements OnInit {
 
   openPreferences() {
     this.modalCtrl.create({
-      cssClass: 'controlled-modal-dingdong',
+      cssClass: 'DindongPreferences',
       component: DingdongPreferencesPage,
       componentProps: { isModal: true },
     }).then(modal => modal.present());
@@ -100,5 +110,4 @@ export class NotificationsPage implements OnInit {
     await modal.present();
     await modal.onDidDismiss();
   }
-
 }
