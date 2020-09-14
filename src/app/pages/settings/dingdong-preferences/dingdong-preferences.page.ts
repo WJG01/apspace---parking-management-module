@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavParams, ToastController } from '@ionic/angular';
+import { ModalController, NavParams, ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -23,7 +23,9 @@ export class DingdongPreferencesPage {
   constructor(
     private params: NavParams,
     private toastCtrl: ToastController,
-    private dingdong: NotificationService
+    private dingdong: NotificationService,
+    private modalCtrl: ModalController,
+
   ) {
     this.isModal = this.params.get('isModal');
   }
@@ -52,8 +54,8 @@ export class DingdongPreferencesPage {
 
   changeState(value: boolean) {
     this.message = value
-                    ? 'By unsubscribing, you will no longer receive any future updates from us in your personal email.'
-                    : 'By subscribing, you will receive any future updates from us in your personal email.';
+      ? 'By unsubscribing, you will no longer receive any future updates from us in your personal email.'
+      : 'By subscribing, you will receive any future updates from us in your personal email.';
     this.isSubscribed = value;
   }
 
@@ -100,5 +102,9 @@ export class DingdongPreferencesPage {
         }
       }
     );
+  }
+
+  dismiss() {
+    this.modalCtrl.dismiss();
   }
 }
