@@ -46,22 +46,22 @@
                   [items]="messages.history | unreadMessagesOnly: filterObject.upcoming | notificationCategory: filterObject.categories | fuse:searchTerm:optionsNotifications"
                   approxItemHeight="68px">
                   <ion-item *virtualItem="let message" (click)="openModal(message)" button="true">
-                    <ion-label>
-                      <ion-text color="primary">
-                        <h3 class="glob-text-bold ion-no-padding">
-                          {{message.title}}
-                        </h3>
-                      </ion-text>
-                      <p class="ion-no-padding">
-                        {{ message.sent_on | dateWithTimezone: 'dd MMMM y hh:mm aaa' }}
-                      </p>
-                    </ion-label>
                     <span class="dot" *ngIf="(!message.read && openedMessages.indexOf(message.message_id) === -1)">
                     </span>
-                    <ion-badge slot="end"
-                      [attr.style]="'--background: ' + getCategoryColor(message.category) | safe: 'bypassStyle'">
-                      {{message.category}}
-                    </ion-badge>
+                    <ion-col class="ion-margin">
+                      <ion-label class="glob-white-space-normal" style="margin-bottom: 5px;">
+                        <h3 class="glob-text-bold" [ngClass]="{'unread' : (!message.read && openedMessages.indexOf(message.message_id) === -1)}">
+                          {{message.title}}
+                        </h3>
+                        <p>
+                          {{ message.sent_on | dateWithTimezone: 'dd MMMM y hh:mm aaa' }}
+                        </p>
+                      </ion-label>
+                      <ion-badge 
+                        [attr.style]="(!message.read && openedMessages.indexOf(message.message_id) === -1) ? '--background: ' + getCategoryColor(message.category) : '--background: var(--ion-color-medium) !important' | safe: 'bypassStyle'">
+                        {{message.category}}
+                      </ion-badge>
+                    </ion-col>
                   </ion-item>
                 </ion-virtual-scroll>
               </div>

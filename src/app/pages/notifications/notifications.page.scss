@@ -6,14 +6,11 @@
   display: inline-block;
   margin: 5px;
   position: absolute;
-  top: 1px;
+  top: 20px;
   right: 14px;
 }
 
-ion-card.notification ion-card-title h3 {
-  color: var(--ion-color-secondary) !important;
-}
-ion-card.notification.unread ion-card-title h3 {
+.unread {
   color: var(--ion-color-primary) !important;
 }
 
