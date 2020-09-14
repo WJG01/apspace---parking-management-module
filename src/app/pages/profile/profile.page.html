@@ -11,100 +11,102 @@
   <div class="glob-container">
     <!-- STUDENT PROFILE -->
     <ng-template [ngIf]="studentRole" [ngIfElse]="userIsStaff">
-
       <ng-container *ngIf="profile$ | async as profile; else loadingProfile">
         <!-- normal profile -->
-        <ion-grid class="ion-margin-top ion-no-padding" *ngIf="!showOrientationProfile; else showOrientProfile">
-          <ion-row>
-            <ion-col class="ion-margin-top" size="12" size-lg="6" offset-lg="3">
-              <ion-card class="ion-no-margin ion-no-padding virtual-card">
-                <img src="assets/img/student_card_apu.jpg">
-                <ng-template let-photo [ngIf]="photo$ | async">
-                  <ion-img class="profile-photo virtual-card-student-img" [src]="
-                                      'data:image/jpg;base64,' +
-                                      photo?.base64_photo
-                                      " (ionError)="$event.target.src = 'assets/img/no_img.png'">
-                  </ion-img>
-                </ng-template>
-                <div class="virtual-card-student-details">
-                  <h5 class="glob-text-bold virtual-card-student-name">
-                    {{ profile.NAME || 'N/A'}}
-                  </h5>
-                  <p class="virtual-card-student-ids">
-                    <span class="attr">STUDENT ID</span> {{ profile.STUDENT_NUMBER || 'N/A'}}
-                  </p>
-                  <p class="virtual-card-student-ids">
-                    <span class="attr">IC/PASSPORT</span> {{ profile.IC_PASSPORT_NO || 'N/A'}}
-                  </p>
-                </div>
-              </ion-card>
-
-              <ion-card class="ion-no-margin ion-no-padding ion-text-center ion-margin-top">
+        <ion-grid *ngIf="!showOrientationProfile; else showOrientProfile">
+          <ion-row class="ion-justify-content-center">
+            <ion-col size="12" size-lg="9">
+              <ion-card>
                 <!-- STUDENT PROFILE INFO -->
-                <ion-card-header>
-                  <ion-card-subtitle>
-                    <h5>{{ profile.INTAKE }}</h5>
-                  </ion-card-subtitle>
-                </ion-card-header>
-                <ion-card-content>
-                  <div class="ion-margin-top">
-                    <h4>Programme</h4>
-                    <p>{{ profile.PROGRAMME }}</p>
-                  </div>
-                  <div class="ion-margin-top">
-                    <ng-template [ngIf]="profile.MENTOR_SAMACCOUNTNAME" [ngIfElse]="mentorLost">
-                      <h4>Mentor Name</h4>
-                      <p (click)="openStaffDirectoryInfo(profile.MENTOR_SAMACCOUNTNAME)" class="cursor-pointer">
-                        <ion-text color="primary">
-                          {{ profile.MENTOR_NAME }}
-                        </ion-text>
-                      </p>
-                    </ng-template>
-                    <ng-template #mentorLost>
-                      <h4>Mentor Name</h4>
-                      <p>{{ profile.MENTOR_NAME }}</p>
-                    </ng-template>
-                  </div>
-                  <div class="ion-margin-top">
-                    <ng-template [ngIf]="profile.PL_SAMACCOUNTNAME" [ngIfElse]="plLost">
-                      <h4>Programme Leader</h4>
-                      <p (click)="openStaffDirectoryInfo(profile.PL_SAMACCOUNTNAME)" class="cursor-pointer">
-                        <ion-text color="primary">
-                          {{ profile.PL_NAME }}
-                        </ion-text>
-                      </p>
-                    </ng-template>
-                    <ng-template #plLost>
-                      <h4>Programme Leader</h4>
-                      <p>{{ profile.PL_NAME }}</p>
-                    </ng-template>
-                  </div>
-                  <div class="ion-margin-top" *ngIf='!local'>
-                    <ng-template let-visa [ngIf]='visa$ | async'>
-                      <ng-template [ngIf]='visa[0].VISA_EXPIRY_DATE' [ngIfElse]='noVisa'>
-                        <h4>Student Pass Expiry Date</h4>
-                        <p>
-                          {{ visa[0].VISA_EXPIRY_DATE | date: "EEE, d MMM y"  }}
-                        </p>
-                      </ng-template>
-                      <ng-template #noVisa>
-                        <h4>Student Pass Expiry Date</h4>
-                        <ion-text color="danger">
-                          <p>
-                            Error while trying to get pass expiry date
-                          </p>
-                        </ion-text>
-                      </ng-template>
-                    </ng-template>
-                  </div>
-                  <div class="ion-margin-top">
-                    <h4>Country</h4>
-                    <p>{{ profile.COUNTRY }}</p>
-                  </div>
-                  <div class="ion-margin-top" *ngIf="intakeModified">
-                    <h4>Timetable & Exam Schedule Intake</h4>
-                    <p>{{timetableAndExamScheduleIntake}}</p>
-                  </div>
+                <ion-card-content class="ion-no-padding">
+                  <ion-grid>
+                    <ion-row class="ion-align-items-center">
+                      <ion-col size="12" size-md="6">
+                        <div class="virtual-card">
+                          <img src="assets/img/student_card_apu.jpg">
+                          <ng-template let-photo [ngIf]="photo$ | async">
+                            <ion-img class="profile-photo virtual-card-student-img" [src]="
+                                                  'data:image/jpg;base64,' +
+                                                  photo?.base64_photo
+                                                  " (ionError)="$event.target.src = 'assets/img/no_img.png'">
+                            </ion-img>
+                          </ng-template>
+                          <div class="virtual-card-student-details">
+                            <h5 class="glob-text-bold virtual-card-student-name">
+                              {{ profile.NAME || 'N/A'}}
+                            </h5>
+                            <p class="virtual-card-student-ids">
+                              <span class="attr">STUDENT ID</span> {{ profile.STUDENT_NUMBER || 'N/A'}}
+                            </p>
+                            <p class="virtual-card-student-ids">
+                              <span class="attr">IC/PASSPORT</span> {{ profile.IC_PASSPORT_NO || 'N/A'}}
+                            </p>
+                          </div>
+                        </div>
+                      </ion-col>
+                      <ion-col class="ion-padding-vertical" size="12" size-md="6">
+                        <h1>{{ profile.INTAKE }}</h1>
+                        <div class="ion-margin-top">
+                          <h4>Programme</h4>
+                          <p>{{ profile.PROGRAMME }}</p>
+                        </div>
+                        <div class="ion-margin-top">
+                          <ng-template [ngIf]="profile.MENTOR_SAMACCOUNTNAME" [ngIfElse]="mentorLost">
+                            <h4>Mentor Name</h4>
+                            <p (click)="openStaffDirectoryInfo(profile.MENTOR_SAMACCOUNTNAME)" class="cursor-pointer">
+                              <ion-text color="primary">
+                                {{ profile.MENTOR_NAME }}
+                              </ion-text>
+                            </p>
+                          </ng-template>
+                          <ng-template #mentorLost>
+                            <h4>Mentor Name</h4>
+                            <p>{{ profile.MENTOR_NAME }}</p>
+                          </ng-template>
+                        </div>
+                        <div class="ion-margin-top">
+                          <ng-template [ngIf]="profile.PL_SAMACCOUNTNAME" [ngIfElse]="plLost">
+                            <h4>Programme Leader</h4>
+                            <p (click)="openStaffDirectoryInfo(profile.PL_SAMACCOUNTNAME)" class="cursor-pointer">
+                              <ion-text color="primary">
+                                {{ profile.PL_NAME }}
+                              </ion-text>
+                            </p>
+                          </ng-template>
+                          <ng-template #plLost>
+                            <h4>Programme Leader</h4>
+                            <p>{{ profile.PL_NAME }}</p>
+                          </ng-template>
+                        </div>
+                        <div class="ion-margin-top" *ngIf='!local'>
+                          <ng-template let-visa [ngIf]='visa$ | async'>
+                            <ng-template [ngIf]='visa[0].VISA_EXPIRY_DATE' [ngIfElse]='noVisa'>
+                              <h4>Student Pass Expiry Date</h4>
+                              <p>
+                                {{ visa[0].VISA_EXPIRY_DATE | date: "EEE, d MMM y"  }}
+                              </p>
+                            </ng-template>
+                            <ng-template #noVisa>
+                              <h4>Student Pass Expiry Date</h4>
+                              <ion-text color="danger">
+                                <p>
+                                  Error while trying to get pass expiry date
+                                </p>
+                              </ion-text>
+                            </ng-template>
+                          </ng-template>
+                        </div>
+                        <div class="ion-margin-top">
+                          <h4>Country</h4>
+                          <p>{{ profile.COUNTRY }}</p>
+                        </div>
+                        <div class="ion-margin-top" *ngIf="intakeModified">
+                          <h4>Timetable & Exam Schedule Intake</h4>
+                          <p>{{timetableAndExamScheduleIntake}}</p>
+                        </div>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
                 </ion-card-content>
                 <ion-footer *ngIf='!local'>
                   <ion-list class="ion-no-margin">
@@ -135,7 +137,7 @@
           <ng-template let-orientationProfile [ngIf]="orientationStudentDetails$ | async" [ngIfElse]="loadingProfile">
             <ion-grid class="ion-no-padding">
               <ion-row>
-                <ion-col size="12" size-md="10" offset-md="1" class="ion-no-padding">
+                <ion-col class="ion-no-padding">
                   <ion-card class="orientation">
                     <ion-card-content class="ion-no-padding">
                       <ion-grid>
@@ -145,7 +147,7 @@
                         </ion-row> -->
                         <ion-row>
                           <ion-col size="12" size-md="7" offset-md="" push-md="5">
-                            <ion-card class="ion-no-margin ion-no-padding ion-float-end virtual-card">
+                            <div class="ion-float-end virtual-card">
                               <img src="assets/img/student_card_apu.jpg">
                               <ng-template let-photo [ngIf]="photo$ | async">
                                 <ion-img class="profile-photo virtual-card-student-img" [src]="
@@ -163,11 +165,16 @@
                                 <p class="virtual-card-student-ids passport">IC/PASSPORT:&nbsp;
                                   {{orientationProfile.student_details[0].IC || 'N/A'}}</p>
                               </div>
-                            </ion-card>
+                            </div>
                           </ion-col>
                           <ion-col size="12" size-md="5" pull-md="7" class="margin-auto">
-                            <h1 class="glob-text-bold colored-text ion-padding-start ion-padding-end">YOUR VIRTUAL CARD</h1>
-                            <h5 class="ion-margin-top ion-padding-start ion-padding-end">This is your Virtual Student Card. Once you resume face-to-face learning on campus, we
+                            <h1 class="glob-text-bold ion-padding-start ion-padding-end">
+                              <ion-text color="primary">
+                                YOUR VIRTUAL CARD
+                              </ion-text>
+                            </h1>
+                            <h5 class="ion-margin-top ion-padding-start ion-padding-end">This is your Virtual Student
+                              Card. Once you resume face-to-face learning on campus, we
                               will be
                               issuing you the physical copy of your card.</h5>
                           </ion-col>
@@ -179,7 +186,7 @@
                 </ion-col>
               </ion-row>
               <ion-row>
-                <ion-col size="12" size-md="10" offset-md="1" class="ion-no-padding">
+                <ion-col class="ion-no-padding">
                   <ion-card class="orientation">
                     <ion-card-content class="ion-no-padding">
                       <ion-grid>
@@ -333,7 +340,8 @@
                                   <h2>RELATIONSHIP</h2>
                                 </ion-col>
                                 <ion-col size="6" offset-md="1" size-md="">
-                                  <h2>: {{orientationProfile.student_details[0].PARENTS_RELATIONSHIP || 'N/A'}} <a button
+                                  <h2>: {{orientationProfile.student_details[0].PARENTS_RELATIONSHIP || 'N/A'}} <a
+                                      button
                                       (click)="change('PARENTS_RELATIONSHIP', orientationProfile.student_details[0].PARENTS_RELATIONSHIP, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
                                   </h2>
                                 </ion-col>
@@ -382,7 +390,8 @@
                                   <h2>RELATIONSHIP</h2>
                                 </ion-col>
                                 <ion-col size="6" offset-md="1" size-md="">
-                                  <h2>: {{orientationProfile.student_details[0].GUARDIAN_RELATIONSHIP || 'N/A'}} <a button
+                                  <h2>: {{orientationProfile.student_details[0].GUARDIAN_RELATIONSHIP || 'N/A'}} <a
+                                      button
                                       (click)="change('GUARDIAN_RELATIONSHIP', orientationProfile.student_details[0].GUARDIAN_RELATIONSHIP, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
                                   </h2>
                                 </ion-col>
@@ -495,7 +504,8 @@
                               <ion-row>
                                 <ion-col>
                                   <p>
-                                    If you would like to request an update to the non-editable information, please submit
+                                    If you would like to request an update to the non-editable information, please
+                                    submit
                                     your request here.
                                   </p>
                                   <ion-button (click)="requestChange(orientationProfile)">REQUEST UPDATE
