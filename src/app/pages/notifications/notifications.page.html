@@ -50,14 +50,15 @@
                     </span>
                     <ion-col class="ion-margin">
                       <ion-label class="glob-white-space-normal" style="margin-bottom: 5px;">
-                        <h3 class="glob-text-bold" [ngClass]="{'unread' : (!message.read && openedMessages.indexOf(message.message_id) === -1)}">
+                        <h3 class="glob-text-bold"
+                          [ngClass]="{'unread' : (!message.read && openedMessages.indexOf(message.message_id) === -1)}">
                           {{message.title}}
                         </h3>
                         <p>
                           {{ message.sent_on | dateWithTimezone: 'dd MMMM y hh:mm aaa' }}
                         </p>
                       </ion-label>
-                      <ion-badge 
+                      <ion-badge
                         [attr.style]="(!message.read && openedMessages.indexOf(message.message_id) === -1) ? '--background: ' + getCategoryColor(message.category) : '--background: var(--ion-color-medium) !important' | safe: 'bypassStyle'">
                         {{message.category}}
                       </ion-badge>
@@ -95,7 +96,7 @@
           </ng-container>
 
           <ng-template #loading>
-            <ion-item *ngFor="let _ of skeletons" style="padding-top: 1px">
+            <ion-item *ngFor="let _ of skeletons">
               <ion-label>
                 <h2>
                   <ion-skeleton-text animated style="line-height: 20px; width: 70%;"></ion-skeleton-text>
@@ -103,8 +104,8 @@
                 <p>
                   <ion-skeleton-text animated style="line-height: 10px; width: 40%;"></ion-skeleton-text>
                 </p>
+                <ion-skeleton-text animated style="line-height: 15px; width: 20%;"></ion-skeleton-text>
               </ion-label>
-              <ion-skeleton-text slot="end" animated style="line-height: 15px; width: 20%;"></ion-skeleton-text>
             </ion-item>
           </ng-template>
         </ion-col>
