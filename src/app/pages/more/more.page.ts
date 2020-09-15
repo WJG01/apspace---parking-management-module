@@ -76,7 +76,7 @@ export class MorePage implements OnInit {
     ]).then(([role, canAccessResults = false]: [Role, boolean]) => {
       this.menuFiltered = this.menuFull.filter(
         // tslint:disable-next-line:no-bitwise
-        menu => (menu.role & role) && ((menu.canAccess && menu.canAccess === canAccessResults) || !menu.canAccess)
+        menu => ((menu.role & role) && ((menu.canAccess && menu.canAccess === canAccessResults) || !menu.canAccess || Role.Student) )
       );
 
       this.fav$ = this.settings.get$('favoriteItems').pipe(

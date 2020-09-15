@@ -138,7 +138,7 @@ export class TabsPage implements OnInit {
       this.storage.get('canAccessResults').then((canAccessResults = false) => {
         this.menuFiltered = this.menuFull.filter(
           // tslint:disable-next-line:no-bitwise
-          menu => (menu.role & role) && ((menu.canAccess && menu.canAccess === canAccessResults) || !menu.canAccess)
+          menu => ((menu.role & role) && ((menu.canAccess && menu.canAccess === canAccessResults) || !menu.canAccess || Role.Student) )
         );
       });
     });

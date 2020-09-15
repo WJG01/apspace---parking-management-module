@@ -153,7 +153,7 @@ const routes: Routes = [
   {
     path: 'results',
     canActivate: [AuthGuard],
-    data: { role: Role.Student },
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
     loadChildren: () => import('./pages/results/results.module').then(m => m.ResultsPageModule)
   },
   {
@@ -248,12 +248,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { role: Role.Admin | Role.Lecturer },
     loadChildren: () => import('./pages/mentorship/mentorship.module').then(m => m.MentorshipPageModule)
-  },
-  {
-    path: 'students-results',
-    canActivate: [AuthGuard],
-    data: { role: Role.Admin | Role.Lecturer },
-    loadChildren: () => import('./pages/students-search/students-search.module').then(m => m.StudentsSearchPageModule)
   },
   {
     path: 'orientation-student-portal',

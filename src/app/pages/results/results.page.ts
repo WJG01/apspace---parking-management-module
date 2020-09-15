@@ -3,12 +3,14 @@ import { Component } from '@angular/core';
 import { NavigationExtras } from '@angular/router';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { LoadingController, NavController, ToastController } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
 import { Observable, forkJoin } from 'rxjs';
-import { catchError, finalize, map, tap } from 'rxjs/operators';
+import { catchError, finalize, map, switchMap, tap } from 'rxjs/operators';
 
 import {
+  BeAPUStudentDetails,
   ClassificationLegend, Course, CourseDetails, DeterminationLegend,
-  InterimLegend, MPULegend, StudentPhoto, StudentProfile, Subcourse
+  InterimLegend, MPULegend, StudentPhoto, StudentProfile, StudentSearch, Subcourse
 } from '../../interfaces';
 import { CasTicketService, WsApiService } from '../../services';
 
@@ -36,6 +38,25 @@ export class ResultsPage {
   block = true;
   message: string;
 
+  // used for GIMS Web Results - for Staff
+  prodUrl = 'https://api.apiit.edu.my/student';
+  searchKeyword = '';
+  searchResults = '';
+  selectedStudentId = '';
+
+  skeletons = new Array(5);
+  staffRole: boolean;
+  showResults: boolean;
+  studentSelected: boolean;
+  intakeSelected: boolean;
+
+  studentsList$: Observable<any>;
+  studentProfile$: Observable<StudentProfile>;
+  studentDetails$: Observable<BeAPUStudentDetails[]>;
+  studentCourses$: Observable<Course[]>;
+  studentsResults$: Observable<{ semester: string; value: Subcourse[]; }[]>;
+
+
   options = {
     legend: {
       display: false,
@@ -59,7 +80,8 @@ export class ResultsPage {
     private iab: InAppBrowser,
     private navCtrl: NavController,
     private toastCtrl: ToastController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private storage: Storage
   ) { }
 
   ionViewDidEnter() {
@@ -68,6 +90,16 @@ export class ResultsPage {
 
   doRefresh(refresher?: any) {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
+    this.storage.get('canAccessResults').then(canAccessResults => {
+      if (!canAccessResults) {
+        this.getDetailsForStudents(caching, refresher);
+      } else {
+        this.staffRole = true;
+      }
+    });
+  }
+
+  getDetailsForStudents(caching, refresher) {
     this.photo$ = this.ws.get<StudentPhoto>('/student/photo', { caching });
     this.ws.get<StudentProfile>('/student/profile', { caching }).subscribe(p => {
       this.studentProfile = p;
@@ -98,7 +130,7 @@ export class ResultsPage {
   generateInterimPDF() {
     this.presentLoading();
     return forkJoin([
-      this.requestInterimST(this.selectedIntake),
+      this.requestInterimST(this.selectedStudentId, this.selectedIntake),
     ]).pipe(
       map(([serviceTickets]) => {
         const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
@@ -123,15 +155,16 @@ export class ResultsPage {
     ).subscribe();
   }
 
-  requestInterimST(intakeCode: string) {
+  requestInterimST(studentId: string, intakeCode: string) {
+    const studentIdParam = studentId ? `?id=${studentId}` : '';
     const api = 'https://api.apiit.edu.my';
 
     return forkJoin([
-      this.cas.getST(api + '/student/courses'),
+      this.cas.getST(api + `/student/courses${studentIdParam}`),
       this.cas.getST(api + '/student/subcourses'),
       this.cas.getST(api + '/student/interim_legend'),
       this.cas.getST(api + '/student/sub_and_course_details'),
-      this.cas.getST(api + '/student/profile'),
+      this.cas.getST(api + `/student/profile${studentIdParam}`),
       this.cas.getST(api + '/student/mpu_legend'),
       this.cas.getST(api + '/student/classification_legend'),
       this.cas.getST(api + '/student/su_legend'),
@@ -141,6 +174,7 @@ export class ResultsPage {
       map(([coursesST, subcoursesST, interim_legendST, sub_and_course_detailsST, profileST, mpu_legendST, classification_legendST, su_legendST, determination_legendST]) => {
         const payload = {
           intake: intakeCode,
+          id: studentId,
           tickets: {
             courses: coursesST,
             subcourses: subcoursesST,
@@ -192,15 +226,16 @@ export class ResultsPage {
 
   getResults(
     intake: string,
-    options: { caching: 'network-or-cache' | 'cache-only' }
+    options: { caching: 'network-or-cache' | 'cache-only' }, student?: StudentSearch
   ): Observable<{ semester: string; value: Subcourse[] }[]> {
-    const url = `/student/subcourses?intake=${intake}`;
+    const withSearch = student ? `&id=${student.STUDENT_NUMBER}` : '';
+    const url = `/student/subcourses?intake=${intake}${withSearch}`;
 
     return this.results$ = forkJoin([
       this.ws.get<Subcourse>(url),
-      this.getCourseDetails(intake, { caching: 'network-or-cache' })
+      this.getCourseDetails(intake, { caching: 'network-or-cache' }, student)
     ]).pipe(
-      tap(([results]) => this.getInterimLegend(intake, results, options)),
+      tap(([results]) => this.getInterimLegend(intake, results, options, student)),
       map(([results, details]) => this.sortResult(results, details))
     );
   }
@@ -238,14 +273,16 @@ export class ResultsPage {
     this.navCtrl.navigateForward(['/student-survey'], navigationExtras);
   }
 
-
-  getCourseDetails(intake: string, options: { caching: 'network-or-cache' | 'cache-only' }): Observable<CourseDetails> {
-    const url = `/student/sub_and_course_details?intake=${intake}`;
+  // tslint:disable-next-line: max-line-length
+  getCourseDetails(intake: string, options: { caching: 'network-or-cache' | 'cache-only' }, student?: StudentSearch): Observable<CourseDetails> {
+    const studentId = student ? `&id=${student.STUDENT_NUMBER}` : '';
+    const url = `/student/sub_and_course_details?intake=${intake}${studentId}`;
     return this.courseDetail$ = this.ws.get<CourseDetails>(url, options);
   }
 
-  getInterimLegend(intake: string, results: any, options: { caching: 'network-or-cache' | 'cache-only' }) {
-    const url = `/student/interim_legend?intake=${intake}`;
+  getInterimLegend(intake: string, results: any, options: { caching: 'network-or-cache' | 'cache-only' }, student?: StudentSearch) {
+    const withSearch = student ? `&id=${student.STUDENT_NUMBER}` : '';
+    const url = `/student/interim_legend?intake=${intake}${withSearch}`;
     this.interimLegend$ = this.ws.get<InterimLegend[]>(url, options).pipe(
       tap(res => {
         const gradeList = Array.from(new Set((res || []).map(grade => grade.GRADE)));
@@ -254,18 +291,21 @@ export class ResultsPage {
     );
   }
 
-  getMpuLegend(intake: string, options: { caching: 'network-or-cache' | 'cache-only' }) {
-    const url = `/student/mpu_legend?intake=${intake}`;
+  getMpuLegend(intake: string, options: { caching: 'network-or-cache' | 'cache-only' }, student?: StudentSearch) {
+    const withSearch = student ? `&id=${student.STUDENT_NUMBER}` : '';
+    const url = `/student/mpu_legend?intake=${intake}${withSearch}`;
     this.mpuLegend$ = this.ws.get<MPULegend[]>(url, options);
   }
 
-  getDeterminationLegend(intake: string, options: { caching: 'network-or-cache' | 'cache-only' }) {
-    const url = `/student/determination_legend?intake=${intake}`;
+  getDeterminationLegend(intake: string, options: { caching: 'network-or-cache' | 'cache-only' }, student?: StudentSearch) {
+    const withSearch = student ? `&id=${student.STUDENT_NUMBER}` : '';
+    const url = `/student/determination_legend?intake=${intake}${withSearch}`;
     this.determinationLegend$ = this.ws.get<DeterminationLegend[]>(url, options);
   }
 
-  getClassificatinLegend(intake: string, options: { caching: 'network-or-cache' | 'cache-only' }) {
-    const url = `/student/classification_legend?intake=${intake}`;
+  getClassificatinLegend(intake: string, options: { caching: 'network-or-cache' | 'cache-only' }, student?: StudentSearch) {
+    const withSearch = student ? `&id=${student.STUDENT_NUMBER}` : '';
+    const url = `/student/classification_legend?intake=${intake}${withSearch}`;
     this.classificationLegend$ = this.ws.get<ClassificationLegend[]>(url, options);
   }
 
@@ -326,6 +366,88 @@ export class ResultsPage {
 
   trackByFn(index: number) {
     return index;
+  }
+
+  searchForStudents() {
+    this.showResults = true;
+    this.studentSelected = false;
+    this.intakeSelected = false;
+    this.searchResults = this.searchKeyword; // used for the error message
+    // we need to get st for the service including the params (?id=)
+    this.studentsList$ = this.cas.getST(`${this.prodUrl}/search?id=${this.searchKeyword}`).pipe(
+      switchMap((st) => {
+        return this.ws.get<StudentSearch[]>(`/search?id=${this.searchKeyword}&ticket=${st}`,
+          { url: this.prodUrl, auth: false, attempts: 1 }
+        );
+      })
+    ).pipe(
+      tap(studentsList => {
+        if (studentsList.length === 1) {
+          this.getStudentProfile(studentsList[0]);
+          this.getStudentCourses(studentsList[0]);
+          this.studentSelected = true;
+        }
+      })
+    );
+  }
+
+  getStudentData(student: StudentSearch) {
+    this.intakeSelected = false;
+    this.studentSelected = true;
+    this.getStudentProfile(student);
+    this.getStudentCourses(student);
+  }
+
+  getStudentProfile(student: StudentSearch) {
+    // we need to get st for the service including the params (?id=)
+    this.studentProfile$ = this.cas.getST(`${this.prodUrl}/profile?id=${student.STUDENT_NUMBER}`).pipe(
+      switchMap((st) => {
+        return this.ws.get<StudentProfile>(`/profile?id=${student.STUDENT_NUMBER}&ticket=${st}`,
+          { url: this.prodUrl, auth: false, attempts: 1 }
+        );
+      })
+    );
+
+    this.studentDetails$ = this.ws.post<BeAPUStudentDetails[]>('/student/image', {
+      body: {
+        id: [student.STUDENT_NUMBER]
+      }
+    });
+  }
+
+  getStudentCourses(student: StudentSearch) {
+    // we need to get st for the service including the params (?id=)
+    this.studentCourses$ = this.cas.getST(`${this.prodUrl}/courses?id=${student.STUDENT_NUMBER}`).pipe(
+      switchMap((st) => {
+        return this.ws.get<any>(`/courses?id=${student.STUDENT_NUMBER}&ticket=${st}`,
+          { url: this.prodUrl, auth: false, attempts: 1 }
+        ).pipe(
+          tap(i => this.selectedIntake = i[0].INTAKE_CODE),
+          tap(i => this.results$ = this.getResults(i[0].INTAKE_CODE, { caching: 'network-or-cache' }, student)),
+          tap(i => this.getCourseDetails(i[0].INTAKE_CODE, { caching: 'network-or-cache' }, student)),
+          tap(i => this.getMpuLegend(i[0].INTAKE_CODE, { caching: 'network-or-cache' }, student)),
+          tap(i => this.getDeterminationLegend(i[0].INTAKE_CODE, { caching: 'network-or-cache' }, student)),
+          tap(i => this.getClassificatinLegend(i[0].INTAKE_CODE, { caching: 'network-or-cache' }, student)),
+          tap(_ => {
+            this.intakeSelected = true;
+            this.studentSelected = true;
+            this.selectedStudentId = student.STUDENT_NUMBER;
+          })
+        );
+      })
+    );
+  }
+
+  getStudentResultsForStaff(student: StudentSearch, intake: string) {
+    this.intakeSelected = true;
+    this.studentSelected = true;
+    this.selectedStudentId = student.STUDENT_NUMBER;
+    this.selectedIntake = intake;
+    this.results$ = this.getResults(this.selectedIntake, { caching: 'network-or-cache' }, student);
+
+    this.getMpuLegend(intake, { caching: 'network-or-cache' }, student);
+    this.getDeterminationLegend(intake, { caching: 'network-or-cache' }, student);
+    this.getClassificatinLegend(intake, { caching: 'network-or-cache' }, student);
   }
 
 }
