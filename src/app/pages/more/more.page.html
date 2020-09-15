@@ -24,13 +24,19 @@
     <div *ngIf="(view$ | async) === 'list'; else menuCardsUI">
       <ion-grid>
         <ion-row>
-          <ion-col size="12" size-md="5" push-md="7">
+          <ion-col [class.sticky]="editMode" size="12" size-md="5" push-md="7">
             <!-- FAVORITE -->
-            <div *ngIf="!editMode && (fav | byItem: term) as filteredFavMenu">
+            <div *ngIf="!editMode && (fav | byItem: term) as filteredFavMenu; else onEditFav">
               <ion-card class="ion-no-margin favorite-background-color">
                 <ion-card-header class="no-background">
                   <ion-card-title color="light">
-                    <h3 class="ion-no-margin">Favorite</h3>
+                    <div class="flex-fav-header">
+                      <h3 class="ion-no-margin">Favorite</h3>
+                      <ion-button (click)="enableEditMode()" fill='outline' color="light">
+                        EDIT
+                        <ion-icon name="star"></ion-icon>
+                      </ion-button>
+                    </div>
                   </ion-card-title>
                 </ion-card-header>
                 <ion-card-content class="ion-no-padding">
@@ -69,6 +75,13 @@
                 </ion-card-content>
               </ion-card>
             </div>
+
+            <ng-template #onEditFav>
+              <ion-button (click)="enableEditMode()" class="sticky" color="primary" expand="block">
+                SAVE ({{ (fav$ | async).length }})
+                <ion-icon name="save"></ion-icon>
+              </ion-button>
+            </ng-template>
           </ion-col>
           <ion-col size="12" size-md="7" pull-md="5">
             <!-- MENU -->
@@ -111,15 +124,31 @@
     <!-- CARDS UI -->
     <ng-template #menuCardsUI>
       <ion-grid>
-
         <!-- FAVORITE -->
+        <ion-row [class.sticky]="editMode" *ngIf="editMode">
+          <ion-col>
+            <ion-button (click)="enableEditMode()" color="light" expand="block">
+              SAVE ({{ (fav$ | async).length }})
+              <ion-icon name="save"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
         <ion-row *ngIf="!editMode && (fav | byItem: term) as filteredFavMenu">
+          <ion-col>
+            <!-- To balance favorite header-->
+          </ion-col>
           <ion-col class="ion-padding-vertical">
             <h5 class="ion-text-center ion-no-margin">
               <ion-text color="light">
                 Favorite
               </ion-text>
             </h5>
+          </ion-col>
+          <ion-col class="ion-text-end">
+            <ion-button (click)="enableEditMode()" fill='outline' color="light">
+              EDIT
+              <ion-icon name="star"></ion-icon>
+            </ion-button>
           </ion-col>
           <ng-container *ngIf="filteredFavMenu.length > 0; else noFavCard">
             <div class="card-view-masonry-list">
@@ -222,16 +251,4 @@
       </ion-grid>
     </ng-template>
   </div>
-
-  <ion-fab *ngIf="!editMode" vertical="bottom" horizontal="center" slot="fixed">
-    <ion-fab-button (click)="enableEditMode()" color="warning">
-      <ion-icon name="star"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-
-  <ion-fab *ngIf="editMode" vertical="bottom" horizontal="center" slot="fixed">
-    <ion-fab-button (click)="enableEditMode()" color="primary">
-      <ion-icon name="save"></ion-icon> ({{ (fav$ | async).length }})
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>
