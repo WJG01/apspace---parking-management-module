@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavParams, ToastController } from '@ionic/angular';
+import { ModalController, NavParams, ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -8,12 +8,11 @@ import { NotificationService } from 'src/app/services';
 
 @Component({
   selector: 'app-dingdong-preferences',
-  templateUrl: './dingdong-preferences.page.html',
-  styleUrls: ['./dingdong-preferences.page.scss'],
+  templateUrl: './dingdong-preferences-modal.html',
+  styleUrls: ['./dingdong-preferences-modal.scss'],
 })
-export class DingdongPreferencesPage {
+export class DingdongPreferencesModalPage {
 
-  isModal = false;
   isProcessing = false;
   isSubscribed = true; // Most of the students are subscribed so why not? Let's save some mem.
   message: string;
@@ -21,12 +20,10 @@ export class DingdongPreferencesPage {
   status$: Observable<NotificationStatus>;
 
   constructor(
-    private params: NavParams,
     private toastCtrl: ToastController,
-    private dingdong: NotificationService
-  ) {
-    this.isModal = this.params.get('isModal');
-  }
+    private dingdong: NotificationService,
+    private modalCtrl: ModalController,
+  ){}
 
   ionViewDidEnter() {
     this.status$ = this.dingdong.getSubscription()
@@ -52,8 +49,8 @@ export class DingdongPreferencesPage {
 
   changeState(value: boolean) {
     this.message = value
-                    ? 'By unsubscribing, you will no longer receive any future updates from us in your personal email.'
-                    : 'By subscribing, you will receive any future updates from us in your personal email.';
+      ? 'By unsubscribing, you will no longer receive any future updates from us in your personal email.'
+      : 'By subscribing, you will receive any future updates from us in your personal email.';
     this.isSubscribed = value;
   }
 
@@ -100,5 +97,9 @@ export class DingdongPreferencesPage {
         }
       }
     );
+  }
+
+  dismiss() {
+    this.modalCtrl.dismiss();
   }
 }

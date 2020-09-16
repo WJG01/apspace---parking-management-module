@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { ComponentsModule } from 'src/app/components/components.module';
 import { SharedPipesModule } from 'src/app/shared/shared-pipes.module';
-import { DingdongPreferencesPageModule } from '../settings/dingdong-preferences/dingdong-preferences.module';
+import { DingdongPreferencesModalModule } from './dingdong-preferences/dingdong-preferences.module';
 import { NotificationCategoryPipe } from './notification-category.pipe';
 import { NotificationsPage } from './notifications.page';
 import { UnreadMessagesOnlyPipe } from './unread-messages-only.pipe';
@@ -26,7 +26,7 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     SharedPipesModule,
-    DingdongPreferencesPageModule
+    DingdongPreferencesModalModule
   ],
   declarations: [NotificationsPage, UnreadMessagesOnlyPipe, NotificationCategoryPipe],
 })

@@ -1,50 +1,25 @@
+.dot {
+  height: 8px;
+  width: 8px;
+  background-color: var(--ion-color-primary);
+  border-radius: 50%;
+  display: inline-block;
+  margin: 5px;
+  position: absolute;
+  top: 20px;
+  right: 14px;
+}
+
 .unread {
-  position: relative;
-  &::before,
-  &::after {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    content: "";
-    z-index: 10;
-    margin: 0;
-    box-shadow: inset 0 0 0 2px;
-    animation: clipMe 8s linear infinite;
-    color: var(--primary-color);
-  }
-  &::before {
-    animation-delay: 8s * -0.5;
-  }
+  color: var(--ion-color-primary) !important;
 }
 
-ion-badge {
-  --color: #ffffff;
-  &.category {
-    float: right;
-  }
-  &.new {
-    --background: var(--primary-color) !important;
-  }
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-ion-card.notification ion-card-title h3 {
-  color: var(--secondary-txt-color) !important;
-}
-ion-card.notification.unread ion-card-title h3 {
-  color: var(--primary-color) !important;
-}
-
-@keyframes clipMe {
-  0%,
-  100% {
-    clip: rect(0px, 1200px * (1 + 0.05 * 2), 2px, 0px);
-  }
-  25% {
-    clip: rect(0px, 2px, 1200px * (1 + 0.05 * 2), 0px);
-  }
-  75% {
-    clip: rect(0px, 1200px * (1 + 0.05 * 2), 1200px * (1 + 0.05 * 2), 1200px * (1 + 0.05 * 2) - 2px);
-  }
+.list-txt-color {
+  color: var(--ion-color-tertiary)
 }

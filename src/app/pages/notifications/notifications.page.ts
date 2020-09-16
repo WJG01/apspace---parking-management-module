@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+import Fuse from 'fuse.js';
 import { Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 
 import { NotificationHistory, Role } from 'src/app/interfaces';
 import { NotificationService } from 'src/app/services';
-import { DingdongPreferencesPage } from '../settings/dingdong-preferences/dingdong-preferences.page';
+import { DingdongPreferencesModalPage } from './dingdong-preferences/dingdong-preferences-modal';
 import { NotificationModalPage } from './notification-modal';
 
 @Component({
@@ -19,11 +20,20 @@ export class NotificationsPage implements OnInit {
   messages$: Observable<NotificationHistory>;
   categories = [];
   allCategories = {};
-  skeletons = new Array(3);
+  skeletons = new Array(6);
   openedMessages = [];
   filterObject = {
     categories: [],
     upcoming: false
+  };
+
+  searchTerm = '';
+
+  optionsNotifications: Fuse.IFuseOptions<NotificationHistory> = {
+    keys: [
+      { name: 'title', weight: 0.2 },
+      { name: 'category', weight: 0.1 },
+    ]
   };
 
   constructor(
@@ -67,14 +77,6 @@ export class NotificationsPage implements OnInit {
     this.menu.open('notifications-filter-menu');
   }
 
-  openPreferences() {
-    this.modalCtrl.create({
-      cssClass: 'controlled-modal-dingdong',
-      component: DingdongPreferencesPage,
-      componentProps: { isModal: true },
-    }).then(modal => modal.present());
-  }
-
   closeMenu() {
     this.menu.close('notifications-filter-menu');
   }
@@ -87,10 +89,10 @@ export class NotificationsPage implements OnInit {
       }
     });
 
-    return color ? color : '#3880ff'; // defaul color
+    return color ? color : '#3880ff'; // default color
   }
 
-  async openModal(message: any) {
+  async openNotificationsModal(message: any) {
     const modal = await this.modalCtrl.create({
       component: NotificationModalPage,
       componentProps: { message, notFound: 'No Message Selected' },
@@ -101,4 +103,11 @@ export class NotificationsPage implements OnInit {
     await modal.onDidDismiss();
   }
 
+  async openDingDongModal() {
+    const modal = await this.modalCtrl.create({
+      component: DingdongPreferencesModalPage
+    });
+    await modal.present();
+    await modal.onDidDismiss();
+  }
 }

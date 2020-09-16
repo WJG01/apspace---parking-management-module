@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { ComponentsModule } from 'src/app/components/components.module';
-import { DingdongPreferencesPage } from './dingdong-preferences.page';
+import { DingdongPreferencesModalPage } from './dingdong-preferences-modal';
 
 @NgModule({
   imports: [
@@ -13,6 +13,6 @@ import { DingdongPreferencesPage } from './dingdong-preferences.page';
     FormsModule,
     IonicModule
   ],
-  declarations: [DingdongPreferencesPage]
+  declarations: [DingdongPreferencesModalPage]
 })
-export class DingdongPreferencesPageModule {}
+export class DingdongPreferencesModalModule {}
