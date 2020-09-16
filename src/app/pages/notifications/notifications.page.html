@@ -45,7 +45,7 @@
                 <ion-virtual-scroll
                   [items]="messages.history | unreadMessagesOnly: filterObject.upcoming | notificationCategory: filterObject.categories | fuse:searchTerm:optionsNotifications"
                   approxItemHeight="68px">
-                  <ion-item *virtualItem="let message" (click)="openModal(message)" button="true">
+                  <ion-item *virtualItem="let message" (click)="openNotificationsModal(message)" button="true">
                     <span class="dot" *ngIf="(!message.read && openedMessages.indexOf(message.message_id) === -1)">
                     </span>
                     <ion-col class="ion-margin">
@@ -117,7 +117,7 @@
 <ion-footer *ngIf="!isStudent">
   <ion-toolbar>
     <ion-title class="ion-text-center" size="small">
-      Click <a (click)="openPreferences()" style="cursor: pointer;">here</a> to change email subscription preferences
+      Click <a (click)="openDingDongModal()" style="cursor: pointer;">here</a> to change email subscription preferences
     </ion-title>
   </ion-toolbar>
 </ion-footer>

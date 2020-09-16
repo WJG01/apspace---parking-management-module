@@ -7,7 +7,7 @@ import { finalize, tap } from 'rxjs/operators';
 
 import { NotificationHistory, Role } from 'src/app/interfaces';
 import { NotificationService } from 'src/app/services';
-import { DingdongPreferencesPage } from '../settings/dingdong-preferences/dingdong-preferences.page';
+import { DingdongPreferencesModalPage } from './dingdong-preferences/dingdong-preferences-modal';
 import { NotificationModalPage } from './notification-modal';
 
 @Component({
@@ -77,14 +77,6 @@ export class NotificationsPage implements OnInit {
     this.menu.open('notifications-filter-menu');
   }
 
-  openPreferences() {
-    this.modalCtrl.create({
-      cssClass: 'DindongPreferences',
-      component: DingdongPreferencesPage,
-      componentProps: { isModal: true },
-    }).then(modal => modal.present());
-  }
-
   closeMenu() {
     this.menu.close('notifications-filter-menu');
   }
@@ -97,16 +89,24 @@ export class NotificationsPage implements OnInit {
       }
     });
 
-    return color ? color : '#3880ff'; // defaul color
+    return color ? color : '#3880ff'; // default color
   }
 
-  async openModal(message: any) {
+  async openNotificationsModal(message: any) {
     const modal = await this.modalCtrl.create({
       component: NotificationModalPage,
       componentProps: { message, notFound: 'No Message Selected' },
     });
     this.openedMessages.push(message.message_id);
     this.notificationService.sendRead(message.message_id).subscribe();
+    await modal.present();
+    await modal.onDidDismiss();
+  }
+
+  async openDingDongModal() {
+    const modal = await this.modalCtrl.create({
+      component: DingdongPreferencesModalPage
+    });
     await modal.present();
     await modal.onDidDismiss();
   }

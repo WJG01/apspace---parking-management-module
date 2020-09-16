@@ -1,10 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar mode="md">
     <ion-title>Email Preference</ion-title>
-    <ion-buttons slot="start" *ngIf="!isModal">
-      <ion-back-button defaultHref="/"></ion-back-button>
-    </ion-buttons>
-    <ion-buttons slot="end" *ngIf="isModal">
+    <ion-buttons slot="end">
       <ion-button (click)="dismiss()">
         <ion-icon name="close"></ion-icon>
       </ion-button>

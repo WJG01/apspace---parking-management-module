@@ -8,12 +8,11 @@ import { NotificationService } from 'src/app/services';
 
 @Component({
   selector: 'app-dingdong-preferences',
-  templateUrl: './dingdong-preferences.page.html',
-  styleUrls: ['./dingdong-preferences.page.scss'],
+  templateUrl: './dingdong-preferences-modal.html',
+  styleUrls: ['./dingdong-preferences-modal.scss'],
 })
-export class DingdongPreferencesPage {
+export class DingdongPreferencesModalPage {
 
-  isModal = false;
   isProcessing = false;
   isSubscribed = true; // Most of the students are subscribed so why not? Let's save some mem.
   message: string;
@@ -21,14 +20,10 @@ export class DingdongPreferencesPage {
   status$: Observable<NotificationStatus>;
 
   constructor(
-    private params: NavParams,
     private toastCtrl: ToastController,
     private dingdong: NotificationService,
     private modalCtrl: ModalController,
-
-  ) {
-    this.isModal = this.params.get('isModal');
-  }
+  ){}
 
   ionViewDidEnter() {
     this.status$ = this.dingdong.getSubscription()
