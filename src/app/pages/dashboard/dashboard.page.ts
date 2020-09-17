@@ -1,10 +1,9 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { AlertController, IonSelect, IonSlides, ModalController, NavController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { format, parse, parseISO } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
-import { DragulaService } from 'ng2-dragula';
 import { Observable, combineLatest, forkJoin, of, zip } from 'rxjs';
 import { catchError, concatMap, finalize, map, mergeMap, shareReplay, switchMap, tap, toArray } from 'rxjs/operators';
 
@@ -29,9 +28,8 @@ import { NotificationModalPage } from '../notifications/notification-modal';
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss']
 })
-export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
+export class DashboardPage implements OnInit {
   // USER SETTINGS
-  @ViewChild('dragulaContainer', { static: true }) container: ElementRef; // access the dragula container
   @ViewChild('dashboardSectionsSelectBox', { static: true }) dashboardSectionsselectBoxRef: IonSelect; // hidden selectbox
   @ViewChild('slides') slides: IonSlides;
 
@@ -103,8 +101,6 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
       'noticeBoard'
     ];
 
-  // dragulaModelArray will be modified whenever there is a change to the order of the dashboard sections
-  dragulaModelArray = this.allDashboardSections;
   // shownDashboardSections get the data from local storage and hide/show elements based on that
   shownDashboardSections: string[] = [];
 
@@ -341,9 +337,7 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     private studentTimetableService: StudentTimetableService,
     private navCtrl: NavController,
     private alertCtrl: AlertController,
-    private dragulaService: DragulaService,
     private notificationService: NotificationService,
-    private renderer: Renderer2,
     private news: NewsService,
     private modalCtrl: ModalController,
     private platform: Platform,
@@ -352,12 +346,6 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     private settings: SettingsService,
     private storage: Storage
   ) {
-    // Create the dragula group (drag and drop)
-    this.dragulaService.createGroup('editable-list', {
-      moves: (_el, _container, handle) => {
-        return handle.classList.contains('handle');
-      }
-    });
     // getting the main accent color to color the chart.js (Temp until removing chart.js)
     // TODO handle value change
     this.activeAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor')).rgba;
@@ -400,17 +388,6 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
       this.settings.initialSync();
       this.doRefresh();
     });
-  }
-
-  ngAfterViewInit() {
-    this.shownDashboardSections.forEach(dragElementId => { // render the elements into the view based on the order in local storage
-      this.renderer.appendChild(this.container.nativeElement, document.getElementById(dragElementId));
-    });
-  }
-
-  ngOnDestroy() {
-    // Destroy the edit list when page is destroyed
-    this.dragulaService.destroy('editable-list');
   }
 
   doRefresh(refresher?) {
@@ -514,23 +491,6 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     await modal.onDidDismiss();
   }
 
-  // DRAG AND DROP FUNCTIONS (DASHBOARD CUSTOMIZATION)
-  toggleReorderingMode() { // enable/disable edit mode
-    if (this.editableList === 'editable-list') {
-      this.editableList = null;
-      this.saveArrayOrderInLocalStorage();
-    } else {
-      this.editableList = 'editable-list';
-      this.dragulaModelArray = this.shownDashboardSections; // set the dragula modal array to the same value coming from local storage
-    }
-
-    // PREVENT SCROLLING ON MOBILE PHONES WHEN MOVING CARDS
-    const handles = document.querySelectorAll('.handle');
-    /* handle scroll */
-    handles.forEach(element => {
-      element.addEventListener('touchmove', event => event.preventDefault());
-    });
-  }
 
   removeSectionFromDashboard(sectionName: string) {
     const index = this.shownDashboardSections.indexOf(sectionName);
@@ -548,20 +508,6 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
       this.shownDashboardSections.splice(0, 0, section);
     });
   }
-
-  saveArrayOrderInLocalStorage() {
-    // Store data in local storage
-    const itemsToStore = [];
-    this.dragulaModelArray.forEach(arrayEl => {
-      this.shownDashboardSections.forEach(shownDashboardSection => {
-        if (arrayEl === shownDashboardSection) {
-          itemsToStore.push(arrayEl);
-        }
-      });
-    });
-    this.settings.set('dashboardSections', itemsToStore);
-  }
-
 
   // PROFILE AND GREETING MESSAGE FUNCTIONS
   getProfile(refresher: boolean) {
