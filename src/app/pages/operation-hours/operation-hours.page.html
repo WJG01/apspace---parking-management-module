@@ -16,7 +16,7 @@
   <div class="glob-conatiner">
     <ng-container *ngIf="quixCompanies$ | async as quixCompanies; else loadingTheFile">
       <ng-container *ngIf="quixCompanies.length > 0; else noData">
-        <ion-segment [(ngModel)]="selectedSegment" (ngModelChange)="segmentValueChanged()">
+        <ion-segment mode="md" [(ngModel)]="selectedSegment" (ngModelChange)="segmentValueChanged()">
           <ion-segment-button *ngFor="let company of quixCompanies" [value]="company.company_id">{{company.company_id}}
           </ion-segment-button>
         </ion-segment>
