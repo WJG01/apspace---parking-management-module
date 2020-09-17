@@ -84,8 +84,8 @@
                     <ion-row class="ion-margin-top">
                       <ion-col size="12" class="ion-text-center ion-no-padding">
                         <ng-container *ngIf="studentCourses$ | async as courses; else loadingCources">
-                          <ion-button *ngFor="let course of courses"
-                            [color]="selectedIntake === course.INTAKE_CODE ? 'success' : 'primary'"
+                          <ion-button *ngFor="let course of courses" color="success"
+                            [fill]="selectedIntake === course.INTAKE_CODE ? 'solid' : 'outline'"
                             (click)="getStudentResultsForStaff(studentProfile, course.INTAKE_CODE)">
                             {{course.INTAKE_CODE}}
                           </ion-button>
@@ -97,7 +97,8 @@
                         </ng-template>
                       </ion-col>
                       <ion-col size="10" offset="1" *ngIf="studentSelected && intakeSelected">
-                        <ion-button class="ion-margin-top" expand="block" color="danger" (click)="generateInterimPDF()">
+                        <ion-button class="ion-margin-top" expand="block" color="primary"
+                          (click)="generateInterimPDF()">
                           Interim Transcript
                           <ion-icon name="print" slot="end"></ion-icon>
                         </ion-button>
