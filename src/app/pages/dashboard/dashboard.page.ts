@@ -925,7 +925,6 @@ export class DashboardPage implements OnInit {
   // APCARD FUNCTIONS
   getTransactions(refresher) {
     return this.ws.get<Apcard[]>('/apcard/', refresher).pipe(
-      map(transactions => this.signTransactions(transactions)),
       tap(transactions => this.analyzeTransactions(transactions)),
       tap(transactions => this.getCurrentApcardBalance(transactions))
     );
@@ -968,16 +967,6 @@ export class DashboardPage implements OnInit {
     // plot graph
     this.apcardChart.data.datasets[0].data = this.monthlyData.cr[now.getFullYear()];
     this.apcardChart.data.datasets[1].data = this.monthlyData.dr[now.getFullYear()];
-  }
-
-  signTransactions(transactions: Apcard[]): Apcard[] {
-    transactions.forEach(transaction => {
-      if (transaction.ItemName !== 'Top Up') {
-        // always make it negative (mutates cached value)
-        transaction.SpendVal = -Math.abs(transaction.SpendVal);
-      }
-    });
-    return transactions;
   }
 
   // FINANCIALS FUNCTIONS

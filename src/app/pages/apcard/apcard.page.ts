@@ -66,17 +66,6 @@ export class ApcardPage implements OnInit {
     return null;
   }
 
-  /** Negate spend value for top ups. */
-  signTransactions(transactions: Apcard[]): Apcard[] {
-    transactions.forEach(transaction => {
-      if (transaction.ItemName !== 'Top Up') {
-        // always make it negative (mutates cached value)
-        transaction.SpendVal = -Math.abs(transaction.SpendVal);
-      }
-    });
-    return transactions;
-  }
-
   getAbsoluteValue(num: number): number {
     return Math.abs(num);
   }
@@ -84,7 +73,6 @@ export class ApcardPage implements OnInit {
   doRefresh(refresher?) {
     this.isLoading = true;
     this.transaction$ = this.ws.get<Apcard[]>('/apcard/', refresher).pipe(
-      map(transactions => this.signTransactions(transactions)),
       tap(transactions => this.transactions = transactions),
       finalize(() => refresher && refresher.target.complete()),
       finalize(() => (this.isLoading = false))
