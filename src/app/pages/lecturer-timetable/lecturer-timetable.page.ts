@@ -29,17 +29,11 @@ export class LecturerTimetablePage implements OnInit {
   selectedDate: Date;
   availableDate: Date[];
   availableDays: string[]; // wday[d.getDay()] for availableDate
-  intakeLabels: string[] = [];
-  intakeSelectable = true;
+
   viewWeek: boolean; // weekly or daily display
-  show2ndToolbar = false;
-  showAttendixFeature = false;
+
   comingFromTabs = this.router.url.split('/')[1].split('/')[0] === 'tabs';
 
-  room: string;
-  intake: string;
-
-  lecturerName: string;
   lecturerCode: string;
 
   constructor(
@@ -107,7 +101,6 @@ export class LecturerTimetablePage implements OnInit {
   doRefresh(refresher?: IonRefresher) {
     this.timetable$ = this.ws.get<StaffProfile[]>('/staff/profile', { caching: 'cache-only' }).pipe(
       tap(profile => {
-        this.lecturerName = profile[0].FULLNAME;
         this.lecturerCode = profile[0].CODE;
       }),
       switchMap(([{ ID }]) => this.ws.get<LecturerTimetable[]>(`/lecturer-timetable/v2/${ID}`, { auth: false })),
@@ -164,12 +157,6 @@ export class LecturerTimetablePage implements OnInit {
   }
 
   quickAttendnace(moduleId: string, date: string, intakes: string, startTime: string, endTime: string) {
-    console.log('sending the data');
-    console.log('moduleId', moduleId);
-    console.log('date', this.datePipe.transform(date, 'yyyy-MM-dd'));
-    console.log('intakes', intakes);
-    console.log('startTime', this.datePipe.transform(startTime, 'hh:mm a'));
-    console.log('endTime', this.datePipe.transform(endTime, 'hh:mm a'));
     const navigationExtras: NavigationExtras = {
       state: {
         moduleId,

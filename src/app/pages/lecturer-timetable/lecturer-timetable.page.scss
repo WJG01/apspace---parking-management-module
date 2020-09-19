@@ -1,93 +1,31 @@
 ion-card {
   ion-card-content ion-icon {
-    vertical-align: -2.5px;
-    padding-left: 4px;
-    padding-right: 8px;
+    vertical-align: -1.1px;
+    padding-left: 0px;
+    padding-right: 2px;
   }
 
   ion-card-content a {
-    text-decoration: none;
-  }
+    color: var(--ion-text-color);
 
-  .freeTime {
-    --background: var(--success-color) !important;
-    --color: #ffffff !important;
+    &:hover {
+      color: var(--ion-color-primary);
+    }
   }
 
   ion-card-header {
-    padding: 9px 12px 9px 12px;
-    margin-bottom: 10px;
-  }
-
-  &.card-special {
-    margin-top: 10px !important;
-    margin-bottom: 1px !important;
-    &.title {
-      border-radius: 10px 10px 0 0;
-    }
+    padding-bottom: 5px;
   }
 }
 
-ion-segment-button {
-  // Fit all week days without scrolling
-  --padding-end: 0 !important;
-  --padding-start: 0 !important;
-  --margin-start: 0 !important;
-  --margin-end: 100 !important;
-  min-width: 50px !important;
+ion-segment {
+  --background: var(--ion-color-light);
 }
 
-.segment-scrollable {
-  overflow-x: auto !important;
-  justify-content: center;
-}
-
-ion-segment.week-segment {
-  margin-bottom: 30px;
-  background: var(--tertiary-bg-color);
-  --background: var(--tertiary-bg-color);
+.small-margin-bottom{
+  margin-bottom: 7px;
 }
 
 .table-item:nth-child(odd) {
-  --background: var(--main-bg-color) !important;
-}
-
-.table-top {
-  display: none;
-}
-
-.hide-on-print-table-flex-on-card {
-  display: flex;
-}
-
-.flex-on-print-table-hide-on-card {
-  display: none;
-}
-
-.margin-auto{
-  margin: auto !important;
-}
-
-@media (min-width: 576px) {
-  .marker {
-    display: none;
-  }
-
-  .hide-on-print-table-flex-on-card {
-    display: none;
-  }
-
-  .flex-on-print-table-hide-on-card {
-    display: flex;
-  }
-
-  .table-top {
-    display: block;
-    visibility: visible;
-    padding-bottom: 4px !important;
-  }
-
-  .card-side {
-    border-left: none !important;
-  }
+  --background: var(--ion-background-color) !important;
 }
