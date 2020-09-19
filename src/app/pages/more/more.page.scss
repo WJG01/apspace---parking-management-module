@@ -2,11 +2,11 @@ ion-avatar {
   --border-radius: 0 !important;
 }
 
-.white-color-text{
+.menu-color-text{
   color: var(--ion-more-page-light-color);
 }
 
-.white-color-background{
+.menu-color-background{
   --color: var(--ion-more-page-light-color);
   --border-color: var(--ion-more-page-light-color);
 }
@@ -138,8 +138,8 @@ ion-col.menu-item{
 
 .favorite-item-background {
   --background: none !important;
-  --border-color: var(--ion-color-light) !important;
-  --detail-icon-color: var(--ion-color-light) !important;
+  --border-color: var(--ion-more-page-light-color) !important;
+  --detail-icon-color: var(--ion-more-page-light-color) !important;
 }
 
 .no-background {

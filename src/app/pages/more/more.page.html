@@ -29,10 +29,10 @@
             <div *ngIf="!editMode && (fav | byItem: term) as filteredFavMenu; else onEditFav">
               <ion-card class="ion-no-margin favorite-background-color">
                 <ion-card-header class="no-background">
-                  <ion-card-title color="light">
+                  <ion-card-title class="menu-color-text">
                     <div class="flex-fav-header">
                       <h3 class="ion-no-margin">Favorite</h3>
-                      <ion-button (click)="enableEditMode()" fill='outline' color="light">
+                      <ion-button (click)="enableEditMode()" fill='outline' class="menu-color-background">
                         EDIT
                         <ion-icon name="star"></ion-icon>
                       </ion-button>
@@ -53,7 +53,7 @@
                           <ion-avatar slot="start">
                             <img [src]="item.img">
                           </ion-avatar>
-                          <ion-label color="light" class="ion-text-wrap">
+                          <ion-label class="ion-text-wrap menu-color-text">
                             <h2>{{ item.title }}</h2>
                           </ion-label>
                         </ion-item>
@@ -61,7 +61,7 @@
                     </ion-item-group>
                     <ng-template #noFav>
                       <ng-container *ngIf="!term; else noSearchResults">
-                        <p class="ion-margin-top ion-margin-bottom ion-text-center ion-padding">
+                        <p class="ion-margin-top ion-margin-bottom ion-text-center ion-padding menu-color-text">
                           Click on edit button and add items now to your favorite menu :)
                         </p>
                       </ng-container>
@@ -139,13 +139,13 @@
           </ion-col>
           <ion-col class="ion-padding-vertical">
             <h5 class="ion-text-center ion-no-margin">
-              <ion-text class="white-color-text">
+              <ion-text class="menu-color-text">
                 Favorite
               </ion-text>
             </h5>
           </ion-col>
           <ion-col class="ion-text-end">
-            <ion-button (click)="enableEditMode()" fill='outline' class="white-color-background">
+            <ion-button (click)="enableEditMode()" fill='outline' class="menu-color-background">
               EDIT
               <ion-icon name="star" slot="end"></ion-icon>
             </ion-button>
@@ -165,7 +165,7 @@
             <ion-col size="12">
               <ng-container *ngIf="!term; else noSearchResults">
                 <p class="ion-margin-top ion-margin-bottom ion-text-center ion-padding">
-                  <ion-text color="light">
+                  <ion-text class="menu-color-text">
                     Click on edit button and add items now to your favorite menu :)
                   </ion-text>
                 </p>
@@ -209,11 +209,11 @@
               </ion-avatar>
 
               <h5 class="ion-text-start ion-padding ion-no-margin">
-                <ion-text class="white-color-text">
+                <ion-text class="menu-color-text">
                   {{ group.key }}
                 </ion-text>
               </h5>
-              <ion-icon class="white-color-text" slot="end"
+              <ion-icon class="menu-color-text" slot="end"
                 [name]="keyList.includes(group.key) ? 'chevron-up-outline' : 'chevron-down-outline'">
               </ion-icon>
             </ion-item>
