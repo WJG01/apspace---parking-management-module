@@ -6,10 +6,6 @@ ion-avatar {
   }
 }
 
-.margin-auto{
-  margin: auto;
-}
-
 .event-calendar {
   font-size: 14px;
   overflow: hidden;
@@ -17,33 +13,6 @@ ion-avatar {
 
 .event {
   text-decoration: none;
-}
-
-.text-color {
-  color: var(--ion-text-color);
-}
-
-.primary-text {
-  color: var(--ion-color-primary);
-}
-
-.success-text {
-  color: var(--ion-color-success);
-}
-
-.warning-text {
-  color: var(--ion-color-warning);
-}
-
-.danger-text {
-  color: var(--ion-color-danger);
-}
-
-.day {
-  padding: 15px;
-  font-weight: bold;
-  color: var(--ion-text-color);
-  background-color: var(--ion-background-color);
 }
 
 .event-container {

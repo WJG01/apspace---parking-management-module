@@ -36,8 +36,12 @@
                   <ion-col size="12" class="ion-text-center">
                     <ion-card-header class="ion-no-padding ion-padding-top">
                       <ion-card-title>
-                        <h5>{{staff.FULLNAME}}</h5>
-                        <h5 class="primary-text">{{staff.TITLE}}</h5>
+                        <ion-text color="primary">
+                          <h5 class="ion-no-margin glob-text-bold">{{staff.FULLNAME}}</h5>
+                        </ion-text>
+                        <ion-text color="tertiary">
+                          {{staff.TITLE}}
+                        </ion-text>
                       </ion-card-title>
                       <ion-card-subtitle>
                         <p *ngIf="staff.LOCATION">
@@ -54,7 +58,7 @@
                         </p>
                         <p>
                           Total Available Slots:
-                          <span class="success-text">{{totalAvailableSlots === -1 ? '--' : totalAvailableSlots}}</span>
+                          <ion-text [color]="totalAvailableSlots > 0 ? 'success' : 'danger'">{{totalAvailableSlots === -1 ? '--' : totalAvailableSlots}}</ion-text>
                         </p>
                       </ion-card-subtitle>
                     </ion-card-header>
@@ -87,7 +91,9 @@
             <ion-card>
               <ion-card-header>
                 <ion-card-title>
-                  <h5 class="warning-text">Data is filtered!</h5>
+                  <ion-text color="warning">
+                    <h5 class="ion-no-margin">Data is filtered!!</h5>
+                  </ion-text>
                 </ion-card-title>
               </ion-card-header>
               <ion-card-content>
@@ -95,31 +101,34 @@
                   You have filtered the data to show only the slots opened on <span
                     class="glob-text-bold">{{dateToFilter | date : 'EEEE, dd MMMM y'}}</span>
                 </p>
-                <p class="danger-text glob-text-bold" style="text-decoration: underline;"
-                  (click)="dateToFilter = ''">
+                <ion-button color="danger" fill="clear" size="small" (click)="dateToFilter = ''">
                   Clear Filters and Show All Slots
-                </p>
+                  <ion-icon name="close-circle" slot="end"></ion-icon>
+                </ion-button>
               </ion-card-content>
             </ion-card>
           </ng-container>
         </ion-col>
-  
+
         <ion-col size="12" size-md="6" size-lg="7">
           <ng-container *ngIf="(slots$ | async) as allSlotsGroupedByMonthYear; else loadingSlots">
             <ng-container *ngIf="((allSlotsGroupedByMonthYear | keyvalue) || []).length; else noSlots">
               <ng-container *ngFor="let slotsForMonthYear of allSlotsGroupedByMonthYear | keyvalue">
                 <ion-card>
-                  <ion-card-header class="ion-padding-start">
+                  <ion-card-header color="primary">
                     <ion-card-title>
-                      <h5 style="display: inline-block" class="text-color ion-no-margin">
-                        {{ slotsForMonthYear.key | date: 'MMMM y' }} </h5>
+                      {{ slotsForMonthYear.key | date: 'MMMM y' }}
                     </ion-card-title>
                   </ion-card-header>
                   <ion-card-content class="ion-no-padding">
                     <div class="event-calendar">
                       <div class="event-list"
                         *ngFor="let slotsGroupedbyDay of slotsForMonthYear.value | filterSlotsByDay: dateToFilter | keyvalue">
-                        <h2 class="day">{{slotsGroupedbyDay.key | date: 'EEEE, dd MMMM'}}</h2>
+                        <ion-item-divider color="light">
+                          <ion-label color="secondary">
+                            <h2>{{slotsGroupedbyDay.key | date: 'EEEE, dd MMMM'}}</h2>
+                          </ion-label>
+                        </ion-item-divider>
                         <div class="event" *ngFor="let slot of slotsGroupedbyDay.value.items | keyvalue">
                           <div class="event-container" [ngClass]="{
                                                 'booked': slot.value.status == 'Booked',
@@ -130,7 +139,8 @@
                               <ion-row class="ion-align-items-center">
                                 <ion-col size="9" size-lg="10">
                                   <span class="title">
-                                    {{slot.value.start_time | dateWithTimezone: "time"}} - {{slot.value.end_time | dateWithTimezone: "time"}}
+                                    {{slot.value.start_time | dateWithTimezone: "time"}} -
+                                    {{slot.value.end_time | dateWithTimezone: "time"}}
                                   </span>
                                   <span class="description">
                                     <ion-icon name="pin"></ion-icon>
@@ -164,7 +174,7 @@
                 </ion-card-content>
               </ion-card>
             </ng-template>
-  
+
           </ng-container>
           <ng-template #loadingSlots>
             <ion-card>
