@@ -48,7 +48,7 @@
                             [name]="(fav | itemInFav: item) ? 'star' : 'star-outline'" class="colored-text"></ion-icon>
                         </div>
                         <ion-item [lines]="!last ? 'inset' : 'none'" detail="true" button="true"
-                          class="cursor-pointer favorite-item-background"
+                          class="favorite-item-background" tappable="true"
                           (click)="openPage(item.url, item.attachTicket)">
                           <ion-avatar slot="start">
                             <img [src]="item.img">
@@ -100,7 +100,7 @@
                           <ion-icon (click)="addToFav(item.id)"
                             [name]="(fav | itemInFav: item) ? 'star' : 'star-outline'" class="colored-text"></ion-icon>
                         </div>
-                        <ion-item [lines]="!last ? 'inset' : 'none'" detail="true" button="true" class="cursor-pointer"
+                        <ion-item [lines]="!last ? 'inset' : 'none'" detail="true" button="true" tappable="true"
                           (click)="openPage(item.url, item.attachTicket)">
                           <ion-avatar slot="start">
                             <img [src]="item.img">
@@ -153,7 +153,7 @@
           <ng-container *ngIf="filteredFavMenu.length > 0; else noFavCard">
             <div class="card-view-masonry-list">
               <div *ngFor="let item of filteredFavMenu" (click)="openPage(item.url)"
-                class="card-view-masonry-item custom-card cursor-pointer">
+                class="card-view-masonry-item custom-card" tappable="true">
                 <div>
                   <img [src]="item.img">
                   <p class="page-title">{{ item.title }}</p>
@@ -203,7 +203,7 @@
         <!-- MENU -->
         <ion-row *ngFor="let group of menuFiltered | fuse:term:options | byGroup | keyvalue:noop;">
           <ion-col size="12">
-            <ion-item class="cursor-pointer" lines="none" color="none" (click)="showMore(group.key)">
+            <ion-item tappable="true" lines="none" color="none" (click)="showMore(group.key)">
               <ion-avatar slot="start">
                 <img [src]="keyIcon[group.key]">
               </ion-avatar>
@@ -224,7 +224,7 @@
               <ion-icon (click)="addToFav(item.id)" [name]="(fav | itemInFav: item) ? 'star' : 'star-outline'"
                 class="colored-text"></ion-icon>
             </div>
-            <div *ngIf="item.title !== 'Logout'" (click)="openPage(item.url)" class="custom-card cursor-pointer">
+            <div *ngIf="item.title !== 'Logout'" (click)="openPage(item.url)" class="custom-card" tappable="true">
               <div class="flex-content">
                 <img [src]="item.img">
                 <p class="page-title">{{ item.title }}</p>
@@ -235,7 +235,7 @@
         </ion-row>
         <ion-row *ngIf="!editMode">
           <ion-col>
-            <ion-item class="cursor-pointer" lines="none" color="none" (click)="openPage('logout')">
+            <ion-item tappable="true" lines="none" color="none" (click)="openPage('logout')">
               <ion-avatar slot="start">
                 <img src="assets/img/log-out.png">
               </ion-avatar>
