@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { format } from 'date-fns';
 import { Observable } from 'rxjs';
-import { finalize, map, tap } from 'rxjs/operators';
+import { finalize, tap } from 'rxjs/operators';
 
 import { WsApiService } from 'src/app/services';
 import { Apcard } from '../../interfaces';
