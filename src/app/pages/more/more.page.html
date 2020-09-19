@@ -139,15 +139,15 @@
           </ion-col>
           <ion-col class="ion-padding-vertical">
             <h5 class="ion-text-center ion-no-margin">
-              <ion-text color="light">
+              <ion-text class="white-color-text">
                 Favorite
               </ion-text>
             </h5>
           </ion-col>
           <ion-col class="ion-text-end">
-            <ion-button (click)="enableEditMode()" fill='outline' color="light">
+            <ion-button (click)="enableEditMode()" fill='outline' class="white-color-background">
               EDIT
-              <ion-icon name="star"></ion-icon>
+              <ion-icon name="star" slot="end"></ion-icon>
             </ion-button>
           </ion-col>
           <ng-container *ngIf="filteredFavMenu.length > 0; else noFavCard">
@@ -203,17 +203,17 @@
         <!-- MENU -->
         <ion-row *ngFor="let group of menuFiltered | fuse:term:options | byGroup | keyvalue:noop;">
           <ion-col size="12">
-            <ion-item tappable="true" lines="none" color="none" (click)="showMore(group.key)">
+            <ion-item tappable="true" lines="none" class="transparent-item" (click)="showMore(group.key)">
               <ion-avatar slot="start">
                 <img [src]="keyIcon[group.key]">
               </ion-avatar>
 
               <h5 class="ion-text-start ion-padding ion-no-margin">
-                <ion-text color="light">
+                <ion-text class="white-color-text">
                   {{ group.key }}
                 </ion-text>
               </h5>
-              <ion-icon color="light" slot="end"
+              <ion-icon class="white-color-text" slot="end"
                 [name]="keyList.includes(group.key) ? 'chevron-up-outline' : 'chevron-down-outline'">
               </ion-icon>
             </ion-item>
