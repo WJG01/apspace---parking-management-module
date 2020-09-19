@@ -2,14 +2,6 @@
   clear: both;
 }
 
-.glob-gradient-primary-background {
-  --background: #0093E9;
-  --background: linear-gradient(160deg, var(--ion-color-primary) 0%, var(--ion-color-secondary) 100%);
-  ion-card-title, ion-card-subtitle{
-    --color: #fff !important;
-  }
-}
-
 .glob-margin-auto {
   margin: auto !important;
 }
