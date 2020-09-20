@@ -108,7 +108,7 @@ export class ApcardPage implements OnInit, OnDestroy {
       componentProps: {
         transactions: this.transactions
       },
-      cssClass: 'custom-modal-style',
+      cssClass: 'glob-partial-page-modal',
     });
     await modal.present();
     await modal.onDidDismiss();
