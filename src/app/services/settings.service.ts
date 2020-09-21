@@ -56,7 +56,6 @@ const defaultData: Settings = {
   defaultVenue: '',
   scan: false,
   favoriteItems: [
-    'apcard',
     'classroom-finder',
     'e-forms',
     'fees',
