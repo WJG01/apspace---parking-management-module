@@ -6,16 +6,6 @@ import { MenuItem } from './menu.interface';
 export const menusRaw = [
   // START OF FINANCE
   {
-    id: 'apcard' as const,
-    title: 'APCard',
-    group: 'Finance',
-    url: 'apcard',
-    img: 'assets/img/apcard.png',
-    role: Role.Student | Role.Lecturer | Role.Admin,
-    tags: ['transactions', 'money', 'card', 'credit', 'expenses'],
-    parents: [],
-  },
-  {
     id: 'fees' as const,
     title: 'Fees',
     group: 'Finance',
@@ -575,16 +565,6 @@ export const menusRaw = [
     role: Role.Student | Role.Admin | Role.Lecturer,
     tags: ['marks', 'web results'],
     canAccess: true,
-    parents: [],
-  },
-  {
-    id: 'student-timetable' as const,
-    title: 'Timetable',
-    group: 'Academic & Enrollment',
-    url: 'student-timetable',
-    img: 'assets/img/timetable.png',
-    role: Role.Student | Role.Lecturer | Role.Admin,
-    tags: ['class', 'schedule', 'break'],
     parents: [],
   },
   // END OF Academic & Enrollment

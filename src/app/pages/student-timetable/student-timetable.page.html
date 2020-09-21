@@ -97,7 +97,7 @@
                         <ion-col size-xs="12" size-sm="6" size-md="3">
                           <p>
                             <ion-icon class="glob-text-bold" name="time-outline"></ion-icon>
-                            {{ timetable.TIME_FROM | timeParser }} - {{ timetable.TIME_TO | timeParser }}
+                            {{ timetable.TIME_FROM | timeParser : timeFormatChangeFlag }} - {{ timetable.TIME_TO | timeParser: timeFormatChangeFlag }}
                           </p>
                         </ion-col>
                         <ion-col size-xs="12" size-sm="6" size-md="4">

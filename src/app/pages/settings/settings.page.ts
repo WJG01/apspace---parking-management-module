@@ -4,6 +4,7 @@ import { Storage } from '@ionic/storage';
 import { Observable, combineLatest } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 
+import { NotifierService } from 'src/app/shared/notifier/notifier.service';
 import { SearchModalComponent } from '../../components/search-modal/search-modal.component';
 import { accentColors } from '../../constants';
 import { APULocation, APULocations, Role, StudentProfile, Venue } from '../../interfaces';
@@ -59,7 +60,8 @@ export class SettingsPage implements OnInit {
     private tt: StudentTimetableService,
     private ws: WsApiService,
     private alertCtrl: AlertController,
-    private plt: Platform
+    private plt: Platform,
+    private notifierService: NotifierService
   ) {
 
     this.settings.get$('menuUI').subscribe(value => this.menuUI = value);
@@ -113,6 +115,7 @@ export class SettingsPage implements OnInit {
 
   toggleTimeFormat() {
     this.settings.set('timeFormat', this.timeFormat);
+    this.notifierService.timeFormatUpdated.next('SUCCESS');
   }
 
   getLocations() {

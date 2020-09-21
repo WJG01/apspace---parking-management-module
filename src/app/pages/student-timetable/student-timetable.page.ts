@@ -1,13 +1,14 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { ActionSheetController, IonRefresher, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { formatISO } from 'date-fns';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, Subscription, combineLatest } from 'rxjs';
 import { finalize, map, tap } from 'rxjs/operators';
 
+import { NotifierService } from 'src/app/shared/notifier/notifier.service';
 import { SearchModalComponent } from '../../components/search-modal/search-modal.component';
 import { Role, StudentProfile, StudentTimetable } from '../../interfaces';
 import { SettingsService, StudentTimetableService, WsApiService } from '../../services';
@@ -19,7 +20,7 @@ import { ClassesPipe } from './classes.pipe';
   templateUrl: './student-timetable.page.html',
   styleUrls: ['./student-timetable.page.scss'],
 })
-export class StudentTimetablePage implements OnInit {
+export class StudentTimetablePage implements OnInit, OnDestroy {
   printUrl = 'https://api.apiit.edu.my/timetable-print/index.php';
   wday = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
@@ -92,6 +93,8 @@ export class StudentTimetablePage implements OnInit {
   room: string;
   intake: string;
   freeTime = false;
+  timeFormatChangeFlag: boolean;
+  notification: Subscription;
 
   constructor(
     private actionSheetCtrl: ActionSheetController,
@@ -104,9 +107,17 @@ export class StudentTimetablePage implements OnInit {
     private storage: Storage,
     private tt: StudentTimetableService,
     private ws: WsApiService,
+    private notifierService: NotifierService
   ) { }
 
   ngOnInit() {
+    this.notification = this.notifierService.timeFormatUpdated.subscribe(data => {
+      if (data && data === 'SUCCESS') {
+        this.timeFormatChangeFlag = !this.timeFormatChangeFlag;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+
     // select current day by default
     this.selectedDate = new Date();
     this.selectedDate.setHours(0, 0, 0, 0);
@@ -160,6 +171,10 @@ export class StudentTimetablePage implements OnInit {
     } else { // intake is defined
       this.doRefresh();
     }
+  }
+
+  ngOnDestroy() {
+    this.notification.unsubscribe();
   }
 
   presentActionSheet(labels: string[], handler: (_: string) => void) {
