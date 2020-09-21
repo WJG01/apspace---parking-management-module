@@ -209,10 +209,10 @@
                   <ion-item detail="true" button="true" lines="full" (click)="navigateToPage('change-password')">
                     <ion-label>Change APKey Password</ion-label>
                   </ion-item>
-                  <ion-item button="true" detail="true" lines="full" (click)="navigateToPage('change-webspace-password')">
+                  <ion-item *ngIf="!isStudent" button="true" detail="true" lines="full" (click)="navigateToPage('change-webspace-password')">
                     <ion-label>Change Webspace Password</ion-label>
                   </ion-item>
-                  <ion-item button="true" detail="true" lines="full" (click)="navigateToPage('reset-webspace-password')">
+                  <ion-item *ngIf="!isStudent" button="true" detail="true" lines="full" (click)="navigateToPage('reset-webspace-password')">
                     <ion-label>Reset Webspace ID Password</ion-label>
                   </ion-item>
                   <ion-item lines="none" detail="true" button="true" (click)="navigateToPage('set-security-questions')">
