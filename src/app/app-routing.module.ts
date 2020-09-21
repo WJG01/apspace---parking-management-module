@@ -189,7 +189,7 @@ const routes: Routes = [
     path: 'aplc-progress-report',
     canActivate: [AuthGuard],
     data: { role: Role.Admin | Role.Lecturer },
-    loadChildren: () => import('./pages/aplc-progress-report/aplc-progress-report.module').then(m => m.AplcProgressReportPageModule)
+    loadChildren: () => import('./pages/aplc-progression/aplc-progression.module').then(m => m.AplcProgressionPageModule)
   },
   {
     path: 'change-password',

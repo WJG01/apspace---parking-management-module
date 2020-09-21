@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Observable } from 'rxjs';
@@ -7,30 +8,44 @@ import { tap } from 'rxjs/operators';
 import { APLCClass, APLCClassDescription, APLCStudentBehaviour, APLCSubject } from 'src/app/interfaces';
 import { WsApiService } from 'src/app/services';
 
+
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
+
 @Component({
-  selector: 'app-view-progress-report',
-  templateUrl: './view-progress-report.page.html',
-  styleUrls: ['./view-progress-report.page.scss'],
+  selector: 'app-aplc-progression',
+  templateUrl: './aplc-progression.page.html',
+  styleUrls: ['./aplc-progression.page.scss'],
 })
-export class ViewProgressReportPage implements OnInit {
-  pdfObj = null; // used to generate report
-  classDescription: APLCClassDescription[] = [];
-  pdfStudentsList: any; // array of arrays (format required by the library)
+export class AplcProgressionPage implements OnInit {
+
   subjects$: Observable<APLCSubject[]>;
   classes$: Observable<APLCClass[]>;
-  scoreLegend$: Observable<any>; // keys are dynamic
-  descriptionLegend$: Observable<any>; // keys are dynamic
   classDescription$: Observable<APLCClassDescription[]>;
   studentsBehaviour$: Observable<APLCStudentBehaviour[]>;
+  scoreLegend$: Observable<any>; // keys are dynamic
+  descriptionLegend$: Observable<any>; // keys are dynamic
 
+  pdfStudentsList: any; // array of arrays (format required by the library)
   skeletons = new Array(6);
+  classDescription: APLCClassDescription[] = [];
+  pdfObj = null; // used to generate report
+  numberOfStudents = 0;
+  numberOfReportsSubmitted = 0;
+  loading: HTMLIonLoadingElement;
+  remarksLimit = 200;
+  scores = [1, 2, 3];
+  editMode = false;
+  term = '';
+  // ngModel
   subjectCode: string;
   classCode: string;
 
   constructor(
     private ws: WsApiService,
+    private alertCtrl: AlertController,
+    private toastCtrl: ToastController,
+    private loadingController: LoadingController
   ) { }
 
   ngOnInit() {
@@ -53,26 +68,35 @@ export class ViewProgressReportPage implements OnInit {
   }
 
   onClassCodeChange() {
+    this.numberOfStudents = 0;
+    this.numberOfReportsSubmitted = 0;
+    this.editMode = false;
     this.classDescription$ = this.ws.get<APLCClassDescription[]>(`/aplc/class-description?class_code=${this.classCode}`).pipe(
       tap(res => this.classDescription = res)
     );
     this.studentsBehaviour$ = this.ws.get<APLCStudentBehaviour[]>(`/aplc/student-behavior?class_code=${this.classCode}`).pipe(
+      tap(r => console.log('r ', r)),
       tap(_ => this.pdfStudentsList = [ // empty the list whenever there is an update
-       [
-        { text: 'Student Name', bold: true, style: 'tableHeader' },
-        { text: 'Student ID', bold: true, style: 'tableHeader', alignment: 'center' },
-        { text: 'Average Score', bold: true, style: 'tableHeader', alignment: 'center'},
-        { text: 'Remarks', bold: true, style: 'tableHeader' }
-      ]
+        [
+          { text: 'Student Name', bold: true, style: 'tableHeader' },
+          { text: 'Student ID', bold: true, style: 'tableHeader', alignment: 'center' },
+          { text: 'Average Score', bold: true, style: 'tableHeader', alignment: 'center' },
+          { text: 'Remarks', bold: true, style: 'tableHeader' }
+        ]
       ]),
       tap(res => res.forEach(student => {
-          const studentData = [
-            { text: student.STUDENT_NAME},
-            { text: student.STUDENT_NUMBER, alignment: 'center'},
-            { text: student.AVERAGE_BEH, alignment: 'center'},
-            { text: student.REMARK}
-          ];
-          this.pdfStudentsList.push(studentData);
+        const studentData = [
+          { text: student.STUDENT_NAME },
+          { text: student.STUDENT_NUMBER, alignment: 'center' },
+          { text: student.AVERAGE_BEH, alignment: 'center' },
+          { text: student.REMARK }
+        ];
+        this.pdfStudentsList.push(studentData);
+        this.numberOfStudents += 1;
+        if (+student.AVERAGE_BEH > 0) {
+          this.numberOfReportsSubmitted += 1;
+        }
+
       }))
     );
   }
@@ -276,6 +300,96 @@ export class ViewProgressReportPage implements OnInit {
     this.pdfObj = pdfMake.createPdf(docDefinition);
     this.pdfObj.download(pdfTitle + '.pdf');
 
+  }
+
+  submit(studentBehaviors: APLCStudentBehaviour[]) {
+    this.alertCtrl.create({
+      header: 'Confirm!',
+      message: 'You are about to update the students\' behaviors. Do you want to continue?',
+      cssClass: 'danger-alert',
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: () => { }
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            // START THE LOADING
+            let formValidFalg = true;
+            this.presentLoading();
+            console.log(studentBehaviors);
+            studentBehaviors.forEach(studentBehavior => {
+              if (
+                (studentBehavior.COMPLETING_BEH === 0 ||
+                  studentBehavior.CONCEPT_BEH === 0 ||
+                  studentBehavior.SOCIAL_BEH === 0 ||
+                  studentBehavior.ACADEMIC_BEH === 0) && (
+                  studentBehavior.COMPLETING_BEH !== 0 ||
+                  studentBehavior.CONCEPT_BEH !== 0 ||
+                  studentBehavior.SOCIAL_BEH !== 0 ||
+                  studentBehavior.ACADEMIC_BEH !== 0
+                ) // user submitted part of a student behavior only
+              ) {
+                formValidFalg = false;
+              }
+            });
+            if (formValidFalg) {
+              this.ws.put<any>('/aplc/student-behavior', {
+                body: studentBehaviors
+              }).subscribe(
+                {
+                  next: _ => {
+                    this.showToastMessage('Student behaviors has been updated successfully!', 'success');
+                  },
+                  error: _ => {
+                    this.showToastMessage('Something went wrong! please try again or contact us via the feedback page', 'danger');
+                  },
+                  complete: () => {
+                    this.dismissLoading();
+                    this.initData();
+                    this.editMode = false;
+                  }
+                }
+              );
+            } else {
+              this.dismissLoading();
+              this.showToastMessage('Once you start filling up the behavior for a student you must finish all his/her behaviors', 'danger');
+            }
+          }
+        }
+      ]
+    }).then(confirm => confirm.present());
+  }
+
+  async presentLoading() {
+    this.loading = await this.loadingController.create({
+      spinner: 'dots',
+      duration: 5000,
+      message: 'Please wait...',
+      translucent: true,
+    });
+    return await this.loading.present();
+  }
+
+  async dismissLoading() {
+    return await this.loading.dismiss();
+  }
+
+  showToastMessage(message: string, color: 'danger' | 'success') {
+    this.toastCtrl.create({
+      message,
+      duration: 7000,
+      position: 'top',
+      color,
+      animated: true,
+      buttons: [
+        {
+          text: 'Close',
+          role: 'cancel'
+        }
+      ],
+    }).then(toast => toast.present());
   }
 
 }
