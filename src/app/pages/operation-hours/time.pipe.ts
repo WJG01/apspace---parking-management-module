@@ -1,9 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { parse } from 'date-fns';
+
+import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-with-timezone.pipe';
 
 @Pipe({
   name: 'time'
 })
-export class TimePipe implements PipeTransform {
+export class TimePipe extends DateWithTimezonePipe implements PipeTransform {
 
   transform(value: any): any {
     let time = value.toString().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [value];
@@ -15,7 +18,8 @@ export class TimePipe implements PipeTransform {
       time[0] = +time[0] % 12 || 12;
     }
 
-    return time.join('');
+    const timeObject = parse(time.join(''), 'h:mm aa', new Date());
+    return super.transform(timeObject, 'time');
   }
 
 }
