@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { format } from 'date-fns';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 
 import { WsApiService } from 'src/app/services';
+import { NotifierService } from 'src/app/shared/notifier/notifier.service';
 import { Apcard } from '../../interfaces';
 import { PrintTransactionsModalPage } from './print-transactions-modal/print-transactions-modal';
 
@@ -14,7 +15,7 @@ import { PrintTransactionsModalPage } from './print-transactions-modal/print-tra
   templateUrl: './apcard.page.html',
   styleUrls: ['./apcard.page.scss'],
 })
-export class ApcardPage implements OnInit {
+export class ApcardPage implements OnInit, OnDestroy {
   transaction$: Observable<Apcard[]>;
   transactions: Apcard[];
   indecitor = false;
@@ -29,14 +30,25 @@ export class ApcardPage implements OnInit {
 
   todayDate = format(new Date(), 'dd MMM yyyy');
 
+  timeFormatChangeFlag: boolean;
+  notification: Subscription;
 
   constructor(
     private ws: WsApiService,
     private router: Router,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private notifierService: NotifierService,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
+    this.notification = this.notifierService.apCardUpdated.subscribe(data => {
+      if (data && data === 'SUCCESS') {
+        this.timeFormatChangeFlag = !this.timeFormatChangeFlag;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+
     this.indecitor = true;
   }
 
@@ -50,6 +62,10 @@ export class ApcardPage implements OnInit {
       this.doRefresh();
       this.indecitor = false;
     }
+  }
+
+  ngOnDestroy() {
+    this.notification.unsubscribe();
   }
 
   /** Generating header value (virtual scroll) */

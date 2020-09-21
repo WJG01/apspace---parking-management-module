@@ -116,6 +116,7 @@ export class SettingsPage implements OnInit {
   toggleTimeFormat() {
     this.settings.set('timeFormat', this.timeFormat);
     this.notifierService.timeFormatUpdated.next('SUCCESS');
+    this.notifierService.apCardUpdated.next('SUCCESS');
   }
 
   getLocations() {

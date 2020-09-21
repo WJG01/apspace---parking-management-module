@@ -5,7 +5,6 @@ import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-wit
 
 @Pipe({
   name: 'timeParser',
-  pure: false
 })
 export class TimeParserPipe extends DateWithTimezonePipe implements PipeTransform {
 
