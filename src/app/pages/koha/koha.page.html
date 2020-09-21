@@ -6,7 +6,7 @@
     <ion-title>Koha</ion-title>
   </ion-toolbar>
   <ion-toolbar *ngIf="(recentAdditions$ | async) as newAdditions; else loadingSegment">
-    <ion-segment [(ngModel)]="selectedSegment" class="segment">
+    <ion-segment [(ngModel)]="selectedSegment">
       <ion-segment-button value="checkouts">
         <ion-label>
           Checkout
@@ -44,19 +44,18 @@
   <div class="glob-container">
     <ion-grid>
       <ion-row>
-        <ion-col size-xs="12" size-md="3" push-md="9">
-          <ion-card class="fines">
+        <ion-col size-xs="12" size-md="4" push-md="8">
+          <ion-card>
             <ion-card-content>
               <ion-row style="text-align: center;">
                 <ion-col>
-                  <ion-text>
+                  <div *ngIf="fine$ | async as fine; else loading">
                     <h3 class="glob-text-bold" style="font-size: 20px; padding-bottom: 5px;"
-                      *ngIf="fine$ | async as fine; else loading"
                       [ngStyle]="{'color': (fine === 0 ) ? '#2dd36f' : '#eb445a'}">
                       RM{{ fine }}
                     </h3>
                     <p>Library Fine</p>
-                  </ion-text>
+                  </div>
                 </ion-col>
               </ion-row>
               <ng-template #loading>
@@ -68,7 +67,7 @@
           </ion-card>
         </ion-col>
 
-        <ion-col size-xs="12" size-md="9" pull-md="3">
+        <ion-col size-xs="12" size-md="8" pull-md="4">
           <ng-container [ngSwitch]="selectedSegment">
 
             <ng-container *ngSwitchCase="'checkouts'">
