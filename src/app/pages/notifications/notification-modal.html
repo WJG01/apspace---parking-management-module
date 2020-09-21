@@ -28,11 +28,11 @@
             <p>
 
                 <ion-text color="primary"><span>Sent on:</span></ion-text><span class="glob-text-bold">
-                    {{message.sent_on | date: 'EEEE, dd MMMM y'}}</span>
+                    {{message.sent_on | dateWithTimezone: 'EEEE, dd MMMM y'}}</span>
             </p>
             <p>
                 <ion-text color="primary"><span>Sent at:</span></ion-text> <span class="glob-text-bold">
-                    {{ message.sent_on | date : 'hh:mm aaa' }}</span>
+                    {{ message.sent_on | dateWithTimezone: 'time' }}</span>
             </p>
         </ion-card-content>
     </ion-card>

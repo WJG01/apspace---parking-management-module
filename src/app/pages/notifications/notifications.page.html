@@ -55,7 +55,7 @@
                           {{message.title}}
                         </h3>
                         <p>
-                          {{ message.sent_on | dateWithTimezone: 'dd MMMM y hh:mm aaa' }}
+                        {{ message.sent_on | dateWithTimezone: 'dd MMMM y' }} {{ message.sent_on | dateWithTimezone: 'time' }}
                         </p>
                       </ion-label>
                       <ion-badge
