@@ -567,6 +567,16 @@ export const menusRaw = [
     canAccess: true,
     parents: [],
   },
+  {
+    id: 'student-timetable' as const,
+    title: 'Student Timetable',
+    group: 'Academic & Enrollment',
+    url: 'student-timetable',
+    img: 'assets/img/timetable.png',
+    role: Role.Lecturer | Role.Admin,
+    tags: ['class', 'schedule', 'break'],
+    parents: [],
+  },
   // END OF Academic & Enrollment
 
   // START OF Career Centre & Corporate Training
@@ -721,4 +731,4 @@ export const menusRaw = [
 /* tslint:enable:no-bitwise */
 
 export const menus: MenuItem[] = menusRaw;
-export const menusTitle = menus.reduce((acc, menu) => ({...acc, [menu.id]: menu.title}), {});
+export const menusTitle = menus.reduce((acc, menu) => ({ ...acc, [menu.id]: menu.title }), {});
