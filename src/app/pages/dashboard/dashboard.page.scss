@@ -19,6 +19,14 @@ ion-col[scrolly=true] {
   .avatar {
     width: 100px;
     height: 100px;
+    transition: 0.5s all;
+    border: 1px solid var(--ion-color-light);
+    padding: 1px;
+
+    &:hover{
+      padding: 3px;
+      border: 1px solid var(--ion-color-primary);
+    }
   }
 
   .notification-badge {
