@@ -6,19 +6,13 @@
   padding-left: 15px;
 }
 
-@media screen and (max-width: 756px) {
+@media screen and (max-width: 991px) {
   .glob-container {
     padding-right: 0px !important;
     padding-left: 0px !important;
     margin-right: 0px !important;
     margin-left: 0px !important;
     width: 100% !important;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .glob-container {
-    width: 750px;
   }
 }
 
@@ -30,6 +24,6 @@
 
 @media screen and (min-width: 1200px) {
   .glob-container {
-    width: 1170px;
+    width: 1280px;
   }
 }
