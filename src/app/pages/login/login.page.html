@@ -1,7 +1,12 @@
 <ion-content>
 
+  <ng-template #systemName let-mobile>
+    <h1 [class.glob-system-title]="mobile === 'web'" [class.ion-text-end]="mobile === 'web'"
+      [class.mobile]="mobile === 'mobile'"><span>APS</span>pace</h1>
+  </ng-template>
+
   <ng-container *ngIf="plt.is('cordova'); else webVersion">
-    <ion-grid class="main-grid ion-no-padding">
+    <ion-grid class="main-grid ion-no-padding mobile">
       <!-- Logo -->
       <ion-row header class="ion-align-items-start ion-align-items-stretch">
         <ion-col size="10" offset="1" size-md="6" offset-md="3" size-lg="4" offset-lg="4">
@@ -12,7 +17,7 @@
           <form (ngSubmit)="login()" #loginForm="ngForm" class="ion-no-padding">
             <ion-row class="ion-align-items-start">
               <ion-col class="title-text-wrapper" size="12">
-                <h1><strong>APSpace</strong></h1>
+                <ng-container *ngTemplateOutlet="systemName; context: {$implicit: 'mobile'}"></ng-container>
                 <h2>Your digital university companion</h2>
               </ion-col>
             </ion-row>
@@ -98,7 +103,7 @@
               </ion-col>
               <ion-col class="glob-margin-auto ion-padding-end ion-padding-start" size="10" offset="1" offset-sm=""
                 size-sm="7" size-md="8" size-lg="9">
-                <h1 class="glob-system-title ion-text-end"><span>APS</span>pace</h1>
+                <ng-container *ngTemplateOutlet="systemName; context: {$implicit: 'web'}"></ng-container>
               </ion-col>
             </ion-row>
           </ion-grid>
@@ -110,7 +115,8 @@
           <ion-grid class="ion-no-padding">
             <ion-row>
               <ion-col class="ion-no-padding ion-padding-start ion-padding-end ion-text-right">
-                <ion-button size="small" fill="clear" class="always-light-button" (click)="showLoginSection = !showLoginSection">
+                <ion-button size="small" fill="clear" class="always-light-button"
+                  (click)="showLoginSection = !showLoginSection">
                   Login
                   <ion-icon slot="end" name="person-circle"></ion-icon>
                 </ion-button>
@@ -395,7 +401,7 @@
                               </div>
                             </div>
                             <div class="copy">
-                              <h1>{{department.dept_name}}</h1>
+                              <h2>{{department.dept_name}}</h2>
                               <h3 *ngIf="department.dept_email" [style.color]="department.dept_icon_color">
                                 {{department.dept_email}}</h3>
                               <ion-grid>
