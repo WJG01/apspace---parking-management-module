@@ -100,6 +100,7 @@ export class NotificationsPage implements OnInit {
     this.openedMessages.push(message.message_id);
     this.notificationService.sendRead(message.message_id).subscribe();
     await modal.present();
+    this.doRefresh();
     await modal.onDidDismiss();
   }
 
