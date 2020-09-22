@@ -144,7 +144,24 @@
                       </ion-input>
                     </div>
                     <div class="login-button-container">
-                      <ion-button color="success" type="submit" expand="block">Login</ion-button>
+                      <ion-button expand="block" type="submit"
+                        [attr.color]="userDidLogin && userUnauthenticated ? 'danger' : 'success'"
+                        [class.btn_center]="userDidLogin && (userUnauthenticated || loginProcessLoading || userAuthenticated)">
+                        <ng-container *ngIf="!userDidLogin">LOGIN</ng-container>
+                        <!-- LOADING -->
+                        <ion-icon *ngIf="!userDidLogin" name="log-in-outline" slot="end"></ion-icon>
+                        <ng-container *ngIf="userDidLogin && loginProcessLoading">
+                          <loading-spinner></loading-spinner>
+                        </ng-container>
+                        <!-- USER ENTER VALID CREDENTIALS -->
+                        <ng-container *ngIf="userDidLogin && userAuthenticated">
+                          <ion-icon name="happy-outline" slot="end" size="large"></ion-icon>
+                        </ng-container>
+                        <!-- USER ENTER INVALID CREDENTIALS -->
+                        <ng-container *ngIf="userDidLogin && userUnauthenticated">
+                          <ion-icon name="sad-outline" slot="end" size="large"></ion-icon>
+                        </ng-container>
+                      </ion-button>
                     </div>
                   </div>
                 </form>
