@@ -151,7 +151,7 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
     this.viewWeek = this.settings.get('viewWeek');
 
     // default intake to student current intake
-    if (this.intake === undefined) {
+    if (intake !== undefined && intake !== null) {
       this.storage.get('role').then((role: Role) => {
         // tslint:disable-next-line: no-bitwise
         if (role & Role.Student) { // intake is not defined & user role is student
