@@ -51,7 +51,7 @@
       </ion-tab-button>
     </ion-tab-bar>
 
-    <div class="menu" [class.with-border-top]="!smallScreen" [class.with-border-bottom]="smallScreen"
+    <div class="menu" [class.large-device-menu]="!smallScreen" [class.small-device-menu]="smallScreen"
       [style.display]="term && searching ? 'block' : 'none'">
       <ion-grid>
         <ion-row class="ion-justify-content-center">

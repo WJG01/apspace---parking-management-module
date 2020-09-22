@@ -8,17 +8,15 @@
   padding: 0 32px;
   width: 100%;
 
-
-  &.with-border-top {
+  &.large-device-menu {
     border-top: 56px solid transparent;
   }
 
-
-  &.with-border-bottom {
-    border-bottom: 56px solid transparent;
+  &.small-device-menu {
+    z-index: 2000;
   }
 
-  &.search-bar-open{
+  &.search-bar-open {
     max-height: 85vh;
   }
 
