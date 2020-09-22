@@ -196,6 +196,15 @@ export class AddFreeSlotPage implements OnInit {
         const nextDate = formatISO(add(Date.parse(startDate), {days: 1}), { representation: 'date' });
         startDate = nextDate;
       }
+
+      if (body.length > 200) {
+        this.showToastMessage(
+          'You only allow to add maximum 200 slots in one time.',
+          'danger'
+        );
+
+        return;
+      }
     }
 
     this.venues$.subscribe(venues => {
@@ -229,7 +238,8 @@ export class AddFreeSlotPage implements OnInit {
                 this.presentLoading();
                 this.ws
                   .post<any>('/iconsult/slot?', {
-                    body
+                    body,
+                    timeout: 30000
                   })
                   .subscribe({
                     next: () => {
@@ -296,7 +306,7 @@ export class AddFreeSlotPage implements OnInit {
   async presentLoading() {
     this.loading = await this.loadingController.create({
       spinner: 'dots',
-      duration: 5000,
+      duration: 30000,
       message: 'Please wait...',
       translucent: true
     });
