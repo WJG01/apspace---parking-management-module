@@ -3,10 +3,10 @@
   position: relative;
   width: 310px !important;
 
-	img {
+  img {
     border-radius: 10px;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-	}
+  }
 
   .virtual-card-student-img {
     position: absolute !important;
@@ -28,14 +28,17 @@
       font-size: 0.9rem;
       margin-bottom: 20px;
     }
+
     .virtual-card-student-ids {
       font-size: 0.7rem;
       margin-top: 2px;
       margin-bottom: 0;
+
       .attr {
         display: inline-block;
         width: 9em;
       }
+
       .attr::after {
         content: ':';
       }
@@ -44,10 +47,39 @@
   }
 }
 
+.gradient-background {
+  --ion-background-color: #3a99d9 !important;  /* fallback for old browsers */;
+  --ion-background-color: var(--ion-more-page-background-color) !important;
+}
+
+.custom-card {
+  position: relative;
+  background-color: var(--ion-background-color);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  margin-top: 100px;
+  padding-right: 35px;
+}
+
 .profile-photo {
   margin-top: 16px;
   max-height: 150px;
   max-width: 122px;
+}
+
+.staff-profile-picture {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 130%;
+  width: 250px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+  transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+  object-fit: cover;
+}
+
+.staff-profile-picture:hover {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
 ion-img {
@@ -60,7 +92,8 @@ ion-img {
   margin: auto;
 }
 
-h1, h4 {
+h1,
+h4 {
   font-weight: bold;
 }
 
@@ -81,6 +114,23 @@ h1, h4 {
   .virtual-card {
     margin: auto !important;
     float: none !important;
+  }
+
+  .staff-profile-picture {
+    position: static;
+    transform: translate(0%, 0%);
+    height: 100%;
+    width: 40%;
+  }
+
+  .staff-picture-in-mobile {
+    text-align: center;
+  }
+
+  .custom-card {
+    box-shadow: none;
+    margin-top: 0;
+    padding-right: 0;
   }
 }
 
@@ -107,7 +157,8 @@ h1, h4 {
       .virtual-card-student-name {
         font-size: 0.7rem;
       }
-      .virtual-card-student-ids{
+
+      .virtual-card-student-ids {
         font-size: 0.59rem !important;
       }
     }
@@ -120,7 +171,7 @@ h1, h4 {
 
     .virtual-card-student-img {
       bottom: 0 !important;
-      
+
     }
   }
 

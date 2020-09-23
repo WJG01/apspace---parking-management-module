@@ -625,59 +625,59 @@
     <!-- STAFF PROFILE -->
     <ng-template #userIsStaff>
       <ion-grid class="ion-margin-top ion-no-padding">
-        <ion-row>
-          <ion-col class="ion-margin-top" size-xs="12" size-md="6" offset-md="3" size-lg="4" offset-lg="4">
-            <ion-card class="ion-no-margin ion-no-padding ion-text-center">
+        <ion-row class="ion-justify-content-center">
+          <ion-col size="12" size-lg="8">
+            <div class="custom-card">
               <ng-container *ngIf="staffProfile$ | async as staffProfile; else loadingProfile">
-                <!-- STAFF IMAGE -->
-                <ion-img class="ion-margin-top profile-photo" [src]="staffProfile[0]?.PHOTO"
-                  (ionError)="$event.target.src = 'assets/img/no_img.png'"> </ion-img>
-                <!-- STAFF PROFILE INFO -->
-                <ion-card-header>
-                  <ion-card-title>
-                    <h3>
-                      {{ staffProfile[0].FULLNAME }}
-                    </h3>
-                  </ion-card-title>
-                  <ion-card-subtitle>
-                    <h5>{{ staffProfile[0].TITLE }}</h5>
-                  </ion-card-subtitle>
-                </ion-card-header>
-                <ion-card-content>
-                  <div class="ion-margin-top">
-                    <h4>ID</h4>
-                    <p>{{ staffProfile[0].ID }}</p>
-                  </div>
-                  <div class="ion-margin-top">
-                    <h4>Current Job Type</h4>
-                    <p>{{ staffProfile[0].CURRENT_JOB_TYPE }}</p>
-                  </div>
-                  <div class="ion-margin-top">
-                    <h4>Department</h4>
-                    <p>{{ staffProfile[0].DEPARTMENT }}</p>
-                  </div>
-
-                  <ng-template [ngIf]="staffProfile[0].DEPARTMENT2">
-                    <div class="ion-margin-top">
-                      <h4>Department 1</h4>
-                      <p>{{ staffProfile[0].DEPARTMENT2 }}</p>
-                    </div>
-                  </ng-template>
-
-                  <ng-template [ngIf]="staffProfile[0].DEPARTMENT3">
-                    <div class="ion-margin-top">
-                      <h4>Department 2</h4>
-                      <p>{{ staffProfile[0].DEPARTMENT3 }}</p>
-                    </div>
-                  </ng-template>
-
-                  <div class="ion-margin-top">
-                    <h4>Nationality</h4>
-                    <p>{{ staffProfile[0].NATIONALITY }}</p>
-                  </div>
-                </ion-card-content>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col class="staff-picture-in-mobile" size="12" size-md="5">
+                      <img class="staff-profile-picture" [src]="staffProfile[0]?.PHOTO"
+                        (ionError)="$event.target.src = 'assets/img/no_img.png'" />
+                    </ion-col>
+                    <ion-col class="ion-text-center" size="12" size-md="7">
+                      <h1>
+                        {{ staffProfile[0].FULLNAME }}
+                      </h1>
+                      <ion-text color="primary">
+                        <h5 class="ion-no-margin">{{ staffProfile[0].TITLE }}</h5>
+                      </ion-text>
+                      <div class="ion-margin-top">
+                        <h4 class="ion-padding-top">ID</h4>
+                        <p class="ion-no-margin">{{ staffProfile[0].ID }}</p>
+                      </div>
+                      <div class="ion-margin-top">
+                        <h4>Current Job Type</h4>
+                        <p class="ion-no-margin">{{ staffProfile[0].CURRENT_JOB_TYPE }}</p>
+                      </div>
+                      <div class="ion-margin-top">
+                        <h4>Department</h4>
+                        <p class="ion-no-margin">{{ staffProfile[0].DEPARTMENT }}</p>
+                      </div>
+    
+                      <ng-template [ngIf]="staffProfile[0].DEPARTMENT2">
+                        <div class="ion-margin-top">
+                          <h4>Department 1</h4>
+                          <p class="ion-no-margin">{{ staffProfile[0].DEPARTMENT2 }}</p>
+                        </div>
+                      </ng-template>
+    
+                      <ng-template [ngIf]="staffProfile[0].DEPARTMENT3">
+                        <div class="ion-margin-top">
+                          <h4>Department 2</h4>
+                          <p class="ion-no-margin">{{ staffProfile[0].DEPARTMENT3 }}</p>
+                        </div>
+                      </ng-template>
+    
+                      <div class="ion-margin-top">
+                        <h4>Nationality</h4>
+                        <p class="ion-no-margin ion-margin-bottom">{{ staffProfile[0].NATIONALITY }}</p>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
               </ng-container>
-            </ion-card>
+            </div>
           </ion-col>
         </ion-row>
       </ion-grid>
