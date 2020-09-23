@@ -45,26 +45,28 @@
     <ion-grid>
       <ion-row>
         <ion-col size-xs="12" size-md="4" push-md="8">
-          <ion-card>
-            <ion-card-content>
-              <ion-row style="text-align: center;">
-                <ion-col>
-                  <div *ngIf="fine$ | async as fine; else loading">
-                    <h3 class="glob-text-bold" style="font-size: 20px; padding-bottom: 5px;"
-                      [ngStyle]="{'color': (fine === 0 ) ? '#2dd36f' : '#eb445a'}">
-                      RM{{ fine }}
+          <div *ngIf="fine$ | async as fine; else loading">
+            <ion-card [color]="+fine.fine === 0 ? 'success' : 'danger'">
+              <ion-card-content>
+                <ion-row style="text-align: center;">
+                  <ion-col>
+                    <h3 class="glob-text-bold" style="font-size: 20px; padding-bottom: 5px;">
+                      RM{{ +fine.fine }}
                     </h3>
                     <p>Library Fine</p>
-                  </div>
-                </ion-col>
-              </ion-row>
-              <ng-template #loading>
-                <h3>
-                  <loading-spinner></loading-spinner>
-                </h3>
-              </ng-template>
-            </ion-card-content>
-          </ion-card>
+                  </ion-col>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+          </div>
+
+          <ng-template #loading>
+            <ion-card>
+              <h3>
+                <loading-spinner></loading-spinner>
+              </h3>
+            </ion-card>
+          </ng-template>
         </ion-col>
 
         <ion-col size-xs="12" size-md="8" pull-md="4">
@@ -160,9 +162,13 @@
             </ng-container>
 
             <ng-template #noBooks>
-              <app-message-with-svg imageUrl="assets/img/no-books.svg" messageTitle="No books found!"
-                messageContent="Perhaps it is a good time time to grab one :)" wrapperSize="6" wrapperMarginTop="30px"
-                wrapperOffset="3"></app-message-with-svg>
+              <ion-card>
+                <ion-card-content>
+                  <app-message-with-svg imageUrl="assets/img/no-books.svg" messageTitle="No books found!"
+                                                                           messageContent="Perhaps it is a good time time to grab one :)" wrapperSize="6" wrapperMarginTop="30px"
+                                                                                                                                                          wrapperOffset="3"></app-message-with-svg>
+                </ion-card-content>
+              </ion-card>
             </ng-template>
 
             <ng-template #loadingCardList>
