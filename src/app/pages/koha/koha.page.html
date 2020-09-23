@@ -48,9 +48,9 @@
           <div *ngIf="fine$ | async as fine; else loading">
             <ion-card [color]="+fine.fine === 0 ? 'success' : 'danger'">
               <ion-card-content>
-                <ion-row style="text-align: center;">
+                <ion-row class="ion-text-center"> 
                   <ion-col>
-                    <h3 class="glob-text-bold" style="font-size: 20px; padding-bottom: 5px;">
+                    <h3 class="glob-text-bold fine">
                       RM{{ +fine.fine }}
                     </h3>
                     <p>Library Fine</p>
