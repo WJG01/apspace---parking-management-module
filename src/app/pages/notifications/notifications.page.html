@@ -51,11 +51,11 @@
                     <ion-col class="ion-margin">
                       <ion-label class="glob-white-space-normal" style="margin-bottom: 5px;">
                         <h3 class="glob-text-bold"
-                          [ngClass]="{'unread' : (!message.read && openedMessages.indexOf(message.message_id) === -1)}">
+                            [ngClass]="{'unread' : (!message.read && openedMessages.indexOf(message.message_id) === -1)}">
                           {{message.title}}
                         </h3>
                         <p>
-                          {{ message.sent_on | dateWithTimezone: 'dd MMMM y hh:mm aaa' }}
+                        {{ message.sent_on | dateWithTimezone: 'dd MMMM y' }} {{ message.sent_on | dateWithTimezone: 'time' }}
                         </p>
                       </ion-label>
                       <ion-badge
@@ -70,8 +70,8 @@
 
             <ng-template #notFound>
               <app-message-with-svg imageUrl="assets/img/search-not-found.svg" messageTitle="Opps! Item not found."
-                messageContent="Perhaps you can try this:" wrapperSize="4" wrapperMarginTop="30px" wrapperOffset="4"
-                [advancedMode]="true">
+                                                                               messageContent="Perhaps you can try this:" wrapperSize="4" wrapperMarginTop="30px" wrapperOffset="4"
+                                                                                                                                                                  [advancedMode]="true">
                 <div class="flex-container">
                   <ul class="list-txt-color">
                     <li>Make sure the keyword is matched with one of the items</li>
@@ -80,8 +80,8 @@
                   </ul>
 
                   <p>Still having trouble? No worries! Just click <a [routerLink]="'/feedback'">here</a> and
-                    report to
-                    us for this issue.</p>
+                  report to
+                  us for this issue.</p>
                 </div>
               </app-message-with-svg>
             </ng-template>
@@ -102,7 +102,7 @@
                   <ion-skeleton-text animated style="line-height: 20px; width: 70%;"></ion-skeleton-text>
                 </h2>
                 <p>
-                  <ion-skeleton-text animated style="line-height: 10px; width: 40%;"></ion-skeleton-text>
+                <ion-skeleton-text animated style="line-height: 10px; width: 40%;"></ion-skeleton-text>
                 </p>
                 <ion-skeleton-text animated style="line-height: 15px; width: 20%;"></ion-skeleton-text>
               </ion-label>

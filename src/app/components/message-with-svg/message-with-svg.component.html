@@ -4,10 +4,12 @@
       <ion-img [src]="imageUrl"></ion-img>
     </ion-col>
     <ion-col size="10" offset="1" class="ion-margin-top">
-      <h3 class="ion-text-center secondary-txt-color text-bolder">{{ messageTitle }}</h3>
-      <p *ngIf="messageContent" class="secondary-txt-color ion-margin-top ion-text-center">
-        {{ messageContent }}
-      </p>
+      <ion-text color="primary">
+        <h3 class="ion-text-center glob-text-bold">{{ messageTitle }}</h3>
+      </ion-text>
+        <p *ngIf="messageContent" class="ion-margin-top ion-text-center">
+          {{ messageContent }}
+        </p>
       <div *ngIf="advancedMode">
         <ng-content></ng-content>
       </div>
