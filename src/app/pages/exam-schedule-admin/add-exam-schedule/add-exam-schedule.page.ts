@@ -73,8 +73,6 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
         this.refreshAssessmentTypes();
       }
     });
-
-    console.log(this.nextYear);
   }
 
   ngOnDestroy() {
