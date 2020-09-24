@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, MenuController, ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, shareReplay, tap } from 'rxjs/operators';
 
 import { SurveyIntake, SurveyModule } from 'src/app/interfaces';
 import { WsApiService } from 'src/app/services';
@@ -101,7 +101,8 @@ export class StudentSurveyPage implements OnInit {
           this.getModuleByClassCode(this.classCode); // get the details of the selected module
           this.surveyType = 'End-Semester'; // The only survey that will block results page is the end-semester survey
         }),
-        tap(_ => this.getSurveys(this.intakeCode)) // get the survey for the intake (survey is for intake, not for module)
+        tap(_ => this.getSurveys(this.intakeCode)), // get the survey for the intake (survey is for intake, not for module)
+        shareReplay(1)
       );
     }
   }
@@ -111,7 +112,7 @@ export class StudentSurveyPage implements OnInit {
     this.courseType = this.selectedIntake.TYPE_OF_COURSE;
     this.intakeCode = this.selectedIntake.COURSE_CODE_ALIAS;
 
-    this.COURSE_MODULES$ = this.getModules(this.intakeCode);
+    this.COURSE_MODULES$ = this.getModules(this.intakeCode).pipe(shareReplay(1));
     this.classCode = ''; // empty class code
     this.surveyType = ''; // empty survey type
 
