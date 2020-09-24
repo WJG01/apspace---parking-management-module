@@ -34,6 +34,7 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
   optionsRange: CalendarComponentOptions = {
     pickMode: 'range'
   };
+  nextYear = moment(new Date()).add(1, 'year').format('YYYY');
 
   examScheduleForm: FormGroup;
 
@@ -72,6 +73,8 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
         this.refreshAssessmentTypes();
       }
     });
+
+    console.log(this.nextYear);
   }
 
   ngOnDestroy() {

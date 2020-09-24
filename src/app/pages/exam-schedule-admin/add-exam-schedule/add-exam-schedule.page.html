@@ -63,7 +63,7 @@
               <ion-label position="stacked" class="item-label">
                 Date
               </ion-label>
-              <ion-datetime [formControl]="examScheduleForm.controls['date']" class="form-input"></ion-datetime>
+              <ion-datetime [max]="nextYear" [formControl]="examScheduleForm.controls['date']" class="form-input"></ion-datetime>
             </ion-item>
 
             <ion-grid class="ion-no-padding">

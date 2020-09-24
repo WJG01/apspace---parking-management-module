@@ -37,6 +37,8 @@ export class AddIntakePage implements OnInit {
     'Resit'
   ];
 
+  nextYear = moment(new Date()).add(1, 'year').format('YYYY');
+
   constructor(
     public modalCtrl: ModalController,
     public loadingCtrl: LoadingController,
