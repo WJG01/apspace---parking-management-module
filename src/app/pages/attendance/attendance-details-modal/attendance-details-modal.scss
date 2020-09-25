@@ -1,31 +1,24 @@
-ion-col {
-    ion-badge {
-        min-width: 24px;
-        border-radius: 19px;
-        padding: 10px;
-    }
-    &.attended {
-      ion-badge {
-        --background: var(--success-color);
-      }
-    }
-    &.absent {
-      ion-badge {
-        --background: var(--danger-color);
-        
-      }
-    }
-    &.absent-reason {
-      ion-badge {
-        --background: #dfa847;
-      }
-    }
-    &.late {
-      ion-badge {
-        --background: #808080;
-      }
-    }
-    .details {
-      --background: var(--primary-color);
-    }
+.dot {
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 15px;
+
+}
+
+ion-item {
+  border-left: 5px solid;
+  &.attended {
+    border-color: var(--ion-color-success);
   }
+  &.absent {
+    border-color: var(--ion-color-danger);
+  }
+  &.absent-reason {
+    border-color: #dfa847;
+  }
+  &.late {
+    border-color: #808080;
+  }
+}
