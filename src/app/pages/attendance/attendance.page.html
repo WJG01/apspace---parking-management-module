@@ -133,7 +133,9 @@
                                 <ion-text>
                                   <h3 class="glob-text-bold">
                                     {{ module.MODULE_ATTENDANCE }}
+                                    <ion-badge *ngIf="module.RETAKE" color="danger">Retake</ion-badge>
                                   </h3>
+                                  <small *ngIf="module.RETAKE">{{module.START_DATE}} To {{module.END_DATE}}</small>
                                 </ion-text>
                               </ion-col>
                             </ion-row>
