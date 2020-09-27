@@ -14,18 +14,18 @@
     <ion-row>
       <ion-col size="12" size-md="8" size-xl="10" offset-md="2" offset-xl="1">
         <ion-card *ngIf="loaded; else loadingCalendar">
-          <ion-card-content>
-            <ion-calendar 
-              [(ngModel)]="openDate" 
-              (change)="onChange($event)" 
-              [options]="options" 
-              [type]="'string'"
-              [format]="'YYYY-MM-DD'"
-              class="glob-calendar"
-            >
+          <ion-card-content class="ion-no-padding">
+              <ion-calendar 
+                [(ngModel)]="openDate" 
+                (change)="onChange($event)" 
+                [options]="options" 
+                [type]="'string'"
+                [format]="'YYYY-MM-DD'"
+                class="glob-calendar calendar "
+              >
             </ion-calendar>
-            <ion-list *ngFor="let detail of detailsList">
-              <ion-item  *ngIf="showDetails" [class]="detail.ATTENDANCE_STATUS === 'Y'
+            <ion-list *ngIf="showDetails">
+              <ion-item *ngFor="let detail of detailsList; let last=last" [lines]="last ? 'none' : 'full'" [class]="detail.ATTENDANCE_STATUS === 'Y'
                                                       ? 'attended'
                                                       : detail.ATTENDANCE_STATUS === 'N'
                                                       ? 'absent'
@@ -40,7 +40,7 @@
                 </ion-label>
               </ion-item>
             </ion-list>
-            <ion-row class="ion-justify-content-center">
+            <ion-row class="ion-justify-content-center" style="padding: 5px;">
                 <p> <span class="dot" style="background: var(--ion-color-success)"></span> - Present </p> 
                 <p> <span class="dot" style="background: var(--ion-color-danger)"></span> - Absent </p> 
                 <p> <span class="dot" style="background: #dfa847"></span> - Absent with Reason </p> 
