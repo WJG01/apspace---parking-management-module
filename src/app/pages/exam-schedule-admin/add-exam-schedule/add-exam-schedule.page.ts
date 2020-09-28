@@ -2,7 +2,7 @@ import { HttpParams } from '@angular/common/http';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, LoadingController, ModalController, PopoverController, ToastController } from '@ionic/angular';
-import { format, parse } from 'date-fns';
+import { addYears, format, parse } from 'date-fns';
 // import { Storage } from '@ionic/storage';
 import { CalendarComponentOptions } from 'ion2-calendar';
 import { Observable, Subscription } from 'rxjs';
@@ -35,6 +35,8 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
   optionsRange: CalendarComponentOptions = {
     pickMode: 'range'
   };
+
+  nextYears = format(addYears(new Date(), 3), 'yyyy');
 
   examScheduleForm: FormGroup;
 

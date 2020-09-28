@@ -87,14 +87,14 @@
               <ion-label position="stacked" class="item-label">
                 Docket Issuance
               </ion-label>
-              <ion-datetime [formControl]="intakeForm.controls['docketIssuance']" class="form-input"></ion-datetime>
+              <ion-datetime [max]="nextYears" [formControl]="intakeForm.controls['docketIssuance']" class="form-input"></ion-datetime>
             </ion-item>
             
             <ion-item lines="none">
               <ion-label position="stacked" class="item-label">
                 Exam Result Date
               </ion-label>
-              <ion-datetime [formControl]="intakeForm.controls['examResultDate']" class="form-input"></ion-datetime>
+              <ion-datetime [max]="nextYears" [formControl]="intakeForm.controls['examResultDate']" class="form-input"></ion-datetime>
             </ion-item>
             <ion-button (click)="submit()" [disabled]="intakeForm.invalid" expand="block" color="primary" class="ion-margin">SUBMIT</ion-button>
           </ion-card-content>

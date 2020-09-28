@@ -2,7 +2,7 @@ import { HttpParams } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, LoadingController, ModalController, PopoverController, ToastController } from '@ionic/angular';
-import { format } from 'date-fns';
+import { addYears, format } from 'date-fns';
 import { tap } from 'rxjs/operators';
 
 import { SearchModalComponent } from 'src/app/components/search-modal/search-modal.component';
@@ -37,6 +37,8 @@ export class AddIntakePage implements OnInit {
     'First',
     'Resit'
   ];
+
+  nextYears = format(addYears(new Date(), 3), 'yyyy');
 
   constructor(
     public modalCtrl: ModalController,
