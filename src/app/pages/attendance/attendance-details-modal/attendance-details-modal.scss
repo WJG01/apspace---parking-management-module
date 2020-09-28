@@ -3,8 +3,6 @@
   width: 8px;
   border-radius: 50%;
   display: inline-block;
-  margin-left: 15px;
-
 }
 
 ion-item {
@@ -26,4 +24,8 @@ ion-item {
 
 .calendar {
   background-color: var(--ion-color-light) !important;
+}
+
+.legend {
+  margin-left: 8px;
 }
