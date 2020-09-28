@@ -57,7 +57,6 @@
   background-color: var(--ion-staff-profile-card-color);
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   margin-top: 100px;
-  padding-right: 35px;
 }
 
 .profile-photo {
@@ -71,8 +70,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  height: 130%;
-  width: 250px;
+  height: 110%;
+  width: 100%;
   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
   transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
   object-fit: cover;
@@ -101,7 +100,7 @@ h4 {
   cursor: pointer;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
   ion-col {
     border: none;
 
@@ -128,6 +127,7 @@ h4 {
   }
 
   .custom-card {
+    background-color: transparent;
     box-shadow: none;
     margin-top: 0;
     padding-right: 0;
