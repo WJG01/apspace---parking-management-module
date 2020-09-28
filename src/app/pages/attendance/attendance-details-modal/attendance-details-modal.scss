@@ -9,16 +9,16 @@ ion-item {
   border-left: 5px solid;
   padding: 0px;
   &.attended {
-    border-color: var(--ion-color-success);
+    border-color: #49B571;
   }
   &.absent {
-    border-color: var(--ion-color-danger);
+    border-color: #E54D42;
   }
   &.absent-reason {
-    border-color: #dfa847;
+    border-color: #36A2EB;
   }
   &.late {
-    border-color: #808080;
+    border-color: #D49A0D;
   }
 }
 
