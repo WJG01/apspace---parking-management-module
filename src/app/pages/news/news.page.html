@@ -22,7 +22,7 @@
             <ion-slide *ngFor="let noticeBoardItem of noticeBoardItems">
               <ion-card class="ion-no-margin">
                 <ion-card-content class="ion-no-padding">
-                  <div [innerHTML]="noticeBoardItem.field_image_link[0].value" style="max-width: 700px; height: 490px;">
+                  <div [innerHTML]="noticeBoardItem.field_image_link[0].value" class="slider-image">
                   </div>
                 </ion-card-content>
                 <div class="swiper-button-next" (click)="nextSlide()"></div>

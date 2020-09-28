@@ -193,54 +193,15 @@
       }
     }
 
-    &.attended {
-      background: var(--ion-color-success) !important;
+    &.attendance {
+      background: var(--ion-color-primary) !important;
 
       &.on-selected {
         background-color: transparent !important;
-        border: 3px solid var(--ion-color-success) !important;
+        border: 3px solid var(--ion-color-primary) !important;
 
         p {
-          color: var(--ion-color-success) !important;
-        }
-      }
-    }
-
-    &.absent {
-      background: var(--ion-color-danger) !important;
-
-      &.on-selected {
-        background-color: transparent !important;
-        border: 3px solid var(--ion-color-danger) !important;
-
-        p {
-          color: var(--ion-color-danger) !important;
-        }
-      }
-    }
-
-    &.absent-reason {
-      background: #dfa847 !important;
-
-      &.on-selected {
-        background-color: transparent !important;
-        border: 3px solid #dfa847 !important;
-
-        p {
-          color: #dfa847 !important;
-        }
-      }
-    }
-
-    &.late {
-      background: #808080 !important;
-
-      &.on-selected {
-        background-color: transparent !important;
-        border: 3px solid #808080 !important;
-
-        p {
-          color: #808080 !important;
+          color: var(--ion-color-primary) !important;
         }
       }
     }
@@ -260,3 +221,4 @@
     }
   }
 }
+

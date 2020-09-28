@@ -60,33 +60,23 @@ export class AttendanceDetailsModalPage implements OnInit {
       {
         next: (records) => {
           records.map((record) => {
-            // pushes css configs based on attendance status, css declared in global
-            const css =
-              record.ATTENDANCE_STATUS === 'Y'
-                ? `attended`
-                : record.ATTENDANCE_STATUS === 'N'
-                  ? `absent`
-                  : record.ATTENDANCE_STATUS === 'R'
-                    ? `absent-reason`
-                    : record.ATTENDANCE_STATUS === 'L'
-                      ? `late`
-                      : null;
+            const css = 'attendance';
 
             this.datesConfig.push({
-              date: new Date(record.CLASS_DATE),
-              subTitle: '.',
-              marked: true,
-              cssClass: css,
-              disable: false
-            });
+                        date: new Date(record.CLASS_DATE),
+                        subTitle: '.',
+                        marked: true,
+                        cssClass: css,
+                        disable: false
+                      });
 
             this.recordsArray.push({
-              ATTENDANCE_STATUS: record.ATTENDANCE_STATUS,
-              CLASS_DATE: record.CLASS_DATE,
-              CLASS_TYPE: record.CLASS_TYPE,
-              TIME_FROM: record.TIME_FROM,
-              TIME_TO: record.TIME_TO
-            });
+                        ATTENDANCE_STATUS: record.ATTENDANCE_STATUS,
+                        CLASS_DATE: record.CLASS_DATE,
+                        CLASS_TYPE: record.CLASS_TYPE,
+                        TIME_FROM: record.TIME_FROM,
+                        TIME_TO: record.TIME_TO
+                      });
           });
         },
         complete: () => {
@@ -94,7 +84,7 @@ export class AttendanceDetailsModalPage implements OnInit {
           this.openDate = this.datePipe.transform(new Date(this.recordsArray[0].CLASS_DATE), 'yyyy-MM-dd');
           this.options.from = new Date(this.recordsArray[this.recordsArray.length - 1].CLASS_DATE);
           this.options.to = new Date(this.openDate),
-          this.loaded = true;
+            this.loaded = true;
         }
       }
     );
@@ -102,6 +92,8 @@ export class AttendanceDetailsModalPage implements OnInit {
 
   // show additional info about class on click
   onChange($event: string) {
+    this.detailsList = [];
+
     this.recordsArray.map((record) => {
       const date = this.datePipe.transform(new Date(record.CLASS_DATE), 'yyyy-MM-dd');
 
@@ -113,7 +105,6 @@ export class AttendanceDetailsModalPage implements OnInit {
           ATTENDANCE_STATUS: record.ATTENDANCE_STATUS,
           CLASS_DATE: record.CLASS_DATE
         });
-
         this.showDetails = true;
       }
     });

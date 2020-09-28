@@ -9,56 +9,45 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content parallax-header>
+<ion-content>
   <ion-grid>
     <ion-row>
       <ion-col size="12" size-md="8" size-xl="10" offset-md="2" offset-xl="1">
         <ion-card *ngIf="loaded; else loadingCalendar">
-          <ion-card-content>
-
+          <ion-card-content class="ion-no-padding">
             <ion-calendar 
-              [(ngModel)]="openDate" 
-              (change)="onChange($event)" 
-              [options]="options" 
-              [type]="'string'"
-              [format]="'YYYY-MM-DD'"
-            >
+                            [(ngModel)]="openDate" 
+                            (change)="onChange($event)" 
+                            [options]="options" 
+                            [type]="'string'"
+                            [format]="'YYYY-MM-DD'"
+                            class="glob-calendar calendar "
+                            >
             </ion-calendar>
-            <ion-list *ngFor="let detail of detailsList">
-              <ion-item lines="none">
-                <ion-label class="colored-text text-bold">
-                  Class / Time:
-                </ion-label>
-                <ion-badge *ngIf="showDetails; else template" class="details">
-                  {{ detail.CLASS_TYPE }} / {{ detail.TIME_TO + ' - ' + detail.TIME_FROM }}
-                </ion-badge>
-                <ng-template #template>
-                  <ion-badge class="details">
-                    ---
-                  </ion-badge>
-                </ng-template>
-              </ion-item>
-            </ion-list>
-            <ion-item class="ion-no-padding" lines="none">
-              <ion-grid>
-                <ion-row>
-                  <ion-col class="ion-text-center" offset="0.5">
-                    <ion-col class="attended">
-                      <ion-badge>Present</ion-badge>
-                    </ion-col>
-                    <ion-col class="absent">
-                      <ion-badge>Absent</ion-badge>
-                    </ion-col>
-                    <ion-col class="late">
-                      <ion-badge>Late</ion-badge>
-                    </ion-col>
-                    <ion-col class="absent-reason">
-                      <ion-badge>Absent with Reason</ion-badge>
-                    </ion-col>
-                  </ion-col>
+              <div *ngIf="showDetails">
+                <ion-list >
+                  <ion-item *ngFor="let detail of detailsList; let last=last" [lines]="last ? 'none' : 'full'" [class]="detail.ATTENDANCE_STATUS === 'Y'
+                                                                                       ? 'attended'
+                                                                                       : detail.ATTENDANCE_STATUS === 'N'
+                                                                                       ? 'absent'
+                                                                                       : detail.ATTENDANCE_STATUS === 'R'
+                                                                                       ? 'absent-reason'
+                                                                                       : detail.ATTENDANCE_STATUS === 'L'
+                                                                                       ? 'late'
+                                                                                       : ''">
+                    <ion-label>
+                      <h3 class="glob-text-bold">{{ detail.CLASS_TYPE }}</h3>
+                      <p>{{ detail.TIME_FROM + ' - ' + detail.TIME_TO }}</p>
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
+                <ion-row class="ion-justify-content-center" style="padding-top: 5px;">
+                  <p> <span class="dot" style="background: #49B571"></span>  Present </p> 
+                  <p class="legend"> <span class="dot" style="background: #E54D42"></span>  Absent </p> 
+                  <p class="legend"> <span class="dot" style="background: #36A2EB"></span>  Absent with Reason </p> 
+                  <p class="legend"> <span class="dot" style="background: #D49A0D"></span>  Late </p> 
                 </ion-row>
-              </ion-grid>
-            </ion-item>
+              </div>
           </ion-card-content>
         </ion-card>
       </ion-col>
@@ -71,29 +60,7 @@
           <ion-card>
             <ion-card-content>
               <ion-skeleton-text animated style="width: 100%; line-height: 300px"></ion-skeleton-text>
-              <ion-list>
-                <ion-item lines="none">
-                  <ion-label class="colored-text text-bold">
-                    <ion-skeleton-text animated style="width: 20%; line-height: 10px"></ion-skeleton-text>
-                  </ion-label>
-                  <ion-skeleton-text animated style="width: 20%; line-height: 10px"></ion-skeleton-text>
-                </ion-item>
-                <ion-item>
-                  <ion-label class="colored-text text-bold">
-                    <ion-skeleton-text animated style="width: 20%; line-height: 10px"></ion-skeleton-text>
-                  </ion-label>
-                  <ion-skeleton-text animated style="width: 35%; line-height: 10px"></ion-skeleton-text>
-                </ion-item>
-              </ion-list>
-              <ion-item class="ion-no-padding" lines="none">
-                <ion-grid>
-                  <ion-row>
-                    <ion-col size="8" offset="2">
-                      <ion-skeleton-text animated style="width: 100%; line-height: 10px"></ion-skeleton-text>
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
-              </ion-item>
+              <ion-skeleton-text class="glob-margin-auto" animated style="width: 80%; line-height: 10px; margin-top: 30px;"></ion-skeleton-text>
             </ion-card-content>
           </ion-card>
         </ion-col>
