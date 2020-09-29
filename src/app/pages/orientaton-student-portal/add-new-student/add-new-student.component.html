@@ -1,0 +1,82 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="primary" (click)="dismissModal()">
+        CLOSE
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Insert New Student</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="glob-container">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" size-lg="6">
+          <h3>
+            <ion-text color="primary">
+              Copy and Paste the Staff ID and Student ID in this field.
+            </ion-text>
+          </h3>
+          <ul>
+            <li>
+              <p>You can copy directly from Excel under the 'Staff ID | Student ID" cells.</p>
+            </li>
+            <li>
+              <p>Every new pasted Student ID must be ended with new line.</p>
+            </li>
+            <li>
+              <p>Default format is 'Staff ID*tabStudent ID'. However, you can paste as 'Staff ID,Student ID' format.</p>
+            </li>
+          </ul>
+          <ion-textarea placeholder="E.g. Staff ID  Student ID or Staff ID,Student ID" rows="10" [(ngModel)]="csvValue"
+            class="form-input"></ion-textarea>
+          <ion-button class="ion-margin-vertical ion-float-end" (click)="submit()">SUBMIT</ion-button>
+        </ion-col>
+        <ion-col *ngIf="results; else noResults" size="12" size-lg="6">
+          <div *ngIf='displayResult; else errors;'>
+            <ion-card color="success" class="ion-no-margin">
+              <ion-card-header color="success">
+                <ion-card-title>
+                  Response
+                </ion-card-title>
+                <ion-card-subtitle>
+                  {{ results.MESSAGE }}
+                </ion-card-subtitle>
+              </ion-card-header>
+            </ion-card>
+          </div>
+  
+          <ng-template #errors>
+            <ion-card color="danger" class="ion-no-margin" *ngFor="let result of results">
+              <ion-card-header color="danger">
+                <ion-card-title>
+                  Response
+                </ion-card-title>
+                <ion-card-subtitle>
+                  {{ result.MESSAGE }}
+                </ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content>
+                <p *ngFor="let id of result['STUDENT ID']">
+                  {{ id }}
+                </p>
+              </ion-card-content>
+            </ion-card>
+          </ng-template>
+        </ion-col>
+
+        <ng-template #noResults>
+          <ion-col size="12" size-lg="6">
+            <div class="custom-message">
+              <h3>
+                Submit the list of Staff ID and Student ID to view the response.
+              </h3>
+            </div>
+          </ion-col>
+        </ng-template>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>

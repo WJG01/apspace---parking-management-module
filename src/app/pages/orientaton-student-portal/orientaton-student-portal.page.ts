@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 
 import { OrientationStudentsList } from 'src/app/interfaces';
 import { CasTicketService, WsApiService } from 'src/app/services';
+import { AddNewStudentComponent } from './add-new-student/add-new-student.component';
 import { ViewStudentProfileModalPage } from './view-student-profile/view-student-profile-modal';
 
 @Component({
@@ -38,6 +39,15 @@ export class OrientatonStudentPortalPage implements OnInit {
         this.iab.create(`${url}?ticket=${st}`, '_system', 'location=true');
       });
     }
+  }
+
+  async insertNewStudent() {
+    const modal = await this.modalCtrl.create({
+      component: AddNewStudentComponent,
+      cssClass: 'glob-full-page-modal'
+    });
+
+    await modal.present();
   }
 
   async viewProfile(studentID: string) {

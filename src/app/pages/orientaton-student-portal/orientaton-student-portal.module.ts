@@ -3,9 +3,11 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
+import { AddNewStudentComponent } from './add-new-student/add-new-student.component';
 import { OrientatonStudentPortalPageRoutingModule } from './orientaton-student-portal-routing.module';
 import { OrientatonStudentPortalPage } from './orientaton-student-portal.page';
 import { ViewStudentProfileModalPage } from './view-student-profile/view-student-profile-modal';
+
 
 @NgModule({
   imports: [
@@ -14,6 +16,6 @@ import { ViewStudentProfileModalPage } from './view-student-profile/view-student
     IonicModule,
     OrientatonStudentPortalPageRoutingModule
   ],
-  declarations: [OrientatonStudentPortalPage, ViewStudentProfileModalPage],
+  declarations: [OrientatonStudentPortalPage, ViewStudentProfileModalPage, AddNewStudentComponent],
 })
-export class OrientatonStudentPortalPageModule {}
+export class OrientatonStudentPortalPageModule { }

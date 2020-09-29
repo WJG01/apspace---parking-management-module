@@ -1,0 +1,18 @@
+.form-input {
+  border-radius: 7px;
+  border: 1px solid var(--ion-color-light-shade);
+}
+
+.custom-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  border: 2px solid var(--ion-color-light-shade);
+  height: 100%;
+
+  h3 {
+    text-align: center;
+    color: var(--ion-color-light-shade);
+  }
+}
