@@ -46,21 +46,34 @@ ion-calendar.holidays {
 
 // Alert
 .alert-wrapper {
+  .alert-button-group {
+    .cancel {
+      color: var(--ion-color-medium);
+    }
+    .main {
+      color: var(--ion-color-primary);
+    }
+  }
+
   .inline {
-    &.absent{
+    &.absent {
       background: var(--ion-color-danger);
     }
+
     &.present {
       background-color: var(--ion-color-success);
     }
-    &.late{
+
+    &.late {
       background-color: var(--ion-color-warning);
     }
-    &.cancel{
+
+    &.cancel {
       span {
         color: var(--ion-color-medium) !important;
       }
     }
+
     span {
       justify-content: space-around;
       padding: 10px;
@@ -85,8 +98,10 @@ ion-calendar.holidays {
       padding-bottom: 0 !important;
     }
 
-    .alert-button {
-      color: var(--ion-color-success) !important;
+    .alert-button-group {
+      .main {
+        color: var(--ion-color-success);
+      }
     }
   }
 }
@@ -107,8 +122,10 @@ ion-calendar.holidays {
       padding-bottom: 0 !important;
     }
 
-    .alert-button {
-      color: var(--ion-color-danger) !important;
+    .alert-button-group {
+      .main {
+        color: var(--ion-color-danger);
+      }
     }
   }
 }
