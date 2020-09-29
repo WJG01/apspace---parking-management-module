@@ -5,6 +5,7 @@ import { ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { OrientationStudentsList } from 'src/app/interfaces';
 import { CasTicketService, WsApiService } from 'src/app/services';
+import { AddNewStudentComponent } from './add-new-student/add-new-student.component';
 import { ViewStudentProfileModalPage } from './view-student-profile/view-student-profile-modal';
 
 @Component({
@@ -39,6 +40,15 @@ export class OrientatonStudentPortalPage implements OnInit {
     }
   }
 
+  async insertNewStudent() {
+    const modal = await this.modalCtrl.create({
+      component: AddNewStudentComponent,
+      cssClass: 'full-page-modal'
+    });
+
+    await modal.present();
+  }
+
   async viewProfile(studentID: string) {
     const modal = await this.modalCtrl.create({
       component: ViewStudentProfileModalPage,
@@ -48,5 +58,4 @@ export class OrientatonStudentPortalPage implements OnInit {
     await modal.present();
     await modal.onDidDismiss();
   }
-
 }
