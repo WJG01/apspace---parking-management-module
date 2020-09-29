@@ -141,12 +141,8 @@
                   <ion-card class="orientation">
                     <ion-card-content class="ion-no-padding">
                       <ion-grid>
-                        <!-- <ion-row>
-                          <ion-col>
-                          </ion-col>
-                        </ion-row> -->
                         <ion-row>
-                          <ion-col size="12" size-md="7" offset-md="" push-md="5">
+                          <ion-col class="ion-padding" size="12" size-md="7" offset-md="" push-md="5">
                             <div class="ion-float-end virtual-card">
                               <img src="assets/img/student_card_apu.jpg">
                               <ng-template let-photo [ngIf]="photo$ | async">
@@ -167,13 +163,13 @@
                               </div>
                             </div>
                           </ion-col>
-                          <ion-col size="12" size-md="5" pull-md="7" class="margin-auto">
-                            <h1 class="glob-text-bold ion-padding-start ion-padding-end">
+                          <ion-col size="12" size-md="5" pull-md="7" class="margin-auto ion-padding-horizontal">
+                            <h1 class="glob-text-bold">
                               <ion-text color="primary">
                                 YOUR VIRTUAL CARD
                               </ion-text>
                             </h1>
-                            <h5 class="ion-margin-top ion-padding-start ion-padding-end">This is your Virtual Student
+                            <h5>This is your Virtual Student
                               Card. Once you resume face-to-face learning on campus, we
                               will be
                               issuing you the physical copy of your card.</h5>
@@ -182,18 +178,17 @@
                       </ion-grid>
                     </ion-card-content>
                   </ion-card>
-
                 </ion-col>
               </ion-row>
               <ion-row>
                 <ion-col class="ion-no-padding">
                   <ion-card class="orientation">
-                    <ion-card-content class="ion-no-padding">
-                      <ion-grid>
+                    <ion-card-content class="ion-padding">
+                      <!-- <ion-grid>
                         <ion-row>
-                          <ion-col size="12">
+                          <ion-col size="12"> -->
                             <ion-grid>
-                              <ion-row>
+                              <ion-row class="ion-margin-bottom">
                                 <ion-col>
                                   <h1 class="glob-text-bold">
                                     <ion-text color="primary">
@@ -276,7 +271,7 @@
                                   </h2>
                                 </ion-col>
                               </ion-row>
-                              <ion-row>
+                              <ion-row class="ion-margin-vertical">
                                 <ion-col>
                                   <h1 class="glob-text-bold">
                                     <ion-text color="primary">
@@ -316,7 +311,7 @@
                                   </h2>
                                 </ion-col>
                               </ion-row>
-                              <ion-row>
+                              <ion-row class="ion-margin-vertical">
                                 <ion-col>
                                   <h1 class="glob-text-bold">
                                     <ion-text color="primary">
@@ -366,7 +361,7 @@
                                   </h2>
                                 </ion-col>
                               </ion-row>
-                              <ion-row>
+                              <ion-row class="ion-margin-vertical">
                                 <ion-col>
                                   <h1 class="glob-text-bold">
                                     <ion-text color="primary">
@@ -416,7 +411,7 @@
                                   </h2>
                                 </ion-col>
                               </ion-row>
-                              <ion-row>
+                              <ion-row class="ion-margin-vertical">
                                 <ion-col>
                                   <h1 class="glob-text-bold">
                                     <ion-text color="primary">
@@ -465,7 +460,7 @@
                                   <h2>: {{orientationProfile.student_details[0].FEES_SCHEME || 'N/A'}}</h2>
                                 </ion-col>
                               </ion-row>
-                              <ion-row>
+                              <ion-row class="ion-margin-vertical">
                                 <ion-col>
                                   <h1 class="glob-text-bold">
                                     <ion-text color="primary">
@@ -492,7 +487,7 @@
                                   <small>Supported files are: PDF, PNG, and JPEG.</small>
                                 </ion-col>
                               </ion-row>
-                              <ion-row>
+                              <ion-row class="ion-margin-vertical">
                                 <ion-col>
                                   <h1 class="glob-text-bold">
                                     <ion-text color="primary">
@@ -508,31 +503,31 @@
                                     submit
                                     your request here.
                                   </p>
-                                  <ion-button (click)="requestChange(orientationProfile)">REQUEST UPDATE
-                                    ON MY PROFILE
+                                  <ion-button (click)="requestChange(orientationProfile)">
+                                    REQUEST PROFILE UPDATE
                                   </ion-button>
                                 </ion-col>
                               </ion-row>
                             </ion-grid>
-                          </ion-col>
+                          <!-- </ion-col>
                         </ion-row>
-                      </ion-grid>
+                      </ion-grid> -->
                     </ion-card-content>
                   </ion-card>
                   <ng-container *ngIf="orientationProfile.councelor_details.length > 0; else noCouncelor">
                     <ion-card class="orientation">
-                      <ion-card-header>
-                        <ion-card-title>
-                          <h1>
-                            <ion-text color="primary">
-                              MEET YOUR E-COUNSELLOR!
-                            </ion-text>
-                          </h1>
-                        </ion-card-title>
-                      </ion-card-header>
-                      <ion-card-content class="ion-no-padding">
+                      <ion-card-content>
                         <ion-grid>
-                          <ion-row>
+                          <ion-row class="ion-margin-bottom">
+                            <ion-col>
+                              <h1>
+                                <ion-text color="primary">
+                                  MEET YOUR E-COUNSELLOR!
+                                </ion-text>
+                              </h1>
+                            </ion-col>
+                          </ion-row>
+                          <ion-row class="ion-margin-bottom">
                             <ion-col size="12">
                               <h3>
                                 Each student will be assigned to an E-Counsellor upon registration. Before your
@@ -549,16 +544,16 @@
                             </ion-col>
                           </ion-row>
                           <ion-row>
-                            <ion-col size="4" offset="4" size-md="3" offset-md="" push-md="9">
+                            <ion-col size="4" size-md="3" push-md="9">
                               <ng-container *ngIf="councelorProfile$ | async as councelorProfile">
-                                <ion-img class="profile-photo"
+                                <ion-img class="counsellor-profile-photo"
                                   [src]="'https://d37plr7tnxt7lb.cloudfront.net/' + councelorProfile.RefNo + '.jpg'"
                                   (ionError)="$event.target.src = 'assets/img/no_img.png'">
                                 </ion-img>
                               </ng-container>
                             </ion-col>
                             <ion-col size="12" size-md="9" pull-md="3">
-                              <ion-grid>
+                              <ion-grid class="ion-no-padding">
                                 <ion-row>
                                   <ion-col size="6" size-md="4">
                                     <h2>E-COUNSELLOR’S NAME</h2>
@@ -583,7 +578,7 @@
                                     <h2>: {{ orientationProfile.councelor_details[0].MOBILE_NO || 'N/A'}}</h2>
                                   </ion-col>
                                 </ion-row>
-                                <ion-row>
+                                <ion-row class="ion-margin-vertical">
                                   <ion-col size="12">
                                     <p>Your E-Counsellor will normally be available from 10am to 6pm, Mondays to Fridays
                                     </p>
@@ -593,7 +588,7 @@
                                   <ion-col size="12">
                                     <ion-button color="primary" expand="block"
                                       (click)="chatInTeams(orientationProfile.councelor_details[0].SAMACCOUNTNAME)">
-                                      SEND A MESSAGE TO YOUR E-COUNSELLOR
+                                      MESSAGE E-COUNSELLOR
                                       <ion-icon name="chatbox" slot="end"></ion-icon>
                                     </ion-button>
                                   </ion-col>
