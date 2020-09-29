@@ -1026,8 +1026,7 @@ export class DashboardPage implements OnInit {
       .pipe(
         mergeMap(intakes => intakes),
         concatMap(intake => {
-          const url = `/student/sub_and_course_details?intake=${
-            intake.INTAKE_CODE
+          const url = `/student/sub_and_course_details?intake=${intake.INTAKE_CODE
             }`;
           return this.ws.get<CourseDetails>(url, { caching }).pipe(
             map(intakeDetails =>
@@ -1193,16 +1192,19 @@ export class DashboardPage implements OnInit {
   logout() {
     this.alertCtrl.create({
       header: 'Are you sure you want to log out?',
+      cssClass: 'danger-alert',
       buttons: [
         {
+          text: 'Cancel',
+          cssClass: 'cancel',
+          role: 'cancel'
+        },
+        {
           text: 'Log Out',
-          cssClass: 'alert-logout',
+          cssClass: 'main',
           handler: () => {
             this.navCtrl.navigateForward('/logout');
           }
-        }, {
-          text: 'Cancel',
-          role: 'cancel'
         }
       ]
     }).then(alert => alert.present());

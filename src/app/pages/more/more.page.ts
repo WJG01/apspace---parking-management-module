@@ -150,14 +150,16 @@ export class MorePage implements OnInit {
       header: 'Are you sure you want to log out?',
       buttons: [
         {
+          text: 'Cancel',
+          cssClass: 'cancel',
+          role: 'cancel'
+        },
+        {
           text: 'Log Out',
-          cssClass: 'alert-logout',
+          cssClass: 'main',
           handler: () => {
             this.navCtrl.navigateForward('/logout');
           }
-        }, {
-          text: 'Cancel',
-          role: 'cancel'
         }
       ]
     }).then(alert => alert.present());
