@@ -12,8 +12,8 @@
   <ion-grid>
     <ion-row>
       <ion-col size-xs="12" size-md="4" push-md="8">
-        <ion-card color="primary">
-          <ion-card-header>
+        <ion-card>
+          <ion-card-header color="primary">
             <ion-card-title>
               Configuration Section
             </ion-card-title>
@@ -23,7 +23,7 @@
           </ion-card-header>
           <ion-card-content class="ion-no-padding">
             <ng-container *ngIf="(COURSE_CODE$ | async) as intakeCourseCode; else loadingIntakes">
-              <ion-item color="primary" lines="full">
+              <ion-item lines="full">
                 <ion-label>Intake</ion-label>
                 <ion-select [(ngModel)]="selectedIntake" (ngModelChange)="onIntakeCodeChanged()" interface="popover">
                   <ion-select-option *ngFor="let intake of intakeCourseCode | reverse" [value]="intake">
@@ -32,13 +32,12 @@
               </ion-item>
             </ng-container>
             <ng-template #loadingIntakes>
-              <ion-item color="primary" lines="full">
+              <ion-item lines="full">
                 <ion-skeleton-text animated style="width: 100%; height: 35px;"></ion-skeleton-text>
               </ion-item>
             </ng-template>
             <ng-container *ngIf="(COURSE_MODULES$ | async) as intakeModules; else loadingModules">
-              <ion-item color="primary" lines="full"
-                [disabled]="surveyType === 'Programme Evaluation' || intakeModules.length <= 0">
+              <ion-item lines="full" [disabled]="surveyType === 'Programme Evaluation' || intakeModules.length <= 0">
                 <ion-label>Module</ion-label>
                 <ion-select [(ngModel)]="classCode" (ngModelChange)="onClassCodeChanged()" interface="popover">
                   <ion-select-option *ngFor="let module of intakeModules" [value]="module.CLASS_CODE">
@@ -48,68 +47,174 @@
               </ion-item>
             </ng-container>
             <ng-template #loadingModules>
-              <ion-item color="primary" lines="full">
+              <ion-item lines="full">
                 <ion-skeleton-text animated style="width: 100%; height: 35px;"></ion-skeleton-text>
               </ion-item>
             </ng-template>
-            <ion-item color="primary" lines="full" disabled="true" *ngIf="surveyType">
-              <ion-label>Survey Type</ion-label>
-              <ion-select [(ngModel)]="surveyType" interface="popover">
-                <ion-select-option value="Programme Evaluation">
-                  Programme Evaluation
-                </ion-select-option>
-                <ion-select-option value="End-Semester">
-                  End-Semester
-                </ion-select-option>
-                <ion-select-option value="Mid-Semester">
-                  Mid-Semester
-                </ion-select-option>
-              </ion-select>
-            </ion-item>
+          </ion-card-content>
+        </ion-card>
+        <ion-card color="light" *ngIf="intakeCode && classCode && surveyType || surveyType === 'Programme Evaluation'">
+          <ion-card-header color="medium">
+            <ion-card-title>
+              Details
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content class="ion-padding-top">
+            <ng-container *ngIf="surveyType === 'Programme Evaluation'; else moduleSurveyDetails">
+              <div *ngIf="selectedIntake.COURSE_DESCRIPTION">
+                <small>
+                  <ion-text>
+                    <b>
+                      Course Description:
+                    </b>
+                  </ion-text>
+                </small>
+                <p class="glob-text-bold">
+                  <ion-text class="">
+                    {{ selectedIntake.COURSE_DESCRIPTION }}
+                  </ion-text>
+                </p>
+              </div>
+
+              <div *ngIf="selectedIntake.INTAKE_CODE">
+                <small>
+                  <ion-text>
+                    Intake Code:
+                  </ion-text>
+                </small>
+                <p class="glob-text-bold">
+                  <ion-text>
+                    {{ selectedIntake.INTAKE_CODE }}
+                  </ion-text>
+                </p>
+              </div>
+
+              <div *ngIf="selectedIntake.TYPE_OF_COURSE">
+                <small>
+                  <ion-text>
+                    <b>
+                      Course Type/Level:
+                    </b>
+                  </ion-text>
+                </small>
+                <p class="glob-text-bold">
+                  <ion-text>
+                    {{ selectedIntake.TYPE_OF_COURSE }}
+                  </ion-text>
+                </p>
+              </div>
+            </ng-container>
+            <ng-template #moduleSurveyDetails>
+              <div *ngIf="classCode">
+                <small>
+                  <ion-text>
+                    <b>
+                      Class Code:
+                    </b>
+                  </ion-text>
+                </small>
+                <p class="glob-text-bold">
+                  <ion-text class="">
+                    {{ classCode }}
+                  </ion-text>
+                </p>
+              </div>
+
+              <div *ngIf="lecturerName">
+                <small>
+                  <ion-text>
+                    Lecturer Name:
+                  </ion-text>
+                </small>
+                <p class="glob-text-bold">
+                  <ion-text>
+                    {{ lecturerName }}
+                  </ion-text>
+                </p>
+              </div>
+
+              <div *ngIf="selectedModule && selectedModule.SUBJECT_DESCRIPTION">
+                <small>
+                  <ion-text>
+                    <b>
+                      Subject Name:
+                    </b>
+                  </ion-text>
+                </small>
+                <p class="glob-text-bold">
+                  <ion-text>
+                    {{ selectedModule.SUBJECT_DESCRIPTION }}
+                  </ion-text>
+                </p>
+              </div>
+            </ng-template>
+            <div *ngIf="surveyType">
+              <small>
+                <ion-text>
+                  <b>
+                    Survey Type:
+                  </b>
+                </ion-text>
+              </small>
+              <p class="glob-text-bold">
+                <ion-text color="tertiary">
+                  {{surveyType}}
+                </ion-text>
+              </p>
+            </div>
           </ion-card-content>
         </ion-card>
       </ion-col>
       <ion-col size-xs="12" size-md="8" pull-md="4">
         <ng-container *ngIf="!intakeCode; else intakeSelected">
           <ion-card>
-            <ion-card-header>
-              <ion-card-title color="danger" class="ion-text-center">
-                Intake is missing!!
+            <app-message-with-svg imageUrl="assets/img/question_mark.svg" messageTitle="" messageContent=""
+              wrapperSize="6" wrapperMarginTop="30px" wrapperOffset="3">
+            </app-message-with-svg>
+            <ion-card-header class="ion-text-center">
+              <ion-card-title color="danger"> Intake is missing!!
               </ion-card-title>
             </ion-card-header>
-            <ion-card-content>
-              <app-message-with-svg imageUrl="assets/img/question_mark.svg"
-                messageTitle="Opps! It looks like that you did not select an intake"
-                messageContent="Please select an intake from the configuration section" wrapperSize="6"
-                wrapperMarginTop="30px" wrapperOffset="3">
-              </app-message-with-svg>
-            </ion-card-content>
+            <p class="ion-text-center ion-padding-start ion-padding-end">Opps! It looks like that you did not select an
+              intake
+            </p>
           </ion-card>
+
         </ng-container>
         <ng-template #intakeSelected>
-          <ng-container *ngIf="(COURSE_MODULES$ | async) as intakeModules; else loadingModules">
+          <ng-container *ngIf="(COURSE_MODULES$ | async) as intakeModules; else loadingMain">
             <ng-container *ngIf="!classCode; else classCodeSelected">
               <ng-container *ngIf="surveyType === 'Programme Evaluation'; else checkModule">
-                It is a programme evaluation
+                <ng-container *ngTemplateOutlet="surveyContent"></ng-container>
               </ng-container>
               <ng-template #checkModule>
                 <ng-container *ngIf="intakeModules.length <= 0; else noModuleSelected">
-                  modules are empty. All done
+                  <ion-card>
+                    <app-message-with-svg imageUrl="assets/img/happy.svg" messageTitle="" messageContent=""
+                      wrapperSize="6" wrapperMarginTop="30px" wrapperOffset="3">
+                    </app-message-with-svg>
+                    <ion-card-header class="ion-text-center">
+                      <ion-card-title color="success">No Surveys Need to be Completed at the Current Time!
+                      </ion-card-title>
+                    </ion-card-header>
+                    <p class="ion-text-center ion-padding-start ion-padding-end">Either you have completed all of the
+                      surveys for the selected intake
+                      '{{intakeCode}}', or the
+                      surveys are not out yet.</p>
+                  </ion-card>
                 </ng-container>
                 <ng-template #noModuleSelected>
                   <ion-card>
-                    <ion-card-header>
-                      <ion-card-title color="danger" class="ion-text-center">
-                        Module is missing!!
+                    <app-message-with-svg imageUrl="assets/img/question_mark.svg" messageTitle="" messageContent=""
+                      wrapperSize="6" wrapperMarginTop="30px" wrapperOffset="3">
+                    </app-message-with-svg>
+                    <ion-card-header class="ion-text-center">
+                      <ion-card-title color="danger"> Module is missing!!
                       </ion-card-title>
                     </ion-card-header>
-                    <ion-card-content>
-                      <app-message-with-svg imageUrl="assets/img/question_mark.svg"
-                        messageTitle="Opps! It looks like that you did not select a module"
-                        messageContent="Please select a module from the configuration section." wrapperSize="6"
-                        wrapperMarginTop="30px" wrapperOffset="3">
-                      </app-message-with-svg>
-                    </ion-card-content>
+                    <p class="ion-text-center ion-padding-start ion-padding-end">Opps! It looks like that you did not
+                      select a module
+                    </p>
                   </ion-card>
                 </ng-template>
               </ng-template>
@@ -117,27 +222,155 @@
             <ng-template #classCodeSelected>
               <ng-container *ngIf="!surveyType; else surveyTypeSelected">
                 <ion-card>
-                  <ion-card-header>
-                    <ion-card-title>None of the survey types are due now!</ion-card-title>
-                    <ion-card-title>There are no surveys to display at the current time for the selected module
+                  <app-message-with-svg imageUrl="assets/img/due_date.svg" messageTitle="" messageContent=""
+                    wrapperSize="6" wrapperMarginTop="30px" wrapperOffset="3">
+                  </app-message-with-svg>
+                  <ion-card-header class="ion-text-center">
+                    <ion-card-title color="warning">None of the survey types are due now!
                     </ion-card-title>
                   </ion-card-header>
-                  <ion-card-content>
-                    <app-message-with-svg imageUrl="assets/img/due_date.svg" messageTitle="" messageContent=""
-                      wrapperSize="6" wrapperMarginTop="30px" wrapperOffset="3">
-                    </app-message-with-svg>
-                  </ion-card-content>
+                  <p class="ion-text-center ion-padding-start ion-padding-end">There are no surveys to display at the
+                    current time for the selected module
+                  </p>
                 </ion-card>
               </ng-container>
               <ng-template #surveyTypeSelected>
-                All Three Selected
+                <ng-container *ngTemplateOutlet="surveyContent"></ng-container>
               </ng-template>
             </ng-template>
           </ng-container>
+          <ng-template #loadingMain>
+            Loading the main
+          </ng-template>
         </ng-template>
       </ion-col>
     </ion-row>
   </ion-grid>
-
-
 </ion-content>
+
+
+<ng-template #surveyContent>
+  <ng-container *ngIf="(survey$ | async) as surveys; else loadingsurvey">
+    <div class="survey-wrapper" *ngFor="let survey of surveys">
+      <div class="survey-sections" *ngIf="survey.sections.length > 0; else noSectionsAddedMsg">
+        <div class="survey-section" *ngFor="let surveySection of survey.sections; index as i">
+          <ion-card>
+            <ion-card-header color="secondary">
+              <ion-card-title>
+                Section {{i+1}}:
+                {{ surveySection.name }}
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="ion-no-padding">
+              <div *ngIf="surveySection.questions.length > 0; else noQuestionsUnderThisSection">
+                <div class="survey-question"
+                  [class.border-success]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content"
+                  [class.border-danger]="!response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content && showFieldMissingError"
+                  *ngFor="let surveyQuestion of surveySection.questions; index as questionIndex">
+                  <p class="questionTitle ion-padding-start ion-padding-end">
+                    <ion-text
+                      *ngIf="!response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content && showFieldMissingError"
+                      color="danger">*</ion-text>
+                    <ion-text
+                      [color]="!response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content && showFieldMissingError ? 'danger' : 'secondary'">
+                      {{ surveyQuestion.content }}</ion-text>
+                  </p>
+                  <div>
+                    <ng-template [ngIf]="surveyQuestion.type === 'MCQ'" [ngIfElse]="showTextArea">
+                      <ion-list class="ion-no-padding">
+                        <ion-radio-group
+                          [(ngModel)]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content">
+                          <ion-item lines="none" class="d-block d-lg-inline rdBtn"
+                            [class.rdBtn-with-na]="!surveyQuestion.applicable" *ngFor="let mcqAnswer of msqAnswers">
+                            <ion-radio color="success" slot="start" [value]="mcqAnswer.id">
+                            </ion-radio>
+                            <ion-label
+                              [color]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content === mcqAnswer.id ? 'success' : ''">
+                              {{mcqAnswer.content}}
+                            </ion-label>
+                          </ion-item>
+                          <ion-item lines="none" *ngIf="!surveyQuestion.applicable" class="d-block d-lg-inline na">
+                            <ion-radio value="0">
+                            </ion-radio>
+                            <ion-label style="font-size: 14px;">
+                              N/A
+                            </ion-label>
+                          </ion-item>
+                        </ion-radio-group>
+                      </ion-list>
+                    </ng-template>
+                  </div>
+                  <ng-template #showTextArea>
+                    <ion-textarea rows="2" autoGrow="true"
+                      [(ngModel)]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content"
+                      type="text" name="note" class="with-padding" placeholder="Enter your answer here">
+                    </ion-textarea>
+                  </ng-template>
+                </div>
+              </div>
+              <ng-template #noQuestionsUnderThisSection>
+                <h2 class="glob-text-bold ion-text-center ion-padding-top">
+                  <ion-text color="danger">
+                    There are no questions added under this section.
+                  </ion-text>
+                </h2>
+              </ng-template>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </div>
+
+      <ng-template #noSectionsAddedMsg>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <p class="normaltext text-center">
+                There are no sections added to this survey yet.
+              </p>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ng-template>
+    </div>
+  </ng-container>
+  <ng-template #loadingsurvey>
+    <ion-card *ngFor="let _ of numOfSkeletons">
+      <ion-item>
+        <ion-skeleton-text animated style="line-height: 30px; width: 100%"></ion-skeleton-text>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-skeleton-text animated style="width: 35%; line-height: 25px;"></ion-skeleton-text>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-skeleton-text animated style="width: 55%; line-height: 25px;"></ion-skeleton-text>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-skeleton-text animated style="width: 75%; line-height: 25px;"></ion-skeleton-text>
+      </ion-item>
+    </ion-card>
+  </ng-template>
+</ng-template>
+
+<ion-footer *ngIf="surveyType === 'Programme Evaluation' || (classCode && intakeCode && surveyType)">
+  <ion-toolbar>
+    <ion-grid class="ion-no-padding">
+      <ion-row>
+        <ion-col *ngIf="showFieldMissingError" size-xs="12" size-md="8" class="ion-padding-start ion-padding-end">
+          <ion-text class="ion-margin-bottom ion-margin-top" color="danger">One (or more)
+            of the answers
+            are
+            missing. You have to answer all the questions with *.</ion-text>
+        </ion-col>
+        <ion-col size-xs="12" size-md="8" class="ion-padding-start ion-padding-end ion-text-end">
+          <ion-button [disabled]="submitting" (click)="submitSurvey()" expand="block" color="success">
+            <ng-container *ngIf="!submitting">
+              Submit
+              <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+            </ng-container>
+            <ng-container *ngIf="submitting">Loading ...</ng-container>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

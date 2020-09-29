@@ -121,6 +121,7 @@ export class StudentSurveyPage implements OnInit {
   onClassCodeChanged() {
     this.userComingFromResultsPage = false;
     this.lecturerName = '';
+    this.surveyType = '';
     this.getSurveyType(this.classCode);
     this.getModuleByClassCode(this.classCode);
     this.showFieldMissingError = false;
@@ -284,22 +285,25 @@ export class StudentSurveyPage implements OnInit {
       message = `You are about to submit the programme survey for the intake ${this.intakeCode}. Do you want to continue?`;
       endpoint = '/survey/programme_response';
     } else {
-      message = `You are about to submit the survey for the module with the code ${this.classCode},
-      under the intake ${this.intakeCode}. Do you want to continue?`;
+      message = `Are you sure you want to submit the survey for the class code ${this.classCode}?`;
       endpoint = '/survey/response';
     }
     const confirm = await this.alertCtrl.create({
-      header: 'Submit Survey',
+      header: 'Confirm!',
       message,
+      cssClass: 'success-alert',
       buttons: [
         {
           text: 'No',
+          role: 'cancel',
+          cssClass: 'cancel',
           // tslint:disable-next-line: no-empty
           handler: () => {
           },
         },
         {
           text: 'Yes',
+          cssClass: 'main',
           handler: () => {
             const notAnsweredQuestions = this.response.answers.filter(answer => answer.content === '');
             if (notAnsweredQuestions.length === 0) {
