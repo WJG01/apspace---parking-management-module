@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { AlertController, LoadingController, ModalController, Platform, ToastController } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
 import { Observable, of } from 'rxjs';
 import { catchError, finalize, map } from 'rxjs/operators';
 
@@ -21,7 +22,7 @@ export class PrintPayslipModalPage {
   dateToFilter;
   fileToFilter;
   term;
-  isHumanResourceAdmin = true;
+  canAccessPayslipFileSearch;
   search = false;
   whileFirstSearch = false;
   segmentValue = 'myFiles';
@@ -32,6 +33,7 @@ export class PrintPayslipModalPage {
     public alertCtrl: AlertController,
     public loadingCtrl: LoadingController,
     private platform: Platform,
+    private storage: Storage,
     private file: File,
     private fileOpener: FileOpener,
     private ws: WsApiService,
@@ -39,6 +41,9 @@ export class PrintPayslipModalPage {
   ) { }
 
   ionViewWillEnter() {
+    this.storage.get('canAccessPayslipFileSearch').then(
+      canAccessPayslipFileSearch => this.canAccessPayslipFileSearch = canAccessPayslipFileSearch
+    );
     this.doRefresh();
   }
 

@@ -123,6 +123,7 @@ export class CasTicketService {
           .join().toLowerCase().split(',');
         let role: Role = 0;
         let canAccessResults = false;
+        let canAccessPayslipFileSearch = false;
 
         /* tslint:disable:no-bitwise */
         if (parts.indexOf('ou=students') !== -1) {
@@ -144,13 +145,18 @@ export class CasTicketService {
           const memberOf = res.serviceResponse.authenticationSuccess.attributes.memberOf
             .join().toLowerCase().split(',');
 
+          // const distinguishedName = res.serviceResponse.authenticationSuccess.attributes.distinguishedName
+          //   .join().toLowerCase().split(',');
+
           canAccessResults = memberOf.includes('cn=gims_web_result');
+          canAccessPayslipFileSearch = memberOf.includes('cn=All HR Staff');
         }
 
         // make sure storage tasks are done before returning
         return forkJoin([
           from(this.storage.set('role', role)),
           from(this.storage.set('canAccessResults', canAccessResults)),
+          from(this.storage.set('canAccessPayslipFileSearch', canAccessPayslipFileSearch))
         ]).pipe(switchMapTo(of(role)));
       }),
     );

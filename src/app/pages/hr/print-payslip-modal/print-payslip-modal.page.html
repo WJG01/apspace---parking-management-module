@@ -2,7 +2,7 @@
   <ion-toolbar mode="md">
     <ion-title>Download Payslip</ion-title>
     <ion-buttons slot="end">
-      <ion-button *ngIf="isHumanResourceAdmin" color="tertiary" fill="outline" (click)="syncFiles()">
+      <ion-button *ngIf="canAccessPayslipFileSearch" color="tertiary" fill="outline" (click)="syncFiles()">
         SYNC
         <ion-icon name="sync" slot="end"></ion-icon>
       </ion-button>
@@ -21,7 +21,7 @@
 
   <div class="glob-container">
     <ion-grid>
-      <ion-row *ngIf="isHumanResourceAdmin">
+      <ion-row *ngIf="canAccessPayslipFileSearch">
         <ion-col class="ion-padding">
           <ion-segment [(ngModel)]="segmentValue" (ionChange)="segmentChanged($event)">
             <ion-segment-button value="myFiles">
