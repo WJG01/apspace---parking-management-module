@@ -21,8 +21,9 @@
       <ion-row class="ion-justify-content-end">
         <ion-col size="auto">
           <ion-button *ngIf="intakeSelectable" fill="outline" (click)="presentIntakeSearch()" color="primary">
-            {{ intake || 'Intakes' }}
-            <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
+            {{ intake || 'Intake' }}
+            <ion-icon *ngIf="!intake" name="search-outline" slot="end"></ion-icon>
+            <ion-icon *ngIf="intake" name="chevron-down-outline" slot="end"></ion-icon>
           </ion-button>
         </ion-col>
         <ion-col size="auto">
@@ -197,7 +198,7 @@
           <ng-template #emptyIntake>
             <app-message-with-svg imageUrl="assets/img/search-not-found.svg"
               messageTitle="Opps! It looks like that you forgot to select an intake."
-              messageContent="Please select an intake from the intakes button on the top right of the page"
+              messageContent="Please select an intake from the intake button on the top right of the page"
               wrapperSize="6" wrapperMarginTop="10px" wrapperOffset="3" [advancedMode]="true">
             </app-message-with-svg>
           </ng-template>
