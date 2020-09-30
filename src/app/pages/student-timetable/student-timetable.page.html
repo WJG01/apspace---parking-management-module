@@ -46,7 +46,7 @@
             <ion-toggle [checked]="viewWeek"></ion-toggle>
           </ion-button>
         </ion-col>
-        <ion-col size="auto">
+        <ion-col size="auto" *ngIf="!room">
           <ion-button color="primary" fill="outline" (click)="sendToPrint()">
             <ion-icon slot="icon-only" name="print"></ion-icon>
           </ion-button>
