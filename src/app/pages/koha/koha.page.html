@@ -149,7 +149,7 @@
             <ng-container *ngSwitchCase="'latest-additions'">
               <div *ngIf="recentAdditions$ | async as recentAdditions; else loadingList">
                 <ion-list *ngFor="let addition of recentAdditions" lines="none">
-                  <ion-item>
+                  <ion-item lines="full">
                     <ion-label>
                       <ion-text color="primary">
                         <h3 class="glob-text-bold">{{ addition.title }}</h3>
