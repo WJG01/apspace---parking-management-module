@@ -1,8 +1,9 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import Fuse from 'fuse.js';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { filter, finalize, map } from 'rxjs/operators';
 
+import { NotifierService } from 'src/app/shared/notifier/notifier.service';
 import { StaffDirectory } from '../../interfaces';
 import { WsApiService } from '../../services';
 
@@ -11,8 +12,10 @@ import { WsApiService } from '../../services';
   templateUrl: './staff-directory.component.html',
   styleUrls: ['./staff-directory.component.scss'],
 })
-export class StaffDirectoryComponent implements OnInit {
+export class StaffDirectoryComponent implements OnInit, OnDestroy{
   @Output() staffID = new EventEmitter<string>();
+
+  notification: Subscription;
 
   term = '';
   dept = '';
@@ -32,10 +35,21 @@ export class StaffDirectoryComponent implements OnInit {
 
   constructor(
     private ws: WsApiService,
+    private notifierService: NotifierService
   ) { }
 
   ngOnInit() {
+    this.notification = this.notifierService.staffDirectoryUpdated.subscribe(data => {
+      if (data && data === 'REFRESH') {
+        this.doRefresh();
+      }
+    });
+
     this.doRefresh();
+  }
+
+  ngOnDestroy() {
+    this.notification.unsubscribe();
   }
 
   doRefresh(refresher?) {

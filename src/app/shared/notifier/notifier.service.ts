@@ -9,4 +9,5 @@ export class NotifierService {
   assessmentTypeUpdated = new Subject();
   timeFormatUpdated = new Subject();
   apCardUpdated = new Subject();
+  staffDirectoryUpdated = new Subject();
 }
