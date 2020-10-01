@@ -5,8 +5,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { ComponentsModule } from 'src/app/components/components.module';
+import { StaffDirectoryModule } from '../../components/staff-directory/staff-directory.module';
 import { SharedPipesModule } from '../../shared/shared-pipes.module';
-import { DepartmentPipe } from './department.pipe';
 import { StaffDirectoryPage } from './staff-directory.page';
 
 const routes: Routes = [
@@ -23,8 +23,9 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     SharedPipesModule,
-    ComponentsModule
+    ComponentsModule,
+    StaffDirectoryModule
   ],
-  declarations: [StaffDirectoryPage, DepartmentPipe]
+  declarations: [StaffDirectoryPage]
 })
 export class StaffDirectoryPageModule { }

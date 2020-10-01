@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 
 import { WsApiService } from '../../services';
 import { FusePipe } from '../../shared/fuse/fuse.pipe';
-import { DepartmentPipe } from './department.pipe';
 import { StaffDirectoryPage } from './staff-directory.page';
 
 describe('StaffDirectoryPage', () => {
@@ -12,7 +11,7 @@ describe('StaffDirectoryPage', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [DepartmentPipe, StaffDirectoryPage, FusePipe],
+      declarations: [StaffDirectoryPage, FusePipe],
       providers: [
         { provide: WsApiService, useValue: {} },
       ],
