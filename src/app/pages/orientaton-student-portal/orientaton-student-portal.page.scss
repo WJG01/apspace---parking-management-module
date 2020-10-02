@@ -1,30 +1,23 @@
 .table {
-  .table-container {
-    padding-top: 5px;
-    padding-bottom: 0;
-    padding-left: 0;
-    padding-right: 0;
 
-    .table-header {
-      padding: 7px 0 10px 0;
-      border-bottom: 1px solid #cccccc;
-      background-color: var(--primary-color);
-      color: #FFFFFF;
-      font-weight: bold;
-      ion-text {
-        font-size: 1rem;
-      }
-    }
+  .table-header {
+    padding: 7px 0 10px 0;
+    font-weight: bold;
 
-    .table-row {
-      padding-top: 5px;
-      padding-bottom: 0;
-
-      &:hover {
-        background: var(--tertiary-bg-color);
-      }
+    ion-text {
+      font-size: 1rem;
     }
   }
+
+  .table-row {
+    padding-top: 5px;
+    padding-bottom: 0;
+
+    &:nth-child(even){
+      background-color: var(--ion-color-light);
+    }
+  }
+
 }
 
 
