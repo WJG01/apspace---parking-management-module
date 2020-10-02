@@ -4,27 +4,26 @@ import { File } from '@ionic-native/file/ngx';
 import { AlertController, LoadingController, ModalController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Observable, of } from 'rxjs';
-import { catchError, finalize, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { CasTicketService, WsApiService } from 'src/app/services';
+import { SearchedFilesDisplayComponent } from './searched-files-display/searched-files-display.component';
+
 
 @Component({
-  selector: 'app-print-payslip-modal',
-  templateUrl: './print-payslip-modal.page.html',
-  styleUrls: ['./print-payslip-modal.page.scss'],
+  selector: 'app-hr-download',
+  templateUrl: './hr-download.page.html',
+  styleUrls: ['./hr-download.page.scss'],
 })
+export class HrDownloadPage {
 
-export class PrintPayslipModalPage {
   files$: Observable<any[]>;
   ePayslipUrl = 'https://t16rz80rg7.execute-api.ap-southeast-1.amazonaws.com/staging';
   // payslipsUrl = 'https://api.apiit.edu.my';
 
   dateToFilter;
   fileToFilter;
-  term;
   canAccessPayslipFileSearch;
-  search = false;
-  whileFirstSearch = false;
   segmentValue = 'myFiles';
 
   constructor(
@@ -44,14 +43,14 @@ export class PrintPayslipModalPage {
     this.storage.get('canAccessPayslipFileSearch').then(
       canAccessPayslipFileSearch => this.canAccessPayslipFileSearch = canAccessPayslipFileSearch
     );
+    // this.canAccessPayslipFileSearch = true;
     this.doRefresh();
   }
 
-  doRefresh(refresher?) {
+  doRefresh() {
     this.files$ = this.ws.get<any>('/epayslip/list', { url: this.ePayslipUrl }).pipe(
       map(files => [...files.ea_form, ...files.payslips]),
-      map(files => files.sort((a, b) => 0 - (a > b ? 1 : -1))),
-      finalize(() => refresher && refresher.target.complete())
+      map(files => files.sort((a, b) => 0 - (a > b ? 1 : -1)))
     );
   }
 
@@ -98,25 +97,31 @@ export class PrintPayslipModalPage {
 
     if (event.detail.value === 'myFiles') {
       this.doRefresh();
-      this.search = false;
-      this.whileFirstSearch = false;
     } else {
       this.files$ = of([]);
-      this.search = true;
-      this.whileFirstSearch = true;
     }
   }
 
-  searchFiles() {
-    if (this.whileFirstSearch) {
-      this.whileFirstSearch = false;
-    }
+  viewSearchedStaffFiles($event) {
+    const staffID = $event;
+    // let staffFiles;
 
-    this.files$ = this.ws.get<any>(`/epayslip/find?staff_id=${this.term}`, { url: this.ePayslipUrl }).pipe(
-      map(files => [...files.ea_form, ...files.payslips]),
-      map(files => files.sort((a, b) => 0 - (a > b ? 1 : -1))),
-      catchError(error => of(error))
-    );
+    // this.ws.get<any>(`/epayslip/find?staff_id=${staffID}`, { url: this.ePayslipUrl }).pipe(
+    //   map(files => [...files.ea_form, ...files.payslips]),
+    //   map(files => files.sort((a, b) => 0 - (a > b ? 1 : -1))),
+    //   tap(files => staffFiles = files),
+    //   catchError(error => of(error))
+    // ).subscribe();
+
+    this.modalCtrl.create({
+      component: SearchedFilesDisplayComponent,
+      cssClass: 'glob-partial-page-modal',
+      componentProps: {
+        staffFiles: staffID
+      }
+    }).then(modal => {
+      modal.present();
+    });
   }
 
   syncFiles() {
@@ -173,4 +178,5 @@ export class PrintPayslipModalPage {
   dismiss() {
     this.modalCtrl.dismiss();
   }
+
 }

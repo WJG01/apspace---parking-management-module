@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { ModalController } from '@ionic/angular';
 import { format } from 'date-fns';
@@ -7,7 +8,6 @@ import { map, tap } from 'rxjs/operators';
 
 import { OnLeaveOnMyCluster, PendingApproval, StaffDirectory, StaffProfile } from 'src/app/interfaces';
 import { WsApiService } from 'src/app/services';
-import { PrintPayslipModalPage } from './print-payslip-modal/print-payslip-modal.page';
 @Component({
   selector: 'app-hr',
   templateUrl: './hr.page.html',
@@ -32,12 +32,17 @@ export class HrPage implements OnInit {
   ];
 
   // leaves$: Observable<LeaveBalance[]>;
-  history$: any;
-  leaveInCluster$: any;
+  history$: Observable<any[]>;
+  leaveInCluster$: Observable<any[]>;
   pendingApproval$: Observable<PendingApproval[]>;
   skeletons = new Array(4);
   staffsOnLeave = []; // IDs of all staff on leave
-  constructor(public modalCtrl: ModalController, private ws: WsApiService, private iab: InAppBrowser) { }
+  constructor(
+    public modalCtrl: ModalController,
+    private ws: WsApiService,
+    private iab: InAppBrowser,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.ws.get<StaffProfile[]>('/staff/profile', { caching: 'cache-only' }).pipe(
@@ -105,7 +110,8 @@ export class HrPage implements OnInit {
             return previous;
           }, {});
         return Object.keys(results).map(date => ({ date, value: results[date] }));
-      })
+      }),
+      tap(console.log)
     );
   }
 
@@ -126,13 +132,7 @@ export class HrPage implements OnInit {
     this.iab.create('https://hr.apiit.edu.my', '_system', 'location=true');
   }
 
-  openPayslipPdf() {
-    this.modalCtrl.create({
-      component: PrintPayslipModalPage,
-      cssClass: 'glob-partial-page-modal',
-    }).then(modal => {
-      modal.present();
-      modal.onDidDismiss();
-    });
+  openHrDownload() {
+    this.router.navigate(['/hr/hr-download']);
   }
 }
