@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { ChartModule } from 'angular2-chartjs';
-import { DragulaModule, DragulaService } from 'ng2-dragula';
 
 import { ComponentsModule } from 'src/app/components/components.module';
 import { DashboardPage } from './dashboard.page';
@@ -26,10 +25,8 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     ComponentsModule,
-    ChartModule,
-    DragulaModule
+    ChartModule
   ],
   declarations: [DashboardPage, DisabledPipe, SectionNamePipe],
-  providers: [DragulaService]
 })
 export class DashboardPageModule {}
