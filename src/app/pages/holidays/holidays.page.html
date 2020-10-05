@@ -16,19 +16,20 @@
     <ion-grid>
       <ion-row>
         <ion-col size="12" size-md="4" offset-md="8">
-          <ion-item *ngIf="affecting" lines="none">
-            <ion-label>Affecting:</ion-label>
-            <ion-select interface="popover" [(ngModel)]="affecting" (ngModelChange)="onFilter()">
-              <ion-select-option value="students">Students only</ion-select-option>
-              <ion-select-option value="staff">Staff only</ion-select-option>
-            </ion-select>
-          </ion-item>
+          
         </ion-col>
       </ion-row>
     </ion-grid>
     <ion-card>
       <ion-card-content>
         <ng-container *ngIf="filteredHoliday$ | async; else loadingHolidays">
+<ion-item *ngIf="affecting" class="ion-padding-bottom">
+            <ion-label>Affecting:</ion-label>
+            <ion-select interface="popover" [(ngModel)]="affecting" (ngModelChange)="onFilter()">
+              <ion-select-option value="students">Students only</ion-select-option>
+              <ion-select-option value="staff">Staff only</ion-select-option>
+            </ion-select>
+          </ion-item>
           <ion-calendar class="holidays" [(ngModel)]="openDate" (change)="holidayItemOnChange($event)" [options]="options"
             [type]="'string'" [format]="'YYYY-MM-DD'">
           </ion-calendar>
@@ -68,7 +69,7 @@
             <ion-list>
               <ion-item lines="none">
                 <ion-label color="tertiary" class="ion-text-center ion-margin-top" style="font-size: 20px;">
-                  Please select a day to view more details
+                  <p>Please select a day to view more details</p>
                 </ion-label>
               </ion-item>
             </ion-list>
