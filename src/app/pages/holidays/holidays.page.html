@@ -30,11 +30,10 @@
               <ion-select-option value="staff">Staff only</ion-select-option>
             </ion-select>
           </ion-item>
-          <ion-calendar class="holidays" [(ngModel)]="openDate" (change)="holidayItemOnChange($event)" [options]="options"
+          <ion-calendar class="glob-calendar" [(ngModel)]="openDate" (change)="holidayItemOnChange($event)" [options]="options"
             [type]="'string'" [format]="'YYYY-MM-DD'">
           </ion-calendar>
-          <ng-container *ngIf="userClickedOnce; else noClick">
-            <ng-container *ngIf="showDetails; else NoHolidaySelected">
+          <ng-container *ngIf="showDetails; else noClick">
               <ion-list>
                 <ion-item lines="none" class="glob-margin-auto">
                   <!-- (click)="showMore = !showMore" to be enabled in the future -->
@@ -54,21 +53,11 @@
                   </ion-badge>
               </ion-item> -->
               </ion-list>
-            </ng-container>
-            <ng-template #NoHolidaySelected>
-              <ion-list>
-                <ion-item lines="none" style="width: 90%;" class="glob-margin-auto">
-                  <ion-label>
-                    <p>No Events to View On This Day</p>
-                  </ion-label>
-                </ion-item>
-              </ion-list>
-            </ng-template>
           </ng-container>
           <ng-template #noClick>
             <ion-list>
               <ion-item lines="none">
-                <ion-label color="tertiary" class="ion-text-center ion-margin-top" style="font-size: 20px;">
+                <ion-label color="primary" class="ion-text-center ion-margin-top">
                   <p>Please select a day to view more details</p>
                 </ion-label>
               </ion-item>
