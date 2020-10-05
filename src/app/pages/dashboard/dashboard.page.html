@@ -59,7 +59,7 @@
             <ion-card-content>
               <ion-grid>
                 <ion-row>
-                  <ion-col size="12">
+                  <ion-col size="12" *ngIf="isCordova">
                     <ion-button expand="block" [routerLink]="['/apcard-qr-code']">
                       Scan Qr Code
                       <ion-icon name="qr-code-outline" slot="end"></ion-icon>
