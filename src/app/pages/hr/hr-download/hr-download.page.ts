@@ -4,7 +4,7 @@ import { File } from '@ionic-native/file/ngx';
 import { AlertController, LoadingController, ModalController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 import { CasTicketService, WsApiService } from 'src/app/services';
 import { SearchedFilesDisplayComponent } from './searched-files-display/searched-files-display.component';
@@ -50,7 +50,8 @@ export class HrDownloadPage {
   doRefresh() {
     this.files$ = this.ws.get<any>('/epayslip/list', { url: this.ePayslipUrl }).pipe(
       map(files => [...files.ea_form, ...files.payslips]),
-      map(files => files.sort((a, b) => 0 - (a > b ? 1 : -1)))
+      map(files => files.sort((a, b) => 0 - (a > b ? 1 : -1))),
+      catchError(error => of(error))
     );
   }
 
