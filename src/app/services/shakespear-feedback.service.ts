@@ -38,7 +38,7 @@ export class ShakespearFeedbackService {
           this.vibration.vibrate(1000); // Vibrate for 1s (1000ms)
           const modal = await this.modalCtrl.create({
             component: ShakespearModalPage,
-            cssClass: 'controlled-modal',
+            cssClass: 'glob-partial-page-modal',
             componentProps: {
               imagePath: res.URI
             }
