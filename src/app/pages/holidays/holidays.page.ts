@@ -77,8 +77,9 @@ export class HolidaysPage implements OnInit {
         if (date === res.holiday_start_date) {
           this.holidayTitle = res.holiday_name;
           this.holidaysAffected = res.holiday_people_affected;
-          // tslint:disable-next-line: max-line-length
-          this.remainingDays = dayDifference < 0 ? Math.abs(dayDifference) + ' Days Ago' : dayDifference === 0 ? 'Today' : dayDifference === 1 ? '1 Day Remaining' : dayDifference + ' Days Remaining';
+          this.remainingDays = dayDifference < 0 ? Math.abs(dayDifference) + ' Days Ago' : dayDifference === 0
+            ? 'Today' : dayDifference === 1
+              ? '1 Day Remaining' : dayDifference + ' Days Remaining';
           this.showDetails = true;
         }
       }

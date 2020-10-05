@@ -24,17 +24,17 @@
                             class="glob-calendar calendar "
                             >
             </ion-calendar>
-              <div *ngIf="showDetails">
+              <div *ngIf="showDetails; else noDetails">
                 <ion-list >
                   <ion-item *ngFor="let detail of detailsList; let last=last" [lines]="last ? 'none' : 'full'" [class]="detail.ATTENDANCE_STATUS === 'Y'
-                                                                                       ? 'attended'
-                                                                                       : detail.ATTENDANCE_STATUS === 'N'
-                                                                                       ? 'absent'
-                                                                                       : detail.ATTENDANCE_STATUS === 'R'
-                                                                                       ? 'absent-reason'
-                                                                                       : detail.ATTENDANCE_STATUS === 'L'
-                                                                                       ? 'late'
-                                                                                       : ''">
+                                                                                                              ? 'attended'
+                                                                                                              : detail.ATTENDANCE_STATUS === 'N'
+                                                                                                              ? 'absent'
+                                                                                                              : detail.ATTENDANCE_STATUS === 'R'
+                                                                                                              ? 'absent-reason'
+                                                                                                              : detail.ATTENDANCE_STATUS === 'L'
+                                                                                                              ? 'late'
+                                                                                                              : ''">
                     <ion-label>
                       <h3 class="glob-text-bold">{{ detail.CLASS_TYPE }}</h3>
                       <p>{{ detail.TIME_FROM + ' - ' + detail.TIME_TO }}</p>
@@ -48,6 +48,12 @@
                   <p class="legend"> <span class="dot" style="background: #D49A0D"></span>  Late </p> 
                 </ion-row>
               </div>
+
+              <ng-template #noDetails>
+                <ion-text color="primary" class="ion-text-center">
+                  <p>Please select a day to view more details</p>
+                </ion-text>
+              </ng-template>
           </ion-card-content>
         </ion-card>
       </ion-col>
