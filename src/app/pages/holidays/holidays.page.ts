@@ -28,7 +28,6 @@ export class HolidaysPage implements OnInit {
   holidayTitle: string;
   holidaysAffected: string;
   showDetails: boolean;
-  userClickedOnce: boolean;
   remainingDays: string;
   recordsArray: Holiday[] = [];
   todaysDate = new Date();
@@ -63,7 +62,6 @@ export class HolidaysPage implements OnInit {
   }
 
   holidayItemOnChange($event: any) {
-    this.userClickedOnce = true;
     this.showDetails = false;
     this.recordsArray.forEach((res) => {
       const date = this.datePipe.transform(new Date(res.holiday_start_date), 'yyyy-MM-dd');
@@ -106,6 +104,7 @@ export class HolidaysPage implements OnInit {
 
         this.options = {
           from: today,
+          to: null,
           daysConfig: this.datesConfig,
         };
 
@@ -115,7 +114,7 @@ export class HolidaysPage implements OnInit {
             marked: true,
             disable: false,
             subTitle: '.',
-            cssClass: 'holiday',
+            cssClass: 'holidays',
           });
 
           this.recordsArray.push({

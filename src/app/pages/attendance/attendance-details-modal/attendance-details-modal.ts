@@ -83,8 +83,8 @@ export class AttendanceDetailsModalPage implements OnInit {
           // picks first date from array(most recent) and opens it in calendar
           this.openDate = this.datePipe.transform(new Date(this.recordsArray[0].CLASS_DATE), 'yyyy-MM-dd');
           this.options.from = new Date(this.recordsArray[this.recordsArray.length - 1].CLASS_DATE);
-          this.options.to = new Date(this.openDate),
-            this.loaded = true;
+          this.options.to = null;
+          this.loaded = true;
         }
       }
     );
