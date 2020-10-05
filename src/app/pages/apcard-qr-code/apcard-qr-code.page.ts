@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner/ngx';
 import { AlertController, LoadingController, ModalController, NavController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { VisitHistoryModalPage } from './visit-history/visit-history-modal';
   templateUrl: './apcard-qr-code.page.html',
   styleUrls: ['./apcard-qr-code.page.scss']
 })
-export class ApcardQrCodePage implements OnInit, OnDestroy {
+export class ApcardQrCodePage implements OnDestroy {
   status: QRScannerStatus;  // scan availability
 
   loading: HTMLIonLoadingElement;
@@ -31,7 +31,7 @@ export class ApcardQrCodePage implements OnInit, OnDestroy {
     private navCtrl: NavController
   ) { }
 
-  ngOnInit() {
+  ionViewDidEnter() {
     this.scanQrCode();
   }
 
