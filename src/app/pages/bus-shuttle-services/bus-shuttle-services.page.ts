@@ -79,17 +79,10 @@ export class BusShuttleServicesPage {
       map(res => res.trips),
       map(r => {
         return r.map(item => {
-          // const tripHours = item.trip_time.split(':')[0];
-          // const tripMinutes = item.trip_time.split(':')[1];
-
-          // const todaysDate = this.dateWithTimezonePipe.transform(this.dateNow, 'yyyy-MM-dd');
-
-          // const finalDate = todaysDate + 'T' + tripHours + ':' + tripMinutes + ':00+08:00';
-
-          const dateObject = parse(item.trip_time, 'HH:mm', new Date());
-
-          item.trip_time = this.dateWithTimezonePipe.transform(new Date(dateObject), 'time');
-
+          if (!item.trip_time.includes(' ')) {
+            const dateObject = parse(item.trip_time, 'HH:mm', new Date());
+            item.trip_time = this.dateWithTimezonePipe.transform(dateObject, 'time');
+          }
           return item;
         });
       }),
@@ -137,7 +130,7 @@ export class BusShuttleServicesPage {
             // FILTER TRIPS TO UPCOMING TRIPS ONLY
             // return this.strToDate(trip.trip_time) >= this.dateNow;
             const timeFilter = this.settings.get('timeFormat') === '24' ? parse(trip.trip_time, 'kk:mm', new Date()) >= this.dateNow :
-                                                                          parse(trip.trip_time, 'hh:mm aa', new Date()) >= this.dateNow;
+              parse(trip.trip_time, 'hh:mm aa', new Date()) >= this.dateNow;
             return timeFilter;
           });
         }
