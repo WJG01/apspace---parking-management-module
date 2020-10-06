@@ -158,6 +158,7 @@ export class TabsPage implements OnInit {
     // tslint:enable:no-bitwise
   }
 
+
   @HostListener('document:keydown.f1')
   @HostListener('document:keydown.?')
   @HostListener('document:keydown.shift.?')
@@ -178,6 +179,9 @@ export class TabsPage implements OnInit {
 
   toggleSearchBar() {
     this.shownSearchBar = !this.shownSearchBar;
+    if (this.shownSearchBar) {
+      this.searchbar.setFocus();
+    }
   }
 
   openHelpCentre() {
