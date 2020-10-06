@@ -180,7 +180,7 @@ export class TabsPage implements OnInit {
   toggleSearchBar() {
     this.shownSearchBar = !this.shownSearchBar;
     if (this.shownSearchBar) {
-      this.searchbar.setFocus();
+      setTimeout(() => this.searchbar.setFocus(), 400);
     }
   }
 
