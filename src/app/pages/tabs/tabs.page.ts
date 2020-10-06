@@ -136,10 +136,23 @@ export class TabsPage implements OnInit {
       }
 
       this.storage.get('canAccessResults').then((canAccessResults = false) => {
-        this.menuFiltered = this.menuFull.filter(
-          // tslint:disable-next-line:no-bitwise
-          menu => ((menu.role & role) && ((menu.canAccess && menu.canAccess === canAccessResults) || !menu.canAccess || Role.Student) )
-        );
+        // tslint:disable-next-line:no-bitwise
+        if (role & Role.Student) {
+          this.menuFiltered = this.menuFull.filter(
+            menu => {
+              // tslint:disable-next-line:no-bitwise
+              return menu.role & role;
+            }
+          );
+        } else {
+          this.menuFiltered = this.menuFull.filter(
+            menu => {
+              // tslint:disable-next-line:no-bitwise
+              return ((menu.role & role) && ((menu.canAccess && menu.canAccess === canAccessResults) || !menu.canAccess));
+            }
+          );
+        }
+
       });
     });
     // tslint:enable:no-bitwise

@@ -67,17 +67,29 @@ export class MorePage implements OnInit {
         console.warn(`duplicate '${menu.id}' in menuFull`);
       }
     });
-
     this.view$ = this.settings.get$('menuUI');
 
     Promise.all([
       this.storage.get('role'),
       this.storage.get('canAccessResults')
     ]).then(([role, canAccessResults = false]: [Role, boolean]) => {
-      this.menuFiltered = this.menuFull.filter(
-        // tslint:disable-next-line:no-bitwise
-        menu => ((menu.role & role) && ((menu.canAccess && menu.canAccess === canAccessResults) || !menu.canAccess || Role.Student) )
-      );
+      // tslint:disable-next-line:no-bitwise
+      if (role & Role.Student) {
+        this.menuFiltered = this.menuFull.filter(
+          menu => {
+            // tslint:disable-next-line:no-bitwise
+            return menu.role & role;
+          }
+        );
+      } else {
+        this.menuFiltered = this.menuFull.filter(
+          menu => {
+            // tslint:disable-next-line:no-bitwise
+            return ((menu.role & role) && ((menu.canAccess && menu.canAccess === canAccessResults) || !menu.canAccess));
+          }
+        );
+      }
+
 
       this.fav$ = this.settings.get$('favoriteItems').pipe(
         // tslint:disable-next-line:no-bitwise
