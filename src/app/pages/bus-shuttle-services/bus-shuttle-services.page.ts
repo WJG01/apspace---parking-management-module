@@ -79,19 +79,21 @@ export class BusShuttleServicesPage {
       map(res => res.trips),
       map(r => {
         return r.map(item => {
-          const tripHours = item.trip_time.split(':')[0];
-          const tripMinutes = item.trip_time.split(':')[1];
+          // const tripHours = item.trip_time.split(':')[0];
+          // const tripMinutes = item.trip_time.split(':')[1];
 
-          const todaysDate = this.dateWithTimezonePipe.transform(this.dateNow, 'yyyy-MM-dd');
+          // const todaysDate = this.dateWithTimezonePipe.transform(this.dateNow, 'yyyy-MM-dd');
 
-          const finalDate = todaysDate + 'T' + tripHours + ':' + tripMinutes + ':00+08:00';
+          // const finalDate = todaysDate + 'T' + tripHours + ':' + tripMinutes + ':00+08:00';
 
-          item.trip_time = this.dateWithTimezonePipe.transform(new Date(finalDate), 'time');
+          const dateObject = parse(item.trip_time, 'HH:mm', new Date());
+
+          item.trip_time = this.dateWithTimezonePipe.transform(new Date(dateObject), 'time');
 
           return item;
         });
-      }
-    ));
+      }),
+    );
   }
 
   getLocations(refresher: boolean) {
@@ -149,7 +151,7 @@ export class BusShuttleServicesPage {
           // STORE LATEST UPDATE DATE
           const applicableFroms = [...new Set(trips.map(trip => trip.applicable_from))];
           const latestUpdate = max(applicableFroms.map(parseISO));
-          this.latestUpdate = format(latestUpdate, 'dddd, do MMMM yyyy') || '';
+          this.latestUpdate = format(latestUpdate, 'do MMMM yyyy') || '';
         }
       }),
       map(trips => {
