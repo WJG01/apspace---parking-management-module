@@ -236,7 +236,8 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
       component: SearchModalComponent,
       componentProps: {
         items: this.intakeLabels,
-        defaultItems: this.settings.get('intakeHistory')
+        defaultItems: this.settings.get('intakeHistory'),
+        autofocus: true
       }
     });
     await modal.present();

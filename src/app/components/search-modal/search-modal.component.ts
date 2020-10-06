@@ -81,7 +81,7 @@ export class SearchModalComponent implements AfterViewInit, OnInit {
   ngAfterViewInit() {
     // XXX: Why Ionic?
     if (this.autofocus) {
-      setTimeout(() => this.searchbar.setFocus(), 200);
+      setTimeout(() => this.searchbar.setFocus(), 400);
     }
   }
 
