@@ -60,6 +60,16 @@ export const menusRaw = [
     parents: [],
   },
   {
+    id: 'anonymous-feedback' as const,
+    title: 'Anonymous Feedback',
+    group: 'Collaboration & Information Resources',
+    url: 'anonymous-feedback',
+    img: 'assets/img/anonymous-feedback.png',
+    role: Role.Student | Role.Lecturer | Role.Admin,
+    tags: ['anonymous', 'feedback', 'complain', 'issue'],
+    parents: []
+  },
+  {
     id: 'e-forms' as const,
     title: 'e-Forms',
     group: 'Collaboration & Information Resources',
