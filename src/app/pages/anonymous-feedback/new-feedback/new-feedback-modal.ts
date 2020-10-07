@@ -13,7 +13,6 @@ import { VersionService, WsApiService } from 'src/app/services';
 
 export class NewFeedbackModalPage implements OnInit {
   onlineFeedbackSystemURL = 'https://erp.apiit.edu.my/easymoo/web/en/user/feedback/feedbackusersend';
-  // stagingAPI = 'https://is04zlrnac.execute-api.ap-southeast-1.amazonaws.com/staging/anonymous_feedback';
   productionAPI = 'https://api.apiit.edu.my/anonymous_feedback';
 
   phoneNumberValidationPattern = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4,5})$/;
