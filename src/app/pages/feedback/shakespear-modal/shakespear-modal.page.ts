@@ -75,6 +75,10 @@ export class ShakespearModalPage implements OnInit {
     }, 500);
   }
 
+  dismiss() {
+    this.modalCtrl.dismiss();
+  }
+
   toggleImage() {
     this.showImage = !this.showImage;
   }

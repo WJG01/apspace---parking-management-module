@@ -1,17 +1,25 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="md">
+    <ion-title mode="ios" color="primary">Report a Problem</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content>
   <div class="ion-margin">
     <div class="ion-text-center ion-margin-bottom">
-      <h4 class="main-text-color">Report a Problem</h4>
-      <h6 class="secondary-txt-color">Your feedback helps us to improve APSpace</h6>
+      <ion-text color="light">
+        <h4 class="glob-text-bold">Shake the phone to send feedback</h4>
+        <p>You shook your device. Your feedback and suggestions help us to improve APSpace.</p>
+      </ion-text>
     </div>
 
-    <app-message-with-svg
-      messageTitle=""
-      messageContent=""
-      imageUrl="assets/img/feedback.svg"
-      wrapperOffset="3"
-      wrapperSize="6"
-    >
+    <app-message-with-svg messageTitle="" messageContent="" imageUrl="assets/img/feedback.svg" wrapperOffset="3"
+      wrapperSize="6">
     </app-message-with-svg>
 
     <div class="feedback-form">
@@ -56,7 +64,8 @@
             </ion-col>
 
             <ion-col size="4">
-              <ion-button [color]="showImage ? 'danger' : 'primary'" fill="clear" expand="block" (click)="toggleImage()">
+              <ion-button [color]="showImage ? 'danger' : 'primary'" fill="clear" expand="block"
+                (click)="toggleImage()">
                 <ion-icon slot="icon-only" [name]="showImage ? 'caret-down' : 'caret-up'"></ion-icon>
               </ion-button>
             </ion-col>
@@ -86,10 +95,7 @@
 </ion-footer>
 
 <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-  <ion-fab-button
-    color="success"
-    size="large"
-    [disabled]="!message || (!phoneNumberValid && contactNo !== '')"
+  <ion-fab-button color="success" size="large" [disabled]="!message || (!phoneNumberValid && contactNo !== '')"
     (click)="submitFeedback()">
     <ion-icon name="checkmark" size="large"></ion-icon>
   </ion-fab-button>
