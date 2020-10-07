@@ -118,7 +118,9 @@ export class SettingsPage implements OnInit {
           {
             text: 'No',
             role: 'cancel',
-            handler: () => {}
+            handler: () => {
+              this.enableMalaysiaTimezone = !this.enableMalaysiaTimezone;
+            }
           },
           {
             text: 'Yes',
