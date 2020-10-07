@@ -12,7 +12,7 @@ import { WsApiService } from 'src/app/services';
 })
 export class GraduateVerificationServicePage {
   applieedYear = '2015';
-  formsURL = 'http://forms.sites.apiit.edu.my/certificate-email-form/';
+  formsURL = 'https://apiit.atlassian.net/servicedesk/customer/portal/6/group/10/create/10181';
   graduater$: Observable<Graduater[]>;
   searchKeyword;
   userSearched = false;
