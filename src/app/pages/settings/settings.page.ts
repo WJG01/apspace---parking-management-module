@@ -110,7 +110,29 @@ export class SettingsPage implements OnInit {
   }
 
   toggleDisplayMalaysiaTimezone() {
-    this.settings.set('enableMalaysiaTimezone', this.enableMalaysiaTimezone);
+    if (this.plt.is('cordova')) {
+      this.alertCtrl.create({
+        header: 'Warning',
+        message: 'The application will exit and require to restart. Are you sure to proceed the changes?',
+        buttons: [
+          {
+            text: 'No',
+            role: 'cancel',
+            handler: () => {}
+          },
+          {
+            text: 'Yes',
+            handler: () => {
+              this.settings.set('enableMalaysiaTimezone', this.enableMalaysiaTimezone);
+              // tslint:disable-next-line: no-string-literal
+              navigator['app'].exitApp();
+            }
+          }
+        ]
+      }).then(alert => alert.present());
+    } else {
+      this.settings.set('enableMalaysiaTimezone', this.enableMalaysiaTimezone);
+    }
   }
 
   toggleTimeFormat() {
