@@ -53,3 +53,4 @@ export { SurveyIntake, SurveyModule } from './student-survey';
 export { StudentSearch } from './student-search';
 export { OrientationStudentDetails, OrientationStudentsList } from './e-orientation';
 export { Role } from './role';
+export { AnonymousFeedbackSummary, AnonymousFeedback, AnonymousFeedbackComment, FeedbackCategory } from './anonymous-feedback';

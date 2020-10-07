@@ -1,0 +1,67 @@
+<ion-header no-border>
+  <ion-toolbar>
+    <ion-title>
+      New Anonymous Feedback
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button outline (click)="dismiss()">
+        <ion-icon class="colored-text" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list lines="full" class="ion-no-margin ion-no-padding">
+    <ion-item>
+      <ion-label position="floating">Category <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-select required="true" interface="popover" [(ngModel)]="selectedCategory"
+        *ngIf="categories$ |async as categories; else loadingCategories">
+        <ion-select-option *ngFor="let category of categories" [value]="category.id">{{category.name}}
+        </ion-select-option>
+      </ion-select>
+      <ng-template #loadingCategories>
+        <ion-skeleton-text animated style="width: 100%; line-height: 30px;"></ion-skeleton-text>
+      </ng-template>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Subject <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-input [(ngModel)]="subject" required="true" type="text" maxLength="120"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Message <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-textarea maxLength="2000" autosize="true" [(ngModel)]="message" required="true" rows="6"
+        placeholder="Enter your message here.."></ion-textarea>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Contact Information <small>(Optional)</small></ion-label>
+      <ion-input placeholder="Email" [(ngModel)]="emailAddress" (ngModelChange)="onEmailFieldChange()"></ion-input>
+      <ion-input placeholder="Phone Number" [(ngModel)]="contactNo" (ngModelChange)="onPhoneNumberChange()"></ion-input>
+    </ion-item>
+    <div class="ion-padding-start ion-padding-end"
+      *ngIf="(contactNo && !phoneNumberValid) || (emailAddress && !emailValid)">
+      <small *ngIf="contactNo && !phoneNumberValid"><ion-text color="danger">Phone
+        number is invalid. Please check the
+        number and enter a valid phone number (Exactly 10 or 11 digits)</ion-text>
+      </small>
+      <br>
+      <small *ngIf="emailAddress && !emailValid"><ion-text color="danger">Email
+        address is invalid. Please check the
+        email address and enter a valid email address</ion-text>
+      </small>
+    </div>
+  </ion-list>
+  <p class="ion-padding-start ion-padding-end">
+    <ion-text color="secondary">
+      This feedback will remain <span class="glob-text-bold">Anonymous</span>. The agent will receive your feedback and respond to it without knowing your identity.
+    </ion-text>
+  </p>
+  <div class="ion-margin-top ion-text-right ion-padding-end ion-padding-start">
+    <ion-button outline (click)="dismiss()" color="light">Cancel</ion-button>
+    <ion-button color="primary" (click)="submitFeedback()"
+    [disabled]="!message || (!phoneNumberValid && contactNo !== '') || (!emailValid && emailAddress !== '') || !selectedCategory || !subject">Submit</ion-button>
+  </div>
+</ion-content>

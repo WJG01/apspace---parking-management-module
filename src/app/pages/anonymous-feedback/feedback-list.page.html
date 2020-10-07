@@ -1,0 +1,102 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Anonymous Feedback</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" pullMax="400" pullMin="60" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
+  </ion-refresher>
+  <ion-grid>
+    <ion-row>
+      <ion-col size-xs="12" size-md="6" offset-md="3" size-lg="4" offset-lg="4">
+        <div class="ion-padding">
+          <ion-button expand="full" fill="solid" class="glob-margin-auto" color="tertiary"
+            (click)="createNewFeedback()">
+            Submit New Feedback
+            <ion-icon name="add-sharp" slot="end"></ion-icon>
+          </ion-button>
+        </div>
+
+        <ng-container *ngIf="feedbackList$ | async as feedbackList; else feedbackListLoading">
+          <ng-container *ngIf="feedbackList.length > 0; else userHasNoFeedback">
+            <ion-card *ngFor="let feedback of feedbackList">
+              <ion-card-header>
+                <ion-card-title color="primary">{{feedback.subject}}</ion-card-title>
+                <ion-card-subtitle>{{feedback.datetime}}</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-item>
+                  <ion-icon color="success" slot="start" name="pricetag-outline"></ion-icon>
+                  <ion-label>Category</ion-label>
+                  <ion-badge slot="end" color="success">{{feedback.category_id}}</ion-badge>
+                </ion-item>
+                <ion-item>
+                  <ion-icon color="warning" slot="start" name="key-outline"></ion-icon>
+                  <ion-label>Ticket ID</ion-label>
+                  <ion-badge slot="end" color="warning">{{feedback.issue_id}}</ion-badge>
+                </ion-item>
+                <div class="ion-text-end ion-margin-top">
+                  <ion-button color="primary" (click)="viewFeedbackDetails(feedback)">
+                    View Details
+                    <ion-icon slot="end" name="chevron-forward-sharp"></ion-icon>
+                  </ion-button>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ng-container>
+          <ng-template #userHasNoFeedback>
+            <div class="ion-margin-top">
+              <app-message-with-svg imageUrl="assets/img/empty.svg" messageTitle="Anonymous Feedback List is Empty!"
+                wrapperSize="6" wrapperOffset="3"
+                messageContent="You have not submitted any anonymous feedback using our system yet">
+              </app-message-with-svg>
+            </div>
+          </ng-template>
+        </ng-container>
+        <ng-template #feedbackListLoading>
+          <ion-card *ngFor="let _ of loadingArray">
+            <ion-card-header>
+              <ion-card-title>
+                <ion-skeleton-text animated style="width: 100%; line-height: 25px"></ion-skeleton-text>
+                <ion-skeleton-text animated style="width: 100%; line-height: 25px"></ion-skeleton-text>
+                <ion-skeleton-text animated style="width: 37%; line-height: 25px"></ion-skeleton-text>
+              </ion-card-title>
+              <ion-card-subtitle>
+                <ion-skeleton-text animated style="width: 75%; line-height: 20px"></ion-skeleton-text>
+              </ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-item>
+                <ion-icon color="success" slot="start" name="pricetag-outline"></ion-icon>
+                <ion-label>
+                  <ion-skeleton-text animated style="width: 100%; line-height: 25px"></ion-skeleton-text>
+                </ion-label>
+              </ion-item>
+              <ion-item>
+                <ion-icon color="warning" slot="start" name="key-outline"></ion-icon>
+                <ion-label>
+                  <ion-skeleton-text animated style="width: 100%; line-height: 25px"></ion-skeleton-text>
+                </ion-label>
+              </ion-item>
+              <div class="ion-text-end ion-margin-top">
+                <ion-skeleton-text animated style="width: 39%; line-height: 35px"></ion-skeleton-text>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ng-template>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-fab *ngIf="mobileApp" vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button color="tertiary" class="colored-background" (click)="createNewFeedback()">
+    <ion-icon name="add-sharp"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
