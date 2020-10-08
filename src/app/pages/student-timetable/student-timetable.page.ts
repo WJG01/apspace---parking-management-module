@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import { ActionSheetController, IonRefresher, ModalController, Platform } from '@ionic/angular';
+import { ActionSheetController, IonRefresher, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { formatISO } from 'date-fns';
 import { Observable, Subscription, combineLatest } from 'rxjs';
@@ -108,7 +108,6 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
     private tt: StudentTimetableService,
     private ws: WsApiService,
     private notifierService: NotifierService,
-    private platform: Platform
   ) { }
 
   ngOnInit() {
@@ -233,11 +232,8 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
 
   /** Display intake search modal. */
   async presentIntakeSearch() {
-    const pageType = this.platform.is('cordova') ? 'glob-partial-page-modal' : '';
-
     const modal = await this.modalCtrl.create({
       component: SearchModalComponent,
-      cssClass: pageType,
       componentProps: {
         items: this.intakeLabels,
         defaultItems: this.settings.get('intakeHistory'),
