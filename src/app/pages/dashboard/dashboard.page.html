@@ -46,12 +46,8 @@
               </ng-template>
             </ion-avatar>
             <ion-card-header>
-              <ion-card-title class="ion-text-center" color="primary">
-                {{
-                  isStudent
-                    ? (userProfile.NAME | titlecase)
-                    : (userProfile.FULLNAME | titlecase)
-                }}
+              <ion-card-title class="ion-text-center" color="primary" (click)="navigateToPage('profile')" tappable="true">
+                {{isStudent ? (userProfile.NAME | titlecase) : (userProfile.FULLNAME | titlecase)}}
               </ion-card-title>
               <ion-card-subtitle class="ion-text-center">
                 {{
