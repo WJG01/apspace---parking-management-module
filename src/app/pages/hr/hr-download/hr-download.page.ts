@@ -64,10 +64,12 @@ export class HrDownloadPage {
         const pdfBlob = new Blob([blob], { type: 'application/pdf' });
 
         if (this.platform.is('cordova')) {
+          const directoryType = this.platform.is('android') ? this.file.externalDataDirectory : this.file.dataDirectory;
+
           // Save the PDF to the data Directory of our App
-          this.file.writeFile(this.file.dataDirectory, `${payslip}.pdf`, pdfBlob, { replace: true }).then(_ => {
+          this.file.writeFile(directoryType, `${payslip}.pdf`, pdfBlob, { replace: true }).then(_ => {
             // Open the PDf with the correct OS tools
-            this.fileOpener.open(this.file.dataDirectory + `${payslip}.pdf`, 'application/pdf');
+            this.fileOpener.open(directoryType + `${payslip}.pdf`, 'application/pdf');
           });
         } else {
           const blobUrl = URL.createObjectURL(pdfBlob);

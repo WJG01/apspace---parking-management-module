@@ -305,14 +305,13 @@ export class PrintTransactionsModalPage implements OnInit {
     if (this.plt.is('cordova')) {
       this.pdfObj.getBuffer((buffer) => {
         const blob = new Blob([buffer], { type: 'application/pdf' });
-        console.log('this.file.dataDirectory ', this.file.dataDirectory);
-        console.log('this.file.externalDataDirectory', this.file.externalDataDirectory);
+        const directoryType = this.plt.is('android') ? this.file.externalDataDirectory : this.file.dataDirectory;
 
         // Save the PDF to the data Directory of our App
-        this.file.writeFile(this.file.externalDataDirectory, `${this.pdfTitle}.pdf`, blob, { replace: true }).then(_ => {
+        this.file.writeFile(directoryType, `${this.pdfTitle}.pdf`, blob, { replace: true }).then(_ => {
           // Open the PDf with the correct OS tools
           this.dismissLoading();
-          this.fileOpener.open(this.file.externalDataDirectory + `${this.pdfTitle}.pdf`, 'application/pdf');
+          this.fileOpener.open(directoryType + `${this.pdfTitle}.pdf`, 'application/pdf');
         });
       });
     } else {
