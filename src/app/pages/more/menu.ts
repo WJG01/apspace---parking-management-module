@@ -434,12 +434,12 @@ export const menusRaw = [
   },
   {
     id: 'human-resource' as const,
-    title: 'Human Resource',
+    title: 'Human Resources',
     group: 'Corporate',
     url: 'hr',
     img: 'assets/img/hr.png',
     role: Role.Lecturer | Role.Admin,
-    tags: ['leave', 'break', 'mc'],
+    tags: ['leave', 'break', 'mc', 'hr', 'payslip', 'e-be'],
     parents: [],
   },
   {
