@@ -54,28 +54,28 @@
             <div *ngIf="comment.username==='Anonymous Feedback'; else nonAnon">
               <ion-item color=light >
                 <ion-label class="glob-normal-wrap" >
-                  <h2 style="display: inline" class="glob-text-bold">
+                  <h2 class="glob-text-bold text-inline">
                     <ion-text color="secondary">
                       {{comment.username}}
                     </ion-text>
                   </h2>
-                  <p style="display: inline"> commented</p>
+                  <p class="text-inline"> commented</p>
                   <div [innerHTML]="comment.comment_c"></div>
-                  <p style="text-align:right"><small><i>{{comment.datetime}}</i></small></p>
+                  <p class="ion-text-right"><small><i>{{comment.datetime}}</i></small></p>
                 </ion-label>
               </ion-item>
             </div>
             <ng-template #nonAnon>
               <ion-item>
                 <ion-label class="glob-normal-wrap">
-                  <h2 style="display: inline" class="glob-text-bold">
+                  <h2 class="glob-text-bold text-inline">
                     <ion-text color="secondary">
                       {{comment.username}}
                     </ion-text>
                   </h2>
-                  <p style="display: inline"> commented</p>
-                  <div [innerHTML]="comment.comment_c"></div>
-                  <p style="text-align:right"><small><i>{{comment.datetime}}</i></small></p>
+                  <p class="text-inline"> commented</p>
+                  <ion-text [innerHTML]="comment.comment_c"></ion-text>
+                  <p class="ion-text-right"><small><i>{{comment.datetime}}</i></small></p>
                 </ion-label>
               </ion-item>
             </ng-template>

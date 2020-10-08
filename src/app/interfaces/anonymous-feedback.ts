@@ -6,13 +6,6 @@ export interface AnonymousFeedbackSummary {
     issue_id: string;
 }
 
-// export interface AnonymousFeedback {
-//     feedback_id: number;
-//     issue_id: string;
-//     subject: string;
-//     comments: string[];
-//     message: string[];
-// }
 export interface AnonymousFeedback {
     feedback_id: number;
     issue_id: string;
