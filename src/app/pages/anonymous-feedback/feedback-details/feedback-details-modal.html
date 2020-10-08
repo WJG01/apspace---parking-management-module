@@ -41,7 +41,7 @@
     </ion-card-header>
     <ion-card-content class="ion-no-padding">
       <ng-container *ngIf="feedbackDetail$ | async as feedbackDetails; else loadingFeedbackDetails">
-        <ion-item >
+        <ion-item lines="full">
           <ion-label class="ion-text-wrap">
             <h2 class="glob-text-bold">
               <ion-text color="success">Main Message</ion-text>
@@ -52,7 +52,7 @@
         <ng-container *ngIf="feedbackDetails.comments.length > 0; else noComments">
           <div *ngFor="let comment of feedbackDetails.comments">
             <div *ngIf="comment.username==='Anonymous Feedback'; else nonAnon">
-              <ion-item color=light >
+              <ion-item lines="full" color=light >
                 <ion-label class="glob-normal-wrap" >
                   <h2 class="glob-text-bold text-inline">
                     <ion-text color="secondary">
@@ -66,7 +66,7 @@
               </ion-item>
             </div>
             <ng-template #nonAnon>
-              <ion-item>
+              <ion-item lines="full">
                 <ion-label class="glob-normal-wrap">
                   <h2 class="glob-text-bold text-inline">
                     <ion-text color="secondary">
