@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-searchbar [formControl]="searchControl" showCancelButton="focus"
+    <ion-searchbar [formControl]="searchControl" showCancelButton="always"
       [placeholder]="placeholder" ngDefaultControl (ionCancel)="select(null)"
       (ionInput)="$event.target.value = $event.target.value.toUpperCase()">
     </ion-searchbar>
