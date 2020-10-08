@@ -21,7 +21,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content scrollY="false">
   <ion-tabs>
     <ion-tab-bar *ngIf="!smallScreen" slot="top">
       <ion-searchbar [(ngModel)]="term" (keydown.escape)="$event.target.blur()" (ionFocus)="searching = true"
