@@ -110,31 +110,26 @@ export class SettingsPage implements OnInit {
   }
 
   toggleDisplayMalaysiaTimezone() {
+    this.settings.set('enableMalaysiaTimezone', this.enableMalaysiaTimezone);
+    let message;
+
     if (this.plt.is('cordova')) {
-      this.alertCtrl.create({
-        header: 'Warning',
-        message: 'The application will exit and require to restart. Are you sure to proceed the changes?',
-        buttons: [
-          {
-            text: 'No',
-            role: 'cancel',
-            handler: () => {
-              this.enableMalaysiaTimezone = !this.enableMalaysiaTimezone;
-            }
-          },
-          {
-            text: 'Yes',
-            handler: () => {
-              this.settings.set('enableMalaysiaTimezone', this.enableMalaysiaTimezone);
-              // tslint:disable-next-line: no-string-literal
-              navigator['app'].exitApp();
-            }
-          }
-        ]
-      }).then(alert => alert.present());
+      message = 'Timezone has been changed. Please restart your application to view your timezone.';
     } else {
-      this.settings.set('enableMalaysiaTimezone', this.enableMalaysiaTimezone);
+      message = 'Timezone has been changed. Please restart your browser to view your timezone.';
     }
+
+    this.presentAlert(
+      'Alert',
+      message,
+      'danger-alert',
+      [
+        {
+          text: 'OK',
+          handler: () => {}
+        }
+      ]
+    );
   }
 
   toggleTimeFormat() {
@@ -281,4 +276,12 @@ export class SettingsPage implements OnInit {
     await confirm.present();
   }
 
+  presentAlert(header, message, cssClass, buttons) {
+    this.alertCtrl.create({
+      header,
+      message,
+      cssClass,
+      buttons
+    }).then(alert => alert.present());
+  }
 }
