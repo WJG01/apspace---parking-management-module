@@ -1,0 +1,111 @@
+<ion-header no-border>
+  <ion-toolbar>
+    <ion-title>
+      {{feedback.issue_id}} Details
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button outline (click)="dismiss()">
+        <ion-icon class="colored-text" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title color="primary">Feedback Summary</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="ion-no-padding">
+      <ion-list lines="full" class="ion-no-margin ion-no-padding">
+        <ion-item>
+          <ion-icon color="success" slot="start" name="pricetag-outline"></ion-icon>
+          <ion-label>Category</ion-label>
+          <ion-badge slot="end" color="success">{{feedback.category_id}}</ion-badge>
+        </ion-item>
+        <ion-item>
+          <ion-icon slot="start" name="receipt-outline"></ion-icon>
+          <ion-label class="glob-normal-wrap">
+            <h2>Subject</h2>
+            <p>{{feedback.subject}}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title color="primary">
+        Feedback Content
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="ion-no-padding">
+      <ng-container *ngIf="feedbackDetail$ | async as feedbackDetails; else loadingFeedbackDetails">
+        <ion-item lines="full">
+          <ion-label class="ion-text-wrap">
+            <h2 class="glob-text-bold">
+              <ion-text color="success">Main Message</ion-text>
+            </h2>
+            <div [innerHTML]="feedbackDetails.message"></div>
+          </ion-label>
+        </ion-item>
+        <ng-container *ngIf="feedbackDetails.comments.length > 0; else noComments">
+          <div *ngFor="let comment of feedbackDetails.comments">
+            <div *ngIf="comment.username==='Anonymous Feedback'; else nonAnon">
+              <ion-item lines="full" color=light >
+                <ion-label class="glob-normal-wrap" >
+                  <h2 class="glob-text-bold text-inline">
+                    <ion-text color="secondary">
+                      {{comment.username}}
+                    </ion-text>
+                  </h2>
+                  <p class="text-inline"> commented</p>
+                  <div [innerHTML]="comment.comment_c"></div>
+                  <p class="ion-text-right"><small><i>{{comment.datetime}}</i></small></p>
+                </ion-label>
+              </ion-item>
+            </div>
+            <ng-template #nonAnon>
+              <ion-item lines="full">
+                <ion-label class="glob-normal-wrap">
+                  <h2 class="glob-text-bold text-inline">
+                    <ion-text color="secondary">
+                      {{comment.username}}
+                    </ion-text>
+                  </h2>
+                  <p class="text-inline"> commented</p>
+                  <ion-text [innerHTML]="comment.comment_c"></ion-text>
+                  <p class="ion-text-right"><small><i>{{comment.datetime}}</i></small></p>
+                </ion-label>
+              </ion-item>
+            </ng-template>
+          </div>
+        </ng-container>
+        <ng-template #noComments>
+          <ion-item lines="full">
+            <ion-label class="glob-normal-wrap">
+              <h2 class="glob-text-bold">
+                <ion-text color="secondary">Comments</ion-text>
+              </h2>
+              <p>No Comments Added Yet!</p>
+            </ion-label>
+          </ion-item>
+        </ng-template>
+        <ion-item>
+          <ion-label class="glob-text-bold" position="floating" color="success">New Comment</ion-label>
+          <ion-textarea maxLength="1000" autosize="true" [(ngModel)]="comment" rows="2"
+            placeholder="Enter your new comment here.."></ion-textarea>
+        </ion-item>
+        <div class="ion-text-end">
+          <ion-button color="success" [disabled]="!comment" (click)="addComment()">
+            Send
+            <ion-icon slot="end" name="send"></ion-icon>
+          </ion-button>
+        </div> 
+      </ng-container>
+      <ng-template #loadingFeedbackDetails>
+        <loading-spinner size="40px" message="Getting the feedback details..."></loading-spinner>
+      </ng-template>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
