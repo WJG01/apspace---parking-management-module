@@ -667,6 +667,7 @@ export class LoginPage implements OnInit {
   showConfirmationMessage() {
     this.alertCtrl.create({
       header: 'Your password has expired..',
+      cssClass: 'danger-alert',
       message: 'You are required to change your password to be able to login to the APSpace' +
         'and other applications. The following documentation provides the steps to do that.',
       buttons: [

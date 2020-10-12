@@ -160,6 +160,7 @@ export class MorePage implements OnInit {
   logout() {
     this.alertCtrl.create({
       header: 'Are you sure you want to log out?',
+      cssClass: 'danger-alert',
       buttons: [
         {
           text: 'Cancel',

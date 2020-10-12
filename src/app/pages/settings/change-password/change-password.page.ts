@@ -114,6 +114,7 @@ export class ChangePasswordPage implements OnInit {
   presentAlert() {
     this.alertCtrl.create({
       header: 'Warning!',
+      cssClass: 'danger-alert',
       subHeader: 'You are about to update your APKey Password',
       // tslint:disable-next-line: max-line-length
       message: 'After clicking "Continue", you will be automatically logged out from the application for security reasons. Also, we advise you to log out and log in again to all other applications that require APKey authentication',
