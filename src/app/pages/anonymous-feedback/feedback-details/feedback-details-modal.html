@@ -25,7 +25,7 @@
         </ion-item>
         <ion-item>
           <ion-icon slot="start" name="receipt-outline"></ion-icon>
-          <ion-label class="glob-normal-wrap">
+          <ion-label class="ion-text-wrap">
             <h2>Subject</h2>
             <p>{{feedback.subject}}</p>
           </ion-label>
@@ -52,8 +52,8 @@
         <ng-container *ngIf="feedbackDetails.comments.length > 0; else noComments">
           <div *ngFor="let comment of feedbackDetails.comments">
             <div *ngIf="comment.username==='Anonymous Feedback'; else nonAnon">
-              <ion-item lines="full" color=light >
-                <ion-label class="glob-normal-wrap" >
+              <ion-item lines="full" color=light>
+                <ion-label class="ion-text-wrap">
                   <h2 class="glob-text-bold text-inline">
                     <ion-text color="secondary">
                       {{comment.username}}
@@ -67,7 +67,7 @@
             </div>
             <ng-template #nonAnon>
               <ion-item lines="full">
-                <ion-label class="glob-normal-wrap">
+                <ion-label class="ion-text-wrap">
                   <h2 class="glob-text-bold text-inline">
                     <ion-text color="secondary">
                       {{comment.username}}
@@ -83,7 +83,7 @@
         </ng-container>
         <ng-template #noComments>
           <ion-item lines="full">
-            <ion-label class="glob-normal-wrap">
+            <ion-label class="ion-text-wrap">
               <h2 class="glob-text-bold">
                 <ion-text color="secondary">Comments</ion-text>
               </h2>
