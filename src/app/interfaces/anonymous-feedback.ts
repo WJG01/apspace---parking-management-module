@@ -12,7 +12,7 @@ export interface AnonymousFeedback {
     subject: string;
     comments: {comment_c: string;
                datetime: string;
-               username: string};
+               username: string}[];
     message: string[];
 }
 
