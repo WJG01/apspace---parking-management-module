@@ -91,6 +91,7 @@ export class ResetWebspacePasswordPage implements OnInit {
   presentAlert() {
     this.alertCtrl.create({
       header: 'Warning!',
+      cssClass: 'danger-alert',
       subHeader: `You are about to reset your Webspace ID's password.`,
       // tslint:disable-next-line: max-line-length
       message: `After clicking "Continue", your Webspace ID's password will be reset.`,

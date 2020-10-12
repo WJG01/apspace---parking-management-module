@@ -134,6 +134,7 @@ export class FilingReportPage implements OnInit {
   submitReport() {
     this.alertCtrl.create({
       header: 'Confirm!',
+      cssClass: 'danger-alert',
       subHeader: `You are about to file a report against the student with ID ${this.studentId}. Do you want to continue?`,
       buttons: [
         {

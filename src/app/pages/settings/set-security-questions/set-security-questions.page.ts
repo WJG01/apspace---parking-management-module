@@ -46,6 +46,7 @@ export class SetSecurityQuestionsPage implements OnInit {
   setConfig(formData: SecurityQuestionsAndAnswers) {
     this.alertCtrl.create({
       header: 'Update Security Questions',
+      cssClass: 'danger-alert',
       message:
         'You are about to update your security questios and your secondary email'
         + ' which are used to recover your password in case you forget it.'

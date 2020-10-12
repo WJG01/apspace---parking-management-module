@@ -323,7 +323,7 @@ export class MarkAttendancePage implements OnInit {
   /** Additional way to mark all as absent. */
   markAllAbsent() {
     this.alertCtrl.create({
-      cssClass: 'delete-warning',
+      cssClass: 'danger-alert',
       header: 'Reset All To Absent!',
       message: 'Are you sure that you want to <span class=\'danger-text text-bold\'>Reset</span> the attendance for all students to \'Absent\'?',
       buttons: [
@@ -356,7 +356,7 @@ export class MarkAttendancePage implements OnInit {
   /** Delete attendance, double confirm. */
   reset() {
     this.alertCtrl.create({
-      cssClass: 'delete-warning',
+      cssClass: 'danger-alert',
       header: 'Delete Attendance Record!',
       message: `Are you sure that you want to <span class="danger-text text-bold">Permanently Delete</span> the selected attendance record?<br><br> <span class="text-bold">Class Code:</span> ${this.schedule.classcode}<br> <span class="text-bold">Class Date:</span> ${this.datePipe.transform(this.schedule.date, 'EEE, dd MMM yyy')}<br> <span class="text-bold">Class Time:</span> ${this.schedule.startTime} - ${this.schedule.endTime}<br> <span class="text-bold">Class Type:</span> ${this.schedule.classType}`,
       buttons: [

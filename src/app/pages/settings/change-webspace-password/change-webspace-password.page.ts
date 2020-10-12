@@ -75,6 +75,7 @@ export class ChangeWebspacePasswordPage {
   presentAlert() {
     this.alertCtrl.create({
       header: 'Warning!',
+      cssClass: 'danger-alert',
       subHeader: 'You are about to change your Webspace password.',
       // tslint:disable-next-line: max-line-length
       message: 'After clicking "Continue", your Webspace password will be changed with the new password.',

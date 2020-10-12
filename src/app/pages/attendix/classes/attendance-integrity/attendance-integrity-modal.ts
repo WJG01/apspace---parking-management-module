@@ -63,7 +63,7 @@ export class AttendanceIntegrityModalPage implements OnInit {
   async reset() {
     const recordsToDelete = (await this.possibleExtraClasses$.toPromise()).filter(record => record.checked);
     this.alertCtrl.create({
-      cssClass: 'delete-warning',
+      cssClass: 'danger-alert',
       header: 'Delete Attendance Record(s)!',
       message: `Are you sure that you want to <span class="danger-text text-bold">Permanently Delete</span> all ${recordsToDelete.length} attendance record(s)?`,
       buttons: [

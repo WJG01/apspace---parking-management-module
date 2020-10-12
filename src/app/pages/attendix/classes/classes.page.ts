@@ -361,7 +361,7 @@ export class ClassesPage implements OnInit {
         return;
       }
       this.alertCtrl.create({
-        cssClass: 'delete-warning',
+        cssClass: 'danger-alert',
         header: 'Warning!',
         message: `By clicking on <span class="text-bold">'Continue'</span>, all students will be marked as ${this.defaultAttendance === 'Y' ? 'Present' : 'Absent'} by default! ${this.defaultAttendance === 'Y' ? '<br><br> <span class="text-bold">**Since you chose to mark all as Present by default, there will be no QR code displayed.</span>' : '.'}`,
         buttons: [
@@ -411,7 +411,7 @@ export class ClassesPage implements OnInit {
     const schedule: ScheduleInput = { classcode, date, startTime, endTime, classType };
 
     this.alertCtrl.create({
-      cssClass: 'delete-warning',
+      cssClass: 'danger-alert',
       header: 'Delete Attendance Record!',
       message: `Are you sure that you want to <span class="danger-text text-bold">Permanently Delete</span> the selected attendance record?<br><br> <span class="text-bold">Class Code:</span> ${classcode}<br> <span class="text-bold">Class Date:</span> ${this.datePipe.transform(date, 'EEE, dd MMM yyy')}<br> <span class="text-bold">Class Time:</span> ${startTime} - ${endTime}<br> <span class="text-bold">Class Type:</span> ${classType}`,
       buttons: [
