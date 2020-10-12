@@ -27,7 +27,7 @@
               <ion-label>Transaction Type:</ion-label>
               <ion-select placeholder="Select a type" [(ngModel)]="transactionTypeModel" interface="popover">
                 <ion-select-option *ngFor="let transactionType of transactionTypes" [value]="transactionType">
-                  {{transactionType}}
+                  {{transactionType|titlecase}}
                 </ion-select-option>
               </ion-select>
             </ion-item>
