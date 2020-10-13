@@ -722,6 +722,11 @@ ion-input {
         p {
           color: white !important;
         }
+
+        a {
+          text-decoration: none;
+          color: inherit;
+        }
       }
     }
   }
@@ -777,6 +782,11 @@ ion-input {
 
         p {
           padding: 0 10px;
+        }
+
+        a {
+          text-decoration: none;
+          color: inherit;
         }
       }
     }

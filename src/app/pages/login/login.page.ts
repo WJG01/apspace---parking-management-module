@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { Network } from '@ionic-native/network/ngx';
-import { AlertController, IonSlides, Platform, ToastController } from '@ionic/angular';
+import { AlertController, IonSlides, ModalController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap, timeout } from 'rxjs/operators';
@@ -12,6 +12,7 @@ import {
   CasTicketService, DataCollectorService, NewsService, SettingsService,
   WsApiService
 } from '../../services';
+import { NewsModalPage } from '../news/news-modal';
 
 @Component({
   selector: 'app-login',
@@ -157,7 +158,8 @@ export class LoginPage implements OnInit {
     private storage: Storage,
     private toastCtrl: ToastController,
     private ws: WsApiService,
-    private news: NewsService
+    private news: NewsService,
+    private modalCtrl: ModalController,
   ) {
   }
 
@@ -756,6 +758,16 @@ export class LoginPage implements OnInit {
     }
     this.iab.create(url, '_system', 'location=true');
 
+  }
+
+  // NEWS MODAL
+async openNewsModal(newsItem: ShortNews) {
+    const modal = await this.modalCtrl.create({
+      component: NewsModalPage,
+      componentProps: { newsItem },
+    });
+    await modal.present();
+    await modal.onDidDismiss();
   }
 
   // SLIDER

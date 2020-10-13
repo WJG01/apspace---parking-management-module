@@ -306,7 +306,7 @@
               <ion-grid class="ion-no-padding ion-padding-top ion-padding-bottom">
                 <ion-row>
                   <ion-col class="ion-padding" size="12" size-sm="6" size-lg="4" *ngFor="let newsItem of news">
-                    <ion-card class="ion-no-margin">
+                    <ion-card class="ion-no-margin" tappable (click)="openNewsModal(newsItem)">
                       <img style="max-height: 200px; width: 100%;" [src]="newsItem.url">
                       <ion-card-header>
                         <ion-card-title class="glob-limit-lines glob-one-line">
@@ -366,7 +366,9 @@
                     <ion-col size="12">
                       <div class="support-item general">
                         <h3 class="sub-title">General Line</h3>
-                        <p><span class="glob-text-bold">Tel:</span> +603-89961000 / 1 300 888 278 (Toll-free)</p>
+                        <a href="tel:+60389961000">
+                          <p><span class="glob-text-bold">Tel:</span> +603-89961000 / 1 300 888 278 (Toll-free)</p>
+                        </a>
                         <p><span class="glob-text-bold">Mon - Fri: </span> 8:30 AM - 7:00 PM</p>
                         <p><span class="glob-text-bold">Saturday: </span> 8:30 AM - 1:00 PM</p>
                       </div>
@@ -374,14 +376,18 @@
                     <ion-col size="12" size-md="6">
                       <div class="support-item emergency">
                         <h3 class="sub-title">APU Security/Emergency Hotline</h3>
-                        <p><span class="glob-text-bold">HP:</span> 017-238 1300</p>
+                        <a href="tel:0172381300">
+                          <p><span class="glob-text-bold">HP:</span> 017-238 1300</p>
+                        </a>
                         <p>7:00 PM - 7:00 AM</p>
                       </div>
                     </ion-col>
                     <ion-col size="12" size-md="6">
                       <div class="support-item weekends">
                         <h3 class="sub-title"> Weekends, Public Holidays Only</h3>
-                        <p><span class="glob-text-bold">HP:</span> 017-379 1700</p>
+                        <a href="tel:0173791700">
+                          <p><span class="glob-text-bold">HP:</span> 017-379 1700</p>
+                        </a>
                         <p>7:00 AM - 7:00 PM</p>
                       </div>
                     </ion-col>
@@ -485,7 +491,9 @@
                                 <div>
                                   <p>
                                     <ion-icon name="call-sharp"></ion-icon>
-                                    {{department.dept_phone}}
+                                    <a [href]="'tel:' + department.dept_phone[0]">
+                                      {{department.dept_phone}}
+                                    </a>
                                   </p>
                                 </div>
                               </div>
