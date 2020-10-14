@@ -427,7 +427,7 @@ export const menusRaw = [
     attachTicket: false,
     img: 'assets/img/obe.png',
     role: Role.Lecturer | Role.Admin,
-    tags: ['obe', 'mnarks', 'results', 'icgpa'],
+    tags: ['obe', 'marks', 'results', 'icgpa', 'cgpa'],
     parents: [],
   },
   // END OF Academic Operations
