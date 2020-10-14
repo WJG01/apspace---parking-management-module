@@ -419,6 +419,17 @@ export const menusRaw = [
     tags: ['report', 'admin', 'jasper'],
     parents: [],
   },
+  {
+    id: 'obe' as const,
+    title: 'OBE',
+    group: 'Academic Operation',
+    url: 'https://icgpa.apu.edu.my/',
+    attachTicket: false,
+    img: 'assets/img/obe.png',
+    role: Role.Lecturer | Role.Admin,
+    tags: ['obe', 'mnarks', 'results', 'icgpa'],
+    parents: [],
+  },
   // END OF Academic Operations
 
   // START OF Corporate
