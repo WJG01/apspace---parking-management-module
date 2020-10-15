@@ -414,7 +414,7 @@
             </ion-row>
             <ion-row class="dark-color">
               <ion-col size="12" class="ion-padding">
-                <ion-slides [options]="operationHoursSlider">
+                <ion-slides #operationsHourSlides [options]="operationHoursSlider">
                   <ng-container *ngIf="(quixCompanies | operationHoursFilter: selectedQuixSegment) as filteredCompany">
                     <ng-container *ngIf="filteredCompany; else noCompanies">
                       <ng-container *ngIf="filteredCompany.company_departments.length > 0; else noDepartments">
@@ -510,6 +510,13 @@
                     </ng-template>
                   </ng-container>
                 </ion-slides>
+                <div class="swiper-button-next">
+                  <ion-icon name="chevron-forward-outline" size="large" tappable (click)="nextOptSlide()">
+                  </ion-icon>
+                </div>
+                <div class="swiper-button-prev">
+                  <ion-icon name="chevron-back-outline" tappable (click)="prevOptSlide()" size="large"></ion-icon>
+                </div>
               </ion-col>
             </ion-row>
           </ion-grid>

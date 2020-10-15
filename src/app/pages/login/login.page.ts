@@ -21,6 +21,7 @@ import { NewsModalPage } from '../news/news-modal';
 })
 export class LoginPage implements OnInit {
   @ViewChild('sliderSlides') sliderSlides: IonSlides;
+  @ViewChild('operationsHourSlides') operationsHourSlides: IonSlides;
 
   noticeBoardItems$: Observable<any[]>;
   news$: Observable<ShortNews[]>;
@@ -777,6 +778,14 @@ async openNewsModal(newsItem: ShortNews) {
 
   nextSlide() {
     this.sliderSlides.slideNext();
+  }
+
+  prevOptSlide() {
+    this.operationsHourSlides.slidePrev();
+  }
+
+  nextOptSlide() {
+    this.operationsHourSlides.slideNext();
   }
 
 }
