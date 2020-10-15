@@ -52,7 +52,7 @@ export class LoginPage implements OnInit {
       el: '.swiper-pagination',
       clickable: true,
       renderBullet: (_, className) => {
-        return '<span style="width: 10px; height: 10px; background-color: #14557b !important;" class="' + className + '"></span>';
+        return '<span style="width: 10px; height: 10px; background-color: #E50565 !important;" class="' + className + '"></span>';
       }
     }
   };
