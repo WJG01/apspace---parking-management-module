@@ -52,15 +52,17 @@
 }
 
 .tabs-searchbar {
-  width: 248px;
+  width: 277px;
   position: absolute;
   top: 0px;
-  left: 16px;
+  left: 28px;
   --border-radius: 50px;
   text-align: left;
   --background: var(--ion-color-step-100);
   --placeholder-color: var(--ion-color-step-950);
   display: none;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .extra-tab {
