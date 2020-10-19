@@ -233,7 +233,7 @@ export class TabsPage implements OnInit {
 
   /** Stop searching after some time, for link clicking time. */
   stopSearching() {
-    setTimeout(() => this.searching = false, 100);
+    setTimeout(() => this.searching = false, 500);
   }
 
   noop(): number {
