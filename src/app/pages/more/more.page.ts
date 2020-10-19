@@ -135,17 +135,25 @@ export class MorePage implements OnInit {
 
   }
 
+  openInAppBrowser(url: string) {
+    if (this.isMobile) {
+      this.iab.create(url, '_system', 'location=true');
+    } else {
+      this.iab.create(url, '_blank', 'location=true');
+    }
+  }
+
   /** Open page, manually check for third party pages. */
   openPage(url: string, attachTicket = false) {
     // external pages does not use relative or absolute link
     if (url.startsWith('http://') || url.startsWith('https://')) {
       // Manually exclude sites that do not need service ticket
       if (!attachTicket) {
-        this.iab.create(url, '_system', 'location=true');
+        this.openInAppBrowser(url);
       } else {
         if (this.network.type !== 'none') {
           this.cas.getST(url).subscribe(st => {
-            this.iab.create(`${url}?ticket=${st}`, '_system', 'location=true');
+            this.openInAppBrowser(`${url}?ticket=${st}`);
           });
         } else {
           this.presentToast('External links cannot be opened in offline mode. Please ensure you have a network connection and try again');

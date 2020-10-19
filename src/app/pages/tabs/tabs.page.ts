@@ -1,10 +1,12 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import { IonSearchbar } from '@ionic/angular';
+import { Network } from '@ionic-native/network/ngx';
+import { AlertController, IonSearchbar, NavController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import Fuse from 'fuse.js';
 
+import { CasTicketService } from 'src/app/services';
 import { Role } from '../../interfaces';
 import { menus, menusTitle } from '../more/menu';
 import { MenuItem } from '../more/menu.interface';
@@ -32,8 +34,19 @@ export class TabsPage implements OnInit {
   menuFull: MenuItem[] = menus;
   menuFiltered = [] as MenuItem[];
   menusTitle: { [id: string]: string } = menusTitle;
+  isMobile = this.platform.is('cordova');
 
-  constructor(private router: Router, private storage: Storage, private iab: InAppBrowser) { }
+  constructor(
+    private router: Router,
+    private storage: Storage,
+    private iab: InAppBrowser,
+    private platform: Platform,
+    private network: Network,
+    public navCtrl: NavController,
+    private toastCtrl: ToastController,
+    private cas: CasTicketService,
+    private alertCtrl: AlertController
+  ) { }
 
   ngOnInit() {
     this.selectedTab = this.router.url.split('/').pop();
@@ -163,7 +176,7 @@ export class TabsPage implements OnInit {
   @HostListener('document:keydown.?')
   @HostListener('document:keydown.shift.?')
   onKeydownHelp() {
-    window.location.href = 'https://apiit.atlassian.net/servicedesk/customer';
+    this.openHelpCentre();
   }
 
   @HostListener('document:keydown.s')
@@ -184,8 +197,38 @@ export class TabsPage implements OnInit {
     }
   }
 
+  openInAppBrowser(url: string) {
+    if (this.isMobile) {
+      this.iab.create(url, '_system', 'location=true');
+    } else {
+      this.iab.create(url, '_blank', 'location=true');
+    }
+  }
+
+  /** Open page, manually check for third party pages. */
+  openPage(url: string, attachTicket = false) {
+    // external pages does not use relative or absolute link
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      // Manually exclude sites that do not need service ticket
+      if (!attachTicket) {
+        this.openInAppBrowser(url);
+      } else {
+        if (this.network.type !== 'none') {
+          this.cas.getST(url).subscribe(st => {
+            this.openInAppBrowser(`${url}?ticket=${st}`);
+          });
+        } else {
+          this.presentToast('External links cannot be opened in offline mode. Please ensure you have a network connection and try again');
+        }
+
+      }
+    } else {
+      url !== 'logout' ? this.navCtrl.navigateForward([url]) : this.logout();
+    }
+  }
+
   openHelpCentre() {
-    this.iab.create('https://apiit.atlassian.net/servicedesk/customer/portals', '_system', 'location=true');
+    this.openPage('https://apiit.atlassian.net/servicedesk/customer/portals');
   }
 
   /** Stop searching after some time, for link clicking time. */
@@ -195,6 +238,43 @@ export class TabsPage implements OnInit {
 
   noop(): number {
     return 0;
+  }
+
+  logout() {
+    this.alertCtrl.create({
+      header: 'Are you sure you want to log out?',
+      cssClass: 'danger-alert',
+      buttons: [
+        {
+          text: 'Cancel',
+          cssClass: 'cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Log Out',
+          cssClass: 'main',
+          handler: () => {
+            this.navCtrl.navigateForward('/logout');
+          }
+        }
+      ]
+    }).then(alert => alert.present());
+  }
+
+  async presentToast(msg: string) {
+    const toast = await this.toastCtrl.create({
+      message: msg,
+      color: 'danger',
+      duration: 6000,
+      position: 'top',
+      buttons: [
+        {
+          text: 'Close',
+          role: 'cancel'
+        }
+      ],
+    });
+    toast.present();
   }
 
 }

@@ -66,14 +66,14 @@
                     <ng-container *ngFor="let item of group.value">
                       <ng-container
                         *ngIf="item.url.startsWith('http://') || item.url.startsWith('https://'); else internalLink">
-                        <a [href]="item.url">
+                        <a tappable="true" (click)="openPage(item.url, item.attachTicket)">
                           <p>
                             {{ item.title }}
                           </p>
                         </a>
                       </ng-container>
                       <ng-template #internalLink>
-                        <a [routerLink]="'/' + item.url">
+                        <a tappable="true" (click)="openPage(item.url, item.attachTicket)">
                           <p>
                             <span *ngFor="let parent of item.parents" class="parent">{{ menusTitle[parent] }}</span>
                             <ion-text [color]="item.parents.length > 0 ? 'medium' : ''">{{ item.title }}</ion-text>
