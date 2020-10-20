@@ -408,7 +408,7 @@ ion-input {
     }
 
     .swiper-button-next {
-      right: 20px;
+      right: 37px;
     }
 
     .box {
@@ -427,7 +427,10 @@ ion-input {
     background-image: none !important;
 
     ion-icon {
+      border-radius: 100%;
+      padding: 6px;
       color: #E50565;
+      background-color: rgba(0, 0, 0, 0.8);
     }
   }
 
