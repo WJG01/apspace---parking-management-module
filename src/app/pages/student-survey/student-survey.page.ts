@@ -184,14 +184,17 @@ export class StudentSurveyPage implements OnInit {
       ),
       tap(res => this.modules = res),
       tap(res => {
-        if (
-          res.length === 0 // If user did all of the end semester surverys in the selected intake
-          && !this.selectedIntake.PROGRAM_APPRAISAL // User did not do program survey and
-          && Date.parse(this.selectedIntake.PROGRAM_APPRAISAL_DATE) < Date.parse(this.todaysDate.toISOString()) // Time for program survey
-        ) {
-          this.surveyType = 'Programme Evaluation';
-          this.getSurveys(this.intakeCode);
+        if (!this.courseType.toLowerCase().includes('master') && !this.courseType.toLowerCase().includes('phd')) {
+          if (
+            res.length === 0 // If user did all of the end semester surverys in the selected intake
+            && !this.selectedIntake.PROGRAM_APPRAISAL // User did not do program survey and
+            && Date.parse(this.selectedIntake.PROGRAM_APPRAISAL_DATE) < Date.parse(this.todaysDate.toISOString()) // Time for program survey
+          ) {
+            this.surveyType = 'Programme Evaluation';
+            this.getSurveys(this.intakeCode);
+          }
         }
+
       })
     );
   }
