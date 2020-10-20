@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonContent } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
-import { differenceInDays } from 'date-fns';
+import { differenceInDays, eachDayOfInterval } from 'date-fns';
 import { CalendarComponentOptions, DayConfig } from 'ion2-calendar';
 import { Observable } from 'rxjs';
 import { finalize, map, tap } from 'rxjs/operators';
@@ -20,6 +20,7 @@ import { WsApiService } from 'src/app/services';
 export class HolidaysPage implements OnInit {
   holiday$: Observable<Holiday[]>;
   filteredHoliday$: Observable<Holiday[]>;
+  dateArray: Date[] = [];
   openDate: string;
   datesConfig: DayConfig[] = [];
   options: CalendarComponentOptions = {
@@ -114,13 +115,17 @@ export class HolidaysPage implements OnInit {
         };
 
         filteredHolidays.forEach(holiday => {
-          this.datesConfig.push({
-            date: new Date(holiday.holiday_start_date),
-            marked: true,
-            disable: false,
-            subTitle: '.',
-            cssClass: 'holidays',
-          });
+
+          if (holiday.holiday_start_date === holiday.holiday_end_date) {
+            this.dateArray.push(new Date(holiday.holiday_start_date));
+          } else if (holiday.holiday_start_date !== holiday.holiday_end_date) {
+            let tempDateArray: Date[] = [];
+
+            tempDateArray = (eachDayOfInterval({ start: new Date(holiday.holiday_start_date), end: new Date(holiday.holiday_end_date) }));
+
+            Array.prototype.push.apply(this.dateArray, tempDateArray);
+
+          }
 
           this.recordsArray.push({
             holiday_id: holiday.holiday_id,
@@ -133,6 +138,16 @@ export class HolidaysPage implements OnInit {
           });
         });
 
+        this.dateArray.forEach(holidayDate => (
+
+          this.datesConfig.push({
+            date: holidayDate,
+            marked: true,
+            disable: false,
+            subTitle: '.',
+            cssClass: 'holidays',
+          })
+        ));
       })
     );
   }
