@@ -78,14 +78,15 @@ export class MorePage implements OnInit {
         this.menuFiltered = this.menuFull.filter(
           menu => {
             // tslint:disable-next-line:no-bitwise
-            return menu.role & role;
+            return (menu.role & role) && menu.parents.length === 0;
           }
         );
       } else {
         this.menuFiltered = this.menuFull.filter(
           menu => {
-            // tslint:disable-next-line:no-bitwise
-            return ((menu.role & role) && ((menu.canAccess && menu.canAccess === canAccessResults) || !menu.canAccess));
+            return menu.parents.length === 0
+                // tslint:disable-next-line:no-bitwise
+                && ((menu.role & role) && ((menu.canAccess && menu.canAccess === canAccessResults) || !menu.canAccess));
           }
         );
       }
