@@ -43,13 +43,12 @@ export class HrDownloadPage {
     this.storage.get('canAccessPayslipFileSearch').then(
       canAccessPayslipFileSearch => this.canAccessPayslipFileSearch = canAccessPayslipFileSearch
     );
-    // this.canAccessPayslipFileSearch = true;
     this.doRefresh();
   }
 
   doRefresh() {
     this.files$ = this.ws.get<any>('/epayslip/list', { url: this.ePayslipUrl }).pipe(
-      map(files => [...files.ea_form, ...files.payslips]),
+      map(files => [...files.ea_form, ...files.payslips, ...files.pcb_form]),
       map(files => files.sort((a, b) => 0 - (a > b ? 1 : -1))),
       catchError(error => of(error))
     );
@@ -106,21 +105,13 @@ export class HrDownloadPage {
   }
 
   viewSearchedStaffFiles($event) {
-    const staffID = $event;
-    // let staffFiles;
-
-    // this.ws.get<any>(`/epayslip/find?staff_id=${staffID}`, { url: this.ePayslipUrl }).pipe(
-    //   map(files => [...files.ea_form, ...files.payslips]),
-    //   map(files => files.sort((a, b) => 0 - (a > b ? 1 : -1))),
-    //   tap(files => staffFiles = files),
-    //   catchError(error => of(error))
-    // ).subscribe();
+    const staffSamAccountName = $event;
 
     this.modalCtrl.create({
       component: SearchedFilesDisplayComponent,
       cssClass: 'glob-partial-page-modal',
       componentProps: {
-        staffFiles: staffID
+        staffSamAccountName
       }
     }).then(modal => {
       modal.present();

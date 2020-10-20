@@ -1,5 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
+import { File } from '@ionic-native/file/ngx';
+import { ModalController, Platform } from '@ionic/angular';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+
+import { CasTicketService, WsApiService } from 'src/app/services';
 
 @Component({
   selector: 'app-searched-files-display',
@@ -7,15 +13,71 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./searched-files-display.component.scss'],
 })
 export class SearchedFilesDisplayComponent implements OnInit {
-  @Input() staffFiles: any;
+  @Input() staffSamAccountName: any;
+  ePayslipUrl = 'https://t16rz80rg7.execute-api.ap-southeast-1.amazonaws.com/staging';
 
+  files$: Observable<any[]>;
   dateToFilter;
   fileToFilter;
 
-  constructor(public modalCtrl: ModalController) { }
+  constructor(
+    public modalCtrl: ModalController,
+    private ws: WsApiService,
+    private cas: CasTicketService,
+    private platform: Platform,
+    private file: File,
+    private fileOpener: FileOpener
+  ) {}
 
   ngOnInit() {
-    console.log(this.staffFiles);
+    this.doRefresh();
+  }
+
+  doRefresh() {
+    this.files$ = this.ws.get<any>(`/epayslip/find?sam_account_name=${this.staffSamAccountName}`, { url: this.ePayslipUrl }).pipe(
+      map(files => [...files.ea_form, ...files.payslips, ...files.pcb_form]),
+      map(files => files.sort((a, b) => 0 - (a > b ? 1 : -1))),
+      catchError(error => of(error))
+    );
+  }
+
+  downloadPayslipPdf(payslip) {
+    const downloadPayslipEndpoint = '/epayslip/download/';
+    const link = this.ePayslipUrl + downloadPayslipEndpoint + payslip;
+
+    this.cas.getST(link).subscribe(st => {
+      fetch(link + `?ticket=${st}`).then(result => result.blob()).then(blob => {
+        const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+
+        if (this.platform.is('cordova')) {
+          const directoryType = this.platform.is('android') ? this.file.externalDataDirectory : this.file.dataDirectory;
+
+          // Save the PDF to the data Directory of our App
+          this.file.writeFile(directoryType, `${payslip}.pdf`, pdfBlob, { replace: true }).then(_ => {
+            // Open the PDf with the correct OS tools
+            this.fileOpener.open(directoryType + `${payslip}.pdf`, 'application/pdf');
+          });
+        } else {
+          const blobUrl = URL.createObjectURL(pdfBlob);
+          const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+
+          a.href = blobUrl;
+          a.download = payslip;
+          document.body.appendChild(a);
+          a.click();
+
+          setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(blobUrl);
+          }, 5000);
+        }
+      });
+    });
+  }
+
+  displayAllFiles() {
+    this.dateToFilter = '';
+    this.fileToFilter = '';
   }
 
   dismissModal() {
