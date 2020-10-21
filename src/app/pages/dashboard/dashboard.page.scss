@@ -145,7 +145,7 @@ ion-col[scrolly=true] {
   }
 
   .swiper-button-prev {
-    left: 20px;
+    left: 2px;
   }
 
   .swiper-button-next {
@@ -165,7 +165,10 @@ ion-col[scrolly=true] {
     background-image: none !important;
 
     ion-icon {
-      color: #14557b;
+      border-radius: 100%;
+      padding: 6px;
+      color: #E50565;
+      background-color: rgba(19, 79, 109, 0.8);
     }
   }
 }
