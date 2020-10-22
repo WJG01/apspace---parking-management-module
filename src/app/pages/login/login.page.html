@@ -135,12 +135,12 @@
                 <form (ngSubmit)="login()" #loginForm="ngForm" class="ion-no-padding">
                   <div class="login-form-container ion-padding">
                     <div class="input-container ion-margin-top">
-                      <p class="text-bold">APKey</p>
+                      <p>APKey</p>
                       <ion-input placeholder="Ex: TP012345" type="text" [(ngModel)]="apkey" (keyup.enter)="login()"
                         [autofocus]="true" [required]="true" name="apkey"></ion-input>
                     </div>
                     <div class="input-container ion-margin-top">
-                      <p class="text-bold">Password</p>
+                      <p>Password</p>
                       <ion-input class="passowrd-input" placeholder="APKey Password"
                         [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" clear-on-edit="false"
                         (keyup.enter)="login()" [required]="true" name="password">
