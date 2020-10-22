@@ -7,7 +7,7 @@
   </ion-toolbar>
 
   <ion-toolbar *ngIf="filteredHoliday$ | async; else loadingSegment">
-    <ion-segment [(ngModel)]="selectedSegment" (ngModelChange)="segmentValueChanged()">
+    <ion-segment [(ngModel)]="selectedSegment">
       <ion-segment-button value="ListView">List</ion-segment-button>
       <ion-segment-button value="CalendarView">Calendar</ion-segment-button>
     </ion-segment>
@@ -123,13 +123,6 @@
               <ion-card>
                 <ion-card-content>
                   <ng-container *ngIf="filteredHoliday$ | async; else loadingHolidays">
-                    <ion-item class="ion-padding-bottom">
-                      <ion-label>Affecting:</ion-label>
-                      <ion-select interface="popover" [(ngModel)]="filterObject.affecting" (ngModelChange)="onFilter()">
-                        <ion-select-option value="students">Students only</ion-select-option>
-                        <ion-select-option value="staff">Staff only</ion-select-option>
-                      </ion-select>
-                    </ion-item>
                     <ion-calendar class="glob-calendar" (change)="holidayItemOnChange($event)" [options]="options"
                       [type]="'string'" [format]="'YYYY-MM-DD'">
                     </ion-calendar>

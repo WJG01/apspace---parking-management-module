@@ -1,6 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonContent } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { differenceInDays, eachDayOfInterval, format } from 'date-fns';
 import { CalendarComponentOptions, DayConfig } from 'ion2-calendar';
@@ -55,7 +54,6 @@ export class HolidaysPage implements OnInit {
 
   selectedSegment = 'ListView';
   skeletons = new Array(6);
-  @ViewChild('content', { static: true }) content: IonContent;
 
   constructor(
     private ws: WsApiService,
@@ -221,9 +219,4 @@ export class HolidaysPage implements OnInit {
 
     this.onFilter();
   }
-
-  segmentValueChanged() {
-    this.content.scrollToTop();
-  }
-
 }
