@@ -40,23 +40,58 @@
           <ng-container [ngSwitch]='selectedSegment'>
             <ng-container *ngSwitchCase="'ListView'">
               <ng-container *ngIf="(filteredHoliday$ | async) as holidays; else loadingList">
-                <ion-item lines="none" *ngFor="let holiday of holidays" class="glob-margin-auto">
-                  <ion-thumbnail>
-                    <ion-icon name="calendar" class="ion-margin-top"></ion-icon>
-                  </ion-thumbnail>
-                  <ion-label>
-                    <h2 class="glob-text-bold">{{ holiday.holiday_name }}</h2>
-                    <p>
-                      {{ holiday.holiday_people_affected === 'students,staff' 
-                              ? 'Students & Staff' : holidaysAffected === 'students' 
+                <ng-container *ngIf="holidays.length > 0; else noHolidays">
+                  <ion-list class="ion-margin-bottom">
+                    <ion-item lines="none">
+                      <ion-label>Show:</ion-label>
+                      <ion-select interface="popover" [(ngModel)]="filterObject.show" (ngModelChange)="onFilter()">
+                        <ion-select-option value="all">All</ion-select-option>
+                        <ion-select-option value="upcoming">Upcoming only</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label>Affecting:</ion-label>
+                      <ion-select interface="popover" [(ngModel)]="filterObject.affecting" (ngModelChange)="onFilter()">
+                        <ion-select-option value="students">Students</ion-select-option>
+                        <ion-select-option value="staff">Staff</ion-select-option>
+                        <ion-select-option value="">All</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label>Number of Days:</ion-label>
+                      <ion-select interface="popover" [(ngModel)]="filterObject.numberOfDays"
+                        (ngModelChange)="onFilter()">
+                        <ion-select-option value="">All</ion-select-option>
+                        <ion-select-option value="many">Many</ion-select-option>
+                        <ion-select-option value="1 day">1 day only</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+                    <div class="ion-text-end ion-padding-top">
+                      <ion-button class="ion-padding-end" size="small" color="danger" fill="solid"
+                        (click)="clearFilter()">
+                        <ion-icon name="trash-bin-outline" class="ion-padding-end"></ion-icon>
+                        Clear Filter
+                      </ion-button>
+                    </div>
+                  </ion-list>
+                  <ion-item lines="none" *ngFor="let holiday of holidays" class="glob-margin-auto">
+                    <ion-thumbnail>
+                      <ion-icon name="calendar" class="ion-margin-top"></ion-icon>
+                    </ion-thumbnail>
+                    <ion-label>
+                      <h2 class="glob-text-bold">{{ holiday.holiday_name }}</h2>
+                      <p>
+                        {{ holiday.holiday_people_affected === 'students,staff' 
+                              ? 'Students & Staff' : holiday.holiday_people_affected === 'students' 
                               ? 'Students' : 'Staff' }}
-                  </ion-label>
-                  <ion-badge color="primary">
-                    {{ holiday.holiday_start_date | prettyDate }}<ng-template
-                      [ngIf]="(holiday.holiday_start_date !== holiday.holiday_end_date)">
-                      - {{ holiday.holiday_end_date | prettyDate }}</ng-template>
-                  </ion-badge>
-                </ion-item>
+                    </ion-label>
+                    <ion-badge color="primary">
+                      {{ holiday.holiday_start_date | prettyDate }}<ng-template
+                        [ngIf]="(holiday.holiday_start_date !== holiday.holiday_end_date)">
+                        - {{ holiday.holiday_end_date | prettyDate }}</ng-template>
+                    </ion-badge>
+                  </ion-item>
+                </ng-container>
               </ng-container>
             </ng-container>
           </ng-container>
@@ -77,20 +112,26 @@
             </ion-list>
           </ng-template>
 
+          <ng-template #noHolidays>
+            <app-message-with-svg imageUrl="assets/img/empty.svg" messageTitle="The list is empty!" wrapperSize="6"
+              wrapperOffset="3" messageContent="Either no items to show for today, or the list has finished">
+            </app-message-with-svg>
+          </ng-template>
+
           <ng-container [ngSwitch]='selectedSegment'>
             <ng-container *ngSwitchCase="'CalendarView'">
               <ion-card>
                 <ion-card-content>
                   <ng-container *ngIf="filteredHoliday$ | async; else loadingHolidays">
-                    <ion-item *ngIf="affecting" class="ion-padding-bottom">
+                    <ion-item class="ion-padding-bottom">
                       <ion-label>Affecting:</ion-label>
-                      <ion-select interface="popover" [(ngModel)]="affecting" (ngModelChange)="onFilter()">
+                      <ion-select interface="popover" [(ngModel)]="filterObject.affecting" (ngModelChange)="onFilter()">
                         <ion-select-option value="students">Students only</ion-select-option>
                         <ion-select-option value="staff">Staff only</ion-select-option>
                       </ion-select>
                     </ion-item>
-                    <ion-calendar class="glob-calendar" (change)="holidayItemOnChange($event)"
-                      [options]="options" [type]="'string'" [format]="'YYYY-MM-DD'">
+                    <ion-calendar class="glob-calendar" (change)="holidayItemOnChange($event)" [options]="options"
+                      [type]="'string'" [format]="'YYYY-MM-DD'">
                     </ion-calendar>
                     <ng-container *ngIf="showDetails; else noClick">
                       <ion-list>
