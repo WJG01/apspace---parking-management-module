@@ -20,7 +20,6 @@ import { WsApiService } from 'src/app/services';
 export class HolidaysPage implements OnInit {
   holiday$: Observable<Holiday[]>;
   filteredHoliday$: Observable<Holiday[]>;
-  openDate: string;
   datesConfig: DayConfig[] = [];
   options: CalendarComponentOptions = {
     daysConfig: this.datesConfig,

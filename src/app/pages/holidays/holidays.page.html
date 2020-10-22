@@ -89,7 +89,7 @@
                         <ion-select-option value="staff">Staff only</ion-select-option>
                       </ion-select>
                     </ion-item>
-                    <ion-calendar class="glob-calendar" [(ngModel)]="openDate" (change)="holidayItemOnChange($event)"
+                    <ion-calendar class="glob-calendar" (change)="holidayItemOnChange($event)"
                       [options]="options" [type]="'string'" [format]="'YYYY-MM-DD'">
                     </ion-calendar>
                     <ng-container *ngIf="showDetails; else noClick">
