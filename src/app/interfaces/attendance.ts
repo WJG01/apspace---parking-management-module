@@ -1,9 +1,16 @@
-export interface Attendancev2 {
-  MODULE_ATTENDANCE: string;
-  PERCENTAGE: number;
-  TOTAL_CLASSES: number;
-  SUBJECT_CODE: string;
+export interface Attendance {
+  COURSE_CODE: string;
+  COURSE_DESCRIPTION: string;
+  END_DATE: string;
   EXAM_ELIGIBILITY: string;
-  TOTAL_ABSENT: number;
+  MIN_CLASSES: number;
+  MODULE_ATTENDANCE: string;
+  NAME: string;
+  PERCENTAGE: number;
   SEMESTER: number;
+  STUDENT_NUMBER: string;
+  SUBJECT_CODE: string;
+  TOTAL_ABSENT: number;
+  TOTAL_CLASSES: number;
+  bankdraft_amount: number;
 }
