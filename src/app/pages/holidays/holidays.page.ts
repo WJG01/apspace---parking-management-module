@@ -151,6 +151,15 @@ export class HolidaysPage implements OnInit {
           to: null,
           daysConfig: this.datesConfig,
         };
+        // Reset calendar before uploading new filtered data
+        this.dateArray = [{
+          holiday_name: '',
+          holiday_start_date: null,
+          holiday_end_date: null,
+          holiday_people_affected: ''
+        }];
+
+        this.datesConfig = [];
 
         filteredHolidays.forEach(holiday => {
 
@@ -217,7 +226,7 @@ export class HolidaysPage implements OnInit {
       numberOfDays: '',
       affecting: ''
     };
-
+    this.defaultFilter();
     this.onFilter();
   }
 
