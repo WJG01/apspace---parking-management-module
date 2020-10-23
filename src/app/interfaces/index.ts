@@ -27,13 +27,11 @@ export { StudentProfile } from './student-profile';
 export { Subcourse } from './subcourses';
 export { StudentTimetable } from './student-timetable';
 export { EventComponentConfigurations } from './event-component-configurations';
-export { DashboardCardComponentConfigurations } from './dashboard-card-componenet-configurations';
 export { CgpaPerIntake } from './cgpa-per-intake';
 export { ConsultationHour } from './iconsult';
 export { Graduater } from './graduater';
 export { IntakeListing } from './intake-listing';
 export { QuixCustomer } from './quix';
-export { DashboardSection } from './dashboard-section';
 export {
     ConsultationSlot,
     SlotDetails,
