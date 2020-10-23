@@ -29,6 +29,7 @@ export class HolidaysPage implements OnInit {
   showDetails: boolean;
   remainingDays: string;
   todaysDate = new Date();
+  filterMenuHidden = true;
 
   filterObject: {
     show: 'all' | 'upcoming',
@@ -218,5 +219,13 @@ export class HolidaysPage implements OnInit {
     };
 
     this.onFilter();
+  }
+
+  showFilterMenu() {
+    if (this.filterMenuHidden === true) {
+      this.filterMenuHidden = false;
+    } else {
+      this.filterMenuHidden = true;
+    }
   }
 }

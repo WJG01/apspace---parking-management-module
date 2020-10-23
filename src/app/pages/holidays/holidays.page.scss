@@ -9,6 +9,10 @@ ion-badge {
 ion-label h2 {
   white-space: normal;
 }
+
+.item {
+  background: var(--ion-item-background);
+}
 // To Be enabled in the Future
 // .hidden-data {
 //   overflow: hidden;

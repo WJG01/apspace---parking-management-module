@@ -41,39 +41,47 @@
             <ng-container *ngSwitchCase="'ListView'">
               <ng-container *ngIf="(filteredHoliday$ | async) as holidays; else loadingList">
                 <ng-container *ngIf="holidays.length > 0; else noHolidays">
-                  <ion-list class="ion-margin-bottom">
-                    <ion-item lines="none">
-                      <ion-label>Show:</ion-label>
-                      <ion-select interface="popover" [(ngModel)]="filterObject.show" (ngModelChange)="onFilter()">
-                        <ion-select-option value="all">All</ion-select-option>
-                        <ion-select-option value="upcoming">Upcoming only</ion-select-option>
-                      </ion-select>
+                    <ion-item lines="none" button (click)="showFilterMenu()" [class.ion-margin-bottom]="filterMenuHidden">
+                      <ion-icon class="ion-padding-end" name="filter"></ion-icon>
+                      Filters
+                      <ion-icon *ngIf="filterMenuHidden; else upCaret" slot="end" size="small" name="caret-down"></ion-icon>
+                      <ng-template #upCaret>
+                      <ion-icon slot="end" size="small" name="caret-up"></ion-icon>
+                      </ng-template>
                     </ion-item>
-                    <ion-item lines="none">
-                      <ion-label>Affecting:</ion-label>
-                      <ion-select interface="popover" [(ngModel)]="filterObject.affecting" (ngModelChange)="onFilter()">
-                        <ion-select-option value="students">Students</ion-select-option>
-                        <ion-select-option value="staff">Staff</ion-select-option>
-                        <ion-select-option value="">All</ion-select-option>
-                      </ion-select>
-                    </ion-item>
-                    <ion-item lines="none">
-                      <ion-label>Number of Days:</ion-label>
-                      <ion-select interface="popover" [(ngModel)]="filterObject.numberOfDays"
-                        (ngModelChange)="onFilter()">
-                        <ion-select-option value="">All</ion-select-option>
-                        <ion-select-option value="many">Many</ion-select-option>
-                        <ion-select-option value="1 day">1 day only</ion-select-option>
-                      </ion-select>
-                    </ion-item>
-                    <div class="ion-text-end ion-padding-top">
-                      <ion-button class="ion-padding-end" size="small" color="danger" fill="solid"
-                        (click)="clearFilter()">
-                        <ion-icon name="trash-bin-outline" class="ion-padding-end"></ion-icon>
-                        Clear Filter
-                      </ion-button>
+                    <div *ngIf="!filterMenuHidden">
+                      <ion-item lines="none">
+                        <ion-label>Show:</ion-label>
+                        <ion-select interface="popover" [(ngModel)]="filterObject.show" (ngModelChange)="onFilter()">
+                          <ion-select-option value="all">All</ion-select-option>
+                          <ion-select-option value="upcoming">Upcoming only</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label>Affecting:</ion-label>
+                        <ion-select interface="popover" [(ngModel)]="filterObject.affecting"
+                          (ngModelChange)="onFilter()">
+                          <ion-select-option value="students">Students</ion-select-option>
+                          <ion-select-option value="staff">Staff</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label>Number of Days:</ion-label>
+                        <ion-select interface="popover" [(ngModel)]="filterObject.numberOfDays"
+                          (ngModelChange)="onFilter()">
+                          <ion-select-option value="">All</ion-select-option>
+                          <ion-select-option value="many">Many</ion-select-option>
+                          <ion-select-option value="1 day">1 day only</ion-select-option>
+                        </ion-select>
+                      </ion-item>
+                      <div class="ion-text-end ion-padding-top ion-padding-bottom ion-margin-bottom item">
+                        <ion-button class="ion-padding-end" size="small" color="danger" fill="solid"
+                          (click)="clearFilter()">
+                          <ion-icon name="trash-bin" class="ion-padding-end"></ion-icon>
+                          Clear Filter
+                        </ion-button>
+                      </div>
                     </div>
-                  </ion-list>
                   <ion-item lines="none" *ngFor="let holiday of holidays" class="glob-margin-auto">
                     <ion-thumbnail>
                       <ion-icon name="calendar" class="ion-margin-top"></ion-icon>
