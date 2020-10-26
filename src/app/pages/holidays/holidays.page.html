@@ -40,11 +40,8 @@
           <ion-item lines="none" button (click)="showFilterMenu()" [class.ion-margin-bottom]="filterMenuHidden">
             <ion-icon class="ion-padding-end" name="filter"></ion-icon>
             Filters
-            <ion-icon *ngIf="filterMenuHidden; else upCaret" slot="end" size="small" name="caret-down">
+            <ion-icon slot="end" size="small" [name]="filterMenuHidden ? 'caret-down' : 'caret-up'">
             </ion-icon>
-            <ng-template #upCaret>
-              <ion-icon slot="end" size="small" name="caret-up"></ion-icon>
-            </ng-template>
           </ion-item>
           <div *ngIf="!filterMenuHidden">
             <ion-item lines="none">
