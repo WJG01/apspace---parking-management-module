@@ -142,9 +142,6 @@ export class AppComponent {
       this.platform.backButton.subscribe(async () => { // back button clicked
         const modal = await this.modalCtrl.getTop();
         if ((this.router.url.startsWith('/tabs') || this.router.url.startsWith('/maintenance-and-update')) && !modal) {
-          if (modal) {
-            modal.dismiss();
-          }
           const timePressed = new Date().getTime();
           if ((timePressed - this.lastTimeBackPress) < this.timePeriodToExit) {
             // tslint:disable-next-line: no-string-literal
@@ -154,6 +151,7 @@ export class AppComponent {
             this.lastTimeBackPress = timePressed;
           }
         } else {
+          this.presentToast('beep', 1000);
           if (this.menuCtrl.getOpen()) {
             this.menuCtrl.close();
             return;
