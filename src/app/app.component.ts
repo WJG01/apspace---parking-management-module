@@ -151,7 +151,6 @@ export class AppComponent {
             this.lastTimeBackPress = timePressed;
           }
         } else {
-          this.presentToast('beep', 1000);
           if (this.menuCtrl.getOpen()) {
             this.menuCtrl.close();
             return;
