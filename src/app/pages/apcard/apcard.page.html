@@ -101,44 +101,57 @@
 
   <!-- LOADING TEMPLATE -->
   <ng-template #apCardBalanceLoading>
-    <div>
-      <div *ngFor="let skelton of skeletonConfig">
-        <ion-card>
-          <ion-card-header>
-            <ion-card-subtitle>
-              <h5>
-                <ion-skeleton-text animated style="width: 60%; line-height: 20px"></ion-skeleton-text>
-              </h5>
-            </ion-card-subtitle>
-            <ion-card-title>
-              <h3>
-                <ion-skeleton-text animated style="width: 80%; line-height: 28px"></ion-skeleton-text>
-              </h3>
-            </ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <ion-list>
-              <ion-item lines="none" class="ion-no-padding" style="border-left: none;"
-                *ngFor="let transactions of skelton.numOfTrans">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-xs="12" size-md="4" push-md="8">
+          <ion-card class="ion-no-margin" color="primary">
+            <ion-card-header class="ion-text-center">
+              <ion-card-subtitle>Balance</ion-card-subtitle>
+              <ion-card-title>
+                <ion-skeleton-text class="ion-no-margin" animated style="height: 120px; width: 100%;">
+                </ion-skeleton-text>
+              </ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </ion-col>
+        <ion-col size-xs="12" size-md="8" pull-md="4">
+          <ion-card class="ion-no-margin">
+            <ion-card-header color="secondary">
+              <ion-card-title>
+                Transactions History
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="ion-no-padding">
+              <ion-item-divider lines="none" color="light">
+                <ion-skeleton-text animated style="width: 57%; height: 20px;"></ion-skeleton-text>
+              </ion-item-divider>
+              <ion-item lines="full" *ngFor="let _ of skeletonConfig" style="border-left: none;">
                 <ion-avatar slot="start">
-                  <ion-skeleton-text animated style="width: 100%; line-height: 33px"></ion-skeleton-text>
+                  <ion-skeleton-text animated></ion-skeleton-text>
                 </ion-avatar>
                 <ion-label>
-                  <h2 class="value">
-                    <ion-skeleton-text animated style="width: 40%; line-height: 20px"></ion-skeleton-text>
-                  </h2>
-                  <h3>
-                    <ion-skeleton-text animated style="width: 55%; line-height: 20px"></ion-skeleton-text>
-                  </h3>
-                  <p>
-                    <ion-skeleton-text animated style="width: 90%; line-height: 20px"></ion-skeleton-text>
-                  </p>
+                  <ion-grid class="ion-no-padding">
+                    <ion-row class="ion-no-padding">
+                      <ion-col size="12" class="ion-no-padding">
+                        <ion-text>
+                          <ion-skeleton-text style="width: 57%;" animated></ion-skeleton-text>
+                        </ion-text>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col size="6">
+                        <ion-text>
+                          <ion-skeleton-text animated></ion-skeleton-text>
+                        </ion-text>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
                 </ion-label>
               </ion-item>
-            </ion-list>
-          </ion-card-content>
-        </ion-card>
-      </div>
-    </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ng-template>
 </ion-content>
