@@ -109,9 +109,9 @@ export class AppComponent {
         // match.$link - the full link data
         let queryParams = {};
         if (match.$args) {
-          queryParams = {location: match.$args.location};
+          queryParams = { location: match.$args.location };
         }
-        this.router.navigate([match.$link.path], {queryParams} );
+        this.router.navigate([match.$link.path], { queryParams });
       }, _ => {
         // _.$link - the full link data
       });
@@ -140,7 +140,8 @@ export class AppComponent {
       const shakeSensitivity = this.settings.get('shakeSensitivity');
       this.shakespear.initShakespear(shakeSensitivity); // FIXME use observable to get latest value
       this.platform.backButton.subscribe(async () => { // back button clicked
-        if (this.router.url.startsWith('/tabs') || this.router.url.startsWith('/maintenance-and-update')) {
+        const modal = await this.modalCtrl.getTop();
+        if ((this.router.url.startsWith('/tabs') || this.router.url.startsWith('/maintenance-and-update')) && !modal) {
           const timePressed = new Date().getTime();
           if ((timePressed - this.lastTimeBackPress) < this.timePeriodToExit) {
             // tslint:disable-next-line: no-string-literal
