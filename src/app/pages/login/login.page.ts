@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { Network } from '@ionic-native/network/ngx';
-import { AlertController, IonSlides, Platform, ToastController } from '@ionic/angular';
+import { AlertController, IonSlides, ModalController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap, timeout } from 'rxjs/operators';
@@ -12,6 +12,7 @@ import {
   CasTicketService, DataCollectorService, NewsService, SettingsService,
   WsApiService
 } from '../../services';
+import { NewsModalPage } from '../news/news-modal';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +21,7 @@ import {
 })
 export class LoginPage implements OnInit {
   @ViewChild('sliderSlides') sliderSlides: IonSlides;
+  @ViewChild('operationsHourSlides') operationsHourSlides: IonSlides;
 
   noticeBoardItems$: Observable<any[]>;
   news$: Observable<ShortNews[]>;
@@ -50,7 +52,7 @@ export class LoginPage implements OnInit {
       el: '.swiper-pagination',
       clickable: true,
       renderBullet: (_, className) => {
-        return '<span style="width: 10px; height: 10px; background-color: #14557b !important;" class="' + className + '"></span>';
+        return '<span style="width: 10px; height: 10px; background-color: #E50565 !important;" class="' + className + '"></span>';
       }
     }
   };
@@ -157,7 +159,8 @@ export class LoginPage implements OnInit {
     private storage: Storage,
     private toastCtrl: ToastController,
     private ws: WsApiService,
-    private news: NewsService
+    private news: NewsService,
+    private modalCtrl: ModalController,
   ) {
   }
 
@@ -758,6 +761,16 @@ export class LoginPage implements OnInit {
 
   }
 
+  // NEWS MODAL
+async openNewsModal(newsItem: ShortNews) {
+    const modal = await this.modalCtrl.create({
+      component: NewsModalPage,
+      componentProps: { newsItem },
+    });
+    await modal.present();
+    await modal.onDidDismiss();
+  }
+
   // SLIDER
   prevSlide() {
     this.sliderSlides.slidePrev();
@@ -765,6 +778,14 @@ export class LoginPage implements OnInit {
 
   nextSlide() {
     this.sliderSlides.slideNext();
+  }
+
+  prevOptSlide() {
+    this.operationsHourSlides.slidePrev();
+  }
+
+  nextOptSlide() {
+    this.operationsHourSlides.slideNext();
   }
 
 }

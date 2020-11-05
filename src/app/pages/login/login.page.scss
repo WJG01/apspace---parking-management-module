@@ -219,6 +219,10 @@ ion-input {
     font-size: 38px !important;
   }
 
+  .dark-color {
+    color: #454343 !important;
+  }
+
   .display-block {
     display: block;
   }
@@ -232,7 +236,6 @@ ion-input {
     padding-left: 5px;
     padding-right: 5px;
   }
-
 
 
   @media screen and (max-width: 756px) {
@@ -346,7 +349,6 @@ ion-input {
               .eye-button {
                 z-index: 200;
                 position: absolute;
-                top: 0px;
                 right: 10px;
 
                 .show-password {
@@ -405,7 +407,7 @@ ion-input {
     }
 
     .swiper-button-next {
-      right: 20px;
+      right: 37px;
     }
 
     .box {
@@ -417,13 +419,17 @@ ion-input {
 
     }
 
-    .swiper-button-next,
-    .swiper-button-prev {
-      background-image: none !important;
+  }
 
-      ion-icon {
-        color: #14557b;
-      }
+  .swiper-button-next,
+  .swiper-button-prev {
+    background-image: none !important;
+
+    ion-icon {
+      border-radius: 100%;
+      padding: 6px;
+      color: #E50565;
+      background-color: rgb(16, 112, 161, 0.8);
     }
   }
 
@@ -722,6 +728,11 @@ ion-input {
         p {
           color: white !important;
         }
+
+        a {
+          text-decoration: none;
+          color: inherit;
+        }
       }
     }
   }
@@ -777,6 +788,11 @@ ion-input {
 
         p {
           padding: 0 10px;
+        }
+
+        a {
+          text-decoration: none;
+          color: inherit;
         }
       }
     }

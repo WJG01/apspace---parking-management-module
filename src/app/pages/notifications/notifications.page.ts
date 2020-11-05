@@ -24,7 +24,7 @@ export class NotificationsPage implements OnInit {
   openedMessages = [];
   filterObject = {
     categories: [],
-    upcoming: false
+    upcoming: true
   };
 
   searchTerm = '';

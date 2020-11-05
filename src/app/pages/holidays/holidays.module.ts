@@ -6,7 +6,9 @@ import { IonicModule } from '@ionic/angular';
 import { CalendarModule } from 'ion2-calendar';
 
 import { ComponentsModule } from 'src/app/components/components.module';
+import { SharedPipesModule } from '../../shared/shared-pipes.module';
 import { HolidaysPage } from './holidays.page';
+import { PrettyDatePipe } from './pretty-date/pretty-date.pipe';
 
 const routes: Routes = [
   {
@@ -22,9 +24,10 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     ComponentsModule,
-    CalendarModule
+    CalendarModule,
+    SharedPipesModule
   ],
   providers: [DatePipe],
-  declarations: [HolidaysPage]
+  declarations: [HolidaysPage, PrettyDatePipe]
 })
 export class HolidaysPageModule {}

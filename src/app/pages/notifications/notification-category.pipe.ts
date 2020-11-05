@@ -14,16 +14,16 @@ export class NotificationCategoryPipe implements PipeTransform {
    * @param categories array of categories
    */
   transform(notifications: NotificationBody[], categories: string[]): any {
-    // tslint:disable-next-line: prefer-const
     let results: NotificationBody[] = [];
 
-    categories.forEach(category => {
-      notifications.forEach(notification => {
-        if (notification.category === category) {
-          results.push(notification);
-        }
-      });
+    results = notifications.filter(notification => {
+      if (categories.includes(notification.category)) {
+        return true;
+      } else {
+        return false;
+      }
     });
+
     return results;
   }
 }

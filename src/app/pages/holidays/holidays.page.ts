@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import differenceInDays from 'date-fns/differenceInDays';
+import { differenceInDays, eachDayOfInterval, format } from 'date-fns';
 import { CalendarComponentOptions, DayConfig } from 'ion2-calendar';
 import { Observable } from 'rxjs';
 import { finalize, map, tap } from 'rxjs/operators';
@@ -19,7 +19,6 @@ import { WsApiService } from 'src/app/services';
 export class HolidaysPage implements OnInit {
   holiday$: Observable<Holiday[]>;
   filteredHoliday$: Observable<Holiday[]>;
-  openDate: string;
   datesConfig: DayConfig[] = [];
   options: CalendarComponentOptions = {
     daysConfig: this.datesConfig,
@@ -29,9 +28,33 @@ export class HolidaysPage implements OnInit {
   holidaysAffected: string;
   showDetails: boolean;
   remainingDays: string;
-  recordsArray: Holiday[] = [];
   todaysDate = new Date();
-  affecting: 'students' | 'staff';
+  filterMenuHidden = true;
+
+  filterObject: {
+    show: 'all' | 'upcoming',
+    numberOfDays: '' | '1 day' | 'many',
+    affecting: '' | 'students' | 'staff'
+  } = {
+      show: 'all',
+      numberOfDays: '',
+      affecting: ''
+    };
+
+  dateArray: [{
+    holiday_name: string,
+    holiday_start_date: Date,
+    holiday_end_date: Date,
+    holiday_people_affected: string
+  }] = [{
+    holiday_name: '',
+    holiday_start_date: null,
+    holiday_end_date: null,
+    holiday_people_affected: ''
+  }];
+
+  selectedSegment = 'ListView';
+  skeletons = new Array(6);
 
   constructor(
     private ws: WsApiService,
@@ -63,7 +86,7 @@ export class HolidaysPage implements OnInit {
 
   holidayItemOnChange($event: any) {
     this.showDetails = false;
-    this.recordsArray.forEach((res) => {
+    this.dateArray.forEach((res) => {
       const date = this.datePipe.transform(new Date(res.holiday_start_date), 'yyyy-MM-dd');
 
       if ($event === date) {
@@ -72,7 +95,7 @@ export class HolidaysPage implements OnInit {
           new Date(res.holiday_start_date),
           this.todaysDate
         );
-        if (date === res.holiday_start_date) {
+        if (date === this.datePipe.transform(res.holiday_start_date, 'yyyy-MM-dd')) {
           this.holidayTitle = res.holiday_name;
           this.holidaysAffected = res.holiday_people_affected;
           this.remainingDays = dayDifference < 0 ? Math.abs(dayDifference) + ' Days Ago' : dayDifference === 0
@@ -88,12 +111,33 @@ export class HolidaysPage implements OnInit {
     this.filteredHoliday$ = this.holiday$.pipe(
       map(holidays => {
 
-        return holidays.filter(holiday => {
-
+        let filteredArray = holidays.filter(holiday => {
           return (
-            holiday.holiday_people_affected.includes(this.affecting)
+            holiday.holiday_people_affected.includes(this.filterObject.affecting)
           );
         });
+
+        if (this.filterObject.show === 'upcoming') {
+          filteredArray = filteredArray.filter(holiday => {
+            return new Date(holiday.holiday_start_date) > this.todaysDate;
+          });
+        }
+
+        if (this.filterObject.numberOfDays !== '') {
+          filteredArray = filteredArray.filter(holiday => {
+            if (this.filterObject.numberOfDays === '1 day') {
+              return this.getNumberOfDaysForHoliday(
+                new Date(format(new Date(holiday.holiday_start_date), 'yyyy-MM-dd')),
+                new Date(format(new Date(holiday.holiday_end_date), 'yyyy-MM-dd'))) === '1 day';
+            } else {
+              return this.getNumberOfDaysForHoliday(
+                new Date(format(new Date(holiday.holiday_start_date), 'yyyy-MM-dd')),
+                new Date(format(new Date(holiday.holiday_end_date), 'yyyy-MM-dd'))) !== '1 day';
+            }
+          });
+        }
+
+        return filteredArray;
       }),
       tap(filteredHolidays => {
         // Did not user global variable of today's date because we are modifying the const
@@ -107,32 +151,57 @@ export class HolidaysPage implements OnInit {
           to: null,
           daysConfig: this.datesConfig,
         };
+        // Reset calendar before uploading new filtered data
+        this.dateArray = [{
+          holiday_name: '',
+          holiday_start_date: null,
+          holiday_end_date: null,
+          holiday_people_affected: ''
+        }];
+
+        this.datesConfig = [];
 
         filteredHolidays.forEach(holiday => {
+
+          if (holiday.holiday_start_date === holiday.holiday_end_date) {
+
+            this.dateArray.push({
+              holiday_name: holiday.holiday_name,
+              holiday_start_date: new Date(holiday.holiday_start_date),
+              holiday_end_date: new Date(holiday.holiday_end_date),
+              holiday_people_affected: holiday.holiday_people_affected
+            });
+
+          } else if (holiday.holiday_start_date !== holiday.holiday_end_date) {
+            let tempDateArray: Date[] = [];
+
+            tempDateArray = (eachDayOfInterval({ start: new Date(holiday.holiday_start_date), end: new Date(holiday.holiday_end_date) }));
+
+            tempDateArray.forEach(date => {
+              this.dateArray.push({
+                holiday_name: holiday.holiday_name,
+                holiday_start_date: date,
+                holiday_end_date: new Date(holiday.holiday_end_date),
+                holiday_people_affected: holiday.holiday_people_affected
+              });
+            });
+          }
+        });
+
+        this.dateArray.forEach(holidayDate => (
+
           this.datesConfig.push({
-            date: new Date(holiday.holiday_start_date),
+            date: holidayDate.holiday_start_date,
             marked: true,
             disable: false,
             subTitle: '.',
             cssClass: 'holidays',
-          });
-
-          this.recordsArray.push({
-            holiday_id: holiday.holiday_id,
-            holiday_name: holiday.holiday_name,
-            holiday_description: holiday.holiday_description,
-            holiday_start_date: holiday.holiday_start_date,
-            holiday_end_date: holiday.holiday_end_date,
-            holiday_people_affected: holiday.holiday_people_affected
-
-          });
-        });
-
+          })
+        ));
       })
     );
   }
 
-  // XXX use differentInDays from date-fns instead
   getNumberOfDaysForHoliday(startDate: Date, endDate: Date): string {
     const secondsDiff = this.getSecondsDifferenceBetweenTwoDates(startDate, endDate);
     const daysDiff = Math.floor(secondsDiff / (3600 * 24));
@@ -147,8 +216,25 @@ export class HolidaysPage implements OnInit {
 
   defaultFilter() {
     this.storage.get('role').then((role: Role) => {
-      this.affecting = role === Role.Student ? 'students' : 'staff';
+      this.filterObject.affecting = role === Role.Student ? 'students' : 'staff';
     });
   }
 
+  clearFilter() {
+    this.filterObject = {
+      show: 'all',
+      numberOfDays: '',
+      affecting: ''
+    };
+    this.defaultFilter();
+    this.onFilter();
+  }
+
+  showFilterMenu() {
+    if (this.filterMenuHidden === true) {
+      this.filterMenuHidden = false;
+    } else {
+      this.filterMenuHidden = true;
+    }
+  }
 }

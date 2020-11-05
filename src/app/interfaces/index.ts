@@ -1,6 +1,6 @@
 export { Apcard } from './apcard';
 export { APLCClass, APLCClassDescription, APLCStudentBehaviour, APLCSubject } from './aplc';
-export { Attendancev2 } from './attendance';
+export { Attendance } from './attendance';
 export { AttendanceLegend } from './attendance-legend';
 export { BusTrips, APULocations, APULocation, BusTrip } from './bus-shuttle-services';
 export { AttendixClass, Classcode, Classcodev1, FlatClasscodev1 } from './classcode';
@@ -27,13 +27,12 @@ export { StudentProfile } from './student-profile';
 export { Subcourse } from './subcourses';
 export { StudentTimetable } from './student-timetable';
 export { EventComponentConfigurations } from './event-component-configurations';
-export { DashboardCardComponentConfigurations } from './dashboard-card-componenet-configurations';
+export { DashboardCardComponentConfigurations } from './dashboard-card-component-configurations';
 export { CgpaPerIntake } from './cgpa-per-intake';
 export { ConsultationHour } from './iconsult';
 export { Graduater } from './graduater';
 export { IntakeListing } from './intake-listing';
 export { QuixCustomer } from './quix';
-export { DashboardSection } from './dashboard-section';
 export {
     ConsultationSlot,
     SlotDetails,

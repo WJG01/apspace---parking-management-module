@@ -152,7 +152,7 @@
           </ion-col>
           <ng-container *ngIf="filteredFavMenu.length > 0; else noFavCard">
             <div class="card-view-masonry-list">
-              <div *ngFor="let item of filteredFavMenu" (click)="openPage(item.url)"
+              <div *ngFor="let item of filteredFavMenu" (click)="openPage(item.url, item.attachTicket)"
                 class="card-view-masonry-item custom-card" tappable="true">
                 <div>
                   <img [src]="item.img">

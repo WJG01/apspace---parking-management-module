@@ -2,7 +2,7 @@
 
   <ng-template #systemName let-mobile>
     <h1 [class.glob-system-title]="mobile === 'web'" [class.ion-text-end]="mobile === 'web'"
-      [class.mobile]="mobile === 'mobile'"><span>APS</span>pace</h1>
+      [class.mobile]="mobile === 'mobile'"><span>AP</span>Space</h1>
   </ng-template>
 
   <ng-container *ngIf="plt.is('cordova'); else webVersion">
@@ -135,12 +135,12 @@
                 <form (ngSubmit)="login()" #loginForm="ngForm" class="ion-no-padding">
                   <div class="login-form-container ion-padding">
                     <div class="input-container ion-margin-top">
-                      <p class="text-bold">APKey</p>
+                      <p>APKey</p>
                       <ion-input placeholder="Ex: TP012345" type="text" [(ngModel)]="apkey" (keyup.enter)="login()"
                         [autofocus]="true" [required]="true" name="apkey"></ion-input>
                     </div>
                     <div class="input-container ion-margin-top">
-                      <p class="text-bold">Password</p>
+                      <p>Password</p>
                       <ion-input class="passowrd-input" placeholder="APKey Password"
                         [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" clear-on-edit="false"
                         (keyup.enter)="login()" [required]="true" name="password">
@@ -306,7 +306,7 @@
               <ion-grid class="ion-no-padding ion-padding-top ion-padding-bottom">
                 <ion-row>
                   <ion-col class="ion-padding" size="12" size-sm="6" size-lg="4" *ngFor="let newsItem of news">
-                    <ion-card class="ion-no-margin">
+                    <ion-card class="ion-no-margin" tappable (click)="openNewsModal(newsItem)">
                       <img style="max-height: 200px; width: 100%;" [src]="newsItem.url">
                       <ion-card-header>
                         <ion-card-title class="glob-limit-lines glob-one-line">
@@ -362,11 +362,13 @@
               <ion-col size="12" size-md="8" class="support ion-padding">
                 <h3 class="title">Support</h3>
                 <ion-grid class="ion-no-padding">
-                  <ion-row>
+                  <ion-row class="dark-color">
                     <ion-col size="12">
                       <div class="support-item general">
                         <h3 class="sub-title">General Line</h3>
-                        <p><span class="glob-text-bold">Tel:</span> +603-89961000 / 1 300 888 278 (Toll-free)</p>
+                        <a href="tel:+60389961000">
+                          <p><span class="glob-text-bold">Tel:</span> +603-89961000 / 1 300 888 278 (Toll-free)</p>
+                        </a>
                         <p><span class="glob-text-bold">Mon - Fri: </span> 8:30 AM - 7:00 PM</p>
                         <p><span class="glob-text-bold">Saturday: </span> 8:30 AM - 1:00 PM</p>
                       </div>
@@ -374,14 +376,18 @@
                     <ion-col size="12" size-md="6">
                       <div class="support-item emergency">
                         <h3 class="sub-title">APU Security/Emergency Hotline</h3>
-                        <p><span class="glob-text-bold">HP:</span> 017-238 1300</p>
+                        <a href="tel:0172381300">
+                          <p><span class="glob-text-bold">HP:</span> 017-238 1300</p>
+                        </a>
                         <p>7:00 PM - 7:00 AM</p>
                       </div>
                     </ion-col>
                     <ion-col size="12" size-md="6">
                       <div class="support-item weekends">
                         <h3 class="sub-title"> Weekends, Public Holidays Only</h3>
-                        <p><span class="glob-text-bold">HP:</span> 017-379 1700</p>
+                        <a href="tel:0173791700">
+                          <p><span class="glob-text-bold">HP:</span> 017-379 1700</p>
+                        </a>
                         <p>7:00 AM - 7:00 PM</p>
                       </div>
                     </ion-col>
@@ -406,9 +412,9 @@
                 </ion-segment>
               </ion-col>
             </ion-row>
-            <ion-row>
+            <ion-row class="dark-color">
               <ion-col size="12" class="ion-padding">
-                <ion-slides [options]="operationHoursSlider">
+                <ion-slides #operationsHourSlides [options]="operationHoursSlider">
                   <ng-container *ngIf="(quixCompanies | operationHoursFilter: selectedQuixSegment) as filteredCompany">
                     <ng-container *ngIf="filteredCompany; else noCompanies">
                       <ng-container *ngIf="filteredCompany.company_departments.length > 0; else noDepartments">
@@ -485,7 +491,9 @@
                                 <div>
                                   <p>
                                     <ion-icon name="call-sharp"></ion-icon>
-                                    {{department.dept_phone}}
+                                    <a [href]="'tel:' + department.dept_phone[0]">
+                                      {{department.dept_phone}}
+                                    </a>
                                   </p>
                                 </div>
                               </div>
@@ -502,6 +510,13 @@
                     </ng-template>
                   </ng-container>
                 </ion-slides>
+                <div class="swiper-button-next">
+                  <ion-icon name="chevron-forward-outline" size="large" tappable (click)="nextOptSlide()">
+                  </ion-icon>
+                </div>
+                <div class="swiper-button-prev">
+                  <ion-icon name="chevron-back-outline" tappable (click)="prevOptSlide()" size="large"></ion-icon>
+                </div>
               </ion-col>
             </ion-row>
           </ion-grid>
