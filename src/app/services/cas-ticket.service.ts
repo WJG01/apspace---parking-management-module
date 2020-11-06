@@ -148,8 +148,8 @@ export class CasTicketService {
           // const distinguishedName = res.serviceResponse.authenticationSuccess.attributes.distinguishedName
           //   .join().toLowerCase().split(',');
 
-          canAccessResults = memberOf.includes('cn=gims_web_result');
-          canAccessPayslipFileSearch = memberOf.includes('cn=All HR Staff');
+          canAccessResults = memberOf.includes('cn=gims_web_result'.toLowerCase());
+          canAccessPayslipFileSearch = memberOf.includes('cn=All HR Staff'.toLowerCase());
         }
 
         // make sure storage tasks are done before returning
