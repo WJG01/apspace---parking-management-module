@@ -132,7 +132,7 @@ export class AppComponent {
           }),
         );
         if (this.network.type === 'none') {
-          this.presentToast('You are now offline, only data stored in the cache will be accessable.', 6000);
+          this.presentToast('You are now offline, only data stored in the cache will be accessible.', 6000);
         }
       } else {
         this.theme$ = this.settings.get$('theme');
