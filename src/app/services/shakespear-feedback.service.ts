@@ -22,13 +22,16 @@ export class ShakespearFeedbackService {
     private router: Router
   ) { }
 
-  initShakespear(sensitivity: number) {
+  initShakespear(sensitivity: number, disable: boolean) {
     // tslint:disable-next-line: max-line-length
     this.shake.startWatch(sensitivity).subscribe(async () => { // "shaked" the phone, "40" is the sensitivity of the shake. The lower the better!
       if (!await this.cas.isAuthenticated()) {
         return; // Do nothing if they aren't logged in
       }
       if (this.router.url.startsWith('/feedback')) {
+        return;
+      }
+      if (disable) {
         return;
       }
 

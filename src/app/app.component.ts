@@ -8,8 +8,8 @@ import {
   ActionSheetController, LoadingController, MenuController, ModalController, NavController,
   Platform, PopoverController, ToastController
 } from '@ionic/angular';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 import { VersionValidator } from './interfaces';
 import { ApcardQrCodePage } from './pages/apcard-qr-code/apcard-qr-code.page';
@@ -132,13 +132,27 @@ export class AppComponent {
           }),
         );
         if (this.network.type === 'none') {
-          this.presentToast('You are now offline, only data stored in the cache will be accessable.', 6000);
+          this.presentToast('You are now offline, only data stored in the cache will be accessible.', 6000);
         }
       } else {
         this.theme$ = this.settings.get$('theme');
       }
-      const shakeSensitivity = this.settings.get('shakeSensitivity');
-      this.shakespear.initShakespear(shakeSensitivity); // FIXME use observable to get latest value
+
+      // Shakespear
+      const disableShakespear$ = this.settings.get$('disableShakespear');
+      const shakeSensitivity$ = this.settings.get$('shakeSensitivity');
+
+      const shakeSpearArgs = combineLatest([disableShakespear$, shakeSensitivity$]).pipe(
+        map(([res1$, res2$]) => ({
+          disableShakespear: res1$,
+          shakeSensitivity: res2$,
+        }))
+      );
+
+      shakeSpearArgs.subscribe(res => {
+        this.shakespear.initShakespear(res.shakeSensitivity, res.disableShakespear);
+      });
+
       this.platform.backButton.subscribe(async () => { // back button clicked
         const modal = await this.modalCtrl.getTop();
         if ((this.router.url.startsWith('/tabs') || this.router.url.startsWith('/maintenance-and-update')) && !modal) {
