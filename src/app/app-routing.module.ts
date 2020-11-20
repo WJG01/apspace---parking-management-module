@@ -165,7 +165,7 @@ const routes: Routes = [
   {
     path: 'koha',
     canActivate: [AuthGuard],
-    data: { role: Role.Student },
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
     loadChildren: () => import('./pages/koha/koha.module').then(m => m.KohaPageModule)
   },
   {
