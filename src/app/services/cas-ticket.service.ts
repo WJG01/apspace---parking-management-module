@@ -149,7 +149,8 @@ export class CasTicketService {
           //   .join().toLowerCase().split(',');
 
           canAccessResults = memberOf.includes('cn=gims_web_result'.toLowerCase());
-          canAccessPayslipFileSearch = memberOf.includes('cn=All HR Staff'.toLowerCase());
+          canAccessPayslipFileSearch = memberOf.includes('cn=All HR Staff'.toLowerCase())
+          || memberOf.includes('cn=All CTI Team Members'.toLowerCase());
         }
 
         // make sure storage tasks are done before returning
