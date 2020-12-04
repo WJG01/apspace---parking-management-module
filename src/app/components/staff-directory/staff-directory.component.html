@@ -8,7 +8,7 @@
     <ion-item *ngIf="staffType$ | async as staffTypes">
       <ion-label>Functional Area</ion-label>
       <ion-select [(ngModel)]="dept" interface="popover">
-        <ion-select-option selected></ion-select-option>
+        <ion-select-option selected value="">ALL</ion-select-option>
         <ion-select-option *ngFor="let type of staffTypes" [innerHTML]="type.toUpperCase()" [value]="type">
         </ion-select-option>
       </ion-select>
