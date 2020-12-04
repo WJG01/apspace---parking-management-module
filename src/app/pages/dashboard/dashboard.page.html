@@ -50,11 +50,16 @@
                 {{isStudent ? (userProfile.NAME | titlecase) : (userProfile.FULLNAME | titlecase)}}
               </ion-card-title>
               <ion-card-subtitle class="ion-text-center">
-                {{
+                <div *ngIf="(userProfile.STUDENT_NUMBER) || (!isStudent && userProfile.TITLE); else loadingCardSubtitle">
+                  {{
                   isStudent
                     ? userProfile.STUDENT_NUMBER + " | " + userProfile.INTAKE
                     : (userProfile.TITLE | titlecase)
-                }}
+                  }}
+                </div>
+                <ng-template #loadingCardSubtitle>
+                  <ion-skeleton-text animated class="glob-margin-auto" style="line-height: 20px; width: 80%"></ion-skeleton-text>
+                </ng-template>
               </ion-card-subtitle>
             </ion-card-header>
             <ion-card-content class="ion-text-center ion-no-padding">
