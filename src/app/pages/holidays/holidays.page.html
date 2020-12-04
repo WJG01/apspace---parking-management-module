@@ -85,8 +85,8 @@
                     <ion-label>
                       <h2 class="glob-text-bold">{{ holiday.holiday_name }}</h2>
                       <p>
-                        {{ holiday.holiday_people_affected === 'students,staff' 
-                              ? 'Students & Staff' : holiday.holiday_people_affected === 'students' 
+                        {{ holiday.holiday_people_affected === 'students,staff'
+                              ? 'Students & Staff' : holiday.holiday_people_affected === 'students'
                               ? 'Students' : 'Staff' }}
                     </ion-label>
                     <ion-badge color="primary">
@@ -118,7 +118,7 @@
 
           <ng-container [ngSwitch]='selectedSegment'>
             <ng-container *ngSwitchCase="'CalendarView'">
-              <ion-card>
+              <ion-card class="ion-no-margin">
                 <ion-card-content>
                   <ng-container *ngIf="filteredHoliday$ | async; else loadingHolidays">
                     <!-- There is always first object with null key values, therefore .length > 1 check-->
