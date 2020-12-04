@@ -216,14 +216,16 @@
             >
               <ion-card-title color="primary"> My Schedule </ion-card-title>
             </ion-card-header>
-            <ion-segment [(ngModel)]="scheduleSegment" scrollable="true">
-              <ion-segment-button value="today">
-                <ion-label>Today</ion-label>
-              </ion-segment-button>
-              <ion-segment-button value="upcoming">
-                <ion-label>Upcoming</ion-label>
-              </ion-segment-button>
-            </ion-segment>
+            <div class="ion-margin-top ion-margin-bottom">
+              <ion-segment class="ion-no-margin" [(ngModel)]="scheduleSegment" scrollable="true">
+                <ion-segment-button value="today">
+                  <ion-label>Today</ion-label>
+                </ion-segment-button>
+                <ion-segment-button value="upcoming">
+                  <ion-label>Upcoming</ion-label>
+                </ion-segment-button>
+              </ion-segment>
+            </div>
             <ion-card-content class="ion-no-padding">
               <ng-container [ngSwitch]="scheduleSegment">
                 <ng-container *ngSwitchCase="'today'">
