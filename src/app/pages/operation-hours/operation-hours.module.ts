@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { FilterByCompanyPipe } from './filter-by-company.pipe';
 import { OperationHoursPage } from './operation-hours.page';
+import { PrettyDateTimePipe } from './pretty-date-time.pipe';
 import { TimePipe } from './time.pipe';
 
 const routes: Routes = [
@@ -24,6 +25,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [OperationHoursPage, TimePipe, FilterByCompanyPipe]
+  declarations: [OperationHoursPage, TimePipe, FilterByCompanyPipe, PrettyDateTimePipe]
 })
 export class OperationHoursPageModule {}
