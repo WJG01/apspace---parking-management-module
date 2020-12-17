@@ -4,18 +4,20 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { ComponentsModule } from 'src/app/components/components.module';
+import {SharedPipesModule} from '../../shared/shared-pipes.module';
 import { FeedbackDetailsModalPage } from './feedback-details/feedback-details-modal';
 import { FeedbackListPageRoutingModule } from './feedback-list-routing.module';
 import { FeedbackListPage } from './feedback-list.page';
 import { NewFeedbackModalPage } from './new-feedback/new-feedback-modal';
 @NgModule({
-  imports: [
-    CommonModule,
-    ComponentsModule,
-    FormsModule,
-    IonicModule,
-    FeedbackListPageRoutingModule,
-  ],
+    imports: [
+        CommonModule,
+        ComponentsModule,
+        FormsModule,
+        IonicModule,
+        FeedbackListPageRoutingModule,
+        SharedPipesModule,
+    ],
   declarations: [FeedbackListPage, NewFeedbackModalPage, FeedbackDetailsModalPage],
   entryComponents: [NewFeedbackModalPage, FeedbackDetailsModalPage]
 })

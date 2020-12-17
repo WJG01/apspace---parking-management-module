@@ -48,7 +48,7 @@
           <div *ngIf="fine$ | async as fine; else loading">
             <ion-card [color]="+fine.fine === 0 ? 'success' : 'danger'">
               <ion-card-content>
-                <ion-row class="ion-text-center"> 
+                <ion-row class="ion-text-center">
                   <ion-col>
                     <h3 class="glob-text-bold fine">
                       RM{{ +fine.fine }}
@@ -147,7 +147,7 @@
             </ng-container>
 
             <ng-container *ngSwitchCase="'latest-additions'">
-              <div *ngIf="recentAdditions$ | async as recentAdditions; else loadingList">
+              <div *ngIf="recentAdditions$ | async as recentAdditions; else loadingList" class="additions">
                 <ion-list *ngFor="let addition of recentAdditions" lines="none">
                   <ion-item lines="full">
                     <ion-label>
@@ -205,14 +205,16 @@
             </ng-template>
 
             <ng-template #loadingList>
-              <ion-list lines="none">
-                <ion-item>
-                  <ion-label>
-                    <ion-skeleton-text animation style="width: 70%"></ion-skeleton-text>
-                    <ion-skeleton-text animation style="width: 30%"></ion-skeleton-text>
-                  </ion-label>
-                </ion-item>
-              </ion-list>
+              <div class="additions">
+                <ion-list lines="none" >
+                  <ion-item>
+                    <ion-label>
+                      <ion-skeleton-text animation style="width: 70%"></ion-skeleton-text>
+                      <ion-skeleton-text animation style="width: 30%"></ion-skeleton-text>
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
+              </div>
             </ng-template>
 
           </ng-container>

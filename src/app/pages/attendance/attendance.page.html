@@ -49,7 +49,7 @@
           </ng-container>
           <ng-template #noAverageAvailable>
             <ng-container *ngIf="average == -1; else loadingAverage">
-              <ion-card class="ion-no-margin">
+              <ion-card class="ion-no-margin ion-margin-top">
                 <ion-card-header class="ion-no-padding">
                   <ion-item [color]="average == -1 ? '' : average >= 0.8 ? 'success' : 'danger'">
                     <ion-label position="floating">Intake</ion-label>
@@ -70,7 +70,7 @@
               </ion-card>
             </ng-container>
             <ng-template #loadingAverage>
-              <ion-card class="ion-no-margin">
+              <ion-card class="ion-no-margin ion-margin-top">
                 <ion-card-header class="ion-no-padding">
                   <ion-item>
                     <ion-label position="floating">Intake</ion-label>
@@ -195,7 +195,7 @@
             </ng-template>
           </ng-template>
           <ng-template #loadAttendance>
-            <ion-card>
+            <ion-card class="ion-no-margin ion-margin-top">
               <ion-card-header color="secondary">
                 <ion-card-title>
                   <ion-skeleton-text animated style="width: 57%; height: 20px;"></ion-skeleton-text>

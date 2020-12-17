@@ -187,323 +187,327 @@
                       <!-- <ion-grid>
                         <ion-row>
                           <ion-col size="12"> -->
-                            <ion-grid>
-                              <ion-row class="ion-margin-bottom">
-                                <ion-col>
-                                  <h2 class="glob-text-bold">
-                                    <ion-text color="primary">
-                                      PERSONAL INFORMATION
-                                    </ion-text>
-                                  </h2>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>FULL NAME</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{ orientationProfile.student_details[0].STUDENT_NAME || 'N/A'}}</h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>STUDENT ID NO.</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].STUDENT_NUMBER || 'N/A'}}</h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>IC / PASSPORT NO.</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].IC || 'N/A'}}</h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>DATE OF BIRTH</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{(orientationProfile.student_details[0].DOB | date) || 'N/A'}}</h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>GENDER</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].GENDER || 'N/A'}}</h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>NATIONALITY</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].NATIONALITY || 'N/A'}}</h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>COUNTRY OF ORIGIN</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].COUNTRY_OF_ORIGIN || 'N/A'}}</h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>RACE</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].RACE || 'N/A'}}</h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>RELIGION</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].RELIGION || 'N/A'}} <a tappable="true"
-                                      (click)="change('RELIGION', orientationProfile.student_details[0].RELIGION, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
-                                  </h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row class="ion-margin-vertical">
-                                <ion-col>
-                                  <h2 class="glob-text-bold">
-                                    <ion-text color="primary">
-                                      CONTACT INFORMATION
-                                    </ion-text>
-                                  </h2>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>MOBILE</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].STUDENT_MOBILE_NO || 'N/A'}} <a tappable="true"
-                                      (click)="change('STUDENT_MOBILE_NO', orientationProfile.student_details[0].STUDENT_MOBILE_NO, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
-                                  </h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>E-MAIL</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].STUDENT_EMAIL || 'N/A'}} <a tappable="true"
-                                      (click)="change('STUDENT_EMAIL', orientationProfile.student_details[0].STUDENT_EMAIL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
-                                  </h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>PERMANENT ADDRESS</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].STUDENT_PERMANENT_ADDRESS || 'N/A'}}
-                                    <a tappable="true"
-                                      (click)="change('STUDENT_PERMANENT_ADDRESS', orientationProfile.student_details[0].STUDENT_PERMANENT_ADDRESS, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
-                                  </h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row class="ion-margin-vertical">
-                                <ion-col>
-                                  <h2 class="glob-text-bold">
-                                    <ion-text color="primary">
-                                      PARENT / GUARDIAN (1) INFORMATION
-                                    </ion-text>
-                                  </h2>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>NAME</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].PARENTS_NAME || 'N/A'}} <a tappable="true"
-                                      (click)="change('PARENTS_NAME', orientationProfile.student_details[0].PARENTS_NAME, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
-                                  </h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>RELATIONSHIP</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].PARENTS_RELATIONSHIP || 'N/A'}} <a
-                                    tappable="true"
-                                      (click)="change('PARENTS_RELATIONSHIP', orientationProfile.student_details[0].PARENTS_RELATIONSHIP, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
-                                  </h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>MOBILE</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].PARENTS_MOBILE_TEL || 'N/A'}} <a tappable="true"
-                                      (click)="change('PARENTS_MOBILE_TEL', orientationProfile.student_details[0].PARENTS_MOBILE_TEL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
-                                  </h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>EMAIL</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].PARENTS_EMAIL || 'N/A'}} <a tappable="true"
-                                      (click)="change('PARENTS_EMAIL', orientationProfile.student_details[0].PARENTS_EMAIL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
-                                  </h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row class="ion-margin-vertical">
-                                <ion-col>
-                                  <h2 class="glob-text-bold">
-                                    <ion-text color="primary">
-                                      PARENT / GUARDIAN (2) INFORMATION
-                                    </ion-text>
-                                  </h2>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>NAME</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].GUARDIAN_NAME || 'N/A'}} <a tappable="true"
-                                      (click)="change('GUARDIAN_NAME', orientationProfile.student_details[0].GUARDIAN_NAME, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
-                                  </h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>RELATIONSHIP</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].GUARDIAN_RELATIONSHIP || 'N/A'}} <a
-                                    tappable="true"
-                                      (click)="change('GUARDIAN_RELATIONSHIP', orientationProfile.student_details[0].GUARDIAN_RELATIONSHIP, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
-                                  </h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>MOBILE</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].GUARDIAN_MOBILE_TEL || 'N/A'}} <a tappable="true"
-                                      (click)="change('GUARDIAN_MOBILE_TEL', orientationProfile.student_details[0].GUARDIAN_MOBILE_TEL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
-                                  </h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>EMAIL</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].GUARDIAN_EMAIL || 'N/A'}} <a tappable="true"
-                                      (click)="change('GUARDIAN_EMAIL', orientationProfile.student_details[0].GUARDIAN_EMAIL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
-                                  </h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row class="ion-margin-vertical">
-                                <ion-col>
-                                  <h2 class="glob-text-bold">
-                                    <ion-text color="primary">
-                                      COURSE INFORMATION
-                                    </ion-text>
-                                  </h2>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>COURSE</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].COURSE || 'N/A'}} </h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>INTAKE DATE</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].INTAKE_DATE || 'N/A'}}</h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>INTAKE CODE</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].INTAKE_CODE || 'N/A'}}</h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="6" size-md="3" class="margin-auto">
-                                  <p>FEES SCHEME</p>
-                                </ion-col>
-                                <ion-col size="6" offset-md="1" size-md="">
-                                  <h4>: {{orientationProfile.student_details[0].FEES_SCHEME || 'N/A'}}</h4>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row class="ion-margin-vertical">
-                                <ion-col>
-                                  <h2 class="glob-text-bold">
-                                    <ion-text color="primary">
-                                      DOCUMENTATION UPDATE
-                                    </ion-text>
-                                  </h2>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col size="12">
-                                  <p>You are required to upload your IC Copy (Malaysian Students) / Passport Copy
-                                    (International Students) for us to update our records.</p>
-                                </ion-col>
-                                <ion-col size="12" size-md="6">
-                                  <ion-input type="file" accept="application/pdf, image/jpeg, image/png" button
-                                    (change)="changeListener($event)"></ion-input>
-                                </ion-col>
-                                <ion-col size="12" size-md="6">
-                                  <ion-button color="success" [disabled]="!file"
-                                    (click)="uploadDocument(orientationProfile.student_details[0].STUDENT_NAME, orientationProfile.councelor_details[0].COUNCELOR_NAME, orientationProfile.councelor_details[0].EMAIL)">
-                                    Upload</ion-button>
-                                </ion-col>
-                                <ion-col size="12">
-                                  <small>Supported files are: PDF, PNG, and JPEG.</small>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row class="ion-margin-vertical">
-                                <ion-col>
-                                  <h2 class="glob-text-bold">
-                                    <ion-text color="primary">
-                                      REQUEST FOR UPDATE
-                                    </ion-text>
-                                  </h2>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row>
-                                <ion-col>
-                                  <p>
-                                    If you would like to request an update to the non-editable information, please
-                                    submit
-                                    your request here.
-                                  </p>
-                                  <ion-button (click)="requestChange(orientationProfile)">
-                                    REQUEST PROFILE UPDATE
-                                  </ion-button>
-                                </ion-col>
-                              </ion-row>
-                            </ion-grid>
-                          <!-- </ion-col>
+                      <ion-grid>
+                        <ion-row class="ion-margin-bottom">
+                          <ion-col>
+                            <h2 class="glob-text-bold">
+                              <ion-text color="primary">
+                                PERSONAL INFORMATION
+                              </ion-text>
+                            </h2>
+                          </ion-col>
                         </ion-row>
-                      </ion-grid> -->
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>FULL NAME</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{ orientationProfile.student_details[0].STUDENT_NAME || 'N/A'}}</h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>STUDENT ID NO.</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].STUDENT_NUMBER || 'N/A'}}</h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>IC / PASSPORT NO.</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].IC || 'N/A'}}</h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>DATE OF BIRTH</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{(orientationProfile.student_details[0].DOB | date) || 'N/A'}}</h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>GENDER</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].GENDER || 'N/A'}}</h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>NATIONALITY</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].NATIONALITY || 'N/A'}}</h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>COUNTRY OF ORIGIN</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].COUNTRY_OF_ORIGIN || 'N/A'}}</h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>RACE</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].RACE || 'N/A'}}</h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>RELIGION</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].RELIGION || 'N/A'}} <a tappable="true"
+                                                                                                 (click)="change('RELIGION', orientationProfile.student_details[0].RELIGION, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                            </h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row class="ion-margin-vertical">
+                          <ion-col>
+                            <h2 class="glob-text-bold">
+                              <ion-text color="primary">
+                                CONTACT INFORMATION
+                              </ion-text>
+                            </h2>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>MOBILE</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].STUDENT_MOBILE_NO || 'N/A'}} <a
+                              tappable="true"
+                              (click)="change('STUDENT_MOBILE_NO', orientationProfile.student_details[0].STUDENT_MOBILE_NO, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                            </h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>E-MAIL</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].STUDENT_EMAIL || 'N/A'}} <a tappable="true"
+                                                                                                      (click)="change('STUDENT_EMAIL', orientationProfile.student_details[0].STUDENT_EMAIL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                            </h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>PERMANENT ADDRESS</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].STUDENT_PERMANENT_ADDRESS || 'N/A'}}
+                              <a tappable="true"
+                                 (click)="change('STUDENT_PERMANENT_ADDRESS', orientationProfile.student_details[0].STUDENT_PERMANENT_ADDRESS, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                            </h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row class="ion-margin-vertical">
+                          <ion-col>
+                            <h2 class="glob-text-bold">
+                              <ion-text color="primary">
+                                PARENT / GUARDIAN (1) INFORMATION
+                              </ion-text>
+                            </h2>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>NAME</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].PARENTS_NAME || 'N/A'}} <a tappable="true"
+                                                                                                     (click)="change('PARENTS_NAME', orientationProfile.student_details[0].PARENTS_NAME, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                            </h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>RELATIONSHIP</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].PARENTS_RELATIONSHIP || 'N/A'}} <a
+                              tappable="true"
+                              (click)="change('PARENTS_RELATIONSHIP', orientationProfile.student_details[0].PARENTS_RELATIONSHIP, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                            </h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>MOBILE</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].PARENTS_MOBILE_TEL || 'N/A'}} <a
+                              tappable="true"
+                              (click)="change('PARENTS_MOBILE_TEL', orientationProfile.student_details[0].PARENTS_MOBILE_TEL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                            </h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>EMAIL</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].PARENTS_EMAIL || 'N/A'}} <a tappable="true"
+                                                                                                      (click)="change('PARENTS_EMAIL', orientationProfile.student_details[0].PARENTS_EMAIL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                            </h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row class="ion-margin-vertical">
+                          <ion-col>
+                            <h2 class="glob-text-bold">
+                              <ion-text color="primary">
+                                PARENT / GUARDIAN (2) INFORMATION
+                              </ion-text>
+                            </h2>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>NAME</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].GUARDIAN_NAME || 'N/A'}} <a tappable="true"
+                                                                                                      (click)="change('GUARDIAN_NAME', orientationProfile.student_details[0].GUARDIAN_NAME, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                            </h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>RELATIONSHIP</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].GUARDIAN_RELATIONSHIP || 'N/A'}} <a
+                              tappable="true"
+                              (click)="change('GUARDIAN_RELATIONSHIP', orientationProfile.student_details[0].GUARDIAN_RELATIONSHIP, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                            </h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>MOBILE</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].GUARDIAN_MOBILE_TEL || 'N/A'}} <a
+                              tappable="true"
+                              (click)="change('GUARDIAN_MOBILE_TEL', orientationProfile.student_details[0].GUARDIAN_MOBILE_TEL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                            </h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>EMAIL</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].GUARDIAN_EMAIL || 'N/A'}} <a tappable="true"
+                                                                                                       (click)="change('GUARDIAN_EMAIL', orientationProfile.student_details[0].GUARDIAN_EMAIL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                            </h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row class="ion-margin-vertical">
+                          <ion-col>
+                            <h2 class="glob-text-bold">
+                              <ion-text color="primary">
+                                COURSE INFORMATION
+                              </ion-text>
+                            </h2>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>COURSE</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].COURSE || 'N/A'}} </h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>INTAKE DATE</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].INTAKE_DATE || 'N/A'}}</h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>INTAKE CODE</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].INTAKE_CODE || 'N/A'}}</h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="6" size-md="3" class="margin-auto">
+                            <p>FEES SCHEME</p>
+                          </ion-col>
+                          <ion-col size="6" offset-md="1" size-md="">
+                            <h4>: {{orientationProfile.student_details[0].FEES_SCHEME || 'N/A'}}</h4>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row class="ion-margin-vertical">
+                          <ion-col>
+                            <h2 class="glob-text-bold">
+                              <ion-text color="primary">
+                                DOCUMENTATION UPDATE
+                              </ion-text>
+                            </h2>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col size="12">
+                            <p>You are required to upload your IC Copy (Malaysian Students) / Passport Copy
+                              (International Students) for us to update our records.</p>
+                          </ion-col>
+                          <ion-col size="12" size-md="6">
+                            <ion-input type="file" accept="application/pdf, image/jpeg, image/png" button
+                                       (change)="changeListener($event)"></ion-input>
+                          </ion-col>
+                          <ion-col size="12" size-md="6">
+                            <ion-button color="success" [disabled]="!file"
+                                        (click)="uploadDocument(orientationProfile.student_details[0].STUDENT_NAME, orientationProfile.councelor_details[0].COUNCELOR_NAME, orientationProfile.councelor_details[0].EMAIL)">
+                              Upload
+                            </ion-button>
+                          </ion-col>
+                          <ion-col size="12">
+                            <small>Supported files are: PDF, PNG, and JPEG.</small>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row class="ion-margin-vertical">
+                          <ion-col>
+                            <h2 class="glob-text-bold">
+                              <ion-text color="primary">
+                                REQUEST FOR UPDATE
+                              </ion-text>
+                            </h2>
+                          </ion-col>
+                        </ion-row>
+                        <ion-row>
+                          <ion-col>
+                            <p>
+                              If you would like to request an update to the non-editable information, please
+                              submit
+                              your request here.
+                            </p>
+                            <ion-button (click)="requestChange(orientationProfile)">
+                              REQUEST PROFILE UPDATE
+                            </ion-button>
+                          </ion-col>
+                        </ion-row>
+                      </ion-grid>
+                      <!-- </ion-col>
+                    </ion-row>
+                  </ion-grid> -->
                     </ion-card-content>
                   </ion-card>
                   <ng-container *ngIf="orientationProfile.councelor_details.length > 0; else noCouncelor">
@@ -539,8 +543,8 @@
                             <ion-col size="4" size-md="3" push-md="9">
                               <ng-container *ngIf="councelorProfile$ | async as councelorProfile">
                                 <ion-img class="counsellor-profile-photo"
-                                  [src]="'https://d37plr7tnxt7lb.cloudfront.net/' + councelorProfile.RefNo + '.jpg'"
-                                  (ionError)="$event.target.src = 'assets/img/no_img.png'">
+                                         [src]="'https://d37plr7tnxt7lb.cloudfront.net/' + councelorProfile.RefNo + '.jpg'"
+                                         (ionError)="$event.target.src = 'assets/img/no_img.png'">
                                 </ion-img>
                               </ng-container>
                             </ion-col>
@@ -579,7 +583,7 @@
                                 <ion-row>
                                   <ion-col size="12">
                                     <ion-button color="primary" expand="block"
-                                      (click)="chatInTeams(orientationProfile.councelor_details[0].SAMACCOUNTNAME)">
+                                                (click)="chatInTeams(orientationProfile.councelor_details[0].SAMACCOUNTNAME)">
                                       MESSAGE E-COUNSELLOR
                                       <ion-icon name="chatbox-outline" slot="end"></ion-icon>
                                     </ion-button>
@@ -611,16 +615,17 @@
 
     <!-- STAFF PROFILE -->
     <ng-template #userIsStaff>
-      <ion-grid class="ion-margin-top ion-no-padding">
-        <ion-row class="ion-justify-content-center">
-          <ion-col size="12" size-lg="8">
-            <div class="custom-card">
-              <ng-container *ngIf="staffProfile$ | async as staffProfile; else loadingProfile">
+
+      <ng-container *ngIf="staffProfile$ | async as staffProfile; else loadingProfile">
+        <ion-grid class="ion-margin-top ion-no-padding">
+          <ion-row class="ion-justify-content-center">
+            <ion-col size="12" size-lg="8">
+              <div class="custom-card">
                 <ion-grid>
                   <ion-row>
                     <ion-col class="staff-picture-in-mobile" size="12" size-md="5">
                       <img class="staff-profile-picture" [src]="staffProfile[0]?.PHOTO"
-                        (ionError)="$event.target.src = 'assets/img/no_img.png'" />
+                           (ionError)="$event.target.src = 'assets/img/no_img.png'"/>
                     </ion-col>
                     <ion-col class="ion-text-center" size="12" size-md="7">
                       <h2 class="bigger-font">
@@ -641,21 +646,21 @@
                         <h4>Department</h4>
                         <p class="ion-no-margin">{{ staffProfile[0].DEPARTMENT }}</p>
                       </div>
-    
+
                       <ng-template [ngIf]="staffProfile[0].DEPARTMENT2">
                         <div class="ion-margin-top">
                           <h4>Department 1</h4>
                           <p class="ion-no-margin">{{ staffProfile[0].DEPARTMENT2 }}</p>
                         </div>
                       </ng-template>
-    
+
                       <ng-template [ngIf]="staffProfile[0].DEPARTMENT3">
                         <div class="ion-margin-top">
                           <h4>Department 2</h4>
                           <p class="ion-no-margin">{{ staffProfile[0].DEPARTMENT3 }}</p>
                         </div>
                       </ng-template>
-    
+
                       <div class="ion-margin-top">
                         <h4>Nationality</h4>
                         <p class="ion-no-margin ion-margin-bottom">{{ staffProfile[0].NATIONALITY }}</p>
@@ -663,19 +668,13 @@
                     </ion-col>
                   </ion-row>
                 </ion-grid>
-              </ng-container>
-            </div>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ng-container>
     </ng-template>
   </div>
-
-  <ng-template #loadingPicture>
-    <div class="ion-margin-top">
-      <ion-skeleton-text animated style="width: 122px; line-height: 150px;margin: auto"></ion-skeleton-text>
-    </div>
-  </ng-template>
 
   <ng-template #loadingProfile>
     <ion-grid class="ion-margin-top ion-no-padding">
