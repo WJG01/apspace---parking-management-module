@@ -21,6 +21,7 @@ export class SettingsPage implements OnInit {
   test = false;
   defaultCampus = '';
   defaultVenue = '';
+  disableShakespear;
   shakeSensitivity: number;
   busShuttleServiceSettings = {
     firstLocation: '',
@@ -74,11 +75,16 @@ export class SettingsPage implements OnInit {
         secondLocation: busSecondLocation,
       };
     });
+    this.settings.get$('disableShakespear').subscribe(value => {
+        this.disableShakespear = value;
+      }
+    );
     this.settings.get$('shakeSensitivity').subscribe(value => {
       this.shakeSensitivity = this.sensitivityOptions.findIndex(item => item.value === value);
     });
-    this.settings.get$('hideProfilePicture').subscribe(value =>
-      this.hideProfilePicture = value
+    this.settings.get$('hideProfilePicture').subscribe(value => {
+        this.hideProfilePicture = value;
+      }
     );
     this.settings.get$('enableMalaysiaTimezone').subscribe(value =>
       this.enableMalaysiaTimezone = value
@@ -99,6 +105,10 @@ export class SettingsPage implements OnInit {
     if (this.defaultCampus) {
       this.getVenues();
     }
+  }
+
+  toggleDisableShakespear() {
+    this.settings.set('disableShakespear', this.disableShakespear);
   }
 
   getSensitivitySlider() {

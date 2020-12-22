@@ -92,3 +92,14 @@
     }
   }
 }
+
+ion-refresher-content {
+  position: relative;
+  padding-bottom: 500px;
+  background-color: var(--ion-background-color);
+
+  .refresher-pulling, .refresher-refreshing {
+    position: relative;
+    top: 30px;
+  }
+}

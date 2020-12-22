@@ -25,6 +25,7 @@ export interface Settings {
   /* dashboard */
   dashboardSections: string[];
   menuUI: 'cards' | 'list';
+  disableShakespear: boolean;
   shakeSensitivity: number;
   hideProfilePicture: boolean;
   enableMalaysiaTimezone: boolean;

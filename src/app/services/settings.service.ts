@@ -74,6 +74,7 @@ const defaultData: Settings = {
   accentColor: 'blue',
   dashboardSections: [],
   menuUI: 'list',
+  disableShakespear: false,
   shakeSensitivity: 40,
   hideProfilePicture: false,
   enableMalaysiaTimezone: true,
@@ -136,13 +137,14 @@ export class SettingsService {
           this.storage.get('timetable').then((value: { blacklists: [] }) => value?.blacklists || []),
           this.storage.get('dashboard-sections').then(value => value || defaultData.dashboardSections),
           this.storage.get('menu-ui').then(value => value || defaultData.menuUI),
+          this.storage.get('disable-shakespear').then(value => value || defaultData.disableShakespear),
           this.storage.get('shake-sensitivity').then(value => +value || defaultData.shakeSensitivity),
           this.storage.get('accent-color').then(value => value?.slice(0, -13) || defaultData.accentColor),
           busShuttleServices.then(value => value?.firstLocation || defaultData.busFirstLocation),
           busShuttleServices.then(value => value?.secondLocation || defaultData.busSecondLocation),
         ]).then(items => items.map(data => ({ epoch, data })))
           .then(([
-            modulesBlacklist, dashboardSections, menuUI, shakeSensitivity,
+            modulesBlacklist, dashboardSections, menuUI, disableShakespear, shakeSensitivity,
             accentColor, busFirstLocation, busSecondLocation,
           ]) => {
           this.data.next({
@@ -151,6 +153,7 @@ export class SettingsService {
             modulesBlacklist,
             dashboardSections,
             menuUI,
+            disableShakespear,
             shakeSensitivity,
             accentColor,
             busFirstLocation,

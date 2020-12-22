@@ -157,7 +157,7 @@ export const menusRaw = [
     group: 'Collaboration & Information Resources',
     url: 'koha',
     img: 'assets/img/koha.png',
-    role: Role.Student,
+    role: Role.Student | Role.Lecturer | Role.Admin,
     tags: ['library', 'library fee', 'library checkout', 'book'],
     parents: [],
   },
