@@ -420,8 +420,8 @@
                       <ng-container *ngIf="filteredCompany.company_departments.length > 0; else noDepartments">
                         <ion-slide *ngFor="let department of filteredCompany.company_departments">
                           <div class="swiper-content">
-                            <div class="top with-background">
-                              <!-- [style.background]="department.img ? 'url(' + department.img + ')' : 'blue'" -->
+                            <div class="top with-background"
+                               [style.background]="department.img ? 'url(' + department.img + ')' : 'blue'">
                               <div class="calendar" [style.backgroundColor]="department.dept_icon_color">
                                 <ion-icon [name]="department.dept_icon"></ion-icon>
                               </div>
@@ -435,12 +435,12 @@
                               <h3 *ngIf="department.dept_email" [style.color]="department.dept_icon_color">
                                 {{department.dept_email}}</h3>
                               <ion-grid>
-                                <ion-row *ngIf="((department.shifts['Mon-Thu'].length === department.shifts['Fri'].length) 
+                                <ion-row *ngIf="((department.shifts['Mon-Thu'].length === department.shifts['Fri'].length)
                                         && department.shifts['Mon-Thu'].length > 0
-                                        && (department.shifts['Mon-Thu'][0].start_time === department.shifts['Fri'][0].start_time)  
+                                        && (department.shifts['Mon-Thu'][0].start_time === department.shifts['Fri'][0].start_time)
                                         && (department.shifts['Mon-Thu'][0].end_time === department.shifts['Fri'][0].end_time)
                                         && (department.shifts['Mon-Thu'][1]
-                                        ? (department.shifts['Mon-Thu'][1].start_time === department.shifts['Fri'][1].start_time)  
+                                        ? (department.shifts['Mon-Thu'][1].start_time === department.shifts['Fri'][1].start_time)
                                         && (department.shifts['Mon-Thu'][1].end_time === department.shifts['Fri'][1].end_time)
                                         : true)); else showSeperate">
                                   <ion-col size-xs="12">
