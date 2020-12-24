@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { Network } from '@ionic-native/network/ngx';
 import { AlertController, IonSelect, IonSlides, ModalController, NavController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { format, parse, parseISO } from 'date-fns';
@@ -17,6 +19,7 @@ import {
   StaffProfile, StudentPhoto, StudentProfile, StudentTimetable
 } from 'src/app/interfaces';
 import {
+  CasTicketService,
   NewsService, NotificationService, SettingsService, StudentTimetableService,
   WsApiService,
 } from 'src/app/services';
@@ -340,6 +343,9 @@ export class DashboardPage implements OnInit {
     private notificationService: NotificationService,
     private news: NewsService,
     private modalCtrl: ModalController,
+    private iab: InAppBrowser,
+    private cas: CasTicketService,
+    private network: Network,
     private platform: Platform,
     private firebaseX: FirebaseX,
     private toastCtrl: ToastController,
@@ -1170,6 +1176,40 @@ export class DashboardPage implements OnInit {
         return location.location_color;
       }
     }
+  }
+
+  // QUICK ACCESS FUNCTIONS
+  openMoodle() {
+    const url = 'https://lms2.apiit.edu.my/login/index.php';
+    if (this.network.type !== 'none') {
+      if (this.isCordova) {
+        this.cas.getST(url).subscribe(st => {
+          this.iab.create(`${url}?ticket=${st}`, '_system', 'location=true');
+        });
+      } else {
+        this.cas.getST(url).subscribe(st => {
+          this.iab.create(`${url}?ticket=${st}`, '_blank', 'location=true');
+        });
+      }
+    } else {
+      this.presentToast('External links cannot be opened in offline mode. Please ensure you have a network connection and try again');
+    }
+  }
+
+  async presentToast(msg: string) {
+    const toast = await this.toastCtrl.create({
+      message: msg,
+      color: 'danger',
+      duration: 6000,
+      position: 'top',
+      buttons: [
+        {
+          text: 'Close',
+          role: 'cancel'
+        }
+      ],
+    });
+    toast.present();
   }
 
   // GENERAL FUNCTIONS
