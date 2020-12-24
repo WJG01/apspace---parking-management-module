@@ -3,27 +3,9 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
-    <ion-title>Koha</ion-title>
+    <ion-title>Library</ion-title>
   </ion-toolbar>
-  <ion-toolbar *ngIf="(recentAdditions$ | async) as newAdditions; else loadingSegment">
-    <ion-segment [(ngModel)]="selectedSegment">
-      <ion-segment-button value="checkouts">
-        <ion-label>
-          Checkout
-        </ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="history">
-        <ion-label>
-          History
-        </ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="latest-additions">
-        <ion-label>
-          New Additions
-        </ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
+
 
   <ng-template #loadingSegment>
     <ion-toolbar>
@@ -41,11 +23,75 @@
 </ion-header>
 
 <ion-content>
+
   <div class="glob-container">
     <ion-grid>
       <ion-row>
+        <ion-col class="ion-margin-bottom" size="12">
+          <ion-card>
+            <ion-card-header color="primary">
+              <ion-card-title class="ion-text-center">
+                Search WorldCat Discovery
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-searchbar [(ngModel)]="worldCatSearch" (search)="openWorldCatSearch()"></ion-searchbar>
+              <ion-list lines="none">
+                  <ion-label class="ion-text-start">Search by: </ion-label>
+                <ion-radio-group [(ngModel)]="worldCatSearchCategory" class="radio-buttons">
+                  <ion-row>
+                    <ion-item>
+                      <ion-label>All</ion-label>
+                      <ion-radio slot="end" value="{{worldCatSearchCategories.all}}">All</ion-radio>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label>eBooks</ion-label>
+                      <ion-radio slot="end" value="{{worldCatSearchCategories.ebooks}}"></ion-radio>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label>Articles</ion-label>
+                      <ion-radio slot="end" value="{{worldCatSearchCategories.articles}}"></ion-radio>
+                    </ion-item>
+
+                    <ion-item>
+                      <ion-label>Print Books</ion-label>
+                      <ion-radio slot="end" value="{{worldCatSearchCategories.printBooks}}"></ion-radio>
+                    </ion-item>
+                  </ion-row>
+                </ion-radio-group>
+              </ion-list>
+
+
+              <ion-button expand="full" fill="solid" (click)="openAdvancedSearch()">Advanced WorldCat Search</ion-button>
+              <ion-button expand="full" fill="solid" (click)="openLibrary()">Open Library Homepage</ion-button>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-segment [(ngModel)]="selectedSegment">
+          <ion-segment-button value="checkouts">
+            <ion-label>
+              Checkout
+            </ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="history">
+            <ion-label>
+              History
+            </ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="latest-additions">
+            <ion-label>
+              New Additions
+            </ion-label>
+          </ion-segment-button>
+        </ion-segment>
+
         <ion-col size-xs="12" size-md="4" push-md="8">
           <div *ngIf="fine$ | async as fine; else loading">
+            <ion-button class="button-margin" expand="full" color="success" (click)="openKoha()">Open My Library</ion-button>
+
             <ion-card [color]="+fine.fine === 0 ? 'success' : 'danger'">
               <ion-card-content>
                 <ion-row class="ion-text-center">
