@@ -27,6 +27,7 @@ export class KohaPage implements OnInit {
     articles: '&subformat=Artchap::artchap_artcl',
     printBooks: '&subformat=Book::book_printbook'
   };
+  searchTerm = 'All';
   isCordova: boolean;
 
   selectedSegment: 'checkouts' | 'history' | 'latest-additions' = 'checkouts';
@@ -70,9 +71,9 @@ export class KohaPage implements OnInit {
   }
 
   openLibrary() {
-   const url = 'https://library.apiit.edu.my/';
+    const url = 'https://library.apiit.edu.my/';
 
-   if (this.network.type !== 'none') {
+    if (this.network.type !== 'none') {
       if (this.isCordova) {
         this.iab.create(url, '_system', 'location=yes');
       } else {
@@ -113,6 +114,11 @@ export class KohaPage implements OnInit {
     } else {
       this.presentToast('External links cannot be opened in offline mode. Please ensure you have a network connection and try again');
     }
+  }
+
+  changeCategory(category: string, searchTerm: string) {
+    this.worldCatSearchCategory = category;
+    this.searchTerm = searchTerm;
   }
 
   async presentToast(msg: string) {
