@@ -209,6 +209,7 @@ export class LoginPage implements OnInit {
               dept_email: 'admin@apu.edu.my',
               dept_icon: 'chatbubbles-sharp',
               dept_icon_color: '#1f640a',
+              img: 'assets/img/admin.jpg',
               dept_id: 'adm',
               dept_name: 'admin',
               dept_phone: [
@@ -239,6 +240,7 @@ export class LoginPage implements OnInit {
               dept_email: 'visa@apu.edu.my',
               dept_icon: 'airplane',
               dept_icon_color: '#260033',
+              img: 'assets/img/immigration.jpg',
               dept_id: 'immig',
               dept_name: 'immigration',
               dept_phone: [
@@ -266,6 +268,7 @@ export class LoginPage implements OnInit {
               dept_email: 'bursary@apu.edu.my',
               dept_icon: 'cash-outline',
               dept_icon_color: '#bc8420',
+              img: 'assets/img/bursary.jpg',
               dept_id: 'cash',
               dept_name: 'cashier',
               dept_phone: [
@@ -295,7 +298,8 @@ export class LoginPage implements OnInit {
             {
               dept_email: 'klinikoceana@gmail.com',
               dept_icon: 'bandage-outline',
-              dept_icon_color: '#E8222D',
+              dept_icon_color: '#235789',
+              img: 'assets/img/klinik.jpg',
               dept_id: 'clinic',
               dept_name: 'clinic',
               dept_phone: [
@@ -320,7 +324,8 @@ export class LoginPage implements OnInit {
             {
               dept_email: 'info@apu.edu.my',
               dept_icon: 'help-circle-sharp',
-              dept_icon_color: '#235789',
+              dept_icon_color: '#E8222D',
+              img: 'assets/img/student_service.jpg',
               dept_id: 'ss',
               dept_name: 'Student Service',
               dept_phone: [
@@ -352,6 +357,7 @@ export class LoginPage implements OnInit {
               dept_email: 'rsvp@apu.edu.my',
               dept_icon: 'business-sharp',
               dept_icon_color: '#F0CEA0',
+              img: 'assets/img/accommodation.jpg',
               dept_id: 'acc',
               dept_name: 'Accommodation',
               dept_phone: [
@@ -386,6 +392,7 @@ export class LoginPage implements OnInit {
               dept_email: 'library@apu.edu.my',
               dept_icon: 'library',
               dept_icon_color: '#5bc0be',
+              img: 'assets/img/library.jpg',
               dept_id: 'lib',
               dept_name: 'Library',
               dept_phone: [
@@ -416,6 +423,7 @@ export class LoginPage implements OnInit {
               dept_email: 'assist@apu.edu.my',
               dept_icon: 'laptop-sharp',
               dept_icon_color: '#0b132b',
+              img: 'assets/img/lab.jpg',
               dept_id: 'tl',
               dept_name: 'Technology Labs',
               dept_phone: [
@@ -445,7 +453,8 @@ export class LoginPage implements OnInit {
             {
               dept_email: '',
               dept_icon: 'print-outline',
-              dept_icon_color: '#e42c64',
+              dept_icon_color: '#c1cd32',
+              img: 'assets/img/print.jpg',
               dept_id: 'ps',
               dept_name: 'Printshop @APU',
               dept_phone: [
@@ -483,6 +492,7 @@ export class LoginPage implements OnInit {
               dept_email: 'library@apu.edu.my',
               dept_icon: 'library',
               dept_icon_color: '#5bc0be',
+              img: 'assets/img/library_apiit.jpg',
               dept_id: 'apiit-lib',
               dept_name: 'Library',
               dept_phone: [
@@ -508,6 +518,7 @@ export class LoginPage implements OnInit {
               dept_email: 'bursary@apu.edu.my',
               dept_icon: 'cash-outline',
               dept_icon_color: '#bc8420',
+              img: 'assets/img/bursary.jpg',
               dept_id: 'apiit-cash',
               dept_name: 'Cashier',
               dept_phone: [
@@ -533,6 +544,7 @@ export class LoginPage implements OnInit {
               dept_email: 'assist@apu.edu.my',
               dept_icon: 'laptop-sharp',
               dept_icon_color: '#0b132b',
+              img: 'assets/img/lab_apiit.jpg',
               dept_id: 'apiit-tl',
               dept_name: 'Technology Labs',
               dept_phone: [

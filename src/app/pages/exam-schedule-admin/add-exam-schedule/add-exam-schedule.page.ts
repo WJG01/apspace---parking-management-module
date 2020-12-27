@@ -1,7 +1,7 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AlertController, LoadingController, ModalController, PopoverController, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, ModalController, Platform, PopoverController, ToastController } from '@ionic/angular';
 import { addYears, format, parse } from 'date-fns';
 // import { Storage } from '@ionic/storage';
 import { CalendarComponentOptions } from 'ion2-calendar';
@@ -37,6 +37,9 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
   };
 
   nextYears = format(addYears(new Date(), 3), 'yyyy');
+  nextYearHtmlInput = format(addYears(new Date(), 3), 'yyyy-MM-dd');
+
+  isCordova: boolean;
 
   examScheduleForm: FormGroup;
 
@@ -50,7 +53,8 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
     public toastCtrl: ToastController,
     private formBuilder: FormBuilder,
     private ws: WsApiService,
-    private notifierService: NotifierService
+    private notifierService: NotifierService,
+    private platform: Platform
     // private storage: Storage
   ) { }
 
@@ -60,6 +64,8 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
     //     this.staffCode = staffProfile[0].CODE;
     //   }
     // );
+
+    this.isCordova = this.platform.is('cordova');
 
     this.ws.get<any>('/exam/module_list').pipe(
       tap(modules => {

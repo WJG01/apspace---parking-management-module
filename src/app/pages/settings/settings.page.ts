@@ -34,7 +34,7 @@ export class SettingsPage implements OnInit {
   accentColor$ = this.settings.get$('accentColor');
   modulesBlacklist$ = this.settings.get$('modulesBlacklist');
 
-  menuUI: 'cards' | 'list' = 'list';
+  menuUI: 'cards' | 'list' = 'cards';
   sensitivityOptions = [
     { index: 0, value: 40 },
     { index: 1, value: 50 },
@@ -44,7 +44,7 @@ export class SettingsPage implements OnInit {
   ];
   hideProfilePicture;
   enableMalaysiaTimezone;
-  timeFormat;
+  timeFormat: '12' | '24' = '12';
   locationOptions = [
     'New Campus',
     'TPM',

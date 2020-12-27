@@ -708,8 +708,6 @@ ion-input {
         }
 
         &.with-background {
-          // library.jpg
-          background-image: url("/assets/img/library.jpg"); // TODO: remove this once quix changes are deployed
           background-position: center;
           background-size: cover;
         }

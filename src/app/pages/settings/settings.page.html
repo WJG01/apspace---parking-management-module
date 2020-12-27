@@ -168,7 +168,10 @@
                     </ion-select>
                   </ion-item>
                   <ion-item [disabled]="!isCordova" lines="full">
-                    <ion-label>Disable Shake Feedback</ion-label>
+                    <ion-label>
+                      Disable Shake Feedback
+                      <p *ngIf="!isCordova">This feature available only on mobile app</p>
+                    </ion-label>
                     <ion-toggle [(ngModel)]="disableShakespear" (ionChange)="toggleDisableShakespear()" color="primary"></ion-toggle>
                   </ion-item>
                   <ng-template [ngIf]="!disableShakespear">

@@ -29,7 +29,7 @@ export interface Settings {
   shakeSensitivity: number;
   hideProfilePicture: boolean;
   enableMalaysiaTimezone: boolean;
-  timeFormat: string;
+  timeFormat: '12' | '24';
   /* bus shuttle service */
   busFirstLocation: string;
   busSecondLocation: string;
