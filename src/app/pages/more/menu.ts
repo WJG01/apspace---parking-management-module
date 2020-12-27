@@ -131,10 +131,10 @@ export const menusRaw = [
   //   parents: [],
   // },
   {
-    id: 'koha' as const,
+    id: 'library' as const,
     title: 'Library',
     group: 'Collaboration & Information Resources',
-    url: 'koha',
+    url: 'library',
     img: 'assets/img/library.png',
     role: Role.Student | Role.Lecturer | Role.Admin,
     tags: ['library', 'library fee', 'library checkout', 'book'],

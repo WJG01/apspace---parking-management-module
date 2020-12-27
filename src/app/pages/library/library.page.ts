@@ -8,11 +8,11 @@ import { Checkouts, Fine, History, LatestAdditions } from 'src/app/interfaces/ko
 import { CasTicketService, WsApiService } from 'src/app/services';
 
 @Component({
-  selector: 'app-koha',
-  templateUrl: './koha.page.html',
-  styleUrls: ['./koha.page.scss'],
+  selector: 'app-library',
+  templateUrl: './library.page.html',
+  styleUrls: ['./library.page.scss'],
 })
-export class KohaPage implements OnInit {
+export class LibraryPage implements OnInit {
 
   checkouts$: Observable<Checkouts>;
   historyList$: Observable<History>;
