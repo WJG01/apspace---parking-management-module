@@ -165,7 +165,8 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
-    const rex = /<img[^>]+src="?([^"\s]+)"?\s*\/>/;
+    // source for regex pattern (second answer) https://stackoverflow.com/questions/18664997/how-can-i-use-regular-expression-to-grab-an-img-tag
+    const rex = /<img\s[^>]*?src\s*=\s*['\"]([^'\"]*?)['\"][^>]*?>/;
     this.noticeBoardItems$ = this.news.getSlideshow().pipe(
       map((noticeBoardItems: any) => {
         return noticeBoardItems.map(item => {
