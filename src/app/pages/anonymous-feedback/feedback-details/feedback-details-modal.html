@@ -1,7 +1,7 @@
 <ion-header no-border>
   <ion-toolbar>
     <ion-title>
-      {{feedback.issue_id}} Details
+      {{feedback.issue_id}} Details 
     </ion-title>
     <ion-buttons slot="end">
       <ion-button outline (click)="dismiss()">
@@ -12,50 +12,28 @@
 </ion-header>
 
 <ion-content>
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title color="primary">Feedback Summary</ion-card-title>
-    </ion-card-header>
-    <ion-card-content class="ion-no-padding">
-      <ion-list lines="full" class="ion-no-margin ion-no-padding">
-        <ion-item>
-          <ion-icon color="success" slot="start" name="pricetag-outline"></ion-icon>
-          <ion-label>Category</ion-label>
-          <ion-badge slot="end" color="success">{{feedback.category_id}}</ion-badge>
-        </ion-item>
-        <ion-item>
-          <ion-icon slot="start" name="receipt-outline"></ion-icon>
-          <ion-label class="ion-text-wrap">
-            <h2>Subject</h2>
-            <p>{{feedback.subject}}</p>
-          </ion-label>
-        </ion-item>
-        <ion-item *ngIf="feedbackDetail$ | async as feedbackDetails">
-          <ion-icon [style.color]="feedbackDetails.status === 'Canceled'? '#eb445a': '#3171e0'" slot="start" name="checkmark-done-circle-outline"></ion-icon>
-          <ion-label class="ion-text-wrap">
-            <h2>Status</h2>
-            <p [style.color]="feedbackDetails.status === 'Canceled'? '#eb445a': '#3171e0'">{{feedbackDetails.status}}</p>
-          </ion-label>
-        </ion-item>
-      </ion-list>
-    </ion-card-content>
-  </ion-card>
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title color="primary">
-        Feedback Content
-      </ion-card-title>
-    </ion-card-header>
-    <ion-card-content class="ion-no-padding">
-      <ng-container *ngIf="feedbackDetail$ | async as feedbackDetails; else loadingFeedbackDetails">
-        <ion-item lines="full">
-          <ion-label class="ion-text-wrap">
-            <h2 class="glob-text-bold">
-              <ion-text color="success">Main Message</ion-text>
-            </h2>
-            <div [innerHTML]="feedbackDetails.message"></div>
-          </ion-label>
-        </ion-item>
+
+  <ng-container *ngIf="feedbackDetail$ | async as feedbackDetails; else loadingFeedbackDetails">
+    <ion-card>
+      <ion-card-header class="ion-no-padding ion-padding-start ion-padding-end ion-padding-top">
+        <ion-card-title color="primary">
+          {{feedback.subject}}
+          <ion-badge [color]="feedbackDetails.status === 'Canceled'? 'danger': 'Done' ? 'success' : 'primary'">
+            {{feedbackDetails.status}}</ion-badge>
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="ion-padding">
+        <div [innerHTML]="feedbackDetails.message"></div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title color="primary">
+          Comments
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="ion-no-padding">
         <ng-container *ngIf="feedbackDetails.comments.length > 0; else noComments">
           <div *ngFor="let comment of feedbackDetails.comments">
             <div *ngIf="comment.username==='Anonymous Feedback'; else nonAnon">
@@ -108,11 +86,12 @@
             Send
             <ion-icon slot="end" name="send"></ion-icon>
           </ion-button>
-        </div> 
-      </ng-container>
-      <ng-template #loadingFeedbackDetails>
-        <loading-spinner size="40px" message="Getting the feedback details..."></loading-spinner>
-      </ng-template>
-    </ion-card-content>
-  </ion-card>
+        </div>
+
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
+  <ng-template #loadingFeedbackDetails>
+    <loading-spinner size="40px" message="Getting the feedback details..."></loading-spinner>
+  </ng-template>
 </ion-content>
