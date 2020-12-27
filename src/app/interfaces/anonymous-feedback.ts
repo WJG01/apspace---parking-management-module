@@ -14,6 +14,7 @@ export interface AnonymousFeedback {
                datetime: string;
                username: string}[];
     message: string[];
+    status: string;
 }
 
 export interface FeedbackCategory {

@@ -30,6 +30,13 @@
             <p>{{feedback.subject}}</p>
           </ion-label>
         </ion-item>
+        <ion-item *ngIf="feedbackDetail$ | async as feedbackDetails">
+          <ion-icon [style.color]="feedbackDetails.status === 'Canceled'? '#eb445a': '#3171e0'" slot="start" name="checkmark-done-circle-outline"></ion-icon>
+          <ion-label class="ion-text-wrap">
+            <h2>Status</h2>
+            <p [style.color]="feedbackDetails.status === 'Canceled'? '#eb445a': '#3171e0'">{{feedbackDetails.status}}</p>
+          </ion-label>
+        </ion-item>
       </ion-list>
     </ion-card-content>
   </ion-card>
