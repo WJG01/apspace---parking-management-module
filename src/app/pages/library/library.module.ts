@@ -6,12 +6,12 @@ import { IonicModule } from '@ionic/angular';
 
 import { ComponentsModule } from 'src/app/components/components.module';
 import { DaysLeftPipe } from './days-left/days-left.pipe';
-import { KohaPage } from './koha.page';
+import { LibraryPage } from './library.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: KohaPage
+    component: LibraryPage
   }
 ];
 
@@ -24,6 +24,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     ComponentsModule,
   ],
-  declarations: [KohaPage, DaysLeftPipe]
+  declarations: [LibraryPage, DaysLeftPipe]
 })
-export class KohaPageModule { }
+export class LibraryPageModule { }

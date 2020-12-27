@@ -163,10 +163,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/lecturer-timetable/lecturer-timetable.module').then(m => m.LecturerTimetablePageModule)
   },
   {
-    path: 'koha',
+    path: 'library',
     canActivate: [AuthGuard],
     data: { role: Role.Student | Role.Admin | Role.Lecturer },
-    loadChildren: () => import('./pages/koha/koha.module').then(m => m.KohaPageModule)
+    loadChildren: () => import('./pages/library/library.module').then(m => m.LibraryPageModule)
   },
   {
     path: 'about',

@@ -1,0 +1,36 @@
+.fine {
+  font-size: 20px;
+  padding-bottom: 5px;
+}
+
+.additions {
+  margin-top: 10px;
+}
+
+.button-margin {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.search-bar {
+  background: var(--ion-color-primary);
+}
+
+.search-tabs ion-button {
+  margin-bottom: 0;
+  margin-left: 0;
+  --box-shadow: 0;
+  --border-radius: 5px 5px 0 0;
+}
+
+@media only screen and (max-width: 560px)  {
+  .button-text {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 561px)  {
+  .button-icon {
+    display: none;
+  }
+}

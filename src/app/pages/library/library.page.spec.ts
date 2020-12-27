@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { KohaPage } from './koha.page';
+import { LibraryPage } from './library.page';
 
-describe('KohaPage', () => {
-  let component: KohaPage;
-  let fixture: ComponentFixture<KohaPage>;
+describe('LibraryPage', () => {
+  let component: LibraryPage;
+  let fixture: ComponentFixture<LibraryPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ KohaPage ],
+      declarations: [ LibraryPage ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(KohaPage);
+    fixture = TestBed.createComponent(LibraryPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
