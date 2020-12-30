@@ -8,11 +8,11 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" pullFactor="0.5" pullMin="100" pullMax="200" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshing-spinner="dots" pulling-icon="refresh"></ion-refresher-content>
+  </ion-refresher>
+
   <ng-container *ngIf="timetables$ | async as timetable; else loadingTimetableData">
-    <ion-refresher slot="fixed" pullFactor="0.5" pullMin="100" pullMax="200" (ionRefresh)="doRefresh($event)">
-      <ion-refresher-content></ion-refresher-content>
-    </ion-refresher>
-    
     <div class="glob-container">
       <ion-card>
         <ion-item>
@@ -47,7 +47,7 @@
           </ion-select>
         </ion-item>
       </ion-card>
-  
+
       <ion-card *ngIf="timetable | at:location | for:types | on:day:since:until as rooms">
         <ion-card-header>
           <ion-card-title>{{ rooms.length }} available rooms</ion-card-title>
