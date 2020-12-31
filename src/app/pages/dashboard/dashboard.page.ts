@@ -82,27 +82,6 @@ export class DashboardPage implements OnInit {
   scheduleSegment: 'today' | 'upcoming' = 'today';
 
   dashboardSectionsSelectBoxModel; // select box dashboard sections value
-  allDashboardSections = this.isStudent ? [ // alldashboardSections will not be modified and it will be used in the select box
-    'inspirationalQuote',
-    'quickAccess',
-    'todaysSchedule',
-    'upcomingEvents',
-    'lowAttendance',
-    'upcomingTrips',
-    'apcard',
-    'cgpa',
-    'financials',
-    'news',
-    'noticeBoard'
-  ] : [
-      'inspirationalQuote',
-      'todaysSchedule',
-      'upcomingEvents',
-      'news',
-      'upcomingTrips',
-      'apcard',
-      'noticeBoard'
-    ];
 
   // shownDashboardSections get the data from local storage and hide/show elements based on that
   shownDashboardSections: string[] = [];
@@ -403,6 +382,7 @@ export class DashboardPage implements OnInit {
     );
     this.quote$ = this.ws.get<Quote>('/apspacequote', { auth: false });
     this.holidays$ = this.getHolidays(true);
+    // tslint:disable-next-line: no-bitwise
     this.noticeBoardItems$ = this.news.getSlideshow(refresher, this.isStudent, this.isLecturer || Boolean(this.role & Role.Admin));
     this.upcomingTrips$ = this.getUpcomingTrips(this.firstLocation, this.secondLocation);
     this.photo$ = this.ws.get<StudentPhoto>('/student/photo');  // no-cache for student photo
