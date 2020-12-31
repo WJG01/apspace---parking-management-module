@@ -41,9 +41,9 @@
           </ion-button>
         </ion-col>
         <ion-col size="auto">
-          <ion-button class="no-ripple" fill="outline" [color]="viewWeek ? 'primary' : 'medium'">
+          <ion-button class="no-ripple" fill="outline" (click)="rotateView()" [color]="viewWeek ? 'primary' : 'medium'">
             <ion-label>Weekly</ion-label>
-            <ion-toggle [checked]="rotateView()" ></ion-toggle>
+            <ion-toggle [checked]="viewWeek" disabled="true"></ion-toggle>
           </ion-button>
         </ion-col>
         <ion-col size="auto" *ngIf="!room">
