@@ -7,7 +7,7 @@ import { Storage } from '@ionic/storage';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap, timeout } from 'rxjs/operators';
 
-import { QuixCustomer, Role, ShortNews } from '../../interfaces';
+import { News, QuixCustomer, Role, ShortNews } from '../../interfaces';
 import {
   CasTicketService, DataCollectorService, NewsService, SettingsService,
   WsApiService
@@ -23,7 +23,7 @@ export class LoginPage implements OnInit {
   @ViewChild('sliderSlides') sliderSlides: IonSlides;
   @ViewChild('operationsHourSlides') operationsHourSlides: IonSlides;
 
-  noticeBoardItems$: Observable<any[]>;
+  noticeBoardItems$: Observable<News[]>;
   news$: Observable<ShortNews[]>;
   quixCompanies$: Observable<any[]>;
 
@@ -165,30 +165,16 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
-    // pattern (second answer) https://stackoverflow.com/questions/18664997/how-can-i-use-regular-expression-to-grab-an-img-tag
-    const rex = /<img\s[^>]*?src\s*=\s*['\"]([^'\"]*?)['\"][^>]*?>/;
-    this.noticeBoardItems$ = this.news.getSlideshow().pipe(
-      map((noticeBoardItems: any) => {
-        return noticeBoardItems.map(item => {
-          if (item && item.field_image_link.length > 0 && item.field_image_link[0].value) {
-            return {
-              value: rex.exec(item.field_image_link[0].value)[1],
-              title: item.title.length > 0 && item.title[0].value ? item.title[0].value : '',
-              updated: item.changed.length > 0 && item.changed[0].value ? new Date(item.changed[0].value * 1000) : ''
-            };
-          }
-        });
-      })
-    );
+    this.noticeBoardItems$ = this.news.getSlideshow();
     this.news$ = this.news.get().pipe(
       map(newsList => {
         return newsList.map(item => {
-          if (item && item.field_news_image.length > 0 && item.field_news_image[0].url) {
+          if (item && item.featured_media_source.length > 0 && item.featured_media_source[0].source_url) {
             return {
-              url: item.field_news_image[0].url,
-              title: item.title.length > 0 && item.title[0].value ? item.title[0].value : '',
-              updated: item.changed.length > 0 && item.changed[0].value ? new Date(item.changed[0].value * 1000) : '',
-              body: item.body.length > 0 && item.body[0].value ? item.body[0].value : ''
+              url: item.featured_media_source[0].source_url,
+              title: item.title && item.title.rendered ? item.title.rendered : '',
+              updated: item.modified ? new Date(item.modified) : '',
+              body: item.content && item.content.rendered ? item.content.rendered : ''
             };
           }
         }).slice(0, 6);

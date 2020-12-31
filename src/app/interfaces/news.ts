@@ -1,27 +1,52 @@
 export interface News {
-  nid: Changed[];
-  uuid: Langcode[];
-  vid: Changed[];
-  langcode: Langcode[];
-  type: Type[];
-  status: DefaultLangcode[];
-  title: Langcode[];
-  uid: Uid[];
-  created: Changed[];
-  changed: Changed[];
-  promote: DefaultLangcode[];
-  sticky: DefaultLangcode[];
-  revision_timestamp: Changed[];
-  revision_uid: Uid[];
-  revision_log: any[];
-  revision_translation_affected: DefaultLangcode[];
-  default_langcode: DefaultLangcode[];
-  path: any[];
-  publish_on: any[];
-  unpublish_on: Changed[];
-  menu_link: any[];
-  body: Body[];
-  field_news_image: FieldNewsImage[];
+  id: string;
+  date: Date;
+  date_gmt: Date;
+  author: string;
+  categories: string[];
+  comment_status: string;
+  content: Content;
+  excerpt: Excerpt;
+  featured_media: string;
+  format: string;
+  guid: Guid;
+  link: string;
+  meta: any[];
+  modified: Date;
+  modified_gmt: Date;
+  ping_status: string;
+  post_meta_fields: any;
+  slug: string;
+  status: string;
+  sticky: boolean;
+  tags: any[];
+  template: string;
+  title: Title;
+  type: string;
+  featured_media_source?: any;
+}
+
+export interface Content {
+  protected: boolean;
+  rendered: string;
+}
+
+export interface Excerpt {
+  protected: boolean;
+  rendered: string;
+}
+
+export interface Guid {
+  rendered: string;
+}
+
+export interface Title {
+  rendered: string;
+}
+
+export interface ImageSource {
+  id: string;
+  source_url: string;
 }
 
 export interface ShortNews {
@@ -31,44 +56,3 @@ export interface ShortNews {
   body: string;
 }
 
-export interface Body {
-  value: string;
-  format: string;
-  summary: string;
-}
-
-export interface Changed {
-  value: number;
-}
-
-export interface DefaultLangcode {
-  value: boolean;
-}
-
-export interface FieldNewsImage {
-  target_id: number;
-  alt: string;
-  title: string;
-  width: number;
-  height: number;
-  target_type: string;
-  target_uuid: string;
-  url: string;
-}
-
-export interface Langcode {
-  value: string;
-}
-
-export interface Uid {
-  target_id: number;
-  target_type: string;
-  target_uuid: string;
-  url: string;
-}
-
-export interface Type {
-  target_id: string;
-  target_type: string;
-  target_uuid: string;
-}

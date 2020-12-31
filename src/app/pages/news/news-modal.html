@@ -12,7 +12,7 @@
 <ion-content parallax-header>
   <ion-img [src]="newsItem.url"></ion-img>
   <div class="ion-padding">
-    <h3 *ngIf="newsItem.title.length > 0" class="colored-text ion-margin-top ion-margin-bottom">{{ newsItem.title }}</h3>
-    <article  *ngIf="newsItem.body.length > 0" class="main-text-color ion-padding-start" [innerHTML]="newsItem.body | safe: 'sanitizeHtml'"></article>
+    <h3 *ngIf="newsItem.title" class="colored-text ion-margin-top ion-margin-bottom">{{ newsItem.title }}</h3>
+    <article  *ngIf="newsItem.body" class="main-text-color ion-padding-start" [innerHTML]="newsItem.body | safe: 'sanitizeHtml'"></article>
   </div>
 </ion-content>

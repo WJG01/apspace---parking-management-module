@@ -524,31 +524,12 @@
               [options]="imageSliderOpts"
             >
               <ng-container
-                *ngIf="noticeBoardItems$ | async as noticeBoardItems"
-              >
-                <ion-slide>
+                *ngIf="noticeBoardItems$ | async as noticeBoardItems">
+                <ion-slide *ngFor="let noticeBoardItem of noticeBoardItems">
                   <div class="picture">
-                    <img [src]="'assets/img/banner_test.jpg'" alt="" />
-                  </div>
-                </ion-slide>
-                <ion-slide>
-                  <div class="picture">
-                    <img
-                      [src]="
-                        'http://www.apu.edu.my/sites/default/files/web_post-covid-19_960_resized.jpg'
-                      "
-                      alt=""
-                    />
-                  </div>
-                </ion-slide>
-                <ion-slide>
-                  <div class="picture">
-                    <img
-                      [src]="
-                        'http://www.apu.edu.my/sites/default/files/covid_banner_updated.jpeg'
-                      "
-                      alt=""
-                    />
+                    <a href="{{ noticeBoardItem.link }}" target="_blank">
+                      <img src="{{ noticeBoardItem.featured_media_source[0].source_url }}" alt="" />
+                    </a>
                   </div>
                 </ion-slide>
               </ng-container>
