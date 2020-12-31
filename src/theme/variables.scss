@@ -12,9 +12,7 @@
     --ion-border-color: #cccccc;
     --ion-item-background: #f5f5f5;
     // TEMPORARY SOLUTION FOR MORE PAGE CUSTOM CARD
-    --ion-more-page-light-color: #e9ecee;
-    --ion-more-page-card-color: #e9ecee;
-    --ion-more-page-background-color: linear-gradient(to right, #148ad9, #3a99d9ee);
+
 
     --ion-staff-profile-card-color: #e9ecee;
 
@@ -191,12 +189,12 @@
     --ion-toolbar-background: #171717;
     --ion-tab-bar-background: #171717;
     --ion-item-background: #171717;
-    
+
     // TEMPORARY SOLUTION FOR MORE PAGE CUSTOM CARD
     --ion-more-page-light-color: #919191;
     --ion-more-page-card-color: #171717;
     --ion-more-page-background-color: linear-gradient(to right, #000000, #141414);
-    
+
     --ion-staff-profile-card-color: #171717;
 
     --ion-color-step-50: #0d0d0d;
@@ -316,42 +314,135 @@
   --ion-color-tertiary-contrast-rgb: 255, 255, 255;
   --ion-color-tertiary-shade: #ca0459;
   --ion-color-tertiary-tint: #e81e74;
+
+  // More page variables
+  --ion-more-page-light-color: #e9ecee;
+  --ion-more-page-card-color: #e9ecee;
+  --ion-more-page-background-color: linear-gradient(to right, #148ad9, #3a99d9ee);
 }
 
 @mixin light-green-color {
-  --ion-color-primary: #08a14f;
-  --ion-color-primary-rgb: 8, 161, 79;
+  /** primary **/
+  --ion-color-primary: #006466;
+  --ion-color-primary-rgb: 0,100,102;
   --ion-color-primary-contrast: #ffffff;
-  --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #078e46;
-  --ion-color-primary-tint: #21aa61;
+  --ion-color-primary-contrast-rgb: 255,255,255;
+  --ion-color-primary-shade: #00585a;
+  --ion-color-primary-tint: #1a7475;
+
+  /** secondary **/
+  --ion-color-secondary: #007f5f;
+  --ion-color-secondary-rgb: 0,127,95;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255,255,255;
+  --ion-color-secondary-shade: #007054;
+  --ion-color-secondary-tint: #1a8c6f;
+
+  /** tertiary **/
+  --ion-color-tertiary: #212f45;
+  --ion-color-tertiary-rgb: 33,47,69;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255,255,255;
+  --ion-color-tertiary-shade: #1d293d;
+  --ion-color-tertiary-tint: #374458;
+
+  /** more page variables **/
+  --ion-more-page-light-color: #e9ecee;
+  --ion-more-page-card-color: #e9ecee;
+  --ion-more-page-background-color: linear-gradient(to right, #006466, #007f5f);
 }
 
 @mixin light-pink-color {
-  --ion-color-primary: #d86586;
-  --ion-color-primary-rgb: 216, 101, 134;
+  /** primary **/
+  --ion-color-primary: #f08080;
+  --ion-color-primary-rgb: 240,128,128;
   --ion-color-primary-contrast: #000000;
-  --ion-color-primary-contrast-rgb: 0, 0, 0;
-  --ion-color-primary-shade: #be5976;
-  --ion-color-primary-tint: #dc7492;
+  --ion-color-primary-contrast-rgb: 0,0,0;
+  --ion-color-primary-shade: #d37171;
+  --ion-color-primary-tint: #f28d8d;
+
+  /** secondary **/
+  --ion-color-secondary: #f4978e;
+  --ion-color-secondary-rgb: 244,151,142;
+  --ion-color-secondary-contrast: #000000;
+  --ion-color-secondary-contrast-rgb: 0,0,0;
+  --ion-color-secondary-shade: #d7857d;
+  --ion-color-secondary-tint: #f5a199;
+
+  /** tertiary **/
+  --ion-color-tertiary: #ef476f;
+  --ion-color-tertiary-rgb: 239,71,111;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255,255,255;
+  --ion-color-tertiary-shade: #d23e62;
+  --ion-color-tertiary-tint: #f1597d;
+
+  /** more page variables **/
+  --ion-more-page-light-color: #e9ecee;
+  --ion-more-page-card-color: #e9ecee;
+  --ion-more-page-background-color: linear-gradient(to right, #f08080, #f4978e);
 }
 
 @mixin light-yellow-color {
-  --ion-color-primary: #dfa847;
-  --ion-color-primary-rgb: 223, 168, 71;
+  /** primary **/
+  --ion-color-primary: #ff8800;
+  --ion-color-primary-rgb: 255,136,0;
   --ion-color-primary-contrast: #000000;
-  --ion-color-primary-contrast-rgb: 0, 0, 0;
-  --ion-color-primary-shade: #c4943e;
-  --ion-color-primary-tint: #e2b159;
+  --ion-color-primary-contrast-rgb: 0,0,0;
+  --ion-color-primary-shade: #e07800;
+  --ion-color-primary-tint: #ff941a;
+
+  /** secondary **/
+  --ion-color-secondary: #ffa200;
+  --ion-color-secondary-rgb: 255,162,0;
+  --ion-color-secondary-contrast: #000000;
+  --ion-color-secondary-contrast-rgb: 0,0,0;
+  --ion-color-secondary-shade: #e08f00;
+  --ion-color-secondary-tint: #ffab1a;
+
+  /** tertiary **/
+  --ion-color-tertiary: #e85d04;
+  --ion-color-tertiary-rgb: 232,93,4;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255,255,255;
+  --ion-color-tertiary-shade: #cc5204;
+  --ion-color-tertiary-tint: #ea6d1d;
+
+  /** more page variables **/
+  --ion-more-page-light-color: #e9ecee;
+  --ion-more-page-card-color: #e9ecee;
+  --ion-more-page-background-color: linear-gradient(to right, #ff8800, #ffa200);
 }
 
 @mixin light-red-color {
-  --ion-color-primary: #e54d42;
-  --ion-color-primary-rgb: 229, 77, 66;
+  /** primary **/
+  --ion-color-primary: #bc3908;
+  --ion-color-primary-rgb: 188,57,8;
   --ion-color-primary-contrast: #ffffff;
-  --ion-color-primary-contrast-rgb: 255, 255, 255;
-  --ion-color-primary-shade: #ca443a;
-  --ion-color-primary-tint: #e85f55;
+  --ion-color-primary-contrast-rgb: 255,255,255;
+  --ion-color-primary-shade: #a53207;
+  --ion-color-primary-tint: #c34d21;
+
+  /** secondary **/
+  --ion-color-secondary: #d00000;
+  --ion-color-secondary-rgb: 208,0,0;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255,255,255;
+  --ion-color-secondary-shade: #b70000;
+  --ion-color-secondary-tint: #d51a1a;
+
+  /** tertiary **/
+  --ion-color-tertiary: #b23a48;
+  --ion-color-tertiary-rgb: 178,58,72;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255,255,255;
+  --ion-color-tertiary-shade: #9d333f;
+  --ion-color-tertiary-tint: #ba4e5a;
+
+  /** more page variables **/
+  --ion-more-page-light-color: #e9ecee;
+  --ion-more-page-card-color: #e9ecee;
+  --ion-more-page-background-color: linear-gradient(to right, #bc3908, #d00000);
 }
 
 @mixin dark-blue-color {
@@ -440,7 +531,7 @@
     }
 
     .yellow {
-      @include dark-yellow-color;
+      @include light-yellow-color;
     }
 
     .red {
