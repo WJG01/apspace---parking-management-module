@@ -403,7 +403,7 @@ export class DashboardPage implements OnInit {
     );
     this.quote$ = this.ws.get<Quote>('/apspacequote', { auth: false });
     this.holidays$ = this.getHolidays(true);
-    this.noticeBoardItems$ = this.news.getSlideshow(refresher, this.isStudent, this.isLecturer);
+    this.noticeBoardItems$ = this.news.getSlideshow(refresher, this.isStudent, this.isLecturer || Boolean(this.role & Role.Admin));
     this.upcomingTrips$ = this.getUpcomingTrips(this.firstLocation, this.secondLocation);
     this.photo$ = this.ws.get<StudentPhoto>('/student/photo');  // no-cache for student photo
     this.displayGreetingMessage();
