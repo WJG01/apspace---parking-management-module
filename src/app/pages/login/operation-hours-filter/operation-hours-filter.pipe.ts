@@ -8,8 +8,6 @@ import { QuixCustomer } from 'src/app/interfaces';
 export class OperationHoursFilterPipe implements PipeTransform {
 
   transform(companies: QuixCustomer[], companyId: string): any {
-    console.log('companies', companies);
-    console.log('company id', companyId);
     return companies.find(company => company.company_id === companyId);
   }
 

@@ -1,9 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonSlides, ModalController } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 
-import { ShortNews } from '../../interfaces';
+import { News, Role, ShortNews } from '../../interfaces';
 import { NewsService } from '../../services';
 import { NewsModalPage } from './news-modal';
 
@@ -13,10 +14,15 @@ import { NewsModalPage } from './news-modal';
   templateUrl: './news.page.html',
   styleUrls: ['./news.page.scss'],
 })
-export class NewsPage {
+export class NewsPage implements OnInit {
   @ViewChild('slides') slides: IonSlides;
   news$: Observable<ShortNews[]>;
-  noticeBoardItems$: Observable<any[]>;
+  noticeBoardItems$: Observable<News[]>;
+
+  role: Role;
+  isStudent: boolean;
+  isLecturer: boolean;
+
   noticeBoardSliderOpts = {
     autoplay: true,
     on: {
@@ -92,26 +98,39 @@ export class NewsPage {
   constructor(
     private news: NewsService,
     private modalCtrl: ModalController,
+    private storage: Storage
   ) { }
 
-
   doRefresh(refresher?) {
-    this.news$ = this.news.get(Boolean(refresher)).pipe(
+
+    this.news$ = this.news.get(Boolean(refresher), this.isStudent, this.isLecturer).pipe(
       map(newsList => {
         return newsList.map(item => {
-          if (item && item.field_news_image.length > 0 && item.field_news_image[0].url) {
+          if (item && item.featured_media_source.length > 0 && item.featured_media_source[0].source_url) {
             return {
-              url: item.field_news_image[0].url,
-              title: item.title.length > 0 && item.title[0].value ? item.title[0].value : '',
-              updated: item.changed.length > 0 && item.changed[0].value ? new Date(item.changed[0].value * 1000) : '',
-              body: item.body.length > 0 && item.body[0].value ? item.body[0].value : ''
+              url: item.featured_media_source[0].source_url,
+              title: item.title && item.title.rendered ? item.title.rendered : '',
+              updated: item.modified ? new Date(item.modified) : '',
+              body: item.content && item.content.rendered ? item.content.rendered : ''
             };
           }
         });
       }),
       finalize(() => refresher && refresher.target.complete())
     );
-    this.noticeBoardItems$ = this.news.getSlideshow(refresher);
+
+    this.noticeBoardItems$ = this.news.getSlideshow(refresher, this.isStudent, this.isLecturer);
+  }
+
+  ngOnInit() {
+    this.storage.get('role').then((role: Role) => {
+        this.role = role;
+        // tslint:disable-next-line: no-bitwise
+        this.isStudent = Boolean(role & Role.Student);
+        // tslint:disable-next-line: no-bitwise
+        this.isLecturer = Boolean(role & (Role.Lecturer || Role.Admin));
+      }
+    );
   }
 
   ionViewDidEnter() {

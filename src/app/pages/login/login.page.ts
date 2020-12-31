@@ -7,7 +7,7 @@ import { Storage } from '@ionic/storage';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap, timeout } from 'rxjs/operators';
 
-import { QuixCustomer, Role, ShortNews } from '../../interfaces';
+import { News, QuixCustomer, Role, ShortNews } from '../../interfaces';
 import {
   CasTicketService, DataCollectorService, NewsService, SettingsService,
   WsApiService
@@ -23,7 +23,7 @@ export class LoginPage implements OnInit {
   @ViewChild('sliderSlides') sliderSlides: IonSlides;
   @ViewChild('operationsHourSlides') operationsHourSlides: IonSlides;
 
-  noticeBoardItems$: Observable<any[]>;
+  noticeBoardItems$: Observable<News[]>;
   news$: Observable<ShortNews[]>;
   quixCompanies$: Observable<any[]>;
 
@@ -165,30 +165,16 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
-    // pattern (second answer) https://stackoverflow.com/questions/18664997/how-can-i-use-regular-expression-to-grab-an-img-tag
-    const rex = /<img\s[^>]*?src\s*=\s*['\"]([^'\"]*?)['\"][^>]*?>/;
-    this.noticeBoardItems$ = this.news.getSlideshow().pipe(
-      map((noticeBoardItems: any) => {
-        return noticeBoardItems.map(item => {
-          if (item && item.field_image_link.length > 0 && item.field_image_link[0].value) {
-            return {
-              value: rex.exec(item.field_image_link[0].value)[1],
-              title: item.title.length > 0 && item.title[0].value ? item.title[0].value : '',
-              updated: item.changed.length > 0 && item.changed[0].value ? new Date(item.changed[0].value * 1000) : ''
-            };
-          }
-        });
-      })
-    );
+    this.noticeBoardItems$ = this.news.getSlideshow();
     this.news$ = this.news.get().pipe(
       map(newsList => {
         return newsList.map(item => {
-          if (item && item.field_news_image.length > 0 && item.field_news_image[0].url) {
+          if (item && item.featured_media_source.length > 0 && item.featured_media_source[0].source_url) {
             return {
-              url: item.field_news_image[0].url,
-              title: item.title.length > 0 && item.title[0].value ? item.title[0].value : '',
-              updated: item.changed.length > 0 && item.changed[0].value ? new Date(item.changed[0].value * 1000) : '',
-              body: item.body.length > 0 && item.body[0].value ? item.body[0].value : ''
+              url: item.featured_media_source[0].source_url,
+              title: item.title && item.title.rendered ? item.title.rendered : '',
+              updated: item.modified ? new Date(item.modified) : '',
+              body: item.content && item.content.rendered ? item.content.rendered : ''
             };
           }
         }).slice(0, 6);
@@ -201,376 +187,143 @@ export class LoginPage implements OnInit {
       caching: 'cache-only',
       headers
     }
-    ).pipe(map(_ => {
-      // TODO: remove this (for testing only)
+    ).pipe(map(companies => {
+      // companies[0] = APU
       return [
         {
           company_departments: [
             {
-              dept_email: 'admin@apu.edu.my',
+              dept_email: companies[0].company_departments[0].dept_email,
               dept_icon: 'chatbubbles-sharp',
               dept_icon_color: '#1f640a',
               img: 'assets/img/admin.jpg',
-              dept_id: 'adm',
-              dept_name: 'admin',
-              dept_phone: [
-                '03 8992 5250'
-              ],
-              shifts: {
-                Fri: [
-                  {
-                    end_time: '19:30:00',
-                    start_time: '08:30:00'
-                  }
-                ],
-                'Mon-Thu': [
-                  {
-                    end_time: '20:00:00',
-                    start_time: '08:30:00'
-                  }
-                ],
-                Sat: [
-                  {
-                    end_time: '13:00:00',
-                    start_time: '09:00:00'
-                  }
-                ]
-              }
+              dept_id: companies[0].company_departments[0].dept_id,
+              dept_name: companies[0].company_departments[0].dept_name,
+              dept_phone: companies[0].company_departments[0].dept_phone,
+              shifts: companies[0].company_departments[0].shifts
             },
             {
-              dept_email: 'visa@apu.edu.my',
+              dept_email: companies[0].company_departments[1].dept_email,
               dept_icon: 'airplane',
               dept_icon_color: '#260033',
               img: 'assets/img/immigration.jpg',
-              dept_id: 'immig',
-              dept_name: 'immigration',
-              dept_phone: [
-                '03 8992 5237',
-                '03 8992 5238',
-                '03 8992 5239'
-              ],
-              shifts: {
-                Fri: [
-                  {
-                    end_time: '15:45:00',
-                    start_time: '09:00:00'
-                  }
-                ],
-                'Mon-Thu': [
-                  {
-                    end_time: '16:45:00',
-                    start_time: '09:00:00'
-                  }
-                ],
-                Sat: []
-              }
+              dept_id: companies[0].company_departments[1].dept_id,
+              dept_name: companies[0].company_departments[1].dept_name,
+              dept_phone: companies[0].company_departments[1].dept_phone,
+              shifts: companies[0].company_departments[1].shifts
             },
             {
-              dept_email: 'bursary@apu.edu.my',
+              dept_email: companies[0].company_departments[2].dept_email,
               dept_icon: 'cash-outline',
               dept_icon_color: '#bc8420',
               img: 'assets/img/bursary.jpg',
-              dept_id: 'cash',
-              dept_name: 'cashier',
-              dept_phone: [
-                '03 8992 5228'
-              ],
-              shifts: {
-                Fri: [
-                  {
-                    end_time: '18:15:00',
-                    start_time: '09:15:00'
-                  }
-                ],
-                'Mon-Thu': [
-                  {
-                    end_time: '18:15:00',
-                    start_time: '09:15:00'
-                  }
-                ],
-                Sat: [
-                  {
-                    end_time: '13:00:00',
-                    start_time: '09:15:00'
-                  }
-                ]
-              }
+              dept_id: companies[0].company_departments[2].dept_id,
+              dept_name: companies[0].company_departments[2].dept_name,
+              dept_phone: companies[0].company_departments[2].dept_phone,
+              shifts: companies[0].company_departments[2].shifts
             },
             {
-              dept_email: 'klinikoceana@gmail.com',
+              dept_email: companies[0].company_departments[3].dept_email,
               dept_icon: 'bandage-outline',
               dept_icon_color: '#235789',
               img: 'assets/img/klinik.jpg',
-              dept_id: 'clinic',
-              dept_name: 'clinic',
-              dept_phone: [
-                '03 8992 5114'
-              ],
-              shifts: {
-                Fri: [
-                  {
-                    end_time: '17:00:00',
-                    start_time: '09:00:00'
-                  }
-                ],
-                'Mon-Thu': [
-                  {
-                    end_time: '17:00:00',
-                    start_time: '09:00:00'
-                  }
-                ],
-                Sat: []
-              }
+              dept_id: companies[0].company_departments[3].dept_id,
+              dept_name: companies[0].company_departments[3].dept_name,
+              dept_phone: companies[0].company_departments[3].dept_phone,
+              shifts: companies[0].company_departments[3].shifts
             },
             {
-              dept_email: 'info@apu.edu.my',
+              dept_email: companies[0].company_departments[4].dept_email,
               dept_icon: 'help-circle-sharp',
               dept_icon_color: '#E8222D',
               img: 'assets/img/student_service.jpg',
-              dept_id: 'ss',
-              dept_name: 'Student Service',
-              dept_phone: [
-                '03 8992 5211',
-                '03 8992 5212'
-              ],
-              shifts: {
-                Fri: [
-                  {
-                    end_time: '19:00:00',
-                    start_time: '08:30:00'
-                  }
-                ],
-                'Mon-Thu': [
-                  {
-                    end_time: '19:00:00',
-                    start_time: '08:30:00'
-                  }
-                ],
-                Sat: [
-                  {
-                    end_time: '13:00:00',
-                    start_time: '08:30:00'
-                  }
-                ]
-              }
+              dept_id: companies[0].company_departments[4].dept_id,
+              dept_name: companies[0].company_departments[4].dept_name,
+              dept_phone: companies[0].company_departments[4].dept_phone,
+              shifts: companies[0].company_departments[4].shifts
             },
             {
-              dept_email: 'rsvp@apu.edu.my',
+              dept_email: companies[0].company_departments[5].dept_email,
               dept_icon: 'business-sharp',
               dept_icon_color: '#F0CEA0',
               img: 'assets/img/accommodation.jpg',
-              dept_id: 'acc',
-              dept_name: 'Accommodation',
-              dept_phone: [
-                '03 8992 5040',
-                '03 8992 5041'
-              ],
-              shifts: {
-                Fri: [
-                  {
-                    end_time: '13:00:00',
-                    start_time: '10:30:00'
-                  },
-                  {
-                    end_time: '17:00:00',
-                    start_time: '14:30:00'
-                  }
-                ],
-                'Mon-Thu': [
-                  {
-                    end_time: '13:00:00',
-                    start_time: '10:30:00'
-                  },
-                  {
-                    end_time: '17:30:00',
-                    start_time: '14:30:00'
-                  }
-                ],
-                Sat: []
-              }
+              dept_id: companies[0].company_departments[5].dept_id,
+              dept_name: companies[0].company_departments[5].dept_name,
+              dept_phone: companies[0].company_departments[5].dept_phone,
+              shifts: companies[0].company_departments[5].shifts
             },
             {
-              dept_email: 'library@apu.edu.my',
+              dept_email: companies[0].company_departments[6].dept_email,
               dept_icon: 'library',
               dept_icon_color: '#5bc0be',
               img: 'assets/img/library.jpg',
-              dept_id: 'lib',
-              dept_name: 'Library',
-              dept_phone: [
-                '03 8992 5207'
-              ],
-              shifts: {
-                Fri: [
-                  {
-                    end_time: '20:00:00',
-                    start_time: '08:30:00'
-                  }
-                ],
-                'Mon-Thu': [
-                  {
-                    end_time: '20:00:00',
-                    start_time: '08:30:00'
-                  }
-                ],
-                Sat: [
-                  {
-                    end_time: '13:00:00',
-                    start_time: '09:00:00'
-                  }
-                ]
-              }
+              dept_id: companies[0].company_departments[6].dept_id,
+              dept_name: companies[0].company_departments[6].dept_name,
+              dept_phone: companies[0].company_departments[6].dept_phone,
+              shifts: companies[0].company_departments[6].shifts
             },
             {
-              dept_email: 'assist@apu.edu.my',
+              dept_email: companies[0].company_departments[7].dept_email,
               dept_icon: 'laptop-sharp',
               dept_icon_color: '#0b132b',
               img: 'assets/img/lab.jpg',
-              dept_id: 'tl',
-              dept_name: 'Technology Labs',
-              dept_phone: [
-                '03 8992 5252'
-              ],
-              shifts: {
-                Fri: [
-                  {
-                    end_time: '19:00:00',
-                    start_time: '08:30:00'
-                  }
-                ],
-                'Mon-Thu': [
-                  {
-                    end_time: '19:00:00',
-                    start_time: '08:30:00'
-                  }
-                ],
-                Sat: [
-                  {
-                    end_time: '13:00:00',
-                    start_time: '09:00:00'
-                  }
-                ]
-              }
+              dept_id: companies[0].company_departments[7].dept_id,
+              dept_name: companies[0].company_departments[7].dept_name,
+              dept_phone: companies[0].company_departments[7].dept_phone,
+              shifts: companies[0].company_departments[7].shifts
             },
             {
-              dept_email: '',
+              dept_email: companies[0].company_departments[8].dept_email,
               dept_icon: 'print-outline',
               dept_icon_color: '#c1cd32',
               img: 'assets/img/print.jpg',
-              dept_id: 'ps',
-              dept_name: 'Printshop @APU',
-              dept_phone: [
-                '03 8992 5171 '
-              ],
-              shifts: {
-                Fri: [
-                  {
-                    end_time: '12:45:00',
-                    start_time: '10:30:00'
-                  },
-                  {
-                    end_time: '19:00:00',
-                    start_time: '14:45:00'
-                  }
-                ],
-                'Mon-Thu': [
-                  {
-                    end_time: '19:00:00',
-                    start_time: '10:30:00'
-                  }
-                ],
-                Sat: []
-              }
+              dept_id: companies[0].company_departments[8].dept_id,
+              dept_name: companies[0].company_departments[8].dept_name,
+              dept_phone: companies[0].company_departments[8].dept_phone,
+              shifts: companies[0].company_departments[8].shifts
             }
           ],
-          company_id: 'APU',
-          company_name: 'Asia Pacific University',
-          customer_type: 'Student',
-          lastModified: '2020-06-22 12:17:06+00:00'
+          company_id: companies[0].company_id,
+          company_name: companies[0].company_name,
+          customer_type: companies[0].customer_type,
+          lastModified: companies[0].lastModified
         },
         {
           company_departments: [
             {
-              dept_email: 'library@apu.edu.my',
+              dept_email: companies[1].company_departments[0].dept_email,
               dept_icon: 'library',
               dept_icon_color: '#5bc0be',
               img: 'assets/img/library_apiit.jpg',
-              dept_id: 'apiit-lib',
-              dept_name: 'Library',
-              dept_phone: [
-                '03 8992 5207'
-              ],
-              shifts: {
-                Fri: [
-                  {
-                    end_time: '18:00:00',
-                    start_time: '08:30:00'
-                  }
-                ],
-                'Mon-Thu': [
-                  {
-                    end_time: '18:00:00',
-                    start_time: '08:30:00'
-                  }
-                ],
-                Sat: []
-              }
+              dept_id: companies[1].company_departments[0].dept_id,
+              dept_name: companies[1].company_departments[0].dept_name,
+              dept_phone: companies[1].company_departments[0].dept_phone,
+              shifts: companies[1].company_departments[0].shifts
             },
             {
-              dept_email: 'bursary@apu.edu.my',
+              dept_email: companies[1].company_departments[1].dept_email,
               dept_icon: 'cash-outline',
               dept_icon_color: '#bc8420',
               img: 'assets/img/bursary.jpg',
-              dept_id: 'apiit-cash',
-              dept_name: 'Cashier',
-              dept_phone: [
-                '03 8992 5228'
-              ],
-              shifts: {
-                Fri: [
-                  {
-                    end_time: '13:00:00',
-                    start_time: '10:00:00'
-                  }
-                ],
-                'Mon-Thu': [
-                  {
-                    end_time: '13:00:00',
-                    start_time: '10:00:00'
-                  }
-                ],
-                Sat: []
-              }
+              dept_id: companies[1].company_departments[1].dept_id,
+              dept_name: companies[1].company_departments[1].dept_name,
+              dept_phone: companies[1].company_departments[1].dept_phone,
+              shifts: companies[1].company_departments[1].shifts
             },
             {
-              dept_email: 'assist@apu.edu.my',
+              dept_email: companies[1].company_departments[2].dept_email,
               dept_icon: 'laptop-sharp',
               dept_icon_color: '#0b132b',
               img: 'assets/img/lab_apiit.jpg',
-              dept_id: 'apiit-tl',
-              dept_name: 'Technology Labs',
-              dept_phone: [
-                '03 8992 5252'
-              ],
-              shifts: {
-                Fri: [
-                  {
-                    end_time: '19:00:00',
-                    start_time: '8:30:00'
-                  }
-                ],
-                'Mon-Thu': [
-                  {
-                    end_time: '19:00:00',
-                    start_time: '8:30:00'
-                  }
-                ],
-                Sat: []
-              }
+              dept_id: companies[1].company_departments[2].dept_id,
+              dept_name: companies[1].company_departments[2].dept_name,
+              dept_phone: companies[1].company_departments[2].dept_phone,
+              shifts: companies[1].company_departments[2].shifts
             }
           ],
-          company_id: 'APIIT',
-          company_name: 'Asia Pacific Institute of Information Technology',
-          customer_type: 'Lecturer'
+          company_id: companies[1].company_id,
+          company_name: companies[1].company_name,
+          customer_type: companies[1].customer_type
         }
       ];
     }));

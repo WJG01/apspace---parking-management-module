@@ -39,6 +39,12 @@ export class LogoutPage implements OnInit {
                 this.settings.clear();
                 this.storage.clear();
                 this.navCtrl.navigateRoot('/login', { replaceUrl: true });
+              },
+              error: err => {
+                console.error(err);
+                this.settings.clear();
+                this.storage.clear();
+                this.navCtrl.navigateRoot('/login', { replaceUrl: true });
               }
             }
           ); // works only on phones
