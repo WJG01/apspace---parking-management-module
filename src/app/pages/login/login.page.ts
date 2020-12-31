@@ -165,8 +165,8 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
-    this.noticeBoardItems$ = this.news.getSlideshow();
-    this.news$ = this.news.get().pipe(
+    this.noticeBoardItems$ = this.news.getSlideshow(true, true, false);
+    this.news$ = this.news.get(true, true, false).pipe(
       map(newsList => {
         return newsList.map(item => {
           if (item && item.featured_media_source.length > 0 && item.featured_media_source[0].source_url) {
