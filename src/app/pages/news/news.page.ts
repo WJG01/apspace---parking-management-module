@@ -102,8 +102,7 @@ export class NewsPage implements OnInit {
   ) { }
 
   doRefresh(refresher?) {
-
-    this.news$ = this.news.get(Boolean(refresher), this.isStudent, this.isLecturer).pipe(
+    this.news$ = this.news.get(refresher, this.isStudent, this.isLecturer).pipe(
       map(newsList => {
         return newsList.map(item => {
           if (item && item.featured_media_source.length > 0 && item.featured_media_source[0].source_url) {
@@ -128,7 +127,7 @@ export class NewsPage implements OnInit {
         // tslint:disable-next-line: no-bitwise
         this.isStudent = Boolean(role & Role.Student);
         // tslint:disable-next-line: no-bitwise
-        this.isLecturer = Boolean(role & (Role.Lecturer || Role.Admin));
+        this.isLecturer = Boolean((role & Role.Lecturer) || (role & Role.Admin));
       }
     );
   }
