@@ -1,113 +1,63 @@
 <ion-content class="dashboard-page">
-  <ion-refresher
-    *ngIf="!editableList"
-    slot="fixed"
-    pullMax="400"
-    pullMin="60 "
-    (ionRefresh)="doRefresh($event)"
-  >
-    <ion-refresher-content
-      refreshing-spinner="dots"
-      pullingIcon="refresh"
-    ></ion-refresher-content>
+  <ion-refresher *ngIf="!editableList" slot="fixed" pullMax="400" pullMin="60 " (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
   </ion-refresher>
   <div class="glob-container">
     <ion-grid class="ion-no-padding">
       <ion-row>
-        <ion-col
-          size-xs="12"
-          size-md="5"
-          class="ion-no-padding ion-padding-top ion-padding-end ion-padding-start"
-        >
+        <ion-col size-xs="12" size-md="5" class="ion-no-padding ion-padding-top ion-padding-end ion-padding-start">
           <ion-card class="profile ion-no-margin ion-padding-top">
-            <ion-avatar
-              tappable="true"
-              class="glob-margin-auto ion-margin-top avatar"
-              (click)="navigateToPage('profile')"
-              *ngIf="!hideProfilePicture"
-            >
+            <ion-avatar tappable="true" class="glob-margin-auto ion-margin-top avatar"
+              (click)="navigateToPage('profile')" *ngIf="!hideProfilePicture">
               <ng-container *ngIf="isStudent; else staffImage">
-                <img
-                  [src]="
+                <img [src]="
                     'data:image/jpg;base64,' + (photo$ | async)?.base64_photo
-                  "
-                  onerror="this.src='assets/img/no_img.png'"
-                  alt="Profile"
-                />
+                  " onerror="this.src='assets/img/no_img.png'" alt="Profile" />
               </ng-container>
               <ng-template #staffImage>
                 <ng-container *ngIf="staffProfile$ | async as staffProfile">
-                  <img
-                    [src]="staffProfile[0].PHOTO"
-                    onerror="this.src='assets/img/no_img.png'"
-                    alt="Profile"
-                  />
+                  <img [src]="staffProfile[0].PHOTO" onerror="this.src='assets/img/no_img.png'" alt="Profile" />
                 </ng-container>
               </ng-template>
             </ion-avatar>
             <ion-card-header>
-              <ion-card-title class="ion-text-center" color="primary" (click)="navigateToPage('profile')" tappable="true">
+              <ion-card-title class="ion-text-center" color="primary" (click)="navigateToPage('profile')"
+                tappable="true">
                 {{isStudent ? (userProfile.NAME | titlecase) : (userProfile.FULLNAME | titlecase)}}
               </ion-card-title>
               <ion-card-subtitle class="ion-text-center">
-                <div *ngIf="(userProfile.STUDENT_NUMBER) || (!isStudent && userProfile.TITLE); else loadingCardSubtitle">
+                <div
+                  *ngIf="(userProfile.STUDENT_NUMBER) || (!isStudent && userProfile.TITLE); else loadingCardSubtitle">
                   {{
                   isStudent
-                    ? userProfile.STUDENT_NUMBER + " | " + userProfile.INTAKE
-                    : (userProfile.TITLE | titlecase)
+                  ? userProfile.STUDENT_NUMBER + " | " + userProfile.INTAKE
+                  : (userProfile.TITLE | titlecase)
                   }}
                 </div>
                 <ng-template #loadingCardSubtitle>
-                  <ion-skeleton-text animated class="glob-margin-auto" style="line-height: 20px; width: 80%"></ion-skeleton-text>
+                  <ion-skeleton-text animated class="glob-margin-auto" style="line-height: 20px; width: 80%">
+                  </ion-skeleton-text>
                 </ng-template>
               </ion-card-subtitle>
             </ion-card-header>
             <ion-card-content class="ion-text-center ion-no-padding">
               <div class="ion-margin-bottom">
-                <ion-button
-                  color="medium"
-                  fill="clear"
-                  (click)="navigateToPage('/settings')"
-                >
+                <ion-button color="medium" fill="clear" (click)="navigateToPage('/settings')">
                   <ion-icon name="settings-outline" size="large"></ion-icon>
                 </ion-button>
-                <ion-button
-                  color="warning"
-                  fill="clear"
-                  (click)="navigateToPage('/notifications')"
-                >
-                  <ion-badge
-                    class="notification-badge"
-                    *ngIf="numberOfUnreadMsgs > 0"
-                    color="warning"
-                  >
-                    {{ numberOfUnreadMsgs }}</ion-badge
-                  >
-                  <ion-icon
-                    color="warning"
-                    size="large"
-                    name="notifications-outline"
-                  ></ion-icon>
+                <ion-button color="warning" fill="clear" (click)="navigateToPage('/notifications')">
+                  <ion-badge class="notification-badge" *ngIf="numberOfUnreadMsgs > 0" color="warning">
+                    {{ numberOfUnreadMsgs }}</ion-badge>
+                  <ion-icon color="warning" size="large" name="notifications-outline"></ion-icon>
                 </ion-button>
                 <ion-button color="danger" fill="clear" (click)="logout()">
-                  <ion-icon
-                    slot="icon-only"
-                    color="danger"
-                    size="large"
-                    name="log-out-outline"
-                  ></ion-icon>
+                  <ion-icon slot="icon-only" color="danger" size="large" name="log-out-outline"></ion-icon>
                 </ion-button>
               </div>
-              <ng-container
-                *ngIf="orientationStudentDetails$ | async as announcement"
-              >
+              <ng-container *ngIf="orientationStudentDetails$ | async as announcement">
                 <ng-container *ngIf="showAnnouncement">
-                  <img
-                    src="assets/img/e-orientation.jpg"
-                    button
-                    [routerLink]="['/', 'profile']"
-                    router-direction="forward"
-                  />
+                  <img src="assets/img/e-orientation.jpg" button [routerLink]="['/', 'profile']"
+                    router-direction="forward" />
                 </ng-container>
               </ng-container>
             </ion-card-content>
@@ -121,36 +71,21 @@
               <ion-grid>
                 <ion-row>
                   <ion-col size="12" *ngIf="isCordova">
-                    <ion-button
-                      expand="block"
-                      [routerLink]="['/apcard-qr-code']"
-                    >
+                    <ion-button expand="block" [routerLink]="['/apcard-qr-code']">
                       Scan Qr Code
                       <ion-icon name="qr-code-outline" slot="end"></ion-icon>
                     </ion-button>
                   </ion-col>
                   <ion-col size="12" *ngIf="isStudent">
-                    <ion-button
-                      expand="block"
-                      [routerLink]="['/attendix/update']"
-                    >
+                    <ion-button expand="block" [routerLink]="['/attendix/update']">
                       Sign Class Attendance
-                      <ion-icon
-                        name="checkmark-done-circle-outline"
-                        slot="end"
-                      ></ion-icon>
+                      <ion-icon name="checkmark-done-circle-outline" slot="end"></ion-icon>
                     </ion-button>
                   </ion-col>
                   <ion-col size="12" *ngIf="isLecturer">
-                    <ion-button
-                      expand="block"
-                      [routerLink]="['/attendix/classes']"
-                    >
+                    <ion-button expand="block" [routerLink]="['/attendix/classes']">
                       Mark Class Attendance
-                      <ion-icon
-                        name="checkmark-done-circle-outline"
-                        slot="end"
-                      ></ion-icon>
+                      <ion-icon name="checkmark-done-circle-outline" slot="end"></ion-icon>
                     </ion-button>
                   </ion-col>
                   <ion-col size="12" *ngIf="!isStudent">
@@ -190,25 +125,12 @@
 
               <ng-template #loadingQuotes>
                 <p>
-                  <ion-skeleton-text
-                    style="width: 100%; line-height: 20px"
-                    animated
-                  ></ion-skeleton-text>
-                  <ion-skeleton-text
-                    style="width: 100%; line-height: 20px"
-                    animated
-                  ></ion-skeleton-text>
-                  <ion-skeleton-text
-                    style="width: 60%; line-height: 20px"
-                    animated
-                  ></ion-skeleton-text>
+                  <ion-skeleton-text style="width: 100%; line-height: 20px" animated></ion-skeleton-text>
+                  <ion-skeleton-text style="width: 100%; line-height: 20px" animated></ion-skeleton-text>
+                  <ion-skeleton-text style="width: 60%; line-height: 20px" animated></ion-skeleton-text>
                 </p>
                 <h4 class="ion-text-right">
-                  <ion-skeleton-text
-                    class="ion-float-right"
-                    style="width: 30%; line-height: 25px"
-                    animated
-                  >
+                  <ion-skeleton-text class="ion-float-right" style="width: 30%; line-height: 25px" animated>
                   </ion-skeleton-text>
                   <div class="glob-clearfix"></div>
                 </h4>
@@ -217,9 +139,7 @@
           </ion-card>
 
           <ion-card class="todays-schedule ion-no-margin ion-margin-top">
-            <ion-card-header
-              class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end"
-            >
+            <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
               <ion-card-title color="primary"> My Schedule </ion-card-title>
             </ion-card-header>
             <div class="ion-margin-top ion-margin-bottom">
@@ -235,29 +155,21 @@
             <ion-card-content class="ion-no-padding">
               <ng-container [ngSwitch]="scheduleSegment">
                 <ng-container *ngSwitchCase="'today'">
-                  <ng-container
-                    *ngIf="
+                  <ng-container *ngIf="
                       todaysSchedule$ | async as todaysScheduleList;
                       else loadingTodaysSchedule
-                    "
-                  >
-                    <div
-                      class="todays-schedule-container"
-                      *ngIf="
+                    ">
+                    <div class="todays-schedule-container" *ngIf="
                         todaysScheduleList.length > 0;
                         else noTodaysScheduleList
-                      "
-                    >
+                      ">
                       <div *ngFor="let event of todaysScheduleList">
-                        <div
-                          class="event-container"
-                          [ngClass]="{
+                        <div class="event-container" [ngClass]="{
                             'passed-event': event.pass,
                             'no-hover': event.pass,
                             'class-type': event.type === 'class',
                             'iconsult-type': event.type === 'iconsult'
-                          }"
-                        >
+                          }">
                           <h2 class="colored-with-type glob-text-bold">
                             {{ event.dateOrTime }} -
                             {{ event.thirdDescription }}
@@ -270,37 +182,28 @@
                           <ion-grid class="ion-no-padding">
                             <ion-row class="info-item">
                               <ion-col size="auto" class="ion-no-padding">
-                                <ion-icon
-                                  class="ion-no-margin small-margin colored-with-type"
-                                  size="small"
-                                  name="location-outline"
-                                ></ion-icon>
+                                <ion-icon class="ion-no-margin small-margin colored-with-type" size="small"
+                                  name="location-outline"></ion-icon>
                               </ion-col>
                               <ion-col class="ion-no-padding">
                                 <p>
                                   <ion-text class="ion-no-margin">{{
                                     event.firstDescription
-                                  }}</ion-text>
+                                    }}</ion-text>
                                 </p>
                               </ion-col>
                             </ion-row>
-                            <ion-row
-                              class="info-item"
-                              *ngIf="event.secondDescription"
-                            >
+                            <ion-row class="info-item" *ngIf="event.secondDescription">
                               <ion-col size="auto" class="ion-no-padding">
-                                <ion-icon
-                                  class="ion-no-margin small-margin colored-with-type"
-                                  size="small"
-                                  name="person"
-                                >
+                                <ion-icon class="ion-no-margin small-margin colored-with-type" size="small"
+                                  name="person">
                                 </ion-icon>
                               </ion-col>
                               <ion-col class="ion-no-padding">
                                 <p>
                                   <ion-text class="ion-no-margin">{{
                                     event.secondDescription
-                                  }}</ion-text>
+                                    }}</ion-text>
                                 </p>
                               </ion-col>
                             </ion-row>
@@ -309,57 +212,36 @@
                       </div>
                     </div>
                     <ng-template #noTodaysScheduleList>
-                      <app-message-with-svg
-                        imageUrl="assets/img/empty.svg"
-                        messageTitle="The list is empty!"
-                        wrapperSize="6"
-                        wrapperOffset="3"
-                        messageContent="Either no items to show for today, or the list has finished"
-                      >
+                      <app-message-with-svg imageUrl="assets/img/empty.svg" messageTitle="The list is empty!"
+                        wrapperSize="6" wrapperOffset="3"
+                        messageContent="Either no items to show for today, or the list has finished">
                       </app-message-with-svg>
                     </ng-template>
                   </ng-container>
                   <ng-template #loadingTodaysSchedule>
-                    <div
-                      *ngFor="let _ of skeletons"
-                      class="ion-padding-start ion-padding-end ion-padding-top"
-                    >
+                    <div *ngFor="let _ of skeletons" class="ion-padding-start ion-padding-end ion-padding-top">
                       <div class="event-container">
                         <h2 class="colored-with-type glob-text-bold">
-                          <ion-skeleton-text
-                            animated
-                            style="width: 45%; line-height: 25px"
-                          ></ion-skeleton-text>
+                          <ion-skeleton-text animated style="width: 45%; line-height: 25px"></ion-skeleton-text>
                         </h2>
                         <p class="glob-text-bold colored-with-type">
-                          <ion-skeleton-text
-                            animated
-                            style="
+                          <ion-skeleton-text animated style="
                               width: 70%;
                               line-height: 17px;
                               margin-bottom: 5px;
-                            "
-                          >
+                            ">
                           </ion-skeleton-text>
                         </p>
                         <ion-grid class="ion-no-padding">
-                          <ion-row
-                            class="info-item ion-padding-start ion-padding-end"
-                          >
+                          <ion-row class="info-item ion-padding-start ion-padding-end">
                             <ion-col size="12" class="ion-no-padding">
                               <p>
-                                <ion-skeleton-text
-                                  animated
-                                  style="width: 85%; line-height: 15px"
-                                ></ion-skeleton-text>
+                                <ion-skeleton-text animated style="width: 85%; line-height: 15px"></ion-skeleton-text>
                               </p>
                             </ion-col>
                             <ion-col size="12" class="ion-no-padding">
                               <p>
-                                <ion-skeleton-text
-                                  animated
-                                  style="width: 85%; line-height: 15px"
-                                ></ion-skeleton-text>
+                                <ion-skeleton-text animated style="width: 85%; line-height: 15px"></ion-skeleton-text>
                               </p>
                             </ion-col>
                           </ion-row>
@@ -369,28 +251,20 @@
                   </ng-template>
                 </ng-container>
                 <ng-container *ngSwitchCase="'upcoming'">
-                  <ng-container
-                    *ngIf="
+                  <ng-container *ngIf="
                       upcomingEvent$ | async as upcomingEvents;
                       else loadingupcomingEvents
-                    "
-                  >
-                    <div
-                      class="todays-schedule-container"
-                      *ngIf="upcomingEvents.length > 0; else noUpcomingEvents"
-                    >
+                    ">
+                    <div class="todays-schedule-container" *ngIf="upcomingEvents.length > 0; else noUpcomingEvents">
                       <div *ngFor="let event of upcomingEvents">
-                        <div
-                          class="event-container"
-                          [ngClass]="{
+                        <div class="event-container" [ngClass]="{
                             'passed-event': event.pass,
                             'no-hover': event.pass,
                             'class-type': event.type === 'class',
                             'iconsult-type': event.type === 'iconsult',
                             'exam-type': event.type === 'exam',
                             'holiday-type': event.type === 'holiday'
-                          }"
-                        >
+                          }">
                           <h2 class="colored-with-type glob-text-bold">
                             {{ event.dateOrTime }}
                           </h2>
@@ -402,49 +276,38 @@
                           <ion-grid class="ion-no-padding">
                             <ion-row class="info-item">
                               <ion-col size="auto" class="ion-no-padding">
-                                <ion-icon
-                                  class="ion-no-margin small-margin colored-with-type"
-                                  size="small"
-                                  [name]="
+                                <ion-icon class="ion-no-margin small-margin colored-with-type" size="small" [name]="
                                     event.type === 'exam'
                                       ? 'location-outline'
                                       : 'time-outline'
-                                  "
-                                ></ion-icon>
+                                  "></ion-icon>
                               </ion-col>
                               <ion-col class="ion-no-padding">
                                 <p>
                                   <ion-text class="ion-no-margin">{{
                                     event.firstDescription
-                                  }}</ion-text>
+                                    }}</ion-text>
                                 </p>
                               </ion-col>
                             </ion-row>
-                            <ion-row
-                              class="info-item"
-                              *ngIf="event.type === 'exam'"
-                            >
+                            <ion-row class="info-item" *ngIf="event.type === 'exam'">
                               <ion-col size="auto" class="ion-no-padding">
-                                <ion-icon
-                                  class="ion-no-margin small-margin colored-with-type"
-                                  size="small"
-                                  name="time-outline"
-                                >
+                                <ion-icon class="ion-no-margin small-margin colored-with-type" size="small"
+                                  name="time-outline">
                                 </ion-icon>
                               </ion-col>
                               <ion-col class="ion-no-padding">
                                 <p>
                                   <ion-text class="ion-no-margin">
                                     {{
-                                      event.secondDescription
-                                        | date: "hh:mm a":"+08:00"
+                                    event.secondDescription
+                                    | date: "hh:mm a":"+08:00"
                                     }}
                                     -
                                     {{
-                                      event.thirdDescription
-                                        | date: "hh:mm a":"+08:00"
-                                    }}</ion-text
-                                  >
+                                    event.thirdDescription
+                                    | date: "hh:mm a":"+08:00"
+                                    }}</ion-text>
                                 </p>
                               </ion-col>
                             </ion-row>
@@ -453,57 +316,36 @@
                       </div>
                     </div>
                     <ng-template #noUpcomingEvents>
-                      <app-message-with-svg
-                        imageUrl="assets/img/empty.svg"
-                        messageTitle="The list is empty!"
-                        wrapperSize="6"
-                        wrapperOffset="3"
-                        messageContent="Either no items to show for today, or the list has finished"
-                      >
+                      <app-message-with-svg imageUrl="assets/img/empty.svg" messageTitle="The list is empty!"
+                        wrapperSize="6" wrapperOffset="3"
+                        messageContent="Either no items to show for today, or the list has finished">
                       </app-message-with-svg>
                     </ng-template>
                   </ng-container>
                   <ng-template #loadingupcomingEvents>
-                    <div
-                      *ngFor="let _ of skeletons"
-                      class="ion-padding-start ion-padding-end ion-padding-top"
-                    >
+                    <div *ngFor="let _ of skeletons" class="ion-padding-start ion-padding-end ion-padding-top">
                       <div class="event-container">
                         <h2 class="colored-with-type glob-text-bold">
-                          <ion-skeleton-text
-                            animated
-                            style="width: 45%; line-height: 25px"
-                          ></ion-skeleton-text>
+                          <ion-skeleton-text animated style="width: 45%; line-height: 25px"></ion-skeleton-text>
                         </h2>
                         <p class="glob-text-bold colored-with-type">
-                          <ion-skeleton-text
-                            animated
-                            style="
+                          <ion-skeleton-text animated style="
                               width: 70%;
                               line-height: 17px;
                               margin-bottom: 5px;
-                            "
-                          >
+                            ">
                           </ion-skeleton-text>
                         </p>
                         <ion-grid class="ion-no-padding">
-                          <ion-row
-                            class="info-item ion-padding-start ion-padding-end"
-                          >
+                          <ion-row class="info-item ion-padding-start ion-padding-end">
                             <ion-col size="12" class="ion-no-padding">
                               <p>
-                                <ion-skeleton-text
-                                  animated
-                                  style="width: 85%; line-height: 15px"
-                                ></ion-skeleton-text>
+                                <ion-skeleton-text animated style="width: 85%; line-height: 15px"></ion-skeleton-text>
                               </p>
                             </ion-col>
                             <ion-col size="12" class="ion-no-padding">
                               <p>
-                                <ion-skeleton-text
-                                  animated
-                                  style="width: 85%; line-height: 15px"
-                                ></ion-skeleton-text>
+                                <ion-skeleton-text animated style="width: 85%; line-height: 15px"></ion-skeleton-text>
                               </p>
                             </ion-col>
                           </ion-row>
@@ -518,62 +360,40 @@
         </ion-col>
         <ion-col size-xs="12" size-md="7" class="ion-padding">
           <section class="image-slider">
-            <ion-slides
-              #imageSliderSlides
-              pager="true"
-              [options]="imageSliderOpts"
-            >
-              <ng-container
-                *ngIf="noticeBoardItems$ | async as noticeBoardItems">
+            <ion-slides #imageSliderSlides pager="true" [options]="imageSliderOpts">
+              <ng-container *ngIf="noticeBoardItems$ | async as noticeBoardItems">
                 <ion-slide *ngFor="let noticeBoardItem of noticeBoardItems">
                   <div class="picture">
-                    <a href="{{ noticeBoardItem.link }}" target="_blank">
-                      <img src="{{ noticeBoardItem.featured_media_source[0].source_url }}" alt="" />
+                    <a href="{{ noticeBoardItem['post-meta-fields']['slideshow_url'][0] ? noticeBoardItem['post-meta-fields']['slideshow_url'][0] : noticeBoardItem.link }}"
+                      target="_blank"> <img src="{{ noticeBoardItem.featured_media_source[0].source_url }}" alt="" />
                     </a>
                   </div>
                 </ion-slide>
               </ng-container>
             </ion-slides>
             <div class="swiper-button-next">
-              <ion-icon
-                name="chevron-forward-outline"
-                size="large"
-                tappable
-                (click)="nextSlide()"
-              >
+              <ion-icon name="chevron-forward-outline" size="large" tappable (click)="nextSlide()">
               </ion-icon>
             </div>
             <div class="swiper-button-prev">
-              <ion-icon
-                name="chevron-back-outline"
-                tappable
-                (click)="prevSlide()"
-                size="large"
-              ></ion-icon>
+              <ion-icon name="chevron-back-outline" tappable (click)="prevSlide()" size="large"></ion-icon>
             </div>
           </section>
           <ion-card class="apcard ion-no-margin ion-margin-top">
             <ng-container *ngIf="apcardTransaction$ | async">
-              <ion-card-header
-                class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end"
-              >
+              <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
                 <ion-card-subtitle>
                   {{
-                    currentBalance !== -1
-                      ? "Balance: " + (currentBalance | currency: "MYR":"RM")
-                      : "Balance: --"
+                  currentBalance !== -1
+                  ? "Balance: " + (currentBalance | currency: "MYR":"RM")
+                  : "Balance: --"
                   }}
                 </ion-card-subtitle>
                 <ion-card-title color="primary"> APCard </ion-card-title>
               </ion-card-header>
               <ion-card-content>
-                <chart
-                  height="600"
-                  *ngIf="apcardChart.data"
-                  [type]="apcardChart.type"
-                  [data]="apcardChart.data"
-                  [options]="apcardChart.options"
-                >
+                <chart height="600" *ngIf="apcardChart.data" [type]="apcardChart.type" [data]="apcardChart.data"
+                  [options]="apcardChart.options">
                 </chart>
               </ion-card-content>
             </ng-container>
@@ -581,24 +401,18 @@
 
           <ion-card class="apcard ion-no-margin ion-margin-top">
             <ng-container *ngIf="financial$ | async as financialSummary">
-              <ion-card-header
-                class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end"
-              >
+              <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
                 <ion-card-subtitle>
                   {{
-                    "Overdue: " +
-                      (financialSummary[0].TOTAL_OVERDUE | currency: "MYR":"RM")
+                  "Overdue: " +
+                  (financialSummary[0].TOTAL_OVERDUE | currency: "MYR":"RM")
                   }}
                 </ion-card-subtitle>
                 <ion-card-title color="primary"> Financial </ion-card-title>
               </ion-card-header>
               <ion-card-content>
-                <chart
-                  *ngIf="financialsChart.data"
-                  [type]="financialsChart.type"
-                  [data]="financialsChart.data"
-                  [options]="financialsChart.options"
-                >
+                <chart *ngIf="financialsChart.data" [type]="financialsChart.type" [data]="financialsChart.data"
+                  [options]="financialsChart.options">
                 </chart>
               </ion-card-content>
             </ng-container>
@@ -606,9 +420,7 @@
 
           <ion-card class="apcard ion-no-margin ion-margin-top">
             <ng-container *ngIf="cgpaPerIntake$ | async">
-              <ion-card-header
-                class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end"
-              >
+              <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
                 <ion-card-subtitle>
                   {{ "Overall: " + (overallCgpa | number: "1.0-2") }}
                 </ion-card-subtitle>
@@ -617,12 +429,8 @@
                 </ion-card-title>
               </ion-card-header>
               <ion-card-content>
-                <chart
-                  *ngIf="cgpaChart.data"
-                  [type]="cgpaChart.type"
-                  [data]="cgpaChart.data"
-                  [options]="cgpaChart.options"
-                >
+                <chart *ngIf="cgpaChart.data" [type]="cgpaChart.type" [data]="cgpaChart.data"
+                  [options]="cgpaChart.options">
                 </chart>
               </ion-card-content>
             </ng-container>
