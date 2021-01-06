@@ -18,27 +18,28 @@
       *ngIf="noticeBoardItems$ | async as noticeBoardItems; else loadingSlideshow">
       <ion-row *ngIf="noticeBoardItems.length > 0; else noSlides">
         <ion-col class="ion-no-padding" size="12">
-            <ion-slides #slides pager="true" [options]="noticeBoardSliderOpts">
-              <ion-slide *ngFor="let noticeBoardItem of noticeBoardItems">
-                <ion-card class="ion-no-margin">
-                  <ion-card-content class="ion-no-padding">
-                    <div class="slider-image">
-                      <a href="{{noticeBoardItem.link}}" target="_blank">
-                        <img src="{{noticeBoardItem.featured_media_source[0].source_url}}" alt="" />
-                      </a>
-                    </div>
-                  </ion-card-content>
-                  <div class="swiper-button-next">
-                    <ion-icon name="chevron-forward-outline" size="large" tappable (click)="nextSlide()">
-                    </ion-icon>
+          <ion-slides #slides pager="true" [options]="noticeBoardSliderOpts">
+            <ion-slide *ngFor="let noticeBoardItem of noticeBoardItems">
+              <ion-card class="ion-no-margin">
+                <ion-card-content class="ion-no-padding">
+                  <div class="slider-image">
+                    <a href="{{ noticeBoardItem['post-meta-fields']['slideshow_url'][0] ? noticeBoardItem['post-meta-fields']['slideshow_url'][0] : noticeBoardItem.link }}"
+                      target="_blank">
+                      <img src="{{noticeBoardItem.featured_media_source[0].source_url}}" alt="" />
+                    </a>
                   </div>
-                  <div class="swiper-button-prev">
-                    <ion-icon name="chevron-back-outline" size="large" tappable (click)="prevSlide()">
-                    </ion-icon>
-                  </div>
-                </ion-card>
-              </ion-slide>
-            </ion-slides>
+                </ion-card-content>
+                <div class="swiper-button-next">
+                  <ion-icon name="chevron-forward-outline" size="large" tappable (click)="nextSlide()">
+                  </ion-icon>
+                </div>
+                <div class="swiper-button-prev">
+                  <ion-icon name="chevron-back-outline" size="large" tappable (click)="prevSlide()">
+                  </ion-icon>
+                </div>
+              </ion-card>
+            </ion-slide>
+          </ion-slides>
         </ion-col>
       </ion-row>
       <ng-template #noSlides>
@@ -78,7 +79,7 @@
                   <ion-card-content>
                     <ion-text>
                       <p>
-                    {{ newsItem.title }}
+                        {{ newsItem.title }}
                       </p>
                     </ion-text>
                     <ion-text>
