@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { ModalController } from '@ionic/angular';
 import { format } from 'date-fns';
@@ -40,8 +39,7 @@ export class HrPage implements OnInit {
   constructor(
     public modalCtrl: ModalController,
     private ws: WsApiService,
-    private iab: InAppBrowser,
-    private router: Router
+    private iab: InAppBrowser
   ) { }
 
   ngOnInit() {
@@ -132,7 +130,4 @@ export class HrPage implements OnInit {
     this.iab.create('https://hr.apiit.edu.my', '_system', 'location=true');
   }
 
-  openHrDownload() {
-    this.router.navigate(['/hr/hr-download']);
-  }
 }
