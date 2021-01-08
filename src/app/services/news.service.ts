@@ -58,16 +58,22 @@ export class NewsService {
     return this.getNewsImages().pipe(
       switchMap(res => {
         images = res;
+        images[0] = { id: '0', source_url: '' };
         return this.http.get<News[]>(url) as Observable<News[]>;
       }),
-      map (news => {
+      map(news => {
         news.forEach(n => {
-          n.featured_media_source = images.filter(i => i.id === n.featured_media);
+          const featuredMediaImageArray = images.filter(i => i.id === n.featured_media);
+          if (featuredMediaImageArray.length > 0) {
+            n.featured_media_source = featuredMediaImageArray;
+          } else {
+            n.featured_media_source = [{ source_url: 'assets/img/placeholder.png' }];
+          }
         });
         images = [];
         return news;
       }),
-      tap (news => refresh && this.storage.set('news-cache', news))
+      tap(news => refresh && this.storage.set('news-cache', news))
     );
   }
 
@@ -105,15 +111,19 @@ export class NewsService {
 
   private getSlideshowWithImages(refresh: boolean, url: string): Observable<any[]> {
     let images: ImageSource[];
-
     return this.getNewsImages().pipe(
       switchMap(res => {
         images = res;
         return this.http.get<any[]>(url) as Observable<any[]>;
       }),
-      map (slideshowItems => {
+      map(slideshowItems => {
         slideshowItems.forEach(n => {
-          n.featured_media_source = images.filter(i => i.id === n.featured_media);
+          const featuredMediaImageArray = images.filter(i => i.id === n.featured_media);
+          if (featuredMediaImageArray.length > 0) {
+            n.featured_media_source = featuredMediaImageArray;
+          } else {
+            n.featured_media_source = [{ source_url: 'assets/img/placeholder.png' }];
+          }
         });
         images = [];
         return slideshowItems;
