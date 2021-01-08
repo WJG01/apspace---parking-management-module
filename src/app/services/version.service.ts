@@ -10,7 +10,7 @@ export class VersionService {
     private plt: Platform,
   ) { }
 
-  readonly version = '2.1.7';
+  readonly version = '3.0.0';
 
   /** Application version name. */
   get name(): string {

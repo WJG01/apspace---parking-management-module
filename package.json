@@ -1,6 +1,6 @@
 {
   "name": "apspace",
-  "version": "2.1.7",
+  "version": "3.0.0",
   "author": "CTI Team <cti@apiit.edu.my>",
   "homepage": "https://apspace.apu.edu.my/",
   "description": "Apspace mobile application",
@@ -8,6 +8,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
