@@ -16,7 +16,7 @@ pipelines:
   #   '**':
   #     - step: *build-test
   branches:
-    production-new:
+    production:
     - step:
         image: cticti/apspace:08.20
         caches:
