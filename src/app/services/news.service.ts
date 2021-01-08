@@ -58,7 +58,6 @@ export class NewsService {
     return this.getNewsImages().pipe(
       switchMap(res => {
         images = res;
-        images[0] = { id: '0', source_url: '' };
         return this.http.get<News[]>(url) as Observable<News[]>;
       }),
       map(news => {
