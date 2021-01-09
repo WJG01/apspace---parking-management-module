@@ -43,7 +43,7 @@ export class SettingsPage implements OnInit {
     { index: 4, value: 80 }
   ];
   hideProfilePicture;
-  enableMalaysiaTimezone;
+  enableMalaysiaTimezone; // TODO: update the variable name (it should be disableMalaysiaTimezone)
   timeFormat: '12' | '24' = '12';
   locationOptions = [
     'New Campus',

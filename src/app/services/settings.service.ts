@@ -77,7 +77,7 @@ const defaultData: Settings = {
   disableShakespear: false,
   shakeSensitivity: 40,
   hideProfilePicture: false,
-  enableMalaysiaTimezone: true,
+  enableMalaysiaTimezone: false, // TODO: update variable name (it should be disableMalaysianTimezone)
   timeFormat: '12',
   busFirstLocation: '',
   busSecondLocation: '',
