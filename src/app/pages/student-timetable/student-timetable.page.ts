@@ -273,7 +273,12 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
           )).sort(),
           'All'
         ];
-        this.selectedGrouping = this.settings.get('intakeGroup') || this.availableGrouping[0];
+        const localIntakeGroupingValue = this.settings.get('intakeGroup');
+        if (localIntakeGroupingValue && this.availableGrouping.includes(localIntakeGroupingValue)) {
+          this.selectedGrouping = this.settings.get('intakeGroup');
+        } else {
+          this.selectedGrouping = this.availableGrouping[0];
+        }
       }),
       tap(() => this.changeDetectorRef.markForCheck()),
     );
