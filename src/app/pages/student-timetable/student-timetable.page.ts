@@ -96,6 +96,9 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
   timeFormatChangeFlag: boolean;
   notification: Subscription;
 
+  // timezone
+  enableMalaysiaTimezone;
+
   constructor(
     private actionSheetCtrl: ActionSheetController,
     private changeDetectorRef: ChangeDetectorRef,
@@ -117,6 +120,10 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
         this.changeDetectorRef.detectChanges();
       }
     });
+
+    this.settings.get$('enableMalaysiaTimezone').subscribe(data =>
+      this.enableMalaysiaTimezone = data
+    );
 
     // select current day by default
     this.selectedDate = new Date();
