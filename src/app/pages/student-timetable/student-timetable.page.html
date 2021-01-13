@@ -237,6 +237,11 @@
               </ion-card-header>
               <ion-card-content>
                 <p>
+                  <ion-text color="danger">
+                    - All times in timetable page are displayed in <span class="glob-text-bold">{{enableMalaysiaTimezone ? "Local Timezone" : "Malaysia Time Zone (GMT+8)"}}</span> (You can change that from the settings)
+                  </ion-text>
+                </p>
+                <p>
                   - Students are advised to consult your lecturers to check whether there
                   will be lectures during the buffer/revision week.
                 </p>
@@ -248,11 +253,6 @@
                   - If your lecturer decides not to use the buffer/revision week, then
                   you will not be required to come for lectures during the
                   buffer/revision week.
-                </p>
-                <p>
-                  <ion-text color="danger">
-                    - All times in timetable page are displayed in <span class="glob-text-bold">{{enableMalaysiaTimezone ? "Local Timezone" : "Malaysia Time Zone (GMT+8)"}}</span> (You can change that from the settings)
-                  </ion-text>
                 </p>
               </ion-card-content>
             </ion-card>
