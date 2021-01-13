@@ -34,11 +34,11 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
       desc: 'Tutorial',
     },
     {
-      name: 'T1',
+      name: 'G1',
       desc: 'Tutorial Group 1',
     },
     {
-      name: 'T2',
+      name: 'G2',
       desc: 'Tutorial Group 2',
     },
     {
