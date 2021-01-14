@@ -285,6 +285,7 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
           this.selectedGrouping = this.settings.get('intakeGroup');
         } else {
           this.selectedGrouping = this.availableGrouping[0];
+          this.settings.set('intakeGroup', this.availableGrouping[0]);
         }
       }),
       tap(() => this.changeDetectorRef.markForCheck()),
