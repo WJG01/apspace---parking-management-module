@@ -8,7 +8,6 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
@@ -71,7 +70,7 @@
     "apollo-link-http": "^1.5.17",
     "aws-appsync": "^2.0.2",
     "com.darktalker.cordova.screenshot": "^0.1.6",
-    "cordova-android": "8.1.0",
+    "cordova-android": "^9.0.0",
     "cordova-ios": "5.1.1",
     "cordova-plugin-actionsheet": "^2.3.3",
     "cordova-plugin-add-swift-support": "^2.0.2",
