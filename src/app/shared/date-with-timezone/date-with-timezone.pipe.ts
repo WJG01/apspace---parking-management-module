@@ -27,7 +27,7 @@ export class DateWithTimezonePipe implements PipeTransform {
         this.timeFormat = value
       );
 
-      this.timeFormat === '24' ? format = 'HH:mm' : format = 'h:mm aa';
+      this.timeFormat === '24' ? format = 'HH:mm (zzz)' : format = 'h:mm aa (zzz)';
     }
 
     return new DatePipe('en-US').transform(date, format, timezone);
