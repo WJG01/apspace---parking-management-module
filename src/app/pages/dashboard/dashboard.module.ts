@@ -9,6 +9,7 @@ import { ComponentsModule } from 'src/app/components/components.module';
 import { DashboardPage } from './dashboard.page';
 import { DisabledPipe } from './disabled.pipe';
 import { SectionNamePipe } from './section-name.pipe';
+import { TimeParserPipe } from './time-parser.pipe';
 
 const routes: Routes = [
   {
@@ -27,6 +28,6 @@ const routes: Routes = [
     ComponentsModule,
     ChartModule
   ],
-  declarations: [DashboardPage, DisabledPipe, SectionNamePipe],
+  declarations: [DashboardPage, DisabledPipe, SectionNamePipe, TimeParserPipe],
 })
 export class DashboardPageModule {}

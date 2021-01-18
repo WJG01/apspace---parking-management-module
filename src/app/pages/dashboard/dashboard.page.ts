@@ -6,7 +6,7 @@ import { AlertController, IonSelect, IonSlides, ModalController, NavController, 
 import { Storage } from '@ionic/storage';
 import { format, parse, parseISO } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
-import { Observable, combineLatest, forkJoin, of, zip } from 'rxjs';
+import { Observable, Subscription, combineLatest, forkJoin, of, zip } from 'rxjs';
 import { catchError, concatMap, finalize, map, mergeMap, shareReplay, switchMap, tap, toArray } from 'rxjs/operators';
 
 import { accentColors } from 'src/app/constants';
@@ -23,6 +23,7 @@ import {
   NewsService, NotificationService, SettingsService, StudentTimetableService,
   WsApiService,
 } from 'src/app/services';
+import { NotifierService } from 'src/app/shared/notifier/notifier.service';
 import { NewsModalPage } from '../news/news-modal';
 import { NotificationModalPage } from '../notifications/notification-modal';
 
@@ -78,6 +79,10 @@ export class DashboardPage implements OnInit {
   isLecturer: boolean;
   isCordova: boolean;
   skeletons = new Array(5);
+
+  timeFormatChangeFlag: boolean;
+  notification: Subscription;
+
 
   scheduleSegment: 'today' | 'upcoming' = 'today';
 
@@ -329,7 +334,9 @@ export class DashboardPage implements OnInit {
     private firebaseX: FirebaseX,
     private toastCtrl: ToastController,
     private settings: SettingsService,
-    private storage: Storage
+    private storage: Storage,
+    private notifierService: NotifierService,
+
   ) {
     // getting the main accent color to color the chart.js (Temp until removing chart.js)
     // TODO handle value change
@@ -338,6 +345,12 @@ export class DashboardPage implements OnInit {
 
   ngOnInit() {
     this.isCordova = this.platform.is('cordova');
+    this.notification = this.notifierService.timeFormatUpdated.subscribe(data => {
+      if (data && data === 'SUCCESS') {
+        this.timeFormatChangeFlag = !this.timeFormatChangeFlag;
+      }
+    });
+
     this.storage.get('role').then((role: Role) => {
       this.role = role;
       // tslint:disable-next-line: no-bitwise
@@ -580,9 +593,11 @@ export class DashboardPage implements OnInit {
       map(x => x[0].concat(x[1])), // MERGE THE TWO ARRAYS TOGETHER
       map(eventsList => {  // SORT THE EVENTS LIST BY TIME
         return eventsList.sort((eventA, eventB) => {
-          return parse(eventA.dateOrTime, 'hh:mm a', new Date()) > parse(eventB.dateOrTime, 'hh:mm a', new Date())
+          // tslint:disable-next-line: quotemark tslint:disable-next-line: max-line-length
+          return parse(eventA.dateOrTime, "yyyy-MM-dd'T'HH:mm:ssXXX", new Date()) > parse(eventB.dateOrTime, "yyyy-MM-dd'T'HH:mm:ssXXX", new Date())
             ? 1
-            : parse(eventA.dateOrTime, 'hh:mm a', new Date()) < parse(eventB.dateOrTime, 'hh:mm a', new Date())
+            // tslint:disable-next-line: quotemark tslint:disable-next-line: max-line-length
+            : parse(eventA.dateOrTime, "yyyy-MM-dd'T'HH:mm:ssXXX", new Date()) < parse(eventB.dateOrTime, "yyyy-MM-dd'T'HH:mm:ssXXX", new Date())
               ? -1
               : 0;
         });
@@ -624,20 +639,22 @@ export class DashboardPage implements OnInit {
         const timetableEventMode: EventComponentConfigurations[] = [];
         timetables.forEach((timetable: StudentTimetable) => {
           let classPass = false;
-          if (this.eventPass(timetable.TIME_FROM, dateNow)) { // CHANGE CLASS STATUS TO PASS IF IT PASS
+          if (this.eventPass(timetable.TIME_FROM_ISO, dateNow)) { // CHANGE CLASS STATUS TO PASS IF IT PASS
             classPass = true;
           }
           timetableEventMode.push({
             title: timetable.MODID,
             firstDescription: timetable.LOCATION + ' | ' + timetable.ROOM,
             secondDescription: timetable.NAME,
-            thirdDescription: format(parse(timetable.TIME_TO, 'hh:mm a', new Date()), 'hh:mm a'),
+            // tslint:disable-next-line: quotemark
+            thirdDescription: timetable.TIME_TO_ISO,
             color: '#27ae60',
             pass: classPass,
             passColor: '#d7dee3',
             outputFormat: 'event-with-time-and-hyperlink',
             type: 'class',
-            dateOrTime: format(parse(timetable.TIME_FROM, 'hh:mm a', new Date()), 'hh:mm a'), // EXPECTED FORMAT HH MM A
+            // tslint:disable-next-line: quotemark
+            dateOrTime: timetable.TIME_FROM_ISO,
           });
         });
         return timetableEventMode;
@@ -673,7 +690,8 @@ export class DashboardPage implements OnInit {
 
         timetables.forEach((timetable: LecturerTimetable) => {
           let classPass = false;
-          if (this.eventPass(format(new Date(timetable.time), 'hh:mm a'), d)) { // CHANGE CLASS STATUS TO PASS IF IT PASS
+          // tslint:disable-next-line: quotemark
+          if (this.eventPass(format(new Date(timetable.time), "yyyy-MM-dd'T'HH:mm:ssXXX"), d)) { // CHANGE CLASS STATUS TO PASS IF IT PASS
             classPass = true;
           }
 
@@ -681,13 +699,14 @@ export class DashboardPage implements OnInit {
             title: timetable.module,
             firstDescription: timetable.location + ' | ' + timetable.room,
             secondDescription: timetable.intakes.join(', '),
-            thirdDescription: format(Date.parse(timetable.time) + timetable.duration * 1000, 'hh mm a'),
+            // tslint:disable-next-line: quotemark
+            thirdDescription: format(Date.parse(timetable.time) + timetable.duration * 1000, "yyyy-MM-dd'T'HH:mm:ssXXX"),
             color: '#27ae60',
             pass: classPass,
             passColor: '#d7dee3',
             outputFormat: 'event-with-time-and-hyperlink',
             type: 'class',
-            dateOrTime: format(new Date(timetable.time), 'hh mm a'), // EXPECTED FORMAT HH MM A
+            dateOrTime: timetable.time
           });
 
         });
@@ -732,12 +751,10 @@ export class DashboardPage implements OnInit {
             }
           })
         );
-
         listOfBookingWithStaffDetail.forEach(upcomingConsultation => {
           let consultationPass = false;
-          if (this.eventPass(format(
-            this.enableMalaysiaTimezone ? utcToZonedTime(new Date(upcomingConsultation.slot_start_time), 'Asia/Kuala_Lumpur')
-              : new Date(upcomingConsultation.slot_start_time), 'hh:mm a'), dateNow)) {
+          // tslint:disable-next-line: quotemark
+          if (this.eventPass(format(new Date(upcomingConsultation.slot_start_time), "yyyy-MM-dd'T'HH:mm:ssXXX"), dateNow)) {
             // CHANGE CLASS STATUS TO PASS IF IT PASS
             consultationPass = true;
           }
@@ -750,15 +767,12 @@ export class DashboardPage implements OnInit {
             passColor: '#d7dee3',
             firstDescription: upcomingConsultation.slot_room_code + ' | ' + upcomingConsultation.slot_venue,
             secondDescription: upcomingConsultation.staff_detail.FULLNAME,
-            thirdDescription: format(
-              this.enableMalaysiaTimezone ? utcToZonedTime(new Date(upcomingConsultation.slot_end_time), 'Asia/Kuala_Lumpur')
-                : new Date(upcomingConsultation.slot_end_time), 'hh:mm a'),
-            dateOrTime: format(
-              this.enableMalaysiaTimezone ? utcToZonedTime(new Date(upcomingConsultation.slot_start_time), 'Asia/Kuala_Lumpur')
-                : new Date(upcomingConsultation.slot_start_time), 'hh:mm a'),
+            // tslint:disable-next-line: quotemark
+            thirdDescription: format(new Date(upcomingConsultation.slot_end_time), "yyyy-MM-dd'T'HH:mm:ssXXX"),
+            // tslint:disable-next-line: quotemark
+            dateOrTime: format(new Date(upcomingConsultation.slot_start_time), "yyyy-MM-dd'T'HH:mm:ssXXX"),
           });
         });
-
         return consultationsEventMode;
       }
       )
@@ -781,9 +795,9 @@ export class DashboardPage implements OnInit {
       map(upcomingConsultations => {
         upcomingConsultations.forEach(upcomingConsultation => {
           let consultationPass = false;
-          if (this.eventPass(format(
-            this.enableMalaysiaTimezone ? utcToZonedTime(new Date(upcomingConsultation.start_time), 'Asia/Kuala_Lumpur')
-              : new Date(upcomingConsultation.start_time), 'hh:mm a'), dateNow)) {
+          // tslint:disable-next-line: quotemark
+          if (this.eventPass(format(new Date(upcomingConsultation.start_time), "yyyy-MM-dd'T'HH:mm:ssXXX"), dateNow)) {
+            // CHANGE CLASS STATUS TO PASS IF IT PASS
             consultationPass = true;
           }
           consultationsEventMode.push({
@@ -794,12 +808,10 @@ export class DashboardPage implements OnInit {
             pass: consultationPass,
             passColor: '#d7dee3',
             firstDescription: upcomingConsultation.room_code + ' | ' + upcomingConsultation.venue,
-            thirdDescription: format(
-              this.enableMalaysiaTimezone ? utcToZonedTime(new Date(upcomingConsultation.end_time), 'Asia/Kuala_Lumpur')
-                : new Date(upcomingConsultation.end_time), 'hh:mm a'),
-            dateOrTime: format(
-              this.enableMalaysiaTimezone ? utcToZonedTime(new Date(upcomingConsultation.start_time), 'Asia/Kuala_Lumpur')
-                : new Date(upcomingConsultation.start_time), 'hh:mm a'),
+            // tslint:disable-next-line: quotemark
+            thirdDescription: format(new Date(upcomingConsultation.end_time), "yyyy-MM-dd'T'HH:mm:ssXXX"),
+            // tslint:disable-next-line: quotemark
+            dateOrTime: format(new Date(upcomingConsultation.start_time), "yyyy-MM-dd'T'HH:mm:ssXXX"),
           });
         });
         return consultationsEventMode;
@@ -822,7 +834,8 @@ export class DashboardPage implements OnInit {
   }
 
   eventPass(eventTime: string, todaysDate: Date) {
-    if (parse(eventTime, 'hh:mm a', new Date()) >= todaysDate) {
+    // tslint:disable-next-line: quotemark
+    if (parse(eventTime, "yyyy-MM-dd'T'HH:mm:ssXXX", new Date()) >= todaysDate) {
       return false;
     }
     return true;
