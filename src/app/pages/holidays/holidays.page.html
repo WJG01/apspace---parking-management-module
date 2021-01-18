@@ -37,7 +37,7 @@
     <ion-grid>
       <ion-row>
         <ion-col size="12">
-          <ion-item lines="none" button (click)="showFilterMenu()" [class.ion-margin-bottom]="filterMenuHidden">
+          <ion-item lines="none" class="curser-pointer" (click)="showFilterMenu()" [class.ion-margin-bottom]="filterMenuHidden">
             <ion-icon class="ion-padding-end" name="filter"></ion-icon>
             Filters
             <ion-icon slot="end" size="small" [name]="filterMenuHidden ? 'caret-down' : 'caret-up'">
