@@ -12,4 +12,6 @@ export interface StudentTimetable {
   DATESTAMP_ISO: string;
   TIME_FROM: string;
   TIME_TO: string;
+  TIME_FROM_ISO?: string;
+  TIME_TO_ISO?: string;
 }

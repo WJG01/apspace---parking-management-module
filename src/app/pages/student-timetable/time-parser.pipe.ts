@@ -8,8 +8,14 @@ import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-wit
 })
 export class TimeParserPipe extends DateWithTimezonePipe implements PipeTransform {
 
-  transform(time: string, _: any): string {
-    const timeObject = parse(time, 'h:mm aa', new Date());
-    return super.transform(timeObject, 'time');
+  transform(time: string, _: any, withDate = false): string {
+    if (!withDate) {
+      const timeObject = parse(time, 'h:mm aa', new Date());
+      return super.transform(timeObject, 'time');
+    } else {
+      // tslint:disable-next-line: quotemark
+      const timeObject = parse(time, "yyyy-MM-dd'T'HH:mm:ssXXX", new Date());
+      return super.transform(timeObject, 'time');
+    }
   }
 }

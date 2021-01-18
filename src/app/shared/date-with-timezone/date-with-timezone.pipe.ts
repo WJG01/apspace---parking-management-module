@@ -17,9 +17,11 @@ export class DateWithTimezonePipe implements PipeTransform {
     );
   }
 
-  transform(date: any, format: string) {
-    const timezone = this.enableMalaysiaTimezone ? '+0800' : '';
+  transform(date: any, format: string, _= false) {
 
+    const timezone = this.enableMalaysiaTimezone ? '' : '+0800';
+    // enableMalaysianTimezone : true => disabled
+    // enableMalaysianTimezone : false => enabled
     if (format === 'time') {
       this.settings.get$('timeFormat').subscribe(value =>
         this.timeFormat = value
