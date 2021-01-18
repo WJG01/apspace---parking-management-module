@@ -321,15 +321,10 @@
                               <ion-col class="ion-no-padding">
                                 <p>
                                   <ion-text class="ion-no-margin">
-                                    {{
-                                    event.secondDescription
-                                    | date: "hh:mm a":"+08:00"
-                                    }}
+                                    {{event.secondDescription| timeParser: timeFormatChangeFlag: true }}
                                     -
-                                    {{
-                                    event.thirdDescription
-                                    | date: "hh:mm a":"+08:00"
-                                    }}</ion-text>
+                                    {{event.thirdDescription| timeParser: timeFormatChangeFlag: true }}
+                                  </ion-text>
                                 </p>
                               </ion-col>
                             </ion-row>
