@@ -56,222 +56,254 @@
 
           <div class="search-bar">
             <ion-row>
-              <ion-searchbar [(ngModel)]="worldCatSearch" placeholder="Search {{searchTerm}}"
-                (change)="openWorldCatSearch()"></ion-searchbar>
+              <ion-searchbar [(ngModel)]="worldCatSearch" placeholder="Search {{searchTerm}}" (change)="openWorldCatSearch()"></ion-searchbar>
             </ion-row>
+            <ion-row>
+              <ion-col class="ion-text-end">
+                <ion-button color="success" (click)="openWorldCatSearch()">
+                  Search
+                  <ion-icon name="search-outline" slot="end"></ion-icon>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+
           </div>
 
           <div class="ion-margin-top">
-            <ion-button expand="block" fill="outline" (click)="openAdvancedSearch()">Advanced WorldCat Search
-            </ion-button>
-            <ion-button expand="block" fill="outline" (click)="openLibrary()">Open Library Homepage</ion-button>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="5">
+                  <ion-button expand="block" fill="outline" color="secondary" (click)="openAdvancedSearch()">
+                    Advanced WorldCat Search
+                    <ion-icon name="open-outline" slot="end"></ion-icon>
+                  </ion-button>
+                </ion-col>
+                <ion-col size="7">
+                  <ion-button expand="block" fill="outline" color="secondary" (click)="openLibrary()">
+                    Open Library Homepage
+                    <ion-icon name="open-outline" slot="end"></ion-icon>
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
           </div>
         </ion-col>
+        <ion-col size="12">
 
-        <ion-segment [(ngModel)]="selectedSegment" *ngIf="(recentAdditions$ | async) as newAdditions; else loadingSegment">
-          <ion-segment-button value="checkouts">
-            <ion-label>
-              Checkout
-            </ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="history">
-            <ion-label>
-              History
-            </ion-label>
-          </ion-segment-button>
-          <ion-segment-button value="latest-additions">
-            <ion-label>
-              New Additions
-            </ion-label>
-          </ion-segment-button>
-        </ion-segment>
+          <ion-card>
+            <ion-segment [(ngModel)]="selectedSegment"
+              *ngIf="(recentAdditions$ | async) as newAdditions; else loadingSegment">
+              <ion-segment-button value="checkouts">
+                <ion-label>
+                  Checkout
+                </ion-label>
+              </ion-segment-button>
+              <ion-segment-button value="history">
+                <ion-label>
+                  History
+                </ion-label>
+              </ion-segment-button>
+              <ion-segment-button value="latest-additions">
+                <ion-label>
+                  New Additions
+                </ion-label>
+              </ion-segment-button>
+            </ion-segment>
 
-        <ng-template #loadingSegment>
-          <ion-segment>
-            <ion-segment-button>
-              <ion-skeleton-text style="width: 100%; height: 38px;" animated></ion-skeleton-text>
-            </ion-segment-button>
-          </ion-segment>
-        </ng-template>
+            <ng-template #loadingSegment>
+              <ion-segment>
+                <ion-segment-button>
+                  <ion-skeleton-text style="width: 100%; height: 38px;" animated></ion-skeleton-text>
+                </ion-segment-button>
+              </ion-segment>
+            </ng-template>
+            <ion-grid>
+              <ion-row>
+                <ion-col size-xs="12" size-md="4" push-md="8">
+                  <div *ngIf="fine$ | async as fine; else loading">
+                    <ion-button class="button-margin" expand="full" color="secondary" (click)="openKoha()">
+                      Open My Library
+                      <ion-icon name="open-outline" slot="end"></ion-icon>
+                    </ion-button>
 
-        <ion-col size-xs="12" size-md="4" push-md="8">
-          <div *ngIf="fine$ | async as fine; else loading">
-            <ion-button class="button-margin" expand="full" color="success" (click)="openKoha()">Open My Library
-            </ion-button>
+                    <ion-card [color]="+fine.fine === 0 ? 'success' : 'danger'">
+                      <ion-card-content>
+                        <ion-row class="ion-text-center">
+                          <ion-col>
+                            <h3 class="glob-text-bold fine">
+                              RM{{ +fine.fine }}
+                            </h3>
+                            <p>Library Fine</p>
+                          </ion-col>
+                        </ion-row>
+                      </ion-card-content>
+                    </ion-card>
+                  </div>
 
-            <ion-card [color]="+fine.fine === 0 ? 'success' : 'danger'">
-              <ion-card-content>
-                <ion-row class="ion-text-center">
-                  <ion-col>
-                    <h3 class="glob-text-bold fine">
-                      RM{{ +fine.fine }}
-                    </h3>
-                    <p>Library Fine</p>
-                  </ion-col>
-                </ion-row>
-              </ion-card-content>
-            </ion-card>
-          </div>
+                  <ng-template #loading>
+                    <ion-card>
+                      <h3>
+                        <loading-spinner></loading-spinner>
+                      </h3>
+                    </ion-card>
+                  </ng-template>
+                </ion-col>
 
-          <ng-template #loading>
-            <ion-card>
-              <h3>
-                <loading-spinner></loading-spinner>
-              </h3>
-            </ion-card>
-          </ng-template>
+                <ion-col size-xs="12" size-md="8" pull-md="4">
+                  <ng-container [ngSwitch]="selectedSegment">
+
+                    <ng-container *ngSwitchCase="'checkouts'">
+                      <div *ngIf="checkouts$ | async as checkouts; else loadingCardList">
+                        <ng-template [ngIf]="checkouts.length > 0" [ngIfElse]="noBooks">
+                          <ion-card *ngFor="let checkout of checkouts">
+                            <ion-card-header color="primary">
+                              <ion-card-title>
+                                {{ checkout.title }}
+                              </ion-card-title>
+                              <ion-card-subtitle>
+                                {{ checkout.author }}
+                              </ion-card-subtitle>
+                            </ion-card-header>
+                            <ion-card-content>
+                              <ion-list>
+                                <ion-item lines="none">
+                                  <ion-label>
+                                    Checkout Date:
+                                  </ion-label>
+                                  <ion-badge color="success" slot="end">
+                                    {{ checkout.issue_date }}
+                                  </ion-badge>
+                                </ion-item>
+                                <ion-item lines="none">
+                                  <ion-label>
+                                    Due Date:
+                                  </ion-label>
+                                  <ion-badge color="success" slot="end">
+                                    in {{ checkout.date_due | daysLeft }}
+                                  </ion-badge>
+                                </ion-item>
+                              </ion-list>
+                            </ion-card-content>
+                          </ion-card>
+                        </ng-template>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="'history'">
+                      <div *ngIf="historyList$ | async as historyList; else loadingCardList">
+                        <ng-template [ngIf]="historyList.length > 0" [ngIfElse]="noBooks">
+                          <ion-card *ngFor="let history of historyList">
+                            <ion-card-header color="primary">
+                              <ion-card-title>
+                                {{ history.title }}
+                              </ion-card-title>
+                              <ion-card-subtitle>
+                                {{ history.author }}
+                              </ion-card-subtitle>
+                            </ion-card-header>
+                            <ion-card-content>
+                              <ion-list>
+                                <ion-item lines="none">
+                                  <ion-label>
+                                    Checkout Date:
+                                  </ion-label>
+                                  <ion-badge color="success" slot="end">
+                                    {{ history.issue_date }}
+                                  </ion-badge>
+                                </ion-item>
+                                <ion-item lines="none">
+                                  <ion-label>
+                                    Return Date:
+                                  </ion-label>
+                                  <ion-badge color="success" slot="end">
+                                    {{ history.return_date }}
+                                  </ion-badge>
+                                </ion-item>
+                              </ion-list>
+                            </ion-card-content>
+                          </ion-card>
+                        </ng-template>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="'latest-additions'">
+                      <div *ngIf="recentAdditions$ | async as recentAdditions; else loadingList" class="additions">
+                        <ion-list *ngFor="let addition of recentAdditions" lines="none">
+                          <ion-item lines="full">
+                            <ion-label>
+                              <ion-text color="primary">
+                                <h3 class="glob-text-bold">{{ addition.title }}</h3>
+                              </ion-text>
+                              <p>{{ addition.author }}</p>
+                            </ion-label>
+                          </ion-item>
+                        </ion-list>
+                      </div>
+                    </ng-container>
+
+                    <ng-template #noBooks>
+                      <ion-card>
+                        <ion-card-content>
+                          <app-message-with-svg imageUrl="assets/img/no-books.svg" messageTitle="No books found!"
+                            messageContent="Perhaps it is a good time to grab one :)" wrapperSize="6"
+                            wrapperMarginTop="30px" wrapperOffset="3"></app-message-with-svg>
+                        </ion-card-content>
+                      </ion-card>
+                    </ng-template>
+
+                    <ng-template #loadingCardList>
+                      <ion-card>
+                        <ion-card-header>
+                          <ion-card-title>
+                            <ion-skeleton-text animation style="width: 70%"></ion-skeleton-text>
+                          </ion-card-title>
+                          <ion-card-subtitle>
+                            <ion-skeleton-text animation style="width: 30%"></ion-skeleton-text>
+                          </ion-card-subtitle>
+                        </ion-card-header>
+                        <ion-card-content>
+                          <ion-list>
+                            <ion-item lines="none">
+                              <ion-label>
+                                <ion-skeleton-text animation></ion-skeleton-text>
+                              </ion-label>
+                              <ion-label slot="end">
+                                <ion-skeleton-text animation></ion-skeleton-text>
+                              </ion-label>
+                            </ion-item>
+                            <ion-item lines="none">
+                              <ion-label>
+                                <ion-skeleton-text animation></ion-skeleton-text>
+                              </ion-label>
+                              <ion-label slot="end">
+                                <ion-skeleton-text animation></ion-skeleton-text>
+                              </ion-label>
+                            </ion-item>
+                          </ion-list>
+                        </ion-card-content>
+                      </ion-card>
+                    </ng-template>
+
+                    <ng-template #loadingList>
+                      <div class="additions">
+                        <ion-list lines="none">
+                          <ion-item>
+                            <ion-label>
+                              <ion-skeleton-text animation style="width: 70%"></ion-skeleton-text>
+                              <ion-skeleton-text animation style="width: 30%"></ion-skeleton-text>
+                            </ion-label>
+                          </ion-item>
+                        </ion-list>
+                      </div>
+                    </ng-template>
+
+                  </ng-container>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card>
         </ion-col>
 
-        <ion-col size-xs="12" size-md="8" pull-md="4">
-          <ng-container [ngSwitch]="selectedSegment">
-
-            <ng-container *ngSwitchCase="'checkouts'">
-              <div *ngIf="checkouts$ | async as checkouts; else loadingCardList">
-                <ng-template [ngIf]="checkouts.length > 0" [ngIfElse]="noBooks">
-                  <ion-card *ngFor="let checkout of checkouts">
-                    <ion-card-header color="primary">
-                      <ion-card-title>
-                        {{ checkout.title }}
-                      </ion-card-title>
-                      <ion-card-subtitle>
-                        {{ checkout.author }}
-                      </ion-card-subtitle>
-                    </ion-card-header>
-                    <ion-card-content>
-                      <ion-list>
-                        <ion-item lines="none">
-                          <ion-label>
-                            Checkout Date:
-                          </ion-label>
-                          <ion-badge color="success" slot="end">
-                            {{ checkout.issue_date }}
-                          </ion-badge>
-                        </ion-item>
-                        <ion-item lines="none">
-                          <ion-label>
-                            Due Date:
-                          </ion-label>
-                          <ion-badge color="success" slot="end">
-                            in {{ checkout.date_due | daysLeft }}
-                          </ion-badge>
-                        </ion-item>
-                      </ion-list>
-                    </ion-card-content>
-                  </ion-card>
-                </ng-template>
-              </div>
-            </ng-container>
-
-            <ng-container *ngSwitchCase="'history'">
-              <div *ngIf="historyList$ | async as historyList; else loadingCardList">
-                <ng-template [ngIf]="historyList.length > 0" [ngIfElse]="noBooks">
-                  <ion-card *ngFor="let history of historyList">
-                    <ion-card-header color="primary">
-                      <ion-card-title>
-                        {{ history.title }}
-                      </ion-card-title>
-                      <ion-card-subtitle>
-                        {{ history.author }}
-                      </ion-card-subtitle>
-                    </ion-card-header>
-                    <ion-card-content>
-                      <ion-list>
-                        <ion-item lines="none">
-                          <ion-label>
-                            Checkout Date:
-                          </ion-label>
-                          <ion-badge color="success" slot="end">
-                            {{ history.issue_date }}
-                          </ion-badge>
-                        </ion-item>
-                        <ion-item lines="none">
-                          <ion-label>
-                            Return Date:
-                          </ion-label>
-                          <ion-badge color="success" slot="end">
-                            {{ history.return_date }}
-                          </ion-badge>
-                        </ion-item>
-                      </ion-list>
-                    </ion-card-content>
-                  </ion-card>
-                </ng-template>
-              </div>
-            </ng-container>
-
-            <ng-container *ngSwitchCase="'latest-additions'">
-              <div *ngIf="recentAdditions$ | async as recentAdditions; else loadingList" class="additions">
-                <ion-list *ngFor="let addition of recentAdditions" lines="none">
-                  <ion-item lines="full">
-                    <ion-label>
-                      <ion-text color="primary">
-                        <h3 class="glob-text-bold">{{ addition.title }}</h3>
-                      </ion-text>
-                      <p>{{ addition.author }}</p>
-                    </ion-label>
-                  </ion-item>
-                </ion-list>
-              </div>
-            </ng-container>
-
-            <ng-template #noBooks>
-              <ion-card>
-                <ion-card-content>
-                  <app-message-with-svg imageUrl="assets/img/no-books.svg" messageTitle="No books found!"
-                    messageContent="Perhaps it is a good time to grab one :)" wrapperSize="6" wrapperMarginTop="30px"
-                    wrapperOffset="3"></app-message-with-svg>
-                </ion-card-content>
-              </ion-card>
-            </ng-template>
-
-            <ng-template #loadingCardList>
-              <ion-card>
-                <ion-card-header>
-                  <ion-card-title>
-                    <ion-skeleton-text animation style="width: 70%"></ion-skeleton-text>
-                  </ion-card-title>
-                  <ion-card-subtitle>
-                    <ion-skeleton-text animation style="width: 30%"></ion-skeleton-text>
-                  </ion-card-subtitle>
-                </ion-card-header>
-                <ion-card-content>
-                  <ion-list>
-                    <ion-item lines="none">
-                      <ion-label>
-                        <ion-skeleton-text animation></ion-skeleton-text>
-                      </ion-label>
-                      <ion-label slot="end">
-                        <ion-skeleton-text animation></ion-skeleton-text>
-                      </ion-label>
-                    </ion-item>
-                    <ion-item lines="none">
-                      <ion-label>
-                        <ion-skeleton-text animation></ion-skeleton-text>
-                      </ion-label>
-                      <ion-label slot="end">
-                        <ion-skeleton-text animation></ion-skeleton-text>
-                      </ion-label>
-                    </ion-item>
-                  </ion-list>
-                </ion-card-content>
-              </ion-card>
-            </ng-template>
-
-            <ng-template #loadingList>
-              <div class="additions">
-                <ion-list lines="none">
-                  <ion-item>
-                    <ion-label>
-                      <ion-skeleton-text animation style="width: 70%"></ion-skeleton-text>
-                      <ion-skeleton-text animation style="width: 30%"></ion-skeleton-text>
-                    </ion-label>
-                  </ion-item>
-                </ion-list>
-              </div>
-            </ng-template>
-
-          </ng-container>
-        </ion-col>
       </ion-row>
     </ion-grid>
   </div>
