@@ -2,7 +2,7 @@ import { HttpParams } from '@angular/common/http';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, LoadingController, ModalController, Platform, PopoverController, ToastController } from '@ionic/angular';
-import { addYears, format, parse } from 'date-fns';
+import { addYears, format, parse, parseISO } from 'date-fns';
 // import { Storage } from '@ionic/storage';
 import { CalendarComponentOptions } from 'ion2-calendar';
 import { Observable, Subscription } from 'rxjs';
@@ -211,9 +211,9 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
 
           filteredExamSchedule.forEach(examSchedule =>
             examSchedule.MODULE_CODE === this.examScheduleForm.get('module').value &&
-            format(new Date(examSchedule.FROMDATE), 'dd-MMM-yyyy') === this.examScheduleForm.get('publicationDate').value.from &&
-            format(new Date(examSchedule.TILLDATE), 'dd-MMM-yyyy') === this.examScheduleForm.get('publicationDate').value.to ?
-            isDuplicated = true : null
+              format(new Date(examSchedule.FROMDATE), 'dd-MMM-yyyy') === this.examScheduleForm.get('publicationDate').value.from &&
+              format(new Date(examSchedule.TILLDATE), 'dd-MMM-yyyy') === this.examScheduleForm.get('publicationDate').value.to ?
+              isDuplicated = true : null
           );
         })
       ).subscribe(_ => {
@@ -231,8 +231,12 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
           module: this.examScheduleForm.get('module').value,
           venue: '',
           dateday: format(new Date(this.examScheduleForm.get('date').value), 'dd-MMM-yyyy').toUpperCase(),
-          time: this.onEdit ? `${format(parse(this.examScheduleForm.get('startTime').value, 'HH:mm', new Date()), 'h:mm a')} till ${format(parse(this.examScheduleForm.get('endTime').value, 'HH:mm', new Date()), 'h:mm a')}` :
-                              `${format(new Date(this.examScheduleForm.get('startTime').value), 'h:mm a')} till ${format(new Date(this.examScheduleForm.get('endTime').value), 'h:mm a')}`,
+          time: !this.isCordova ?
+            (this.onEdit ? `${format(parse(this.examScheduleForm.get('startTime').value, 'HH:mm', new Date()), 'h:mm a')} till ${format(parse(this.examScheduleForm.get('endTime').value, 'HH:mm', new Date()), 'h:mm a')}` :
+              `${format(parse(this.examScheduleForm.get('startTime').value, 'HH:mm', new Date()), 'h:mm a')} till ${format(parse(this.examScheduleForm.get('endTime').value, 'HH:mm', new Date()), 'h:mm a')}`)
+
+            : (this.onEdit ? `${format(parseISO(this.examScheduleForm.get('startTime').value), 'h:mm a')} till ${format(parseISO(this.examScheduleForm.get('endTime').value), 'h:mm a')}` :
+              `${format(new Date(this.examScheduleForm.get('startTime').value), 'h:mm a')} till ${format(new Date(this.examScheduleForm.get('endTime').value), 'h:mm a')}`),
           remarks: this.examScheduleForm.get('remarks').value,
           status: 'Inactive',
           result_date: '',
@@ -248,26 +252,26 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
             body,
             headers
           })
-          .subscribe({
-            next: () => {
-              this.notifierService.examScheduleUpdated.next('SUCCESS');
-              this.showToastMessage(
-                'Exam Schedule updated successfully!',
-                'success'
-              );
-            },
-            error: (err) => {
-              this.dismissLoading();
-              this.showToastMessage(
-                err.status + ': ' + err.error.error,
-                'danger'
-              );
-            },
-            complete: () => {
-              this.dismissLoading();
-              this.modalCtrl.dismiss('Wrapped Up!');
-            }
-          });
+            .subscribe({
+              next: () => {
+                this.notifierService.examScheduleUpdated.next('SUCCESS');
+                this.showToastMessage(
+                  'Exam Schedule updated successfully!',
+                  'success'
+                );
+              },
+              error: (err) => {
+                this.dismissLoading();
+                this.showToastMessage(
+                  err.status + ': ' + err.error.error,
+                  'danger'
+                );
+              },
+              complete: () => {
+                this.dismissLoading();
+                this.modalCtrl.dismiss('Wrapped Up!');
+              }
+            });
         } else {
           this.alertCtrl.create({
             header: 'Adding new exam schedule',
