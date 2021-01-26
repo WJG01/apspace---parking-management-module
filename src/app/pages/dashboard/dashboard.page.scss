@@ -120,6 +120,30 @@ ion-col[scrolly=true] {
   }
 }
 
+.locations{
+  font-weight: bold; 
+  font-size: 1.2em;
+}
+
+.color-indicator{
+  width:100%; 
+  height:100%; 
+  border-radius: 5px 0px 0px 5px;
+}
+
+.schedule-container{
+  background-color: var(--ion-color-light);
+  border-radius: 0px 5px 5px 0px;
+
+  .latest-time{
+    font-weight: bold;
+  }
+
+  .timings{
+    font-size: 1.2em;
+  }
+}
+
 .image-slider {
   position: relative;
   .swiper-container {
