@@ -418,14 +418,14 @@
                           <!--Indicates Title and Bus Timing-->
                           <ion-col size="11.5">
                             <div class="ion-padding schedule-container">
-                              <h3 class="locations">
+                              <h3 class="locations glob-text-bold">
                                 <span class="ion-padding-end">{{trip.trip_from}}</span>
                                 <ion-icon name="caret-forward-outline" class="ion-padding-end"></ion-icon>
                                 <span>{{trip.trip_to}}</span>
                               </h3>
                               <ng-container *ngIf="trip.times.length > 0; else tripsEnded">
                                 <p class="timings">
-                                  <span class="ion-padding-end latest-time"
+                                  <span class="ion-padding-end latest-time glob-text-bold"
                                     *ngIf="trip.times[0]">{{trip.times[0]}}</span>
                                   <span class="ion-padding-end" *ngIf="trip.times[1]">{{trip.times[1]}}</span>
                                   <span class="ion-padding-end" *ngIf="trip.times[2]">{{trip.times[2]}}</span>
