@@ -374,6 +374,29 @@
               </ng-container>
             </ion-card-content>
           </ion-card>
+        </ion-col>
+
+        <ion-col size-xs="12" size-md="7" class="ion-padding">
+          <section class="image-slider">
+            <ion-slides #imageSliderSlides pager="true" [options]="imageSliderOpts">
+              <ng-container *ngIf="noticeBoardItems$ | async as noticeBoardItems">
+                <ion-slide *ngFor="let noticeBoardItem of noticeBoardItems">
+                  <div class="picture">
+                    <a href="{{ noticeBoardItem['post-meta-fields']['slideshow_url'] && noticeBoardItem['post-meta-fields']['slideshow_url'][0] ? noticeBoardItem['post-meta-fields']['slideshow_url'][0] : noticeBoardItem.link }}"
+                      target="_blank"> <img src="{{ noticeBoardItem.featured_media_source[0].source_url }}" alt="" />
+                    </a>
+                  </div>
+                </ion-slide>
+              </ng-container>
+            </ion-slides>
+            <div class="swiper-button-next">
+              <ion-icon name="chevron-forward-outline" size="large" tappable (click)="nextSlide()">
+              </ion-icon>
+            </div>
+            <div class="swiper-button-prev">
+              <ion-icon name="chevron-back-outline" tappable (click)="prevSlide()" size="large"></ion-icon>
+            </div>
+          </section>
 
           <!--Bus Schedule Card-->
           <ion-card class="ion-no-margin ion-margin-top">
@@ -400,12 +423,20 @@
                                 <ion-icon name="caret-forward-outline" class="ion-padding-end"></ion-icon>
                                 <span>{{trip.trip_to}}</span>
                               </h3>
-                              <p class="timings">
-                                <span class="ion-padding-end latest-time" *ngIf="trip.times[0]">{{trip.times[0]}}</span>
-                                <span class="ion-padding-end" *ngIf="trip.times[1]">{{trip.times[1]}}</span>
-                                <span class="ion-padding-end" *ngIf="trip.times[2]">{{trip.times[2]}}</span>
-                                <span class="ion-padding-end" *ngIf="trip.times[3]">{{trip.times[3]}}</span>
-                              </p>
+                              <ng-container *ngIf="trip.times.length > 0; else tripsEnded">
+                                <p class="timings">
+                                  <span class="ion-padding-end latest-time"
+                                    *ngIf="trip.times[0]">{{trip.times[0]}}</span>
+                                  <span class="ion-padding-end" *ngIf="trip.times[1]">{{trip.times[1]}}</span>
+                                  <span class="ion-padding-end" *ngIf="trip.times[2]">{{trip.times[2]}}</span>
+                                  <span class="ion-padding-end" *ngIf="trip.times[3]">{{trip.times[3]}}</span>
+                                </p>
+                              </ng-container>
+                              <ng-template #tripsEnded>
+                                <p class="timings">
+                                  <span class="ion-padding-end">No more trips available for this destination</span>
+                                </p>
+                              </ng-template>
                             </div>
                           </ion-col>
                         </ion-row>
@@ -453,29 +484,7 @@
               </ion-grid>
             </ion-card-content>
           </ion-card>
-        </ion-col>
 
-        <ion-col size-xs="12" size-md="7" class="ion-padding">
-          <section class="image-slider">
-            <ion-slides #imageSliderSlides pager="true" [options]="imageSliderOpts">
-              <ng-container *ngIf="noticeBoardItems$ | async as noticeBoardItems">
-                <ion-slide *ngFor="let noticeBoardItem of noticeBoardItems">
-                  <div class="picture">
-                    <a href="{{ noticeBoardItem['post-meta-fields']['slideshow_url'] && noticeBoardItem['post-meta-fields']['slideshow_url'][0] ? noticeBoardItem['post-meta-fields']['slideshow_url'][0] : noticeBoardItem.link }}"
-                      target="_blank"> <img src="{{ noticeBoardItem.featured_media_source[0].source_url }}" alt="" />
-                    </a>
-                  </div>
-                </ion-slide>
-              </ng-container>
-            </ion-slides>
-            <div class="swiper-button-next">
-              <ion-icon name="chevron-forward-outline" size="large" tappable (click)="nextSlide()">
-              </ion-icon>
-            </div>
-            <div class="swiper-button-prev">
-              <ion-icon name="chevron-back-outline" tappable (click)="prevSlide()" size="large"></ion-icon>
-            </div>
-          </section>
           <ion-card class="apcard ion-no-margin ion-margin-top">
             <ng-container *ngIf="apcardTransaction$ | async">
               <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
@@ -495,6 +504,7 @@
               </ion-card-content>
             </ng-container>
           </ion-card>
+
 
           <ion-card class="apcard ion-no-margin ion-margin-top">
             <ng-container *ngIf="financial$ | async as financialSummary">
