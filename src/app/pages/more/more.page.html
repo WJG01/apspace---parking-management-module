@@ -86,7 +86,7 @@
           <ion-col size="12" size-md="7" pull-md="5">
             <!-- MENU -->
             <div *ngFor="let group of menuFiltered | fuse:term:options | byGroup | keyvalue:noop">
-              <ion-card class="ion-no-margin">
+              <ion-card class="ion-no-margin ion-margin-bottom">
                 <ion-card-header color="light">
                   <ion-card-title>
                     <h3 class="ion-no-margin">{{ group.key }}</h3>
