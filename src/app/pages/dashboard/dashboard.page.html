@@ -423,15 +423,13 @@
                                 <ion-icon name="caret-forward-outline" class="ion-padding-end"></ion-icon>
                                 <span>{{trip.trip_to}}</span>
                               </h3>
-                              <ng-container *ngIf="trip.times.length > 0; else tripsEnded">
-                                <p class="timings">
-                                  <span class="ion-padding-end latest-time glob-text-bold"
-                                    *ngIf="trip.times[0]">{{trip.times[0]}}</span>
-                                  <span class="ion-padding-end" *ngIf="trip.times[1]">{{trip.times[1]}}</span>
-                                  <span class="ion-padding-end" *ngIf="trip.times[2]">{{trip.times[2]}}</span>
-                                  <span class="ion-padding-end" *ngIf="trip.times[3]">{{trip.times[3]}}</span>
-                                </p>
-                              </ng-container>
+                              <p class="timings">
+                                <span class="ion-padding-end latest-time glob-text-bold"
+                                  *ngIf="trip.times[0]">{{trip.times[0]}}</span>
+                                <span class="ion-padding-end" *ngIf="trip.times[1]">{{trip.times[1]}}</span>
+                                <span class="ion-padding-end" *ngIf="trip.times[2]">{{trip.times[2]}}</span>
+                                <span class="ion-padding-end" *ngIf="trip.times[3]">{{trip.times[3]}}</span>
+                              </p>
                             </div>
                           </ion-col>
                         </ion-row>
