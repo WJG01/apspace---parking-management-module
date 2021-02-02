@@ -219,14 +219,14 @@ export class DashboardPage implements OnInit {
     contentPadding: true
   };
 
-  // TODAYS TRIPS
+  // UPCOMING TRIPS
   upcomingTrips$: Observable<any>;
   showSetLocationsSettings = false;
   locations: APULocation[];
   busCardConfigurations: DashboardCardComponentConfigurations = {
     cardTitle: 'Upcoming Trips',
     contentPadding: false,
-    withOptionsButton: false,
+    withOptionsButton: false
   };
 
   // NEWS
@@ -1113,25 +1113,27 @@ export class DashboardPage implements OnInit {
       );
   }
 
-  // UPCOMING TRIPS FUNCTIONS
-  getUpcomingTrips(firstLocation: string, secondLocation: string): any {
+
+
+  // UPCOMING TRIPS
+  getUpcomingTrips(firstLocation: string, secondLocation: string) {
     if (!firstLocation || !secondLocation) {
       this.showSetLocationsSettings = true;
       return of({});
     }
     this.showSetLocationsSettings = false;
-    const dateNow = new Date();
-    return this.ws.get<BusTrips>(`/transix/trips/applicable`, { auth: false }).pipe(
+    const currentDate = new Date();
+    return this.ws.get<BusTrips>('/transix/trips/applicable', { auth: false }).pipe(
       map(res => res.trips),
-      map(trips => { // FILTER TRIPS TO UPCOMING ONLY FROM THE SELCETED LOCATIONS
+      map(trips => {
         return trips.filter(trip => {
-          return parse(trip.trip_time, 'kk:mm', new Date()) >= dateNow
-            && trip.trip_day === this.getTodayDay(dateNow)
+          return parse(trip.trip_time, 'kk:mm', new Date()) >= currentDate
+            && trip.trip_day === this.getTodayDay(currentDate)
             && ((trip.trip_from === firstLocation && trip.trip_to === secondLocation)
               || (trip.trip_from === secondLocation && trip.trip_to === firstLocation));
         });
       }),
-      map(trips => { // GET THE NEEDED DATA ONLY
+      map(trips => {
         return trips.reduce(
           (prev, curr) => {
             prev[curr.trip_from + curr.trip_to] = prev[curr.trip_from + curr.trip_to] || {
@@ -1147,13 +1149,14 @@ export class DashboardPage implements OnInit {
           {}
         );
       }),
-      map(trips => { // CONVERT OBJECT TO ARRAY
+      map(trips => {
         return Object.keys(trips).map(
           key => trips[key]
         );
       })
     );
   }
+
 
   getLocations(refresher: boolean) {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
@@ -1163,6 +1166,7 @@ export class DashboardPage implements OnInit {
     ).subscribe();
   }
 
+
   getLocationColor(locationName: string) {
     for (const location of this.locations) {
       if (location.location_name === locationName) {
@@ -1170,6 +1174,7 @@ export class DashboardPage implements OnInit {
       }
     }
   }
+
 
   // QUICK ACCESS FUNCTIONS
   openMoodle() {

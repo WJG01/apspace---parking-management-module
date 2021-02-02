@@ -375,6 +375,7 @@
             </ion-card-content>
           </ion-card>
         </ion-col>
+
         <ion-col size-xs="12" size-md="7" class="ion-padding">
           <section class="image-slider">
             <ion-slides #imageSliderSlides pager="true" [options]="imageSliderOpts">
@@ -396,6 +397,108 @@
               <ion-icon name="chevron-back-outline" tappable (click)="prevSlide()" size="large"></ion-icon>
             </div>
           </section>
+
+          <!--Bus Schedule Card-->
+          <ion-card class="ion-no-margin ion-margin-top">
+            <ion-card-header class="ion-padding">
+              <ion-card-title color="primary">Upcoming Trips</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-grid>
+                <!--First Row-->
+                <ng-container *ngIf="(upcomingTrips$ | async) as upcomingTrips; else loadingTrips">
+                  <ng-container *ngIf="!showSetLocationsSettings; else locationsSettings">
+                    <ng-container *ngIf="upcomingTrips.length > 0; else noTrips">
+                      <div *ngFor="let trip of upcomingTrips">
+                        <ion-row class="ion-padding-bottom">
+                          <ion-col size=".5" class="ion-no-padding">
+                            <div class="color-indicator" [style.background]="trip.trip_from_color">
+                            </div>
+                          </ion-col>
+                          <!--Indicates Title and Bus Timing-->
+                          <ion-col size="11.5">
+                            <div class="ion-padding schedule-container">
+                              <h3 class="locations glob-text-bold">
+                                <span class="ion-padding-end">{{trip.trip_from}}</span>
+                                <ion-icon name="caret-forward-outline" class="ion-padding-end"></ion-icon>
+                                <span>{{trip.trip_to}}</span>
+                              </h3>
+                              <p class="timings">
+                                <span class="ion-padding-end latest-time glob-text-bold"
+                                  *ngIf="trip.times[0]">{{trip.times[0]}}</span>
+                                <span class="ion-padding-end" *ngIf="trip.times[1]">{{trip.times[1]}}</span>
+                                <span class="ion-padding-end" *ngIf="trip.times[2]">{{trip.times[2]}}</span>
+                                <span class="ion-padding-end" *ngIf="trip.times[3]">{{trip.times[3]}}</span>
+                              </p>
+                            </div>
+                          </ion-col>
+                        </ion-row>
+                        <ng-container *ngIf="upcomingTrips.length < 2">
+                          <ion-row class="ion-padding-bottom">
+                            <ion-col size=".5" class="ion-no-padding">
+                              <div class="color-indicator" [style.background]="trip.trip_to_color">
+                              </div>
+                            </ion-col>
+                            <!--Indicates Title and Bus Timing-->
+                            <ion-col size="11.5">
+                              <div class="ion-padding schedule-container">
+                                <h3 class="locations glob-text-bold">
+                                  <span class="ion-padding-end">{{trip.trip_to}}</span>
+                                  <ion-icon name="caret-forward-outline" class="ion-padding-end"></ion-icon>
+                                  <span>{{trip.trip_from}}</span>
+                                </h3>
+                                <p class="timings">
+                                  <span class="ion-padding-end latest-time">No more trips available for this destination</span>
+                                </p>
+                              </div>
+                            </ion-col>
+                          </ion-row>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+                    <ng-template #noTrips>
+                      <app-message-with-svg messageTitle="No More Trips!"
+                        messageContent="No more trips for the selected destinations." imageUrl="assets/img/sad.svg"
+                        wrapperOffset="3" wrapperSize="6">
+                      </app-message-with-svg>
+                    </ng-template>
+                  </ng-container>
+                  <ng-template #locationsSettings>
+                    <app-message-with-svg
+                      messageTitle="Choose Locations to view the upcoming trips from/to those locations!"
+                      messageContent="You can configure this section from the settings page, under the bus shuttle services card."
+                      imageUrl="assets/img/config.svg" wrapperOffset="3" wrapperSize="6">
+                    </app-message-with-svg>
+                    <ion-grid>
+                      <ion-row>
+                        <ion-col size="10" offset="1">
+                          <ion-button routerLink="/settings" routerDirection="forward" class="colored-background"
+                            expand="block">
+                            Open Settings
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </ng-template>
+                </ng-container>
+                <ng-template #loadingTrips>
+                  <ion-skeleton-text class="ion-margin-top ion-margin-bottom" style="width: 50%; 
+                  line-height: 30px;" animated>
+                  </ion-skeleton-text>
+                  <ion-skeleton-text class="ion-margin-top ion-margin-bottom" style="width: 50%; 
+                  line-height: 30px;" animated>
+                  </ion-skeleton-text>
+                  <ion-skeleton-text class="ion-margin-top ion-margin-bottom" style="width: 50%; 
+                  line-height: 30px;" animated>
+                  </ion-skeleton-text>
+                  <ion-skeleton-text class="ion-margin-top ion-margin-bottom" style="width: 50%; 
+                  line-height: 30px;" animated>
+                  </ion-skeleton-text>
+                </ng-template>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+
           <ion-card class="apcard ion-no-margin ion-margin-top">
             <ng-container *ngIf="apcardTransaction$ | async">
               <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
@@ -415,6 +518,7 @@
               </ion-card-content>
             </ng-container>
           </ion-card>
+
 
           <ion-card class="apcard ion-no-margin ion-margin-top">
             <ng-container *ngIf="financial$ | async as financialSummary">
