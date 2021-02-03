@@ -16,8 +16,10 @@ export class EndtimePipe implements PipeTransform {
    * @param timetable Lecturer timetable
    * @returns endtime End time (epoch) calculated from start time and duration
    */
-  transform(timetable: LecturerTimetable): number {
-    return Date.parse(timetable.time) + timetable.duration * 1000;
+  transform(timetable: LecturerTimetable): string {
+    const d = Date.parse(timetable.time) + timetable.duration * 1000;
+    const malaysianTimeIsoString = new Date(d + (480 * 60000)).toISOString().replace('.000Z', '+08:00');
+    return malaysianTimeIsoString;
   }
 
 }

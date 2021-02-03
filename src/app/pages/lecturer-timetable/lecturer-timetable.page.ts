@@ -4,9 +4,10 @@ import { NavigationExtras, Router } from '@angular/router';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { ActionSheetController, IonRefresher } from '@ionic/angular';
 import { formatISO } from 'date-fns';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { finalize, switchMap, tap } from 'rxjs/operators';
 
+import { NotifierService } from 'src/app/shared/notifier/notifier.service';
 import { LecturerTimetable, StaffProfile } from '../../interfaces';
 import { SettingsService, WsApiService } from '../../services';
 
@@ -29,6 +30,9 @@ export class LecturerTimetablePage implements OnInit {
   selectedDate: Date;
   availableDate: Date[];
   availableDays: string[]; // wday[d.getDay()] for availableDate
+  timeFormatChangeFlag: boolean;
+  notification: Subscription;
+
 
   viewWeek: boolean; // weekly or daily display
 
@@ -43,7 +47,8 @@ export class LecturerTimetablePage implements OnInit {
     private router: Router,
     private settings: SettingsService,
     private ws: WsApiService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private notifierService: NotifierService,
   ) { }
 
   ngOnInit() {
@@ -61,6 +66,13 @@ export class LecturerTimetablePage implements OnInit {
     this.viewWeek = !!this.settings.get('viewWeek');
 
     this.doRefresh();
+
+    this.notification = this.notifierService.timeFormatUpdated.subscribe(data => {
+      if (data && data === 'SUCCESS') {
+        this.timeFormatChangeFlag = !this.timeFormatChangeFlag;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 
   presentActionSheet(labels: string[], handler: (_: string) => void) {

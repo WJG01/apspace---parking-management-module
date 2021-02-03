@@ -10,6 +10,7 @@ import { EndtimePipe } from './endtime.pipe';
 import { LecturerTimetablePage } from './lecturer-timetable.page';
 import { ThedayPipe } from './theday.pipe';
 import { TheweekPipe } from './theweek.pipe';
+import { TimeParserPipe } from './time-parser.pipe';
 
 const routes: Routes = [
   {
@@ -32,6 +33,7 @@ const routes: Routes = [
     ThedayPipe,
     TheweekPipe,
     EndtimePipe,
+    TimeParserPipe
   ]
 })
 export class LecturerTimetablePageModule {}
