@@ -371,6 +371,15 @@ export class DashboardPage implements OnInit {
 
       this.holidays$ = this.getHolidays(false);
 
+      combineLatest([
+        this.settings.get$('busFirstLocation'),
+        this.settings.get$('busSecondLocation'),
+      ]).subscribe(([busFirstLocation, busSecondLocation]) => {
+        this.firstLocation = busFirstLocation;
+        this.secondLocation = busSecondLocation;
+        this.upcomingTrips$ = this.getUpcomingTrips(busFirstLocation, busSecondLocation);
+      });
+
       if (this.platform.is('cordova')) {
         this.runCodeOnReceivingNotification(); // notifications
       }
