@@ -134,9 +134,32 @@ ion-col[scrolly=true] {
   background-color: var(--ion-color-light);
   border-radius: 0px 5px 5px 0px;
 
-  .timings{
-    font-size: 1.2em;
+
+  
+  .timing-1{
+    font-size: 1.4em;
   }
+
+  .timing-2{
+    font-size: 1.2em;
+    opacity: .6;
+  }
+
+  .timing-3{
+    font-size: 1em;
+    opacity: .6;
+  }
+
+  .timing-4{
+    font-size: .9em;
+    opacity: .6;
+  }
+
+  .bus-icon{
+    color: #fff;
+    font-size: 1.5em;
+  }
+
 }
 
 .image-slider {
