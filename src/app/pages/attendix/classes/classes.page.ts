@@ -311,7 +311,17 @@ export class ClassesPage implements OnInit {
   /** Change date. */
   changeDate(date: string) {
     this.date = formatISO(new Date(date), { representation: 'date' });
-    const d = new Date();
+    const newDate = new Date();
+
+    const localToUtcOffset = (newDate.getTimezoneOffset());
+    const localParsedDate = Date.parse(newDate.toString());
+
+    const utcDate = new Date(localParsedDate + (localToUtcOffset * 60000));
+    const utcParsedDate = Date.parse(utcDate.toUTCString());
+
+    const d = new Date(utcParsedDate + (480 * 60000));
+
+    // console.log('malaysianTimeIsoString: ', malaysianTimeIsoString);
     if (isoDate(new Date(date)) === isoDate(d)) { // current day
       const nowMins = d.getHours() * 60 + d.getMinutes();
       const firstFutureClass = this.timings.find(time => nowMins < parseTime(time));

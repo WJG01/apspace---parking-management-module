@@ -34,7 +34,7 @@
                     </ion-col>
                     <ion-col size="12">
                       <ion-item>
-                        <ion-label position="stacked">Date</ion-label>
+                        <ion-label position="stacked">Date <ion-text color="tertiary">(Malaysian Time)</ion-text></ion-label>
                         <ion-datetime [ngModel]="date" (ngModelChange)="changeDate(date = $event)" [min]="minDate"
                           [max]="maxDate" placeholder="Click to select" displayFormat="YYYY-MM-DD"
                           pickerFormat="DD MMM YYYY"></ion-datetime>
@@ -45,7 +45,7 @@
                   <ion-row>
                     <ion-col size="12" size-md="6">
                       <ion-item lines="full">
-                        <ion-label position="stacked">Start Time</ion-label>
+                        <ion-label position="stacked">Start Time <ion-text color="tertiary">(Malaysian Time)</ion-text></ion-label>
                         <ion-select [disabled]="!date" [(ngModel)]="startTime"
                           (ngModelChange)="changeStartTime(startTime = $event)" interface="popover"
                           placeholder="Start Time">
