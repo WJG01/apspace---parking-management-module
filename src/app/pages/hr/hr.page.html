@@ -14,10 +14,6 @@
       <ion-row>
         <ion-col size="12" size-md="4" push-md="8">
           <div class="padding-small">
-            <ion-button expand="block" (click)="openHrDownload()" color="secondary">
-              Payslip | EA Form | PCB
-              <ion-icon name="receipt-outline" slot="end"></ion-icon>
-            </ion-button>
             <ion-button expand="block" (click)="openHrSystem()" color="tertiary">
               Open HR System
               <ion-icon slot="end" name="open-outline"></ion-icon>
@@ -108,10 +104,10 @@
                 <ng-template #noHistoryAvailable>
                   <div class="ion-margin-top">
                     <app-message-with-svg messageTitle="Your leave history is not available!"
-                      messageContent="Your leave history is empty. If you believe that there is an issue with that, please contact us via the feedback page"
-                      imageUrl="assets/img/empty.svg" wrapperOffset="3" wrapperSize="6">
-                    </app-message-with-svg>
-                  </div>
+                    messageContent="Your leave history is empty. If you believe that there is an issue with that, please contact us via the feedback page"
+                    imageUrl="assets/img/empty.svg" wrapperOffset="3" wrapperSize="6">
+                  </app-message-with-svg>
+                </div>
                 </ng-template>
                 <ion-list *ngFor="let historyGroupedByMonth of historyList" class="ion-no-padding">
                   <ion-item-divider color="light">
