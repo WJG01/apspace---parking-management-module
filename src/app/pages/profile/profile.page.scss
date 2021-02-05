@@ -169,10 +169,12 @@ ion-img {
 
       .virtual-card-student-name {
         font-size: 0.7rem;
+        line-height: 18px;
       }
 
       .virtual-card-student-ids {
         font-size: 0.59rem !important;
+        line-height: 18px;
       }
     }
   }
@@ -182,9 +184,12 @@ ion-img {
   .virtual-card {
     width: 250px !important;
 
+    .virtual-card-student-details {
+      top: 65px !important;
+    }
+
     .virtual-card-student-img {
       bottom: 0 !important;
-
     }
   }
 

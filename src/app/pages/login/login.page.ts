@@ -463,20 +463,17 @@ export class LoginPage implements OnInit {
   }
 
   openLink(
-    linkName: 'timetable' | 'holiday' | 'moodle' | 'graduation' | 'apkey' | 'apkeyPassword' | 'troubleshooting' | 'apu' | 'aplc' | 'apiit' | 'corporateTraining' | 'facebook' | 'twitter' | 'linkedin' | 'playStore' | 'appStore' | 'privacyPolicy' | 'termsOfUse') {
+    linkName: 'timetable' | 'holiday' | 'moodle' | 'apkey' | 'apkeyPassword' | 'troubleshooting' | 'apu' | 'aplc' | 'apiit' | 'corporateTraining' | 'facebook' | 'twitter' | 'linkedin' | 'playStore' | 'appStore' | 'privacyPolicy' | 'termsOfUse') {
     let url = '';
     switch (linkName) {
       case 'timetable':
         url = 'https://apspace.apu.edu.my/student-timetable';
         break;
       case 'holiday':
-        url = 'https://cdn.webspace.apiit.edu.my/public/2020-04/2020%20APU%20student%20holidays-update.pdf';
+        url = 'https://dif7uuh3zqcps.cloudfront.net/wp-content/uploads/sites/67/2021/01/26095204/2021-APU-student-holidays.pdf';
         break;
       case 'moodle':
         url = 'https://lms2.apiit.edu.my/login/index.php?authCAS=CAS';
-        break;
-      case 'graduation':
-        url = 'https://graduation.sites.apiit.edu.my/';
         break;
       case 'apkey':
         url = 'https://apiit.atlassian.net/servicedesk/customer/portal/4/article/219086900';
