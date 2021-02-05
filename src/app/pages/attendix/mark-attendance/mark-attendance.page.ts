@@ -94,7 +94,16 @@ export class MarkAttendancePage implements OnInit {
     this.resetable = limit <= Date.parse(schedule.date);
 
     // initAttendance and attendance query order based on probability
-    const d = new Date();
+    const newDate = new Date();
+
+    const localToUtcOffset = (newDate.getTimezoneOffset());
+    const localParsedDate = Date.parse(newDate.toString());
+
+    const utcDate = new Date(localParsedDate + (localToUtcOffset * 60000));
+    const utcParsedDate = Date.parse(utcDate.toUTCString());
+
+    const d = new Date(utcParsedDate + (480 * 60000));
+    const d1 = new Date(utcParsedDate + (480 * 60000));
     const nowMins = d.getHours() * 60 + d.getMinutes();
     // if this is the current class
     this.thisClass = schedule.date === isoDate(today)
@@ -148,7 +157,7 @@ export class MarkAttendancePage implements OnInit {
     // stop timer until class ends with 5 minutes buffer
     const hh = +schedule.endTime.slice(0, 2) % 12 + (schedule.endTime.slice(-2) === 'PM' ? 12 : 0);
     const mm = +schedule.endTime.slice(3, 5) + 5;
-    const stopTimer$ = timer(new Date(schedule.date).setHours(hh, mm) - new Date().getTime());
+    const stopTimer$ = timer(d1.setHours(hh, mm) - d.getTime());
     const reload$ = timer(authenticator.timeRemaining() * 1000, authenticator.options.step * 1000).pipe(
       takeUntil(stopTimer$),
       share()
