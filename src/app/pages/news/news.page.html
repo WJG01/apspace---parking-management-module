@@ -25,7 +25,7 @@
                   <div class="slider-image">
                     <a href="{{ noticeBoardItem['post-meta-fields']['slideshow_url'] && noticeBoardItem['post-meta-fields']['slideshow_url'][0] ? noticeBoardItem['post-meta-fields']['slideshow_url'][0] : noticeBoardItem.link }}"
                       target="_blank">
-                      <ion-img src="{{noticeBoardItem.featured_media_source[0].source_url}}" alt="" ></ion-img>
+                      <ion-img src="{{noticeBoardItem.featured_media_source[0].source_url}}" alt=""></ion-img>
                     </a>
                   </div>
                 </ion-card-content>
@@ -62,56 +62,48 @@
         </ion-row>
       </ion-grid>
     </ng-template>
-
-
-
+    <!-- News Card SECTION -->
     <ion-grid>
+      <ion-text color="primary">
+        <h2 class="news-header" class="glob-text-bold ion-text-center">News</h2>
+      </ion-text>
       <ion-row>
-        <ion-col size="12" size-md="8" size-xl="6" offset-md="2" offset-xl="3">
-          <ng-template let-news [ngIf]="news$ | async" [ngIfElse]="loadingNews">
-            <ng-template [ngIf]="news && news.length > 0" [ngIfElse]="nonews">
-              <ion-text color="primary">
-                <h2 class="news-header" class="glob-text-bold ion-text-center ion-padding">News</h2>
-              </ion-text>
-              <div *ngFor="let newsItem of news">
-                <ion-card class="ion-margin" tappable (click)="openModal(newsItem)">
-                  <img [src]="newsItem.url" />
-                  <ion-card-content>
-                    <ion-text>
-                      <p>
-                        {{ newsItem.title }}
-                      </p>
-                    </ion-text>
-                    <ion-text>
-                      <p>
-                        {{ newsItem.updated | dateWithTimezone : 'yyyy-MM-dd HH:mm:ss'}}
-                      </p>
-                    </ion-text>
-                  </ion-card-content>
-                </ion-card>
-              </div>
-            </ng-template>
-
-            <ng-template #nonews>
-              <ion-card class="ion-padding">
+        <ng-template let-news [ngIf]="news$ | async" [ngIfElse]="loadingNews">
+          <ng-template [ngIf]="news && news.length > 0" [ngIfElse]="nonews">
+            <ion-col size="12" size-sm="6" size-lg="4" size-xl="4" *ngFor="let newsItem of news">
+              <ion-card class="ion-no-margin" tappable (click)="openModal(newsItem)">
+                <ion-img [src]="newsItem.url"></ion-img>
+                <div class="text-overlay">
+                  <ion-label>
+                    <h2>{{ newsItem.title }}</h2>
+                    <p>{{ newsItem.updated | dateWithTimezone : 'MMM d, y, h:mm a'}}</p>
+                  </ion-label>
+                </div>
+              </ion-card>
+            </ion-col>
+          </ng-template>
+          <!-- No News -->
+          <ng-template #nonews>
+            <ion-col size="12" size-sm="6" size-lg="4" size-xl="4">
+              <ion-card class="ion-no-margin">
                 <ion-card-content>
-                  <p>No news available</p>
+                  <ion-title>No News Available</ion-title>
                 </ion-card-content>
               </ion-card>
-            </ng-template>
+            </ion-col>
           </ng-template>
-          <ng-template #loadingNews>
-            <div *ngFor="let s of skeletonSettings.numberOfSkeltons">
-              <ion-card tappable>
-                <ion-skeleton-text class="ion-no-margin" animated style="width: 100%; line-height: 200px">
+        </ng-template>
+        <!-- Loading News -->
+        <ng-template #loadingNews>
+          <ion-col size="12" size-sm="6" size-lg="4" size-xl="4" *ngFor="let s of skeletonSettings.numberOfSkeltons">
+            <ion-card class="ion-no-margin">
+              <ion-card-header class="ion-no-padding">
+                <ion-skeleton-text class="ion-no-margin" animated style="height: 120px; width: 100%;">
                 </ion-skeleton-text>
-                <ion-card-content>
-                  <ion-skeleton-text animated style="width: 60%; line-height: 15px"></ion-skeleton-text>
-                </ion-card-content>
-              </ion-card>
-            </div>
-          </ng-template>
-        </ion-col>
+              </ion-card-header>
+            </ion-card>
+          </ion-col>
+        </ng-template>
       </ion-row>
     </ion-grid>
   </div>
