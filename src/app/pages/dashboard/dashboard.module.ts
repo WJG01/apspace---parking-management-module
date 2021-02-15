@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 import { ChartModule } from 'angular2-chartjs';
 
 import { ComponentsModule } from 'src/app/components/components.module';
+import { SharedPipesModule } from '../../shared/shared-pipes.module';
 import { DashboardPage } from './dashboard.page';
 import { DisabledPipe } from './disabled.pipe';
 import { SectionNamePipe } from './section-name.pipe';
@@ -19,15 +20,16 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    IonicModule,
-    RouterModule.forChild(routes),
-    ComponentsModule,
-    ChartModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        IonicModule,
+        RouterModule.forChild(routes),
+        ComponentsModule,
+        ChartModule,
+        SharedPipesModule
+    ],
   declarations: [DashboardPage, DisabledPipe, SectionNamePipe, TimeParserPipe],
 })
 export class DashboardPageModule {}
