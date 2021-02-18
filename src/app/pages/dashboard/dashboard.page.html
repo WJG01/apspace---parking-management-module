@@ -418,7 +418,7 @@
               <ng-container *ngIf="news$ | async as news; else loadingNews">
                 <ng-container *ngIf="news.length > 0; else noNews">
                   <div *ngFor="let newsItem of news">
-                    <ion-item  button="true" lines="none" (click)="openModal(newsItem)">
+                    <ion-item detail="true"  button="true" lines="none" (click)="openModal(newsItem)">
                       <ion-thumbnail slot="start">
                         <img src="{{ newsItem.url }}" />
                       </ion-thumbnail>
@@ -443,7 +443,7 @@
           </ion-card>
 
           <ion-card class="apcard ion-no-margin ion-margin-top">
-            <ng-container *ngIf="apcardTransaction$ | async; else loadingApcardChart">
+            <ng-container *ngIf="apcardTransaction$ | async">
               <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
                 <ion-card-subtitle>
                   {{
@@ -460,14 +460,11 @@
                 </chart>
               </ion-card-content>
             </ng-container>
-            <ng-template #loadingApcardChart>
-              <ion-skeleton-text animated style="height: 200px"></ion-skeleton-text>
-            </ng-template>
           </ion-card>
 
 
           <ion-card class="apcard ion-no-margin ion-margin-top">
-            <ng-container *ngIf="financial$ | async as financialSummary; else loadingFinancialChart">
+            <ng-container *ngIf="financial$ | async as financialSummary">
               <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
                 <ion-card-subtitle>
                   {{
@@ -483,13 +480,10 @@
                 </chart>
               </ion-card-content>
             </ng-container>
-            <ng-template #loadingFinancialChart>
-              <ion-skeleton-text animated style="height: 200px"></ion-skeleton-text>
-            </ng-template>
           </ion-card>
 
           <ion-card class="apcard ion-no-margin ion-margin-top">
-            <ng-container *ngIf="cgpaPerIntake$ | async; else loadingCgpaChart">
+            <ng-container *ngIf="cgpaPerIntake$ | async">
               <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
                 <ion-card-subtitle>
                   {{ "Overall: " + (overallCgpa | number: "1.0-2") }}
@@ -504,9 +498,6 @@
                 </chart>
               </ion-card-content>
             </ng-container>
-            <ng-template #loadingCgpaChart>
-              <ion-skeleton-text animated style="height: 200px"></ion-skeleton-text>
-            </ng-template>
           </ion-card>
         </ion-col>
       </ion-row>
