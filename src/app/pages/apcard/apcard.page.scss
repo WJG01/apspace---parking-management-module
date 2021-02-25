@@ -5,6 +5,9 @@
 
 ion-item {
   border-left: 5px solid;
+  .item-name {
+    white-space: normal;
+  }
   &.credit {
     border-color: var(--ion-color-success);
     ion-icon,

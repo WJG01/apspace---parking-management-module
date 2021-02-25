@@ -178,12 +178,14 @@
                   </ion-item>
                   <ng-template [ngIf]="!disableShakespear">
                     <ion-item [disabled]="!isCordova"  lines="none">
-                      <ion-label>Shake Sensitivity</ion-label>
-                      <ion-range value="1400" color="primary" min="0" max="4" step="1" ticks="true" snaps="true"
-                                 [(ngModel)]="shakeSensitivity" (ionChange)="getSensitivitySlider()">
-                        <ion-icon slot="start" size="small" color="primary" name="trending-down-outline"></ion-icon>
-                        <ion-icon slot="end" color="primary" name="trending-up-outline"></ion-icon>
-                      </ion-range>
+                      <ion-label>
+                        Shake Sensitivity
+                        <ion-range value="1400" color="primary" min="0" max="4" step="1" ticks="true" snaps="true"
+                          [(ngModel)]="shakeSensitivity" (ionChange)="getSensitivitySlider()">
+                          <ion-icon slot="start" size="small" color="primary" name="trending-down-outline"></ion-icon>
+                          <ion-icon slot="end" color="primary" name="trending-up-outline"></ion-icon>
+                        </ion-range>
+                      </ion-label>
                     </ion-item>
                   </ng-template>
                 </ion-item-group>
