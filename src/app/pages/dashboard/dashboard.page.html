@@ -379,14 +379,16 @@
         <ion-col size-xs="12" size-md="7" class="ion-padding">
           <section class="image-slider">
             <ion-slides #imageSliderSlides pager="true" [options]="imageSliderOpts">
-              <ng-container *ngIf="noticeBoardItems$ | async as noticeBoardItems">
-                <ion-slide *ngFor="let noticeBoardItem of noticeBoardItems">
-                  <div class="picture">
-                    <a href="{{ noticeBoardItem['post-meta-fields']['slideshow_url'] && noticeBoardItem['post-meta-fields']['slideshow_url'][0] ? noticeBoardItem['post-meta-fields']['slideshow_url'][0] : noticeBoardItem.link }}"
-                      target="_blank"> <img src="{{ noticeBoardItem.featured_media_source[0].source_url }}" alt="" />
-                    </a>
-                  </div>
-                </ion-slide>
+              <ng-container *ngIf="noticeBoardItems$ | async as noticeBoardItems; else loadingNoticeBoard">
+                <ng-container *ngIf="noticeBoardItems.length > 0; else noNoticeBoardItems">
+                  <ion-slide *ngFor="let noticeBoardItem of noticeBoardItems">
+                    <div class="picture">
+                      <a href="{{ noticeBoardItem['post-meta-fields']['slideshow_url'] && noticeBoardItem['post-meta-fields']['slideshow_url'][0] ? noticeBoardItem['post-meta-fields']['slideshow_url'][0] : noticeBoardItem.link }}"
+                         target="_blank"> <img src="{{ noticeBoardItem.featured_media_source[0].source_url }}" alt="" />
+                      </a>
+                    </div>
+                  </ion-slide>
+                </ng-container>
               </ng-container>
             </ion-slides>
             <div class="swiper-button-next">
@@ -396,7 +398,49 @@
             <div class="swiper-button-prev">
               <ion-icon name="chevron-back-outline" tappable (click)="prevSlide()" size="large"></ion-icon>
             </div>
+            <ng-template #loadingNoticeBoard>
+              <ion-skeleton-text animated style="height: 150px"></ion-skeleton-text>
+            </ng-template>
+            <ng-template #noNoticeBoardItems>
+              <app-message-with-svg wrapperSize="6" wrapperOffset="3" imageUrl="assets/img/empty.svg" messageTitle="Nothing to show yet!" messageContent="Try to come later :)">
+              </app-message-with-svg>
+            </ng-template>
           </section>
+
+
+          <ion-card class="ion-no-margin ion-margin-top">
+            <ion-card-header>
+              <ion-card-title color="primary">
+                News
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="ion-no-padding ion-padding-bottom">
+              <ng-container *ngIf="news$ | async as news; else loadingNews">
+                <ng-container *ngIf="news.length > 0; else noNews">
+                  <div *ngFor="let newsItem of news">
+                    <ion-item detail="true"  button="true" lines="none" (click)="openModal(newsItem)">
+                      <ion-thumbnail slot="start">
+                        <img src="{{ newsItem.url }}" />
+                      </ion-thumbnail>
+                      <ion-label>
+                        <h3 class="ion-text-wrap">{{ newsItem.title }}</h3>
+                        <p>{{ newsItem.updated | dateWithTimezone: 'dd MMM yy' }}</p>
+                      </ion-label>
+                    </ion-item>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </ion-card-content>
+            <ng-template #loadingNews>
+              <ion-item lines="none" *ngFor="let _ of skeletons">
+                <ion-skeleton-text animated style="height: 25px"></ion-skeleton-text>
+              </ion-item>
+            </ng-template>
+            <ng-template #noNews>
+              <app-message-with-svg wrapperSize="6" wrapperOffset="3" imageUrl="assets/img/empty.svg" messageTitle="No News yet!" messageContent="Try to come later :)">
+              </app-message-with-svg>
+            </ng-template>
+          </ion-card>
 
           <ion-card class="apcard ion-no-margin ion-margin-top">
             <ng-container *ngIf="apcardTransaction$ | async">
