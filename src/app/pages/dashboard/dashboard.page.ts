@@ -15,8 +15,8 @@ import {
   Apcard, BusTrips, CgpaPerIntake, ConsultationHour, ConsultationSlot,
   Course, CourseDetails, DashboardCardComponentConfigurations,
   EventComponentConfigurations, ExamSchedule, FeesTotalSummary, Holiday, Holidays, LecturerTimetable,
-  News, OrientationStudentDetails, Quote, Role, StaffDirectory,
-  StaffProfile, StudentPhoto, StudentProfile, StudentTimetable
+  News, OrientationStudentDetails, Quote, Role, ShortNews,
+  StaffDirectory, StaffProfile, StudentPhoto, StudentProfile, StudentTimetable
 } from 'src/app/interfaces';
 import {
   CasTicketService,
@@ -230,7 +230,7 @@ export class DashboardPage implements OnInit {
   };
 
   // NEWS
-  news$: Observable<News[]>;
+  news$: Observable<ShortNews[]>;
   newsCardConfigurations: DashboardCardComponentConfigurations = {
     cardTitle: 'Latest News',
     contentPadding: false,
@@ -381,9 +381,22 @@ export class DashboardPage implements OnInit {
 
   doRefresh(refresher?) {
     this.getLocations(refresher);
-    this.news$ = this.news.get(refresher).pipe(
-      map(res => res.slice(0, 4))
+    // tslint:disable-next-line:no-bitwise
+    this.news$ = this.news.get(refresher, this.isStudent, this.isLecturer || Boolean(this.role & Role.Admin)).pipe(
+      map(newsList => {
+        return newsList.map(item => {
+          if (item && item.featured_media_source.length > 0 && item.featured_media_source[0].source_url) {
+            return {
+              url: item.featured_media_source[0].source_url,
+              title: item.title && item.title.rendered ? item.title.rendered : '',
+              updated: item.modified ? new Date(item.modified) : '',
+              body: item.content && item.content.rendered ? item.content.rendered : ''
+            };
+          }
+        }).slice(0, 6);
+      }),
     );
+
     this.quote$ = this.ws.get<Quote>('/apspacequote', { auth: false });
     this.holidays$ = this.getHolidays(true);
     // tslint:disable-next-line: no-bitwise
@@ -558,8 +571,13 @@ export class DashboardPage implements OnInit {
   }
 
   // NEWS
-  showMore(itemIndex: number) {
-    this.newsIndexToShow = itemIndex;
+  async openModal(newsItem: ShortNews) {
+    const modal = await this.modalCtrl.create({
+      component: NewsModalPage,
+      componentProps: { newsItem },
+    });
+    await modal.present();
+    await modal.onDidDismiss();
   }
 
   async openNewsModal(item: News) {

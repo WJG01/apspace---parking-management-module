@@ -111,8 +111,8 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
 
     if (this.onEdit && examScheduleDetails.TIME) {
       splitTime = examScheduleDetails.TIME.split(' ');
-      startTime = format(parse(`${splitTime[0]} ${splitTime[1]}`, 'h:mm a', new Date()), 'HH:mm:00');
-      endTime = format(parse(`${splitTime[3]} ${splitTime[4]}`, 'h:mm a', new Date()), 'HH:mm:00');
+      startTime = format(parse(`${splitTime[0]} ${splitTime[1]}`, 'h:mm a', new Date()), 'HH:mm');
+      endTime = format(parse(`${splitTime[3]} ${splitTime[4]}`, 'h:mm a', new Date()), 'HH:mm');
       publicationDate = {
         from: format(new Date(examScheduleDetails.FROMDATE), 'dd-MMM-yyyy'),
         to: format(new Date(examScheduleDetails.TILLDATE), 'dd-MMM-yyyy')

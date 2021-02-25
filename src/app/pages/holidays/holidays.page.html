@@ -74,6 +74,11 @@
             </div>
           </div>
 
+          <ion-button (click)="generateHolidaysPDF()"  color="primary" expand="block" class="ion-margin-bottom">
+            Generate PDF
+            <ion-icon slot="end" name="print"></ion-icon>
+          </ion-button>
+
           <ng-container [ngSwitch]='selectedSegment'>
             <ng-container *ngSwitchCase="'ListView'">
               <ng-container *ngIf="(filteredHoliday$ | async) as holidays; else loadingList">
