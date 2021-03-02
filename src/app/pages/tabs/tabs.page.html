@@ -46,8 +46,8 @@
 
     <ion-tab-bar *ngIf="smallScreen">
       <ion-tab-button *ngFor="let tab of tabs" [tab]="tab.path">
-        <ion-label>{{ tab.name }}</ion-label>
-        <ion-icon [name]="tab.icon"></ion-icon>
+        <ion-label class ="tab-label">{{ tab.name }}</ion-label>
+        <ion-icon class ="tab-icon" [name]="tab.icon"></ion-icon>
       </ion-tab-button>
     </ion-tab-bar>
 
