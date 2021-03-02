@@ -467,7 +467,7 @@ export class LoginPage implements OnInit {
     let url = '';
     switch (linkName) {
       case 'timetable':
-        url = 'https://apspace.apu.edu.my/student-timetable';
+        url = '/student-timetable';
         break;
       case 'holiday':
         url = 'https://dif7uuh3zqcps.cloudfront.net/wp-content/uploads/sites/67/2021/01/26095204/2021-APU-student-holidays.pdf';
