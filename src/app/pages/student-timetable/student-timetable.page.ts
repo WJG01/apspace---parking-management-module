@@ -89,6 +89,7 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
   intakeSelectable = true;
   viewWeek: boolean; // weekly or daily display
   skeletons = new Array(5);
+  role: Role;
 
   room: string;
   intake: string;
@@ -158,10 +159,11 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
     this.viewWeek = this.settings.get('viewWeek');
 
     // default intake to student current intake
-    if (intake !== undefined && intake !== null) {
-      this.storage.get('role').then((role: Role) => {
-        // tslint:disable-next-line: no-bitwise
-        if (role & Role.Student) { // intake is not defined & user role is student
+    this.storage.get('role').then((role: Role) => {
+      this.role = role;
+      // tslint:disable-next-line: no-bitwise
+      if (role & Role.Student) { // intake is not defined & user role is student
+        if (!this.intake) {
           this.ws.get<StudentProfile>('/student/profile', { caching: 'cache-only' }).subscribe(p => {
             // AP & BP Removed Temp (Requested by Management | DON'T TOUCH)
             this.intake = p.INTAKE.replace(/[(]AP[)]|[(]BP[)]/g, '');
@@ -170,14 +172,23 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
             this.doRefresh();
           });
         } else {
-          this.settings.set('intakeHistory', []);
-          // intake is not defined & user role is staff or lecturers
+          this.changeDetectorRef.markForCheck();
           this.doRefresh();
         }
-      });
-    } else { // intake is defined
-      this.doRefresh();
-    }
+
+      } else {
+        if (!this.intake) {
+          if (this.role) {
+            this.settings.set('intakeHistory', []);
+          }
+        }
+
+        // intake is not defined & user role is staff or lecturers
+        this.changeDetectorRef.markForCheck();
+        this.doRefresh();
+      }
+    });
+
   }
 
   ngOnDestroy() {
@@ -193,7 +204,12 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
 
   /** Switch between daily and weekly view and save. */
   rotateView() {
-    this.settings.set('viewWeek', this.viewWeek = !this.viewWeek);
+    this.viewWeek = !this.viewWeek;
+    this.changeDetectorRef.markForCheck();
+    this.timetable$.subscribe();
+    if (this.role) {
+      this.settings.set('viewWeek', this.viewWeek);
+    }
   }
 
   /** Choose week with presentActionSheet. */
@@ -214,14 +230,28 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
   changeIntake(intake: string) {
     if (intake !== null && intake !== this.intake) {
       this.intake = intake;
-      this.settings.set('intakeHistory', this.settings.get('intakeHistory')
-        .concat(intake)
-        .filter((v, i, a) => a.lastIndexOf(v) === i)
-        .slice(-5));
-      this.timetable$.subscribe(() => {
-        // always reset grouping to the only intake or 'All' as fallback after changing intake and recalculation
+      if (this.role) {
+        this.settings.set('intakeHistory', this.settings.get('intakeHistory')
+          .concat(intake)
+          .filter((v, i, a) => a.lastIndexOf(v) === i)
+          .slice(-5));
+      }
+      this.selectedGrouping = 'All';
+      this.changeDetectorRef.markForCheck();
+
+      this.timetable$.subscribe((res) => {
+        this.availableGrouping = [
+          ...Array.from(new Set(
+            (res || []).filter(t => t.INTAKE === this.intake && t.GROUPING).map(t => t.GROUPING.toUpperCase())
+          )).sort(),
+          'All'
+        ];
         this.selectedGrouping = this.availableGrouping.length <= 2 ? this.availableGrouping[0] : 'All';
-        this.settings.set('intakeGroup', this.selectedGrouping);
+        this.changeDetectorRef.markForCheck();
+        // always reset grouping to the only intake or 'All' as fallback after changing intake and recalculation
+        if (this.role) {
+          this.settings.set('intakeGroup', this.selectedGrouping);
+        }
       });
     }
   }
@@ -230,7 +260,10 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
   chooseGrouping() {
     this.presentActionSheet(this.availableGrouping, (selectedGrouping: string) => {
       if (this.selectedGrouping !== selectedGrouping) {
-        this.settings.set('intakeGroup', this.selectedGrouping = selectedGrouping);
+        this.selectedGrouping = selectedGrouping;
+        if (this.role) {
+          this.settings.set('intakeGroup', this.selectedGrouping);
+        }
         this.changeDetectorRef.markForCheck();
         this.timetable$.subscribe();
       }
@@ -263,33 +296,58 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
 
   /** Refresh timetable, forcefully if refresher is passed. */
   doRefresh(refresher?: IonRefresher) {
-    const timetable$ = this.tt.get(true).pipe( // force refersh for now
-      finalize(() => refresher && refresher.complete())
-    );
-    this.timetable$ = combineLatest([timetable$, this.settings.get$('modulesBlacklist')]).pipe(
-      map(([tt, modulesBlacklist]) => tt.filter(t => !modulesBlacklist.includes(t.MODID))),
-      tap(tt => this.updateDay(tt)),
-      // initialize or update intake labels only if timetable might change
-      tap(tt => (Boolean(refresher) || this.intakeLabels.length === 0)
-        && (this.intakeLabels = Array.from(new Set((tt || []).map(t => t.INTAKE))).sort())),
-      // always recalculate availableGrouping based on intake selected, then update selectedGrouping selected
-      tap(tt => {
-        this.availableGrouping = [
-          ...Array.from(new Set(
-            (tt || []).filter(t => t.INTAKE === this.intake && t.GROUPING).map(t => t.GROUPING.toUpperCase())
-          )).sort(),
-          'All'
-        ];
-        const localIntakeGroupingValue = this.settings.get('intakeGroup');
-        if (localIntakeGroupingValue && this.availableGrouping.includes(localIntakeGroupingValue)) {
-          this.selectedGrouping = this.settings.get('intakeGroup');
-        } else {
-          this.selectedGrouping = this.availableGrouping[0];
-          this.settings.set('intakeGroup', this.availableGrouping[0]);
-        }
-      }),
-      tap(() => this.changeDetectorRef.markForCheck()),
-    );
+    if (this.role) {
+      const timetable$ = this.tt.get(true).pipe( // force refersh for now
+        finalize(() => refresher && refresher.complete())
+      );
+      this.timetable$ = combineLatest([timetable$, this.settings.get$('modulesBlacklist')]).pipe(
+
+        map(([tt, modulesBlacklist]) => tt.filter(t => !modulesBlacklist.includes(t.MODID))),
+        tap(tt => this.updateDay(tt)),
+        // initialize or update intake labels only if timetable might change
+        tap(tt => (Boolean(refresher) || this.intakeLabels.length === 0)
+          && (this.intakeLabels = Array.from(new Set((tt || []).map(t => t.INTAKE))).sort())),
+        // always recalculate availableGrouping based on intake selected, then update selectedGrouping selected
+        tap(tt => {
+          this.availableGrouping = [
+            ...Array.from(new Set(
+              (tt || []).filter(t => t.INTAKE === this.intake && t.GROUPING).map(t => t.GROUPING.toUpperCase())
+            )).sort(),
+            'All'
+          ];
+          if (!this.selectedGrouping) {
+            const localIntakeGroupingValue = this.settings.get('intakeGroup');
+            if (localIntakeGroupingValue && this.availableGrouping.includes(localIntakeGroupingValue)) {
+              this.selectedGrouping = this.settings.get('intakeGroup');
+            } else {
+              this.selectedGrouping = this.availableGrouping[0];
+              this.settings.set('intakeGroup', this.availableGrouping[0]);
+            }
+          }
+
+        }),
+        tap(() => this.changeDetectorRef.markForCheck()),
+      );
+    } else {
+      this.timetable$ = this.tt.get(true).pipe( // force refersh for now
+        tap(tt => this.updateDay(tt)),
+        tap(tt => (Boolean(refresher) || this.intakeLabels.length === 0)
+          && (this.intakeLabels = Array.from(new Set((tt || []).map(t => t.INTAKE))).sort())),
+        tap(tt => {
+          this.availableGrouping = [
+            ...Array.from(new Set(
+              (tt || []).filter(t => t.INTAKE === this.intake && t.GROUPING).map(t => t.GROUPING.toUpperCase())
+            )).sort(),
+            'All'
+          ];
+          if (!this.selectedGrouping) {
+            this.selectedGrouping = this.availableGrouping[0];
+          }
+        }),
+        tap(_ => this.changeDetectorRef.markForCheck()),
+        finalize(() => refresher && refresher.complete())
+      );
+    }
   }
 
   /** Track timetable objects. */
