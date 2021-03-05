@@ -10,7 +10,7 @@ import { catchError, finalize, map, switchMap, tap } from 'rxjs/operators';
 import {
   BeAPUStudentDetails,
   ClassificationLegend, Course, CourseDetails, DeterminationLegend,
-  InterimLegend, MPULegend, StudentPhoto, StudentProfile, StudentSearch, Subcourse
+  InterimLegend, MPULegend, Role, StudentPhoto, StudentProfile, StudentSearch, Subcourse
 } from '../../interfaces';
 import { CasTicketService, WsApiService } from '../../services';
 
@@ -49,6 +49,7 @@ export class ResultsPage {
   showResults: boolean;
   studentSelected: boolean;
   intakeSelected: boolean;
+  unauthorised = false;
 
   studentsList$: Observable<any>;
   studentProfile$: Observable<StudentProfile>;
@@ -91,10 +92,17 @@ export class ResultsPage {
   doRefresh(refresher?: any) {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
     this.storage.get('canAccessResults').then(canAccessResults => {
-      if (!canAccessResults) {
-        this.getDetailsForStudents(caching, refresher);
-      } else {
+      if (canAccessResults) {
         this.staffRole = true;
+      } else {
+        this.storage.get('role').then((role: Role) => {
+          // tslint:disable-next-line: no-bitwise
+          if (role & Role.Student) {
+            this.getDetailsForStudents(caching, refresher);
+          } else {
+            this.unauthorised = true;
+          }
+        });
       }
     });
   }
