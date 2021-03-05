@@ -10,7 +10,7 @@ import { StudentTimetable } from '../interfaces';
 })
 export class StudentTimetableService {
 
-  readonly timetableUrl = 'https://s3-ap-southeast-1.amazonaws.com/open-ws/weektimetable';
+  readonly timetableUrl = 'https://s3-ap-southeast-1.amazonaws.com/open-ws/weektimetable1';
 
   constructor(public http: HttpClient) { }
 
