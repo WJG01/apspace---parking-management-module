@@ -262,6 +262,14 @@ export class ClassesPage implements OnInit {
     //    2. see how many parts of the module code match each class code
     //    3. store the class code in the results array alongside with the number of matches
     const searchRegExpOr = new RegExp(moduleCodePartsCombinedWithOr, 'gi');
+
+    classcodes.forEach(classcode => {
+      console.log(classcode, ' vs ', paramModuleId);
+      if (classcode.includes(paramModuleId)) {
+        results.push({ value: classcode, matches: 100 });
+      }
+    });
+
     classCodesToSearchInto.forEach(classCode => {
       if (classCode.match(searchRegExpOr)) {
         results.push({ value: classCode, matches: classCode.match(searchRegExpOr).length });
