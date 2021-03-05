@@ -264,7 +264,6 @@ export class ClassesPage implements OnInit {
     const searchRegExpOr = new RegExp(moduleCodePartsCombinedWithOr, 'gi');
 
     classcodes.forEach(classcode => {
-      console.log(classcode, ' vs ', paramModuleId);
       if (classcode.includes(paramModuleId)) {
         results.push({ value: classcode, matches: 100 });
       }
