@@ -484,10 +484,10 @@ export class ClassesPage implements OnInit {
   async openconfirmClassCodeModal(filteredClassCodes: any[]) { // TODO: add type
     const modal = await this.modalCtrl.create({
       component: ConfirmClassCodeModalPage,
-      cssClass: 'custom-modal-style',
+      cssClass: 'glob-partial-page-modal',
       componentProps: {
         classTypes: this.classTypes,
-        classCodes: filteredClassCodes
+        classCodes: filteredClassCodes,
       }
     });
     await modal.present();
