@@ -12,7 +12,7 @@ import { IntakeListing } from '../interfaces';
 })
 export class IntakeListingService {
 
-  intakesUrl = 'https://s3-ap-southeast-1.amazonaws.com/open-ws/intake_listing1';
+  intakesUrl = 'https://s3-ap-southeast-1.amazonaws.com/open-ws/intake_listing';
 
   constructor(
     public http: HttpClient,
