@@ -21,7 +21,6 @@ export class BusShuttleServicesPage {
   filteredTrip$: any;
   locations: APULocation[];
   dateNow = new Date();
-  timeNow = '';
   latestUpdate = '';
 
   filterObject: {
@@ -65,7 +64,6 @@ export class BusShuttleServicesPage {
 
   doRefresh(refresher) {
     // update current time when user refresh
-    this.timeNow = this.dateWithTimezonePipe.transform(this.dateNow, 'time');
     this.filteredTrip$ = forkJoin([this.getLocations(refresher), this.getTrips(refresher)]).pipe(
       map(res => res[1]),
       tap(_ => this.onFilter(refresher)),

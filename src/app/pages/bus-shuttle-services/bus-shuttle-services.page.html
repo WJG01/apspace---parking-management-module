@@ -139,7 +139,7 @@
                             <ion-col [class.passed]="tripData.trip_time | checkPassedTime"
                               class="ion-text-center primary-color" *ngFor="let tripData of destination.value" size="4"
                               size-md="4">
-                              {{tripData.trip_time}}
+                              {{tripData.trip_time.slice(0, -8)}}
                             </ion-col>
                           </ion-row>
                         </ion-grid>

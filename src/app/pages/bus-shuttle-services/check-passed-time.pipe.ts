@@ -16,7 +16,7 @@ export class CheckPassedTimePipe implements PipeTransform {
     const timeFormat = this.settings.get('timeFormat');
 
     if (timeFormat === '12') {
-      const timeObject = parse(passedTime, 'h:mm aa', new Date());
+      const timeObject = parse(passedTime.slice(0, -8), 'h:mm aa', new Date());
       const formattedPassedTime = this.dateWithTimezonePipe.transform(timeObject, 'HH:mm');
 
       return currentTime >= formattedPassedTime;
