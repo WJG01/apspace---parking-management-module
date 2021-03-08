@@ -17,20 +17,25 @@ export class DateWithTimezonePipe implements PipeTransform {
     );
   }
 
-  transform(date: any, format: string, _= false) {
+  transform(date: any, format: string, _ = false) {
 
     const timezone = this.enableMalaysiaTimezone ? '' : '+0800';
+    let newFormat = '';
+
     // enableMalaysianTimezone : true => disabled
     // enableMalaysianTimezone : false => enabled
-    if (format === 'time') {
+    if (format === 'time' || format === 'bus') {
       this.settings.get$('timeFormat').subscribe(value =>
         this.timeFormat = value
       );
-
-      this.timeFormat === '24' ? format = 'HH:mm (zzz)' : format = 'h:mm aa (zzz)';
+      this.timeFormat === '24' ? newFormat = 'HH:mm (zzz)' : newFormat = 'h:mm aa (zzz)';
     }
 
-    return new DatePipe('en-US').transform(date, format, timezone);
+    if (format === 'bus') {
+      return new DatePipe('en-US').transform(date, newFormat, '');
+    } else {
+      return new DatePipe('en-US').transform(date, newFormat, timezone);
+    }
   }
 
 }

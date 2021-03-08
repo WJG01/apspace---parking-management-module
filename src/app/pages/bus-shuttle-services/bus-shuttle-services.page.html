@@ -103,6 +103,9 @@
             <h6>
               Effective from: <span class="glob-text-bold">{{latestUpdate}}</span>
             </h6>
+            <h6 style="padding-bottom: 5px;">
+              <ion-text color="danger" class="glob-text-bold">Note:</ion-text> All times in this page are displayed in Malaysian Timezone
+            </h6>
             <div *ngFor="let trip of trips | keyvalue">
               <ion-card class="ion-no-margin ion-margin-bottom">
                 <ion-card-header [ngStyle]="{
