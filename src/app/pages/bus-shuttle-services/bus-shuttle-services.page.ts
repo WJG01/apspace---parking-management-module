@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
-import { format, max, parse } from 'date-fns';
-import { parseISO } from 'date-fns/fp';
+import { format, max, parse, parseISO } from 'date-fns';
 import { Observable, forkJoin } from 'rxjs';
 import { finalize, map, tap } from 'rxjs/operators';
 
