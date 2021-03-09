@@ -152,7 +152,7 @@ export class BusShuttleServicesPage {
         if (trips.length > 0) {
           // STORE LATEST UPDATE DATE
           const applicableFroms = [...new Set(trips.map(trip => trip.applicable_from))];
-          const latestUpdate = max(applicableFroms.map(parseISO));
+          const latestUpdate = max(applicableFroms.map(applicableFrom => parseISO(applicableFrom)));
           this.latestUpdate = format(latestUpdate, 'do MMMM yyyy') || '';
         }
       }),
