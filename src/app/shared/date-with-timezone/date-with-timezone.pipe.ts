@@ -29,6 +29,8 @@ export class DateWithTimezonePipe implements PipeTransform {
         this.timeFormat = value
       );
       this.timeFormat === '24' ? newFormat = 'HH:mm (zzz)' : newFormat = 'h:mm aa (zzz)';
+    } else {
+      newFormat = format;
     }
 
     if (format === 'bus') {
