@@ -92,6 +92,7 @@ export class DashboardPage implements OnInit {
   activeDashboardSections: string[] = [];
 
   hideProfilePicture;
+  userProfileName$: Observable<string>;
 
   activeAccentColor = '';
   lowAttendanceChart: any;
@@ -364,6 +365,12 @@ export class DashboardPage implements OnInit {
 
       this.settings.get$('hideProfilePicture').subscribe(data =>
         this.hideProfilePicture = data
+      );
+
+      this.userProfileName$ = this.settings.get$('userProfileName').pipe(
+        map(data => {
+          return data.join(' ');
+        })
       );
 
       this.settings.get$('enableMalaysiaTimezone').subscribe(data =>

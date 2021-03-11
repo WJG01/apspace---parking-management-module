@@ -140,6 +140,15 @@
                       Others
                     </ion-label>
                   </ion-item-divider>
+                  <ion-item *ngIf="modifiedName">
+                    <ion-label>
+                      Modify Dashboard Name
+                      <p>Uncheck the options to change name</p>
+                    </ion-label>
+                    <ion-select multiple="true" [(ngModel)]="modifiedName" (ngModelChange)="setProfileName()">
+                      <ion-select-option *ngFor="let name of profileName$ | async">{{name}}</ion-select-option>
+                    </ion-select>
+                  </ion-item>
                   <ion-item>
                     <ion-label>Active Dashboard Sections</ion-label>
                     <ng-container *ngIf="isStudent; else staff">
