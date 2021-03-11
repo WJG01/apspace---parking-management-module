@@ -199,3 +199,21 @@ ion-col[scrolly=true] {
 .timezone-notice-text {
   font-weight: bold;
 }
+
+.dash-padding{
+  padding: 1em 1em 0 1em;
+}
+
+.dash-padding-bottom{
+  padding-bottom: 1em;
+}
+
+
+@media screen and (max-width: 720px){
+  .dash-padding{
+    padding: 1em 0 0 0;
+  }
+  .dash-padding-bottom{
+    padding-bottom: 1em;
+  }
+}
