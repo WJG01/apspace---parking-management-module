@@ -23,7 +23,7 @@
             <ion-card-header>
               <ion-card-title class="ion-text-center" color="primary" (click)="navigateToPage('profile')"
                 tappable="true">
-                {{(userProfileName$ | async) ? (userProfileName$ | async | titlecase) : (isStudent ? (userProfile.NAME | titlecase) : (userProfile.FULLNAME | titlecase))}}
+                {{(userProfileName$ | async) ? (userProfileName$ | async | uppercase) : (isStudent ? (userProfile.NAME | uppercase) : (userProfile.FULLNAME | titlecase))}}
               </ion-card-title>
               <ion-card-subtitle class="ion-text-center">
                 <div
