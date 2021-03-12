@@ -6,7 +6,7 @@
     <ion-grid class="ion-no-padding">
       <ion-row>
         <ion-col size-xs="12" size-md="5" class="dash-padding">
-          <ion-card class="ion-no-margin ion-margin-bottom" color="danger">
+          <ion-card class="ion-no-margin ion-margin-bottom no-border-rad" color="danger">
             <ion-card-content>
               All times in the application are following
               <span class="timezone-notice-text">
@@ -18,7 +18,7 @@
               and {{enableMalaysiaTimezone ? "disable" : "enable"}} "Use Local Timezone" option.
             </ion-card-content>
           </ion-card>
-          <ion-card class="profile ion-no-margin ion-padding-top">
+          <ion-card class="profile ion-no-margin ion-padding-top no-border-rad">
             <ion-avatar tappable="true" class="glob-margin-auto ion-margin-top avatar"
               (click)="navigateToPage('profile')" *ngIf="!hideProfilePicture">
               <ng-container *ngIf="isStudent; else staffImage">
@@ -75,7 +75,7 @@
             </ion-card-content>
           </ion-card>
 
-          <ion-card class="quick-access-buttons ion-no-margin ion-margin-top">
+          <ion-card class="quick-access-buttons ion-no-margin ion-margin-top no-border-rad">
             <ion-card-header class="ion-padding">
               <ion-card-title color="primary"> Quick Access </ion-card-title>
             </ion-card-header>
@@ -117,7 +117,7 @@
             </ion-card-content>
           </ion-card>
 
-          <ion-card *ngIf="!isStudent" class="ion-no-margin ion-margin-top">
+          <ion-card *ngIf="!isStudent" class="ion-no-margin ion-margin-top no-border-rad">
             <ion-card-header>
               <ion-card-title color="primary">
                 Inspirational Quote
@@ -150,7 +150,7 @@
             </ion-card-content>
           </ion-card>
 
-          <ion-card class="todays-schedule ion-no-margin ion-margin-top">
+          <ion-card class="todays-schedule ion-no-margin ion-margin-top no-border-rad">
             <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
               <ion-card-title color="primary"> My Schedule </ion-card-title>
             </ion-card-header>
@@ -408,7 +408,7 @@
           </section>
 
 
-          <ion-card class="ion-no-margin ion-margin-top">
+          <ion-card class="ion-no-margin ion-margin-top no-border-rad">
             <ion-card-header>
               <ion-card-title color="primary">
                 News
@@ -442,7 +442,7 @@
             </ng-template>
           </ion-card>
 
-          <ion-card class="apcard ion-no-margin ion-margin-top">
+          <ion-card class="apcard ion-no-margin ion-margin-top no-border-rad">
             <ng-container *ngIf="apcardTransaction$ | async">
               <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
                 <ion-card-subtitle>
@@ -463,7 +463,7 @@
           </ion-card>
 
 
-          <ion-card class="apcard ion-no-margin ion-margin-top">
+          <ion-card class="apcard ion-no-margin ion-margin-top no-border-rad">
             <ng-container *ngIf="financial$ | async as financialSummary">
               <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
                 <ion-card-subtitle>
@@ -482,7 +482,7 @@
             </ng-container>
           </ion-card>
 
-          <ion-card class="apcard ion-no-margin ion-margin-top">
+          <ion-card class="apcard ion-no-margin ion-margin-top no-border-rad">
             <ng-container *ngIf="cgpaPerIntake$ | async">
               <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
                 <ion-card-subtitle>

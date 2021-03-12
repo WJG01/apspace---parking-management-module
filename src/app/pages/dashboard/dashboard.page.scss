@@ -208,12 +208,20 @@ ion-col[scrolly=true] {
   padding-bottom: 1em;
 }
 
-
 @media screen and (max-width: 720px){
   .dash-padding{
     padding: 1em 0 0 0;
+    border-radius: 0;
   }
   .dash-padding-bottom{
     padding-bottom: 1em;
+  }
+  .no-border-rad{
+    border-radius: 0;
+  }
+  .image-slider{
+    .swiper-slide{
+      border-radius: 0;
+    }
   }
 }
