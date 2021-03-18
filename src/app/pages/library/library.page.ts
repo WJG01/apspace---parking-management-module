@@ -18,7 +18,7 @@ export class LibraryPage implements OnInit {
   historyList$: Observable<History>;
   recentAdditions$: Observable<LatestAdditions>;
   fine$: Observable<Fine>;
-  worldCatSearch: string;
+  worldCatSearch = '';
   worldCatSearchCategory = '';
   worldCatSearchCategories = {
     all: '',
@@ -55,19 +55,21 @@ export class LibraryPage implements OnInit {
   }
 
   openWorldCatSearch() {
-    const url = `https://asiapacificuniversity.on.worldcat.org/external-search?queryString=${this.worldCatSearch}&databaseList=&clusterResults=on&stickyFacetsChecked=on&baseScope=${this.worldCatSearchCategory}`;
-
-    if (this.network.type !== 'none') {
-      if (this.isCordova) {
-        this.iab.create(url, '_system', 'location=yes');
-      } else {
-        this.iab.create(url, '_blank', 'location=yes');
-      }
+    if (this.worldCatSearch == '') {
+      this.presentToast('Search field cannot be empty');
     } else {
-      this.presentToast('External links cannot be opened in offline mode. Please ensure you have a network connection and try again');
-    }
+      const url = `https://asiapacificuniversity.on.worldcat.org/external-search?queryString=${this.worldCatSearch}&databaseList=&clusterResults=on&stickyFacetsChecked=on&baseScope=${this.worldCatSearchCategory}`;
 
-    this.worldCatSearch = '';
+      if (this.network.type !== 'none') {
+        if (this.isCordova) {
+          this.iab.create(url, '_system', 'location=yes');
+        } else {
+          this.iab.create(url, '_blank', 'location=yes');
+        }
+      } else {
+        this.presentToast('External links cannot be opened in offline mode. Please ensure you have a network connection and try again');
+      }
+    }
   }
 
   openLibrary() {
