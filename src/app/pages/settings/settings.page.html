@@ -140,13 +140,12 @@
                       Others
                     </ion-label>
                   </ion-item-divider>
-                  <ion-item *ngIf="modifiedName">
+                  <ion-item>
                     <ion-label>
                       Modify Dashboard Name
-                      <p>Uncheck the options to change name</p>
                     </ion-label>
-                    <ion-select multiple="true" [(ngModel)]="modifiedName" (ngModelChange)="setProfileName()">
-                      <ion-select-option *ngFor="let name of profileName$ | async">{{name}}</ion-select-option>
+                    <ion-select multiple="true" [compareWith]="mySelectValue" [(ngModel)]="modifiedName" (ngModelChange)="setProfileName()" placeholder="click to select your name">
+                      <ion-select-option *ngFor="let name of profileName$ | async" [value]="name">{{name}}</ion-select-option>
                     </ion-select>
                   </ion-item>
                   <ion-item>

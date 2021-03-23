@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController, NavController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Observable, combineLatest } from 'rxjs';
-import { map, pluck } from 'rxjs/operators';
+import { map, pluck, tap } from 'rxjs/operators';
 
 import { NotifierService } from 'src/app/shared/notifier/notifier.service';
 import { SearchModalComponent } from '../../components/search-modal/search-modal.component';
@@ -73,6 +73,7 @@ export class SettingsPage implements OnInit {
   // for profile name change in Dashboard
   profileName$: Observable<string[]>;
   modifiedName: string[];
+  mySelectValue: string[];
 
   isCordova: boolean;
   constructor(
@@ -122,6 +123,8 @@ export class SettingsPage implements OnInit {
       this.modifiedName = value;
     }
     );
+
+    this.mySelectValue = this.modifiedName;
   }
 
   ngOnInit() {
@@ -151,6 +154,9 @@ export class SettingsPage implements OnInit {
         this.modifiedName = res[0].FULLNAME.split(' ');
         return res[0].FULLNAME.split(' ');
       }),
+      tap(_ => {
+        this.modifiedName = this.mySelectValue;
+      })
     );
   }
 
