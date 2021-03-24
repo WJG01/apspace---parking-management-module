@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { Network } from '@ionic-native/network/ngx';
-import { AlertController, IonSelect, IonSlides, ModalController, NavController, Platform, ToastController } from '@ionic/angular';
+import { AlertController, IonSlides, ModalController, NavController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { format, parse, parseISO } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
@@ -34,7 +34,6 @@ import { NotificationModalPage } from '../notifications/notification-modal';
 })
 export class DashboardPage implements OnInit {
   // USER SETTINGS
-  @ViewChild('dashboardSectionsSelectBox', { static: true }) dashboardSectionsselectBoxRef: IonSelect; // hidden selectbox
   @ViewChild('slides') slides: IonSlides;
 
   @ViewChild('imageSliderSlides') sliderSlides: IonSlides;
@@ -86,10 +85,9 @@ export class DashboardPage implements OnInit {
 
   scheduleSegment: 'today' | 'upcoming' = 'today';
 
-  dashboardSectionsSelectBoxModel; // select box dashboard sections value
 
   // shownDashboardSections get the data from local storage and hide/show elements based on that
-  shownDashboardSections: string[] = [];
+  activeDashboardSections: string[] = [];
 
   hideProfilePicture;
 
@@ -359,7 +357,7 @@ export class DashboardPage implements OnInit {
       this.isLecturer = Boolean(role & Role.Lecturer);
 
       this.settings.get$('dashboardSections')
-        .subscribe(data => this.shownDashboardSections = data);
+        .subscribe(data => this.activeDashboardSections = data);
 
       this.settings.get$('hideProfilePicture').subscribe(data =>
         this.hideProfilePicture = data
@@ -501,24 +499,6 @@ export class DashboardPage implements OnInit {
     });
     await modal.present();
     await modal.onDidDismiss();
-  }
-
-
-  removeSectionFromDashboard(sectionName: string) {
-    const index = this.shownDashboardSections.indexOf(sectionName);
-    if (index > -1) {
-      this.shownDashboardSections.splice(index, 1);
-    }
-  }
-
-  openDashboardSectionsSelectBox() {
-    this.dashboardSectionsselectBoxRef.open();
-  }
-
-  dashboardSectionsChanged(event) {
-    event.detail.value.forEach(section => {
-      this.shownDashboardSections.splice(0, 0, section);
-    });
   }
 
   // PROFILE AND GREETING MESSAGE FUNCTIONS

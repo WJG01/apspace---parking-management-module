@@ -50,6 +50,24 @@ export class SettingsPage implements OnInit {
     'TPM',
     'Online'
   ];
+
+  studentDashboardSettingValues = [
+    {name: 'Notice Board', value: 'noticeBoard'},
+    {name: 'News', value: 'news'},
+    {name: 'Upcoming Trips', value: 'upcomingTrips'},
+    {name: 'APCard Chart', value: 'apcard'},
+    {name: 'Financial Chart', value: 'financials'},
+    {name: 'CGPA Chart', value: 'cgpa'},
+  ];
+
+  staffDashboardSettingsValues = [
+    {name: 'Notice Board', value: 'noticeBoard'},
+    {name: 'News', value: 'news'},
+    {name: 'APCard Chart', value: 'apcard'},
+  ];
+
+  dashboardSections = [];
+
   accentColors = accentColors;
   isCordova: boolean;
   constructor(
@@ -92,6 +110,9 @@ export class SettingsPage implements OnInit {
     this.settings.get$('timeFormat').subscribe(value =>
       this.timeFormat = value
     );
+    this.settings.get$('dashboardSections').subscribe(value => {
+      this.dashboardSections = value;
+    });
   }
 
   ngOnInit() {
@@ -105,6 +126,10 @@ export class SettingsPage implements OnInit {
     if (this.defaultCampus) {
       this.getVenues();
     }
+  }
+
+  selectActiveDashboardSections() {
+    this.settings.set('dashboardSections', this.dashboardSections);
   }
 
   toggleDisableShakespear() {

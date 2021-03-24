@@ -141,6 +141,27 @@
                     </ion-label>
                   </ion-item-divider>
                   <ion-item>
+                    <ion-label>Active Dashboard Sections</ion-label>
+                    <ng-container *ngIf="isStudent; else staff">
+                      <ion-select [(ngModel)]="dashboardSections" (ngModelChange)="selectActiveDashboardSections()" multiple="true">
+                        <div *ngFor="let section of studentDashboardSettingValues">
+                          <ion-select-option [value]="section.value">
+                            {{section.name}}
+                          </ion-select-option>
+                        </div>
+                      </ion-select>
+                    </ng-container>
+                    <ng-template #staff>
+                      <ion-select [(ngModel)]="dashboardSections" (ngModelChange)="selectActiveDashboardSections()" multiple="true">
+                        <div *ngFor="let section of staffDashboardSettingsValues">
+                          <ion-select-option [value]="section.value">
+                            {{section.name}}
+                          </ion-select-option>
+                        </div>
+                      </ion-select>
+                    </ng-template>
+                  </ion-item>
+                  <ion-item>
                     <ion-label>Menu UI</ion-label>
                     <ion-select [(ngModel)]="menuUI" (ngModelChange)="toggleMenuUI()">
                       <ion-select-option [value]="'cards'">
