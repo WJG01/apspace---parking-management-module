@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { Network } from '@ionic-native/network/ngx';
 import { AlertController, IonSlides, ModalController, Platform, ToastController } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap, timeout } from 'rxjs/operators';
 
@@ -156,7 +155,6 @@ export class LoginPage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private settings: SettingsService,
-    private storage: Storage,
     private toastCtrl: ToastController,
     private ws: WsApiService,
     private news: NewsService,
@@ -382,37 +380,7 @@ export class LoginPage implements OnInit {
           }
           this.loginProcessLoading = false;
           this.userAuthenticated = true;
-          // GET USER ROLE HERE AND CHECK PUSH THE SETTINGS BASED ON THAT
-          if (this.settings.get('dashboardSections').length === 0) {
-            this.storage.get('role').then((role: Role) => {
-              // tslint:disable-next-line:no-bitwise
-              if (role & Role.Student) {
-                this.settings.set('dashboardSections', [
-                  'quickAccess',
-                  'todaysSchedule',
-                  'upcomingEvents',
-                  'lowAttendance',
-                  'upcomingTrips',
-                  'apcard',
-                  'cgpa',
-                  'financials',
-                  'news',
-                  'noticeBoard'
-                ]);
-                // tslint:disable-next-line:no-bitwise
-              } else if (role & (Role.Lecturer | Role.Admin)) {
-                this.settings.set('dashboardSections', [
-                  'inspirationalQuote',
-                  'todaysSchedule',
-                  'upcomingEvents',
-                  'upcomingTrips',
-                  'apcard',
-                  'news',
-                  'noticeBoard'
-                ]);
-              }
-            });
-          }
+
           setTimeout(() => {
             // Show the success message for 300 ms after completing the request
             const url = this.route.snapshot.queryParams.redirect || '/';
@@ -525,7 +493,7 @@ export class LoginPage implements OnInit {
   }
 
   // NEWS MODAL
-async openNewsModal(newsItem: ShortNews) {
+  async openNewsModal(newsItem: ShortNews) {
     const modal = await this.modalCtrl.create({
       component: NewsModalPage,
       componentProps: { newsItem },
