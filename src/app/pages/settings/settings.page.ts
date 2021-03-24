@@ -70,7 +70,7 @@ export class SettingsPage implements OnInit {
 
   accentColors = accentColors;
 
-  // for profile name change in Dashboard
+  // modify dashboard name
   profileName$: Observable<string[]>;
   modifiedName: string[];
   mySelectValue: string[];
@@ -101,15 +101,13 @@ export class SettingsPage implements OnInit {
     });
     this.settings.get$('disableShakespear').subscribe(value => {
       this.disableShakespear = value;
-    }
-    );
+    });
     this.settings.get$('shakeSensitivity').subscribe(value => {
       this.shakeSensitivity = this.sensitivityOptions.findIndex(item => item.value === value);
     });
     this.settings.get$('hideProfilePicture').subscribe(value => {
       this.hideProfilePicture = value;
-    }
-    );
+    });
     this.settings.get$('enableMalaysiaTimezone').subscribe(value =>
       this.enableMalaysiaTimezone = value
     );
@@ -121,9 +119,7 @@ export class SettingsPage implements OnInit {
     });
     this.settings.get$('userProfileName').subscribe(value => {
       this.modifiedName = value;
-    }
-    );
-
+    });
     this.mySelectValue = this.modifiedName;
   }
 
@@ -210,7 +206,6 @@ export class SettingsPage implements OnInit {
   getVenues() {
     this.venues$ = this.ws.get<Venue[]>(`/iconsult/locations?venue=${this.defaultCampus}`);
   }
-
 
   setBusShuttleServicesSettings() {
     this.settings.set('busFirstLocation', this.busShuttleServiceSettings.firstLocation);
