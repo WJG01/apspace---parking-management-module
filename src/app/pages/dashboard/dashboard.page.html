@@ -377,7 +377,7 @@
         </ion-col>
 
         <ion-col *ngIf="activeDashboardSections.length > 0" size-xs="12" size-md="7" class="dash-padding dash-padding-bottom">
-          <section class="image-slider" *ngIf="activeDashboardSections.includes('noticeBoard')">
+          <section class="image-slider ion-margin-bottom" *ngIf="activeDashboardSections.includes('noticeBoard')">
             <ion-slides #imageSliderSlides pager="true" [options]="imageSliderOpts">
               <ng-container *ngIf="noticeBoardItems$ | async as noticeBoardItems; else loadingNoticeBoard">
                 <ng-container *ngIf="noticeBoardItems.length > 0; else noNoticeBoardItems">
@@ -408,7 +408,7 @@
           </section>
 
 
-          <ion-card class="ion-no-margin ion-margin-top no-border-rad" *ngIf="activeDashboardSections.includes('news')">
+          <ion-card class="ion-no-margin ion-margin-bottom no-border-rad" *ngIf="activeDashboardSections.includes('news')">
             <ion-card-header>
               <ion-card-title color="primary">
                 News
@@ -443,7 +443,7 @@
           </ion-card>
 
           <!--Bus Schedule Card-->
-          <ion-card class="ion-no-margin ion-margin-top no-border-rad" *ngIf="activeDashboardSections.includes('upcomingTrips')">
+          <ion-card class="ion-no-margin ion-margin-bottom no-border-rad" *ngIf="activeDashboardSections.includes('upcomingTrips')">
             <ion-card-header class="ion-padding">
               <ion-card-title color="primary">Upcoming Trips</ion-card-title>
             </ion-card-header>
@@ -542,7 +542,7 @@
             </ion-card-content>
           </ion-card>
 
-          <ion-card class="ion-no-margin ion-margin-top" *ngIf="activeDashboardSections.includes('apcard')">
+          <ion-card class="ion-no-margin ion-margin-bottom" *ngIf="activeDashboardSections.includes('apcard')">
             <ng-container *ngIf="apcardTransaction$ | async">
               <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
                 <ion-card-subtitle>
@@ -563,7 +563,7 @@
           </ion-card>
 
 
-          <ion-card class="ion-no-margin ion-margin-top no-border-rad" *ngIf="activeDashboardSections.includes('financials')">
+          <ion-card class="ion-no-margin ion-margin-bottom no-border-rad" *ngIf="activeDashboardSections.includes('financials')">
             <ng-container *ngIf="financial$ | async as financialSummary">
               <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
                 <ion-card-subtitle>
@@ -582,7 +582,7 @@
             </ng-container>
           </ion-card>
 
-          <ion-card class="ion-no-margin ion-margin-top no-border-rad" *ngIf="activeDashboardSections.includes('cgpa')">
+          <ion-card class="ion-no-margin no-border-rad" *ngIf="activeDashboardSections.includes('cgpa')">
             <ng-container *ngIf="cgpaPerIntake$ | async">
               <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
                 <ion-card-subtitle>
