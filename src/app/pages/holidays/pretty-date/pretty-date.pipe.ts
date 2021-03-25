@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 })
 export class PrettyDatePipe implements PipeTransform {
 
-  transform(value: Date): string {
+  transform(value: string): string {
     return format(new Date (value), 'dd MMM');
   }
 
