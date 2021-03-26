@@ -91,6 +91,10 @@ export class BusShuttleServicesPage {
             const dateObject = parse(item.trip_time, 'HH:mm', d);
             item.trip_time = this.dateWithTimezonePipe.transform(dateObject, 'bus');
           }
+
+          if ((item.trip_time.includes('PM') || item.trip_time.includes('AM')) && (item.trip_time.split(':')[0].length === 1)) {
+            item.trip_time = '0' + item.trip_time;
+          }
           return item;
         });
       }),
