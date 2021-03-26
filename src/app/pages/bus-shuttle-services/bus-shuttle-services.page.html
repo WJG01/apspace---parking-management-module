@@ -14,7 +14,7 @@
   <div class="glob-container">
     <div *ngIf="filteredTrip$ | async as trips; else loadingTrips" class="ion-no-padding">
       <ion-grid>
-        <ion-row *ngIf="numberOfTrips !== 0; else noTrips;">
+        <ion-row>
           <ion-col size="12" size-lg="6" offset-lg="3">
             <ion-item color="light" lines="none" class="ion-margin-bottom">
               <ion-thumbnail>
@@ -91,39 +91,41 @@
               </div>
             </div>
 
-            <div *ngFor="let trip of trips | keyvalue">
-              <ion-card class="ion-no-margin ion-margin-bottom" [style.border-top]="'5px solid ' + getLocationColor(trip.key)">
-                <ion-card-header color="light">
-                  <ion-card-title>
-                    <div [style.color]="getLocationColor(trip.key)" [style.filter]="'saturate(150%)'" class="glob-text-bold">
-                      {{ getLocationDisplayNameAndType(trip.key).split('&&')[0] | uppercase }} <small
-                      *ngIf="trip.key === 'mosque'">(Friday Only)</small>
-                    </div>
-                  </ion-card-title>
-                </ion-card-header>
-                <ion-card-content class="ion-no-padding ion-padding-bottom ion-padding-start ion-padding-end">
-                  <ion-list class="ion-no-padding">
-                    <ion-item lines="none" *ngFor="let destination of trip.value | keyvalue">
-                      <ion-label>
-                        <p>trip to</p>
-                        <h2 class="glob-text-bold">
-                          {{ destination.key | uppercase }}
-                          <small *ngIf="destination.key === 'mosque'">(Friday Only)</small>
-                        </h2>
-                        <ion-grid class="ion-no-padding">
-                          <ion-row>
-                            <ion-col [class.passed]="tripData.trip_time | checkPassedTime"
-                              class="ion-text-center primary-color" *ngFor="let tripData of destination.value" size="4"
-                              size-md="3">
-                              {{tripData.trip_time.slice(0, -8)}}
-                            </ion-col>
-                          </ion-row>
-                        </ion-grid>
-                      </ion-label>
-                    </ion-item>
-                  </ion-list>
-                </ion-card-content>
-              </ion-card>
+            <div *ngIf="numberOfTrips !== 0; else noTrips;">
+              <div *ngFor="let trip of trips | keyvalue">
+                <ion-card class="ion-no-margin ion-margin-bottom" [style.border-top]="'5px solid ' + getLocationColor(trip.key)">
+                  <ion-card-header color="light">
+                    <ion-card-title>
+                      <div [style.color]="getLocationColor(trip.key)" [style.filter]="'saturate(150%)'" class="glob-text-bold">
+                        {{ getLocationDisplayNameAndType(trip.key).split('&&')[0] | uppercase }} <small
+                        *ngIf="trip.key === 'mosque'">(Friday Only)</small>
+                      </div>
+                    </ion-card-title>
+                  </ion-card-header>
+                  <ion-card-content class="ion-no-padding ion-padding-bottom ion-padding-start ion-padding-end">
+                    <ion-list class="ion-no-padding">
+                      <ion-item lines="none" *ngFor="let destination of trip.value | keyvalue">
+                        <ion-label>
+                          <p>trip to</p>
+                          <h2 class="glob-text-bold">
+                            {{ destination.key | uppercase }}
+                            <small *ngIf="destination.key === 'mosque'">(Friday Only)</small>
+                          </h2>
+                          <ion-grid class="ion-no-padding">
+                            <ion-row>
+                              <ion-col [class.passed]="tripData.trip_time | checkPassedTime"
+                                       class="ion-text-center primary-color" *ngFor="let tripData of destination.value" size="4"
+                                       size-md="3">
+                                {{tripData.trip_time.slice(0, -8)}}
+                              </ion-col>
+                            </ion-row>
+                          </ion-grid>
+                        </ion-label>
+                      </ion-item>
+                    </ion-list>
+                  </ion-card-content>
+                </ion-card>
+              </div>
             </div>
           </ion-col>
         </ion-row>
@@ -132,8 +134,8 @@
         <ion-row>
           <ion-col>
             <app-message-with-svg messageTitle="No Trips To Show!"
-              messageContent="Bus trips has finished for today. Try showing all the trips by changing the show filter to all trips instead of upcoming only."
-              imageUrl="assets/img/empty.svg" wrapperOffset="4" wrapperSize="4" wrapperMarginTop="50px">
+                                  messageContent="Bus trips has finished for today. Try showing all the trips by changing the show filter to all trips instead of upcoming only."
+                                  imageUrl="assets/img/empty.svg" wrapperOffset="4" wrapperSize="4" wrapperMarginTop="50px">
             </app-message-with-svg>
           </ion-col>
         </ion-row>
