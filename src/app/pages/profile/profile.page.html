@@ -623,9 +623,16 @@
               <div class="custom-card">
                 <ion-grid>
                   <ion-row>
-                    <ion-col class="staff-picture-in-mobile" size="12" size-md="5">
-                      <img class="staff-profile-picture" [src]="staffProfile[0]?.PHOTO"
-                           (ionError)="$event.target.src = 'assets/img/no_img.png'"/>
+                    <ion-col size="12" size-md="5" class="ion-align-self-center virtual-card-padding">
+                      <div class="staff-virtual-card">
+                        <img class="staff-background" src="assets/img/staff_card_apu.jpg">
+                        <img class="staff-profile-picture" [src]="staffProfile[0]?.PHOTO"
+                           (ionError)="$event.target.src = 'assets/img/no_img.png'">
+                        <div class = "staff-details">
+                          <p>{{ staffProfile[0].FULLNAME }}</p>
+                          <p>{{ staffProfile[0].TITLE }}</p>
+                        </div>
+                      </div>
                     </ion-col>
                     <ion-col class="ion-text-center" size="12" size-md="7">
                       <h2 class="bigger-font">
@@ -648,7 +655,6 @@
                         <p class="ion-no-margin" *ngIf="staffProfile[0].DEPARTMENT2">{{ staffProfile[0].DEPARTMENT2 }}</p>
                         <p class="ion-no-margin" *ngIf="staffProfile[0].DEPARTMENT3">{{ staffProfile[0].DEPARTMENT3 }}</p>
                       </div>
-
                       <div class="ion-margin-top">
                         <h4>Nationality</h4>
                         <p class="ion-no-margin ion-margin-bottom">{{ staffProfile[0].NATIONALITY }}</p>

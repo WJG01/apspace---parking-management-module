@@ -56,6 +56,47 @@ p, h1, h2, h3, h4, h5, h6{
   }
 }
 
+.staff-virtual-card{
+  max-width: 220px;
+  height: auto;
+  margin: auto;
+  position: relative;
+  
+  .staff-background{
+    border-radius: 10px;
+  }
+
+  .staff-profile-picture {
+    height: auto;
+    max-width: 100px;
+    position: absolute;
+    top:0;
+    left: 0;
+    margin: 0 60px;
+    margin-top: 100px;
+    border-radius: 5px;
+  }
+
+  .staff-details{
+    width: 150px;
+    position: absolute;
+    top: 0;
+    margin-top: 230px;
+    margin-left: 60px;
+    margin-right: 10px;
+    font-size: .8rem;
+    color: #fff;
+
+    p{
+      line-height: 20px;
+    }
+  }
+}
+
+.card-padding{
+  padding: 12rem;
+}
+
 .gradient-background {
   --ion-background-color: #3a99d9 !important;  /* fallback for old browsers */;
   --ion-background-color: var(--ion-more-page-background-color) !important;
@@ -65,8 +106,8 @@ p, h1, h2, h3, h4, h5, h6{
   position: relative;
   background-color: var(--ion-staff-profile-card-color);
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-  margin-top: 100px;
   padding-right: 35px;
+  padding: 2rem;
 }
 
 .profile-photo {
@@ -78,22 +119,6 @@ p, h1, h2, h3, h4, h5, h6{
 .counsellor-profile-photo {
   max-height: 150px;
   max-width: 122px;
-}
-
-.staff-profile-picture {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: 130%;
-  width: 250px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-  transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
-  object-fit: cover;
-}
-
-.staff-profile-picture:hover {
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
 ion-img {
@@ -129,21 +154,14 @@ ion-img {
     float: none !important;
   }
 
-  .staff-profile-picture {
-    position: static;
-    transform: translate(0%, 0%);
-    height: 100%;
-    width: 40%;
-  }
-
-  .staff-picture-in-mobile {
-    text-align: center;
+  .virtual-card-padding{
+    padding-top: 1rem;
   }
 
   .custom-card {
     box-shadow: none;
     margin-top: 0;
-    padding-right: 0;
+    padding: 0;
   }
 }
 
