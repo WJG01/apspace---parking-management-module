@@ -92,6 +92,7 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
     ASSESSMENT_TYPE: '',
     CHECK_WEEK: 0,
     DATEDAY: '',
+    DATEDAYEND: '',
     EXAMID: 0,
     FROMDATE: '',
     MODULE_CODE: '',
@@ -123,6 +124,7 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
       publicationDate: [publicationDate, Validators.required],
       module: [examScheduleDetails.MODULE_CODE, Validators.required],
       date: [examScheduleDetails.DATEDAY, Validators.required],
+      endDate: [examScheduleDetails.DATEDAYEND, Validators.required],
       startTime: [startTime, Validators.required],
       endTime: [endTime, Validators.required],
       assessmentType: [examScheduleDetails.ASSESSMENT_TYPE, Validators.required],
@@ -231,6 +233,7 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
           module: this.examScheduleForm.get('module').value,
           venue: '',
           dateday: format(new Date(this.examScheduleForm.get('date').value), 'dd-MMM-yyyy').toUpperCase(),
+          datedayend: format(new Date(this.examScheduleForm.get('endDate').value), 'dd-MMM-yyyy').toUpperCase(),
           time: !this.isCordova ?
             (this.onEdit ? `${format(parse(this.examScheduleForm.get('startTime').value, 'HH:mm', new Date()), 'h:mm a')} till ${format(parse(this.examScheduleForm.get('endTime').value, 'HH:mm', new Date()), 'h:mm a')}` :
               `${format(parse(this.examScheduleForm.get('startTime').value, 'HH:mm', new Date()), 'h:mm a')} till ${format(parse(this.examScheduleForm.get('endTime').value, 'HH:mm', new Date()), 'h:mm a')}`)
@@ -279,7 +282,8 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
               'Are you sure you want to add new exam schedule with the following details:',
             message: `<p><strong>Publication Date: </strong> ${bodyObject.from_date} - ${bodyObject.till_date}</p>
                       <p><strong>Module: </strong>${bodyObject.module}</p>
-                      <p><strong>Date: </strong>${bodyObject.dateday}</p>
+                      <p><strong>Start Date: </strong>${bodyObject.dateday}</p>
+                      <p><strong>End Date: </strong>${bodyObject.datedayend}</p>
                       <p><strong>Time: </strong> ${bodyObject.time}</p>
                       <p><strong>Assessment Type: </strong> ${bodyObject.assessment_type} </p>
                       <p><strong>Remarks: </strong> ${bodyObject.remarks} </p>`,
