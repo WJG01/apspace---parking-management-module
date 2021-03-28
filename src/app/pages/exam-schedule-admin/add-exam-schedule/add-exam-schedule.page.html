@@ -59,15 +59,32 @@
               </div>
             </ion-item> -->
 
-            <ion-item lines="none">
-              <ion-label position="stacked" class="item-label">
-                Date
-              </ion-label>
-              <ion-input *ngIf="!isCordova else date" type="date" class="form-input" [max]="nextYearHtmlInput" [formControl]="examScheduleForm.controls['date']"></ion-input>
-              <ng-template #date>
-                <ion-datetime [max]="nextYears" [formControl]="examScheduleForm.controls['date']" class="form-input"></ion-datetime>
-              </ng-template>
-            </ion-item>
+            <ion-grid class="ion-no-padding">
+              <ion-row class="ion-no-padding">
+                <ion-col class="ion-no-padding ion-align-self-end">
+                  <ion-item lines="none">
+                    <ion-label position="stacked" class="item-label">
+                      Start Date
+                    </ion-label>
+                    <ion-input *ngIf="!isCordova else date" type="date" class="form-input" [max]="nextYearHtmlInput" [formControl]="examScheduleForm.controls['date']"></ion-input>
+                    <ng-template #date>
+                      <ion-datetime [max]="nextYears" [formControl]="examScheduleForm.controls['date']" class="form-input"></ion-datetime>
+                    </ng-template>
+                  </ion-item>
+                </ion-col>
+                <ion-col class="ion-no-padding ion-align-self-end">
+                  <ion-item lines="none">
+                    <ion-label position="stacked" class="item-label">
+                      End Date
+                    </ion-label>
+                    <ion-input *ngIf="!isCordova else dateEnd" type="date" class="form-input" [max]="nextYearHtmlInput" [formControl]="examScheduleForm.controls['endDate']"></ion-input>
+                    <ng-template #dateEnd>
+                      <ion-datetime [max]="nextYears" [formControl]="examScheduleForm.controls['endDate']" class="form-input"></ion-datetime>
+                    </ng-template>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
 
             <ion-grid class="ion-no-padding">
               <ion-row class="ion-no-padding">
