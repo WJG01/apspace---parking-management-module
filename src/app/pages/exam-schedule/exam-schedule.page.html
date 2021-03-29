@@ -76,13 +76,13 @@
                               <ion-col size="12">
                                 <ion-text color="tertiary">
                                   <h5 class="glob-text-bold">{{ exam.since | dateWithTimezone: 'EEEE, dd MMM y' }} @
-                                    {{ exam.since | dateWithTimezone: 'time' }} - {{ exam.endDate ? (exam.endDate | dateWithTimezone: 'EEEE, dd MMM y') + ' @ ' : '' }}
-                                    {{ exam.until | dateWithTimezone: 'time' }} {{exam.duration ? '(' + exam.duration + ')' : '' }}</h5>
+                                    {{ exam.since | dateWithTimezone: 'time' }}
+                                    {{ exam.endDate ? '' : ' - ' + (exam.until | dateWithTimezone: 'time')}} </h5>
                                 </ion-text>
                               </ion-col>
                             </ion-row>
                             <ion-row class="small-margin-top">
-                              <ion-col size-xs="12" size-sm="6">
+                              <ion-col size-xs="12" size-sm="4">
                                 <ion-text>
                                   <h3 class="larger-text">
                                     <ion-icon class="glob-text-bold" color="primary" name="location-outline"></ion-icon>
@@ -91,7 +91,7 @@
                                 </ion-text>
 
                               </ion-col>
-                              <ion-col size-xs="12" size-sm="6" *ngIf="exam.assessmentType">
+                              <ion-col size-xs="12" size-sm="4" *ngIf="exam.assessmentType">
                                 <ion-text>
                                   <h3 class="larger-text">
                                     <ion-icon class="glob-text-bold" color="primary" name="pricetag-outline"></ion-icon>
@@ -100,11 +100,26 @@
                                 </ion-text>
                               </ion-col>
 
+                              <ion-col *ngIf="examDuration" size-xs="12" size-sm="4">
+                                <ion-text>
+                                  <h3 class="larger-text">
+                                    <ion-icon class="glob-text-bold" color="primary" name="alarm-outline"></ion-icon>
+                                    {{ exam.duration ? exam.duration : '' }}
+                                  </h3>
+                                </ion-text>
+                              </ion-col>
+
+                              <ion-col size-xs="12" *ngIf="exam.endDate">
+                                <p>
+                                  <span class="glob-text-bold">End Date:</span>
+                                  {{ exam.endDate ? (exam.endDate | dateWithTimezone: 'EEEE, dd MMM y') + ' @ ' +  (exam.until | dateWithTimezone: 'time') : '' }}
+                                </p>
+                              </ion-col>
                               <ion-col size-xs="12" *ngIf="exam.docketsDue">
-                                <h2>
-                                  <span>Dockets Issuance (Week Of):</span>
+                                <p>
+                                  <span class="glob-text-bold">Dockets Issuance (Week Of):</span>
                                   {{ exam.docketsDue | date: 'EEE, dd MMM y' }}
-                                </h2>
+                                </p>
                               </ion-col>
                               <ion-col size-xs="12" *ngIf="exam.appraisalsDue">
                                 <p>
