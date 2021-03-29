@@ -3,11 +3,13 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { ModalController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 
 import { SearchModalComponent } from '../../components/search-modal/search-modal.component';
 import { ExamSchedule, Role, StudentProfile } from '../../interfaces';
 import { IntakeListingService, SettingsService, WsApiService } from '../../services';
+import { ExamDurationPipe } from '../exam-schedule-admin/add-exam-schedule/exam-duration.pipe';
+
 
 @Component({
   selector: 'app-exam-schedule',
@@ -16,6 +18,7 @@ import { IntakeListingService, SettingsService, WsApiService } from '../../servi
 })
 export class ExamSchedulePage {
   exam$: Observable<ExamSchedule[]>;
+  examDuration: string;
   intake: string;
   intakes: string[];
   selectedIntake: string;
@@ -69,6 +72,18 @@ export class ExamSchedulePage {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
     if (this.intake) {
       this.exam$ = this.ws.get<ExamSchedule[]>(url, { auth: false, caching }).pipe(
+        map(res => {
+          res.forEach(exam => {
+            if (exam.endDate) {
+              return Object.assign(
+                exam, {duration: this.showDuration((new Date(exam.endDate + 'T' + exam.until.split('T')[1])), new Date(exam.since))}
+              );
+            } else {
+              return Object.assign(exam, {duration: this.showDuration(new Date(exam.until), new Date(exam.since))});
+            }
+          });
+          return res;
+        }),
         finalize(() => (refresher && refresher.target.complete())),
       );
       this.il.get(refresher).subscribe(ii => {
@@ -97,7 +112,54 @@ export class ExamSchedulePage {
     }
   }
 
-  openGuidlines() {
+  showDuration(formattedEndDate: Date, formattedStartDate: Date) {
+
+    if (formattedStartDate && formattedEndDate) {
+      const duration = new ExamDurationPipe().transform(formattedStartDate, formattedEndDate);
+      if (duration && (duration.includes('hour') || duration.includes('hours'))) {
+        const day = Math.floor(+duration.split(' ')[0] / 24);
+        const time = +duration.split(' ')[0] % 24;
+
+
+        if (day > 1 && time > 1) {
+          this.examDuration = day + ' days' + ' and ' + time + ' hours';
+        }
+
+        if (day === 1 && time > 1) {
+          this.examDuration = day + ' day' + ' and ' + time + ' hours';
+        }
+
+        if (day > 1 && time === 1) {
+          this.examDuration = day + ' days' + ' and ' + time + ' hour';
+        }
+
+        if (day === 1 && !time) {
+          this.examDuration = day + ' day';
+        }
+
+        if (day > 1 && !time) {
+          this.examDuration = day + ' days';
+        }
+
+        if (day === 1 && time === 1) {
+          this.examDuration = day + ' day' + ' and ' + time + ' hour';
+        }
+
+        if (!day) {
+          this.examDuration = duration;
+        }
+
+        return this.examDuration;
+
+      } else {
+        this.examDuration = duration;
+        return this.examDuration;
+      }
+    }
+  }
+
+
+    openGuidlines() {
     this.iab.create('https://kb.sites.apiit.edu.my/knowledge-base/examination-guidelines/', '_system', 'location=true');
   }
 }

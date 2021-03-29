@@ -380,6 +380,10 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
           this.examDuration = day + ' days';
         }
 
+        if (day === 1 && time === 1) {
+          this.examDuration = day + ' day' + ' and ' + time + ' hour';
+        }
+
         if (!day) {
           this.examDuration = duration;
         }

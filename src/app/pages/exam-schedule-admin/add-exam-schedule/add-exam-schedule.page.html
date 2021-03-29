@@ -83,18 +83,10 @@
                     </ng-template>
                   </ion-item>
                 </ion-col>
-                <ion-col *ngIf="examDuration" class="ion-no-padding ion-align-self-end">
-                  <ion-item lines="none" class="ion-margin-bottom">
-                    <ion-label position="stacked" class="item-label ion-margin-bottom">
-                      Duration
-                    </ion-label>
-                    <ion-badge class="ion-margin-top">
-                      {{examDuration}}
-                    </ion-badge>
-                  </ion-item>
-                </ion-col>
               </ion-row>
             </ion-grid>
+
+
 
             <ion-grid class="ion-no-padding">
               <ion-row class="ion-no-padding">
@@ -124,6 +116,15 @@
                 </ion-col>
               </ion-row>
             </ion-grid>
+
+            <ion-item *ngIf="examDuration" lines="none" class="ion-margin-top duration-item">
+              <ion-label class="item-label duration-label">
+                Duration
+              </ion-label>
+              <ion-badge slot="end">
+                {{examDuration}}
+              </ion-badge>
+            </ion-item>
 
             <ion-item lines="none">
               <ion-label position="stacked" class="item-label">
