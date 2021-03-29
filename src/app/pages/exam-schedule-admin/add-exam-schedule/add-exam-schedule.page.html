@@ -66,9 +66,9 @@
                     <ion-label position="stacked" class="item-label">
                       Start Date
                     </ion-label>
-                    <ion-input *ngIf="!isCordova else date" type="date" class="form-input" [max]="nextYearHtmlInput" [formControl]="examScheduleForm.controls['date']"></ion-input>
+                    <ion-input *ngIf="!isCordova else date" (ionChange)="showDuration()" type="date" class="form-input" [max]="nextYearHtmlInput" [formControl]="examScheduleForm.controls['date']"></ion-input>
                     <ng-template #date>
-                      <ion-datetime [max]="nextYears" [formControl]="examScheduleForm.controls['date']" class="form-input"></ion-datetime>
+                      <ion-datetime (ionChange)="showDuration()" [max]="nextYears" [formControl]="examScheduleForm.controls['date']" class="form-input"></ion-datetime>
                     </ng-template>
                   </ion-item>
                 </ion-col>
@@ -77,10 +77,20 @@
                     <ion-label position="stacked" class="item-label">
                       End Date
                     </ion-label>
-                    <ion-input *ngIf="!isCordova else dateEnd" type="date" class="form-input" [max]="nextYearHtmlInput" [formControl]="examScheduleForm.controls['endDate']"></ion-input>
+                    <ion-input *ngIf="!isCordova else dateEnd" (ionChange)="showDuration()" type="date" class="form-input" [max]="nextYearHtmlInput" [formControl]="examScheduleForm.controls['endDate']"></ion-input>
                     <ng-template #dateEnd>
-                      <ion-datetime [max]="nextYears" [formControl]="examScheduleForm.controls['endDate']" class="form-input"></ion-datetime>
+                      <ion-datetime (ionChange)="showDuration()" [max]="nextYears" [formControl]="examScheduleForm.controls['endDate']" class="form-input"></ion-datetime>
                     </ng-template>
+                  </ion-item>
+                </ion-col>
+                <ion-col *ngIf="examDuration" class="ion-no-padding ion-align-self-end">
+                  <ion-item lines="none" class="ion-margin-bottom">
+                    <ion-label position="stacked" class="item-label ion-margin-bottom">
+                      Duration
+                    </ion-label>
+                    <ion-badge class="ion-margin-top">
+                      {{examDuration}}
+                    </ion-badge>
                   </ion-item>
                 </ion-col>
               </ion-row>
@@ -93,9 +103,9 @@
                     <ion-label position="stacked" class="item-label">
                       Start Time
                     </ion-label>
-                    <ion-input *ngIf="!isCordova else timeStart" type="time" [formControl]="examScheduleForm.controls['startTime']" class="form-input"></ion-input>
+                    <ion-input (ionChange)="showDuration()" *ngIf="!isCordova else timeStart" type="time" [formControl]="examScheduleForm.controls['startTime']" class="form-input"></ion-input>
                     <ng-template #timeStart>
-                      <ion-datetime [formControl]="examScheduleForm.controls['startTime']" displayFormat="h:mm A"
+                      <ion-datetime (ionChange)="showDuration()" [formControl]="examScheduleForm.controls['startTime']" displayFormat="h:mm A"
                                     placeholder="Start Time" class="form-input"></ion-datetime>
                     </ng-template>
                   </ion-item>
@@ -105,9 +115,9 @@
                     <ion-label position="stacked" class="item-label">
                       End Time
                     </ion-label>
-                    <ion-input *ngIf="!isCordova else timeEnd" type="time" [formControl]="examScheduleForm.controls['endTime']" class="form-input"></ion-input>
+                    <ion-input (ionChange)="showDuration()" *ngIf="!isCordova else timeEnd" type="time" [formControl]="examScheduleForm.controls['endTime']" class="form-input"></ion-input>
                     <ng-template #timeEnd>
-                      <ion-datetime [formControl]="examScheduleForm.controls['endTime']" displayFormat="h:mm A"
+                      <ion-datetime (ionChange)="showDuration()" [formControl]="examScheduleForm.controls['endTime']" displayFormat="h:mm A"
                                     placeholder="End Time" class="form-input"></ion-datetime>
                     </ng-template>
                   </ion-item>

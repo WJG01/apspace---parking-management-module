@@ -12,6 +12,7 @@ import { SearchModalComponent } from 'src/app/components/search-modal/search-mod
 import { ExamScheduleAdmin } from 'src/app/interfaces/exam-schedule-admin';
 import { WsApiService } from 'src/app/services';
 import { NotifierService } from 'src/app/shared/notifier/notifier.service';
+import { ExamDurationPipe } from './exam-duration.pipe';
 import { ManageAssessmentTypesPage } from './manage-assessment-types/manage-assessment-types.page';
 
 @Component({
@@ -40,6 +41,8 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
   nextYearHtmlInput = format(addYears(new Date(), 3), 'yyyy-MM-dd');
 
   isCordova: boolean;
+
+  examDuration: string;
 
   examScheduleForm: FormGroup;
 
@@ -285,6 +288,7 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
                       <p><strong>Start Date: </strong>${bodyObject.dateday}</p>
                       <p><strong>End Date: </strong>${bodyObject.datedayend}</p>
                       <p><strong>Time: </strong> ${bodyObject.time}</p>
+                      <p><strong>Duration: </strong> ${this.examDuration}</p>
                       <p><strong>Assessment Type: </strong> ${bodyObject.assessment_type} </p>
                       <p><strong>Remarks: </strong> ${bodyObject.remarks} </p>`,
             buttons: [
@@ -339,6 +343,52 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
         }
       ]
     }).then(toast => toast.present());
+  }
+
+  showDuration() {
+    const formattedStartDate = parse(
+      this.examScheduleForm.get('startTime').value, 'HH:mm', new Date(this.examScheduleForm.get('date').value)
+    );
+    const formattedEndDate = parse(
+      this.examScheduleForm.get('endTime').value, 'HH:mm', new Date(this.examScheduleForm.get('endDate').value)
+    );
+
+    if (formattedStartDate && formattedEndDate) {
+      const duration = new ExamDurationPipe().transform(formattedStartDate, formattedEndDate);
+      if (duration && (duration.includes('hour') || duration.includes('hours'))) {
+        const day = Math.floor(+duration.split(' ')[0] / 24);
+        const time = +duration.split(' ')[0] % 24;
+
+
+        if (day > 1 && time > 1) {
+          this.examDuration = day + ' days' + ' and ' + time + ' hours';
+        }
+
+        if (day === 1 && time > 1) {
+          this.examDuration = day + ' day' + ' and ' + time + ' hours';
+        }
+
+        if (day > 1 && time === 1) {
+          this.examDuration = day + ' days' + ' and ' + time + ' hour';
+        }
+
+        if (day === 1 && !time) {
+          this.examDuration = day + ' day';
+        }
+
+        if (day > 1 && !time) {
+          this.examDuration = day + ' days';
+        }
+
+        if (!day) {
+          this.examDuration = duration;
+        }
+
+      } else {
+        this.examDuration = duration;
+      }
+    }
+
   }
 
   async presentLoading() {
