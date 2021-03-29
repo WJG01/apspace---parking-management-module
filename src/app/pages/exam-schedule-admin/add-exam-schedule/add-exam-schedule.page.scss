@@ -66,3 +66,14 @@ div.scrollable-div {
 .masonry-item {
     padding: 0;
 }
+
+.duration-label {
+  font-size: 16px;
+}
+
+.duration-item {
+  --background: var(--ion-background-color);
+  padding-left: 16px;
+  padding-right: 16px;
+  --border-radius: 7px;
+}
