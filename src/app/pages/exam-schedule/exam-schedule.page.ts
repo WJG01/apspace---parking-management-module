@@ -74,9 +74,13 @@ export class ExamSchedulePage {
       this.exam$ = this.ws.get<ExamSchedule[]>(url, { auth: false, caching }).pipe(
         map(res => {
           res.forEach(exam => {
-            return Object.assign(
-              exam, {duration: this.showDuration((new Date(exam.endDate + 'T' + exam.until.split('T')[1])), new Date(exam.since))}
-            );
+            if (exam.endDate) {
+              return Object.assign(
+                exam, {duration: this.showDuration((new Date(exam.endDate + 'T' + exam.until.split('T')[1])), new Date(exam.since))}
+              );
+            } else {
+              return Object.assign(exam, {duration: this.showDuration(new Date(exam.until), new Date(exam.since))});
+            }
           });
           return res;
         }),
