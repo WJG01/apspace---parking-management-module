@@ -8,7 +8,7 @@ export class ExamDurationPipe implements PipeTransform {
   transform(startDate: Date, endDate: Date): any {
     const seconds = Math.floor((+endDate - +startDate) / 1000);
     if (seconds < 29) {
-      return 'Less than 30 seconds';
+      return 'The duration is too small, please check your input';
     }
 
 
