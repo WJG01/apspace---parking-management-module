@@ -55,7 +55,7 @@ export class LibraryPage implements OnInit {
   }
 
   openWorldCatSearch() {
-    if (this.worldCatSearch == '') {
+    if (this.worldCatSearch === '') {
       this.presentToast('Search field cannot be empty');
     } else {
       const url = `https://asiapacificuniversity.on.worldcat.org/external-search?queryString=${this.worldCatSearch}&databaseList=&clusterResults=on&stickyFacetsChecked=on&baseScope=${this.worldCatSearchCategory}`;
