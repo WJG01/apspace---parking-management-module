@@ -76,8 +76,8 @@
                               <ion-col size="12">
                                 <ion-text color="tertiary">
                                   <h5 class="glob-text-bold">{{ exam.since | dateWithTimezone: 'EEEE, dd MMM y' }} @
-                                    {{ exam.since | dateWithTimezone: 'time' }} -
-                                    {{ exam.until | dateWithTimezone: 'time' }}</h5>
+                                    {{ exam.since | dateWithTimezone: 'time' }} - {{ exam.endDate | dateWithTimezone: 'EEEE, dd MMM y' }} @
+                                    {{ exam.until | dateWithTimezone: 'time' }} {{exam.duration ? '(' + exam.duration + ')' : '' }}</h5>
                                 </ion-text>
                               </ion-col>
                             </ion-row>
