@@ -23,6 +23,7 @@ import {
   NewsService, NotificationService, SettingsService, StudentTimetableService,
   WsApiService,
 } from 'src/app/services';
+import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-with-timezone.pipe';
 import { NotifierService } from 'src/app/shared/notifier/notifier.service';
 import { NewsModalPage } from '../news/news-modal';
 import { NotificationModalPage } from '../notifications/notification-modal';
@@ -30,7 +31,8 @@ import { NotificationModalPage } from '../notifications/notification-modal';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.page.html',
-  styleUrls: ['./dashboard.page.scss']
+  styleUrls: ['./dashboard.page.scss'],
+  providers: [DateWithTimezonePipe]
 })
 export class DashboardPage implements OnInit {
   // USER SETTINGS
@@ -334,6 +336,7 @@ export class DashboardPage implements OnInit {
     private settings: SettingsService,
     private storage: Storage,
     private notifierService: NotifierService,
+    private dateWithTimezonePipe: DateWithTimezonePipe
 
   ) {
     // getting the main accent color to color the chart.js (Temp until removing chart.js)
@@ -1141,6 +1144,17 @@ export class DashboardPage implements OnInit {
               trip_to_color: this.getLocationColor(curr.trip_to),
               times: []
             };
+            // Convert to dateObject for time format
+            const localToUtcOffset = (currentDate.getTimezoneOffset());
+            const localParsedDate = Date.parse(currentDate.toString());
+
+            const utcDate = new Date(localParsedDate + (localToUtcOffset * 60000));
+            const utcParsedDate = Date.parse(utcDate.toUTCString());
+
+            const d = new Date(utcParsedDate + (480 * 60000));
+            const dateObject = parse(curr.trip_time, 'HH:mm', d);
+            curr.trip_time = this.dateWithTimezonePipe.transform(dateObject, 'bus');
+
             prev[curr.trip_from + curr.trip_to].times.push(curr.trip_time);
             return prev;
           },

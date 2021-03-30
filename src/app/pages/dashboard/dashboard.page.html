@@ -468,10 +468,10 @@
                                 <span>{{trip.trip_to}}</span>
                               </h3>
                               <p class="timings">
-                                <span class="ion-padding-end timing-1 glob-text-bold" *ngIf="trip.times[0]">{{trip.times[0]}}</span>
-                                <span class="ion-padding-end timing-2 glob-text-bold" *ngIf="trip.times[1]">{{trip.times[1]}}</span>
-                                <span class="ion-padding-end timing-3 glob-text-bold" *ngIf="trip.times[2]">{{trip.times[2]}}</span>
-                                <span class="ion-padding-end timing-4 glob-text-bold" *ngIf="trip.times[3]">{{trip.times[3]}}</span>
+                                <span class="ion-padding-end timing-1 glob-text-bold" *ngIf="trip.times[0]">{{trip.times[0].slice(0, -8)}}</span>
+                                <span class="ion-padding-end timing-2 glob-text-bold" *ngIf="trip.times[1]">{{trip.times[1].slice(0, -8)}}</span>
+                                <span class="ion-padding-end timing-3 glob-text-bold" *ngIf="trip.times[2]">{{trip.times[2].slice(0, -8)}}</span>
+                                <span class="ion-padding-end timing-4 glob-text-bold" *ngIf="trip.times[3]">{{trip.times[3].slice(0, -8)}}</span>
                               </p>
                             </div>
                           </ion-col>
@@ -498,6 +498,7 @@
                           </ion-row>
                         </ng-container>
                       </div>
+                      <p class="ion-padding-top"><ion-text class ="glob-text-bold">Note:</ion-text> All of the timings of Upcoming Trips are displayed in the Malaysian Timezone</p>
                     </ng-container>
                     <ng-template #noTrips>
                       <app-message-with-svg messageTitle="No More Trips!"
