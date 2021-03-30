@@ -23,8 +23,8 @@ export class MinutesLeftPipe implements PipeTransform {
 
       const intervals = {
         hour: 3600,
-        minute: 60,
-        second: 1
+        min: 60,
+        sec: 1
       };
 
       let counter;
@@ -32,9 +32,9 @@ export class MinutesLeftPipe implements PipeTransform {
         counter = Math.floor(seconds / intervals[i]);
         if (counter > 0) {
           if (counter === 1) {
-            return 'in' + ' ' + counter + ' ' + i + '' + ' ' + '(' + value + ')' ; // singular (in 1 hour )
+            return 'in' + ' ' + counter + ' ' + i + ''; // singular (in 1 hour )
           } else {
-            return 'in' + ' ' + counter + ' ' + i + 's' + ' ' + '(' + value + ')' ; // plural (in 2 hours)
+            return 'in' + ' ' + counter + ' ' + i + 's'; // plural (in 2 hours)
           }
         }
       }

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { MenuController } from '@ionic/angular';
 import { format, max, parse, parseISO } from 'date-fns';
 import { Observable, forkJoin } from 'rxjs';
 import { finalize, map, tap } from 'rxjs/operators';
@@ -22,15 +21,16 @@ export class BusShuttleServicesPage {
   dateNow = new Date();
   latestUpdate = '';
 
+  detailedView = false;
+
+  filterMenuHidden = true;
   filterObject: {
     tripDay: string,
     toLocation: string,
     fromLocation: string,
-    show: 'all' | 'upcoming'
   } = {
       toLocation: '',
       fromLocation: '',
-      show: 'all',
       tripDay: this.getTodayDay(this.dateNow)
     };
 
@@ -43,7 +43,6 @@ export class BusShuttleServicesPage {
   numberOfTrips = 1;
 
   constructor(
-    private menu: MenuController,
     private settings: SettingsService,
     private ws: WsApiService,
     private router: Router,
@@ -115,7 +114,6 @@ export class BusShuttleServicesPage {
         fromLocation: '',
         toLocation: '',
         tripDay: this.getTodayDay(this.dateNow),
-        show: 'all'
       };
     }
     this.filteredTrip$ = this.trip$.pipe(
@@ -137,18 +135,20 @@ export class BusShuttleServicesPage {
             );
           }
         });
-        if (this.filterObject.show === 'upcoming') {
+        if (this.detailedView === false) {
           filteredArray = filteredArray.filter(trip => {
             // FILTER TRIPS TO UPCOMING TRIPS ONLY
-            // return this.strToDate(trip.trip_time) >= this.dateNow;
-            const timeFilter = this.settings.get('timeFormat') === '24' ? parse(trip.trip_time, 'kk:mm', new Date()) >= this.dateNow :
-              parse(trip.trip_time, 'hh:mm aa', new Date()) >= this.dateNow;
+            const timeFilter = this.settings.get('timeFormat') === '24' ?
+              parse(trip.trip_time.replace(' (GMT+8)', ''), 'HH:mm', new Date()) >= this.dateNow :
+              parse(trip.trip_time.replace(' (GMT+8)', ''), 'hh:mm aa', new Date()) >= this.dateNow;
+
             return timeFilter;
           });
         }
         if (filteredArray.length === 0) { // NO RESULTS => SHOW 'THERE ARE NO TRIPS' MESSAGE
           this.numberOfTrips = 0;
         }
+
         return filteredArray;
       }),
       tap(trips => {
@@ -177,13 +177,12 @@ export class BusShuttleServicesPage {
     );
   }
 
-  openMenu() {
-    this.menu.enable(true, 'bus-filter-menu');
-    this.menu.open('bus-filter-menu');
-  }
-
-  closeMenu() {
-    this.menu.close('bus-filter-menu');
+  showFilterMenu() {
+    if (this.filterMenuHidden === true) {
+      this.filterMenuHidden = false;
+    } else {
+      this.filterMenuHidden = true;
+    }
   }
 
   // SWAP FROM AND TO LOCATIONS
@@ -199,7 +198,6 @@ export class BusShuttleServicesPage {
       fromLocation: '',
       toLocation: '',
       tripDay: this.getTodayDay(this.dateNow),
-      show: 'upcoming'
     };
     this.onFilter();
   }

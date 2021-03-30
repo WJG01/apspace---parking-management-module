@@ -3,9 +3,56 @@
 }
 
 .passed{
-  color: var(--ion-color-medium) !important;
+  font-weight: normal !important;
 }
 
 .primary-color {
+  color: var(--ion-color-primary) !important;
+}
+
+.minutes-left-wrap {
+ padding-left: 3px;
+}
+
+.trips {
+  padding-bottom: 20px;
+  font-size: 18px;
+}
+
+.simple-view-trip {
+  font-size: 17px;
+}
+
+.simple-view-trip-first {
+  font-weight: bold;
+  font-size: 17px;
   color: var(--ion-color-primary);
+}
+
+
+.simple-view-trip-duration-first {
+  opacity: 60%;
+}
+
+.simple-view-trip-duration {
+  opacity: 60%;
+}
+
+.trip-section {
+ font-size: 25px !important;
+  color: var(--ion-color-primary);
+}
+
+
+.trip-section:nth-last-child(-n+2) {
+  @media (max-width: 768px) {
+    padding-top: 20px;
+  }
+}
+
+.trip-section:not(:last-child) {
+
+  @media (min-width: 768px) {
+    border-right: solid 1.5px;
+  }
 }
