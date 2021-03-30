@@ -39,16 +39,11 @@
 }
 
 .trip-section {
- font-size: 25px !important;
+  font-size: 25px !important;
   color: var(--ion-color-primary);
+  margin-bottom: 20px;
 }
 
-
-.trip-section:nth-last-child(-n+2) {
-  @media (max-width: 768px) {
-    padding-top: 20px;
-  }
-}
 
 .trip-section:not(:last-child) {
 
