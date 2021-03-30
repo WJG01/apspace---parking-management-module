@@ -274,6 +274,14 @@
                               </ion-col>
                               <ion-col size="12">
                                 <ion-item color="light" lines="full">
+                                  <ion-label>Completing Assignments</ion-label>
+                                  <ion-select [(ngModel)]="studentBehavior.COMPLETING_BEH" interface="popover">
+                                    <ion-select-option *ngFor="let score of scores" [value]="score">
+                                      {{score}}
+                                    </ion-select-option>
+                                  </ion-select>
+                                </ion-item>
+                                <ion-item color="light" lines="full">
                                   <ion-label>Academic Behaviour</ion-label>
                                   <ion-select [(ngModel)]="studentBehavior.ACADEMIC_BEH" interface="popover">
                                     <ion-select-option *ngFor="let score of scores" [value]="score">
