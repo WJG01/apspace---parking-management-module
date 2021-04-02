@@ -12,7 +12,7 @@
   <ion-grid>
     <ion-row>
       <ion-col size-xs="12" size-md="4" push-md="8">
-        <ion-card>
+        <ion-card class="ion-no-margin ion-margin-bottom">
           <ion-card-header color="primary">
             <ion-card-title>
               Configuration Section
@@ -32,12 +32,12 @@
               </ion-item>
             </ng-container>
             <ng-template #loadingIntakes>
-              <ion-item lines="full">
-                <ion-skeleton-text animated style="width: 100%; height: 35px;"></ion-skeleton-text>
+              <ion-item lines="full" class="ion-no-margin ion-no-padding" style="--inner-padding-end: none;">
+                <ion-skeleton-text animated style="width: 100%; height: 100%;"></ion-skeleton-text>
               </ion-item>
             </ng-template>
             <ng-container *ngIf="(COURSE_MODULES$ | async) as intakeModules; else loadingModules">
-              <ion-item lines="full" [disabled]="surveyType === 'Programme Evaluation' || intakeModules.length <= 0">
+              <ion-item lines="none" [disabled]="surveyType === 'Programme Evaluation' || intakeModules.length <= 0">
                 <ion-label>Module</ion-label>
                 <ion-select [(ngModel)]="classCode" (ngModelChange)="onClassCodeChanged()" interface="popover">
                   <ion-select-option *ngFor="let module of intakeModules" [value]="module.CLASS_CODE">
@@ -47,13 +47,14 @@
               </ion-item>
             </ng-container>
             <ng-template #loadingModules>
-              <ion-item lines="full">
-                <ion-skeleton-text animated style="width: 100%; height: 35px;"></ion-skeleton-text>
+              <ion-item lines="none" class="ion-no-margin ion-no-padding" style="--inner-padding-end: none;">
+                <ion-skeleton-text animated style="width: 100%; height: 100%;"></ion-skeleton-text>
               </ion-item>
             </ng-template>
           </ion-card-content>
         </ion-card>
-        <ion-card color="light" *ngIf="intakeCode && classCode && surveyType || surveyType === 'Programme Evaluation'">
+        <ion-card class="ion-no-margin" color="light"
+          *ngIf="intakeCode && classCode && surveyType || surveyType === 'Programme Evaluation'">
           <ion-card-header color="medium">
             <ion-card-title>
               Details
@@ -167,7 +168,7 @@
       </ion-col>
       <ion-col size-xs="12" size-md="8" pull-md="4">
         <ng-container *ngIf="!intakeCode; else intakeSelected">
-          <ion-card>
+          <ion-card class="ion-no-margin">
             <app-message-with-svg imageUrl="assets/img/question_mark.svg" messageTitle="" messageContent=""
               wrapperSize="6" wrapperMarginTop="30px" wrapperOffset="3">
             </app-message-with-svg>
@@ -189,7 +190,7 @@
               </ng-container>
               <ng-template #checkModule>
                 <ng-container *ngIf="intakeModules.length <= 0; else noModuleSelected">
-                  <ion-card>
+                  <ion-card class="ion-no-margin">
                     <app-message-with-svg imageUrl="assets/img/happy.svg" messageTitle="" messageContent=""
                       wrapperSize="6" wrapperMarginTop="30px" wrapperOffset="3">
                     </app-message-with-svg>
@@ -204,7 +205,7 @@
                   </ion-card>
                 </ng-container>
                 <ng-template #noModuleSelected>
-                  <ion-card>
+                  <ion-card class="ion-no-margin">
                     <app-message-with-svg imageUrl="assets/img/question_mark.svg" messageTitle="" messageContent=""
                       wrapperSize="6" wrapperMarginTop="30px" wrapperOffset="3">
                     </app-message-with-svg>
@@ -221,7 +222,7 @@
             </ng-container>
             <ng-template #classCodeSelected>
               <ng-container *ngIf="!surveyType; else surveyTypeSelected">
-                <ion-card>
+                <ion-card class="ion-no-margin">
                   <app-message-with-svg imageUrl="assets/img/due_date.svg" messageTitle="" messageContent=""
                     wrapperSize="6" wrapperMarginTop="30px" wrapperOffset="3">
                   </app-message-with-svg>
@@ -240,7 +241,7 @@
             </ng-template>
           </ng-container>
           <ng-template #loadingMain>
-            <ion-card>
+            <ion-card class="ion-no-margin">
               <ion-skeleton-text class="ion-no-margin" animated style="height: 300px; width: 100%;">
               </ion-skeleton-text>
             </ion-card>
@@ -256,8 +257,8 @@
   <ng-container *ngIf="(survey$ | async) as surveys; else loadingsurvey">
     <div class="survey-wrapper" *ngFor="let survey of surveys">
       <div class="survey-sections" *ngIf="survey.sections.length > 0; else noSectionsAddedMsg">
-        <div class="survey-section" *ngFor="let surveySection of survey.sections; index as i">
-          <ion-card>
+        <div class="survey-section" *ngFor="let surveySection of survey.sections; index as i; let isLast = last">
+          <ion-card [ngClass]="isLast ? 'ion-no-margin' : 'ion-no-margin ion-margin-bottom'">
             <ion-card-header color="secondary">
               <ion-card-title>
                 Section {{i+1}}:
@@ -337,7 +338,7 @@
     </div>
   </ng-container>
   <ng-template #loadingsurvey>
-    <ion-card *ngFor="let _ of numOfSkeletons">
+    <ion-card *ngFor="let i of [].constructor(3)" class="ion-no-margin">
       <ion-item>
         <ion-skeleton-text animated style="line-height: 30px; width: 100%"></ion-skeleton-text>
       </ion-item>
@@ -365,12 +366,9 @@
             missing. You have to answer all the questions with *.</ion-text>
         </ion-col>
         <ion-col size-xs="12" size-md="8" class="ion-padding-start ion-padding-end ion-text-end">
-          <ion-button [disabled]="submitting" (click)="submitSurvey()" expand="block" color="success">
-            <ng-container *ngIf="!submitting">
-              Submit
-              <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-            </ng-container>
-            <ng-container *ngIf="submitting">Loading ...</ng-container>
+          <ion-button (click)="submitSurvey()" expand="block" color="success">
+            Submit
+            <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
           </ion-button>
         </ion-col>
       </ion-row>
