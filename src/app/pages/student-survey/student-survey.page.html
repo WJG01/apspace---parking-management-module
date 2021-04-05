@@ -338,7 +338,7 @@
     </div>
   </ng-container>
   <ng-template #loadingsurvey>
-    <ion-card *ngFor="let i of [].constructor(3)" class="ion-no-margin">
+    <ion-card *ngFor="let _ of skeletons" class="ion-no-margin">
       <ion-item>
         <ion-skeleton-text animated style="line-height: 30px; width: 100%"></ion-skeleton-text>
       </ion-item>

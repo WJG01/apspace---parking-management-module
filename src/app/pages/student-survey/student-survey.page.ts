@@ -29,6 +29,7 @@ export class StudentSurveyPage implements OnInit {
   selectedIntake: SurveyIntake;
 
   loading: HTMLIonLoadingElement;
+  skeletons = new Array(3);
   showFieldMissingError = false;
 
   // LISTS
