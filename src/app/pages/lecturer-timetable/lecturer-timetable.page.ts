@@ -4,7 +4,7 @@ import { NavigationExtras, Router } from '@angular/router';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { ActionSheetController, IonRefresher } from '@ionic/angular';
 import { formatISO } from 'date-fns';
-import { Observable, Subscription , of} from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { catchError, finalize, switchMap, tap} from 'rxjs/operators';
 
 import { NotifierService } from 'src/app/shared/notifier/notifier.service';
