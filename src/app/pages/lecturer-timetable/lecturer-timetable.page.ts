@@ -4,8 +4,8 @@ import { NavigationExtras, Router } from '@angular/router';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { ActionSheetController, IonRefresher } from '@ionic/angular';
 import { formatISO } from 'date-fns';
-import { Observable, Subscription } from 'rxjs';
-import { finalize, switchMap, tap } from 'rxjs/operators';
+import { Observable, Subscription , of} from 'rxjs';
+import { catchError, finalize, switchMap, tap} from 'rxjs/operators';
 
 import { NotifierService } from 'src/app/shared/notifier/notifier.service';
 import { LecturerTimetable, StaffProfile } from '../../interfaces';
@@ -35,6 +35,8 @@ export class LecturerTimetablePage implements OnInit {
 
 
   viewWeek: boolean; // weekly or daily display
+
+  profileExists: boolean;
 
   comingFromTabs = this.router.url.split('/')[1].split('/')[0] === 'tabs';
 
@@ -114,9 +116,14 @@ export class LecturerTimetablePage implements OnInit {
     this.timetable$ = this.ws.get<StaffProfile[]>('/staff/profile', { caching: 'cache-only' }).pipe(
       tap(profile => {
         this.lecturerCode = profile[0].CODE;
+        this.profileExists = true;
       }),
       switchMap(([{ ID }]) => this.ws.get<LecturerTimetable[]>(`/lecturer-timetable/v2/${ID}`, { auth: false })),
       tap(tt => this.updateDay(tt)),
+      catchError(err => {
+        this.profileExists = false;
+        return of(err);
+      }),
       finalize(() => refresher && refresher.complete()),
     );
   }
