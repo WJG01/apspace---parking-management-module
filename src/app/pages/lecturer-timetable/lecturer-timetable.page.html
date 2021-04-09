@@ -49,8 +49,8 @@
 
 
     <!-- do not add filter pipe here as it affects loading -->
-    <ng-template let-timetables [ngIf]="timetable$ | async" [ngIfElse]="loading">
-      <ng-template [ngIf]="profileExists" [ngIfElse]="empty">
+    <ng-template [ngIf]="profileExists" [ngIfElse]="noProfile">
+      <ng-template let-timetables [ngIf]="timetable$ | async" [ngIfElse]="loading">
         <ng-template let-timetables
           [ngIf]="!viewWeek ? (timetables | theday:selectedDate) : (timetables | theweek:selectedWeek)"
           [ngIfElse]="loading">
@@ -147,85 +147,93 @@
             </ion-grid>
           </ng-template>
         </ng-template>
+
+        <ng-template #empty>
+          <ion-card>
+            <ng-template [ngIf]="!viewWeek && availableWeek!.length > 0">
+              <ion-segment class="week-segment" [ngModel]="selectedDate | date:'E' | uppercase"
+                (ngModelChange)="selectedDate = availableDate[availableDays.indexOf($event)]" scrollable>
+                <ion-segment-button *ngFor="let day of availableDays" [value]="day">
+                  {{ day }}
+                </ion-segment-button>
+              </ion-segment>
+            </ng-template>
+            <ion-card-content>
+              <ng-container *ngIf="viewWeek">
+                <app-message-with-svg imageUrl="assets/img/empty.svg"
+                  messageTitle="Oops! It looks like there is no classes assigned to you on the week that starts on {{selectedWeek | dateWithTimezone:'EEEE, dd MM yyy'}}"
+                  messageContent="If you think that there is something wrong, you can try this:" wrapperSize="6"
+                  wrapperMarginTop="30px" wrapperOffset="3" [advancedMode]="true">
+                  <div class="flex-container">
+                    <ul class="list-txt-color">
+                      <li>Make sure you have selected the right date</li>
+                      <li>Try to refresh the page</li>
+                    </ul>
+                    <p>Still having trouble? No worries! Just click <a [routerLink]="'/feedback'">here</a> and
+                      report
+                      the issue to us.</p>
+                  </div>
+                </app-message-with-svg>
+              </ng-container>
+              <ng-container *ngIf="!viewWeek">
+                <app-message-with-svg imageUrl="assets/img/empty.svg"
+                  messageTitle="Oops! It looks like there is no classes assigned to you on the selected date {{selectedDate | date:'E' | uppercase}}"
+                  messageContent="If you think that there is something wrong, you can try this:" wrapperSize="6"
+                  wrapperMarginTop="30px" wrapperOffset="3" [advancedMode]="true">
+                  <div class="flex-container">
+                    <ul class="list-txt-color">
+                      <li>Make sure you have selected the right date</li>
+                      <li>Enable the weekly view and check if there are classes on other days</li>
+                      <li>Try to refresh the page</li>
+                    </ul>
+                    <p>Still having trouble? No worries! Just click <a [routerLink]="'/feedback'">here</a> and
+                      report
+                      the issue to us.</p>
+                  </div>
+                </app-message-with-svg>
+              </ng-container>
+            </ion-card-content>
+          </ion-card>
+        </ng-template>
       </ng-template>
-      
-      <ng-template #empty>
-        <ion-card>
-          <ng-template [ngIf]="!viewWeek && availableWeek!.length > 0">
-            <ion-segment class="week-segment" [ngModel]="selectedDate | date:'E' | uppercase"
-              (ngModelChange)="selectedDate = availableDate[availableDays.indexOf($event)]" scrollable>
-              <ion-segment-button *ngFor="let day of availableDays" [value]="day">
-                {{ day }}
-              </ion-segment-button>
-            </ion-segment>
-          </ng-template>
-          <ion-card-content>
-            <ng-container *ngIf="viewWeek && profileExists">
-              <app-message-with-svg imageUrl="assets/img/empty.svg"
-                messageTitle="Oops! It looks like there is no classes assigned to you on the week that starts on {{selectedWeek | dateWithTimezone:'EEEE, dd MM yyy'}}"
-                messageContent="If you think that there is something wrong, you can try this:" wrapperSize="6"
-                wrapperMarginTop="30px" wrapperOffset="3" [advancedMode]="true">
-                <div class="flex-container">
-                  <ul class="list-txt-color">
-                    <li>Make sure you have selected the right date</li>
-                    <li>Try to refresh the page</li>
-                  </ul>
-                  <p>Still having trouble? No worries! Just click <a [routerLink]="'/feedback'">here</a> and
-                    report
-                    the issue to us.</p>
-                </div>
-              </app-message-with-svg>
-            </ng-container>
-            <ng-container *ngIf="!viewWeek && profileExists">
-              <app-message-with-svg imageUrl="assets/img/empty.svg"
-                messageTitle="Oops! It looks like there is no classes assigned to you on the selected date {{selectedDate | date:'E' | uppercase}}"
-                messageContent="If you think that there is something wrong, you can try this:" wrapperSize="6"
-                wrapperMarginTop="30px" wrapperOffset="3" [advancedMode]="true">
-                <div class="flex-container">
-                  <ul class="list-txt-color">
-                    <li>Make sure you have selected the right date</li>
-                    <li>Enable the weekly view and check if there are classes on other days</li>
-                    <li>Try to refresh the page</li>
-                  </ul>
-                  <p>Still having trouble? No worries! Just click <a [routerLink]="'/feedback'">here</a> and
-                    report
-                    the issue to us.</p>
-                </div>
-              </app-message-with-svg>
-            </ng-container>
-            <ng-contianer *ngIf="!profileExists">
-              <app-message-with-svg imageUrl="assets/img/no_data.svg" messageTitle="Error"
-                messageContent="Your profile has not been created by the HR yet. Please get in touch with them."
-                wrapperSize="5" wrapperMarginTop="30px" wrapperOffset="3.5">
-              </app-message-with-svg>
-            </ng-contianer>
+
+      <ng-template #loading>
+        <ion-card class="ion-no-padding">
+          <ion-card-content class="ion-no-padding">
+            <ion-skeleton-text animated style="width: 100%; line-height: 100px"></ion-skeleton-text>
+          </ion-card-content>
+        </ion-card>
+        <ion-card class="ion-no-padding">
+          <ion-card-content class="ion-no-padding">
+            <ion-skeleton-text animated style="width: 100%; line-height: 100px"></ion-skeleton-text>
+          </ion-card-content>
+        </ion-card>
+        <ion-card class="ion-no-padding">
+          <ion-card-content class="ion-no-padding">
+            <ion-skeleton-text animated style="width: 100%; line-height: 100px"></ion-skeleton-text>
+          </ion-card-content>
+        </ion-card>
+        <ion-card class="ion-no-padding">
+          <ion-card-content class="ion-no-padding">
+            <ion-skeleton-text animated style="width: 100%; line-height: 100px"></ion-skeleton-text>
           </ion-card-content>
         </ion-card>
       </ng-template>
     </ng-template>
 
-    <ng-template #loading>
-      <ion-card class="ion-no-padding">
-        <ion-card-content class="ion-no-padding">
-          <ion-skeleton-text animated style="width: 100%; line-height: 100px"></ion-skeleton-text>
-        </ion-card-content>
-      </ion-card>
-      <ion-card class="ion-no-padding">
-        <ion-card-content class="ion-no-padding">
-          <ion-skeleton-text animated style="width: 100%; line-height: 100px"></ion-skeleton-text>
-        </ion-card-content>
-      </ion-card>
-      <ion-card class="ion-no-padding">
-        <ion-card-content class="ion-no-padding">
-          <ion-skeleton-text animated style="width: 100%; line-height: 100px"></ion-skeleton-text>
-        </ion-card-content>
-      </ion-card>
-      <ion-card class="ion-no-padding">
-        <ion-card-content class="ion-no-padding">
-          <ion-skeleton-text animated style="width: 100%; line-height: 100px"></ion-skeleton-text>
-        </ion-card-content>
-      </ion-card>
-    </ng-template>
+    <ng-template #noProfile>
+        <ion-card>
+          <ion-card-content>
+            <ng-container *ngIf="!profileExists">
+              <app-message-with-svg imageUrl="assets/img/no_data.svg" messageTitle="Error"
+                messageContent="Your profile has not been created by the HR yet. Please get in touch with them."
+                wrapperSize="5" wrapperMarginTop="30px" wrapperOffset="3.5">
+              </app-message-with-svg>
+            </ng-container>
+          </ion-card-content>
+        </ion-card>
+      </ng-template>
+      
   </div>
 
 </ion-content>
