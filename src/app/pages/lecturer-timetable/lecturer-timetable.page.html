@@ -49,7 +49,7 @@
 
 
     <!-- do not add filter pipe here as it affects loading -->
-    
+
     <ng-template let-timetables [ngIf]="timetable$ | async" [ngIfElse]="loading">
       <ng-template [ngIf]="profileExists" [ngIfElse]="empty">
         <ng-template let-timetables
@@ -149,7 +149,7 @@
           </ng-template>
         </ng-template>
       </ng-template>
-      
+
       <ng-template #empty>
         <ion-card>
           <ng-template [ngIf]="!viewWeek && availableWeek!.length > 0">
@@ -196,8 +196,13 @@
             </ng-container>
             <ng-container *ngIf="!profileExists">
               <app-message-with-svg imageUrl="assets/img/no_data.svg" messageTitle="Error"
-                messageContent="Your profile has not been created by the HR yet. Please get in touch with them."
-                wrapperSize="5" wrapperMarginTop="30px" wrapperOffset="3.5">
+                messageContent="Your profile has not been created by the HR yet." wrapperSize="5"
+                wrapperMarginTop="30px" wrapperOffset="3.5" [advancedMode]="true">
+                <div class="flex-container">
+                  <p class="ion-text-center">Please get in touch with the HR team through the <a
+                      href="https://apiit.atlassian.net/servicedesk/customer/portals" target="_blank">Help Center</a>
+                  </p>
+                </div>
               </app-message-with-svg>
             </ng-container>
           </ion-card-content>
