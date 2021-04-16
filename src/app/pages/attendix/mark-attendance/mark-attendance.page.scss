@@ -24,7 +24,7 @@ ion-item {
   --background: transparent !important;
 }
 
-ion-card>ion-item>ion-label {
+ion-card > ion-item > ion-label {
   --color: #000000 !important;
   min-width: 15ex;
   /* force occupy some space on mobile */
@@ -40,7 +40,7 @@ ion-card>ion-item>ion-label {
   padding-bottom: calc(12px - 5px);
   border-bottom: 5px solid var(--primary-color);
   color: #000000;
-  font-family: 'Hack', 'Iconsolata', monospace;
+  font-family: "Hack", "Iconsolata", monospace;
 }
 
 .form-input {
@@ -73,6 +73,7 @@ qrcode {
   justify-content: center;
 }
 
+
 .main-title {
   font-size: 30px;
   padding-left: 0;
@@ -89,7 +90,6 @@ qrcode {
   .table-container {
     padding: 0;
 
-
     .table-row {
       min-height: 42px;
       padding: 10px;
@@ -103,27 +103,27 @@ qrcode {
 
   // Attendance Status (stateR: absent with reason, stateL: Late, stateN: absent, stateY: present)
   .stateR {
-    color: #FFFFFF;
-    background: #36A2EB !important;
+    color: #ffffff;
+    background: #36a2eb !important;
     // border-color: #36A2EB !important;
   }
 
   .stateN {
-    color: #FFFFFF;
+    color: #ffffff;
     background: #e54d42 !important;
     // border-color: #e54d42 !important;
     --background-hover: #af4448 !important;
   }
 
   .stateL {
-    color: #FFFFFF;
+    color: #ffffff;
     background: #d49a0d !important;
     // border-color: #d49a0d !important;
     --background-hover: #cabf45 !important;
   }
 
   .stateY {
-    color: #FFFFFF;
+    color: #ffffff;
     background: #49b571 !important;
     // border-color: #49b571 !important;
     --background-hover: #519657 !important;

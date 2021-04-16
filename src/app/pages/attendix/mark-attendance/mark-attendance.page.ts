@@ -1,7 +1,7 @@
-import { DatePipe, Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { DatePipe, LocationStrategy } from '@angular/common';
+import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AlertController, LoadingController, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
 import { authenticator } from 'otplib/otplib-browser';
 import { NEVER, Observable, Subject, interval, timer } from 'rxjs';
 import {
@@ -25,7 +25,12 @@ const stateMap = { Y: 'present', L: 'late', N: 'absent', R: 'absent with reason'
   styleUrls: ['./mark-attendance.page.scss'],
   providers: [DatePipe]
 })
+
+
+
 export class MarkAttendancePage implements OnInit {
+
+  @HostListener('window:beforeunload', ['$event'])
 
   doughnutChart = {
     type: 'pie',
@@ -58,10 +63,10 @@ export class MarkAttendancePage implements OnInit {
   studentsChartData$: Observable<any>;
   statusUpdate = new Subject<{ id: string; attendance: string; absentReason: string | null; }>();
 
+
   constructor(
     private attendance: AttendanceGQL,
     private initAttendance: InitAttendanceGQL,
-    private location: Location,
     private markAttendance: MarkAttendanceGQL,
     private markAttendanceAll: MarkAttendanceAllGQL,
     private newStatus: NewStatusGQL,
@@ -71,7 +76,9 @@ export class MarkAttendancePage implements OnInit {
     public alertCtrl: AlertController,
     public toastCtrl: ToastController,
     public loadingCtrl: LoadingController,
-    private datePipe: DatePipe
+    private locationStrategy: LocationStrategy,
+    private datePipe: DatePipe,
+    public navCtrl: NavController,
   ) { }
 
   ngOnInit() {
@@ -184,7 +191,6 @@ export class MarkAttendancePage implements OnInit {
     );
 
     // take last 10 values updated and ignore duplicates
-    console.log('schedule', schedule);
     this.lastMarked$ = this.newStatus.subscribe(schedule).pipe(
       pluck('data', 'newStatus'),
       tap(({ id }) => console.log('new', id, studentsNameById[id])),
@@ -241,7 +247,10 @@ export class MarkAttendancePage implements OnInit {
       map(students => students.length),
       first() // total does not change so stop counting
     );
+
+    this.handleBeforeGoBack();
   }
+
 
   /** Mark student attendance. */
   mark(student: string, attendance: string, absentEvent?: KeyboardEvent) {
@@ -380,7 +389,7 @@ export class MarkAttendancePage implements OnInit {
           handler: () => {
             const schedule = this.schedule;
             this.resetAttendance.mutate({ schedule }).subscribe(
-              () => { this.toast('Attendance deleted', 'success'), this.location.back(); },
+              () => { this.toast('Attendance deleted', 'success'), this.navCtrl.navigateBack('/attendix/classes'); },
               e => { this.toast('Attendance delete failed: ' + e, 'danger'); console.error(e); }
             );
           }
@@ -403,4 +412,48 @@ export class MarkAttendancePage implements OnInit {
     return item.id;
   }
 
+  async goBackToast() {
+    try {
+      this.toastCtrl.dismiss().then(() => {
+      }).catch(() => {
+      }).finally(() => {
+      });
+    } catch (e) { }
+
+    const toast = await this.toastCtrl.create({
+      header: 'Attention -- do you want to save the attendance?',
+      position: 'bottom',
+      color: 'danger',
+      duration: 8000,
+      buttons: [
+        {
+          text: 'Save Changes',
+          handler: () => {
+            this.navCtrl.navigateBack('/attendix/classes');
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+          }
+        }
+      ]
+    });
+    await toast.present();
+  }
+
+  /** Trigger on browser back button */
+  handleBeforeGoBack() {
+    history.pushState(null, null, window.location.href);
+    this.locationStrategy.onPopState(() => {
+      history.pushState(null, null, window.location.href);
+      this.goBackToast();
+    });
+  }
+
+  /** Trigger on browser close button */
+  handleBeforeUnload() {
+    return false;
+  }
 }

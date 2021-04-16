@@ -1,7 +1,10 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/attendix/classes"></ion-back-button>
+      <!-- defaultHref="" -->
+      <ion-button (click)="goBackToast()">
+        <ion-icon size="large" name="arrow-back"></ion-icon>
+      </ion-button>
     </ion-buttons>
     <ion-title>AttendiX | {{ thisClass ? 'New' : 'Edit' }} Attendance </ion-title>
     <ion-buttons slot="end">
@@ -19,12 +22,12 @@
     <ion-grid class="ion-no-padding">
       <ion-row *ngIf="otp$ | async as otp">
         <ion-col size="12" size-md="9" size-lg="7">
-              <qrcode *ngIf="otp" [qrdata]="otp" width="600" errorCorrectionLevel="H" [ngStyle]="{filter: otp === '---' ? 'blur(5px)' : '',
+          <qrcode *ngIf="otp" [qrdata]="otp" width="600" errorCorrectionLevel="H" [ngStyle]="{filter: otp === '---' ? 'blur(5px)' : '',
                             opacity: otp === '---' ? '0.5' : ''}"></qrcode>
-              <div *ngIf="otp === '---'" class="dead">
-                <p><strong>Class Time Over</strong></p>
-                <p>Please switch to manual mode</p>
-              </div>
+          <div *ngIf="otp === '---'" class="dead">
+            <p><strong>Class Time Over</strong></p>
+            <p>Please switch to manual mode</p>
+          </div>
         </ion-col>
 
         <ion-col size="12" size-md="3" size-lg="5">
@@ -46,7 +49,8 @@
                 </div>
                 <div class="small-margin-top">
                   <p class="ion-no-margin"><small>Class Type & Date</small></p>
-                  <small class="glob-text-bold">{{ schedule!.classType }} on {{ schedule!.date | date : 'EEE, dd MMM yyy' }}
+                  <small class="glob-text-bold">{{ schedule!.classType }} on {{ schedule!.date | date : 'EEE, dd MMM
+                    yyy' }}
                   </small>
                 </div>
                 <div class="small-margin-top">
@@ -236,7 +240,8 @@
                       <ion-col size="12">
                         <h2 class="ion-text-center ion-padding">No students found
                           {{term ? 'with the keyword ' + term : ''}} <span *ngIf="type"> and status of
-                            {{type === 'Y' ? 'Present' : type === 'N' ? 'Absent' : type === 'L' ? 'Late' : 'Absent with reason'}}</span>.
+                            {{type === 'Y' ? 'Present' : type === 'N' ? 'Absent' : type === 'L' ? 'Late' : 'Absent with
+                            reason'}}</span>.
                         </h2>
                       </ion-col>
                     </ion-row>
