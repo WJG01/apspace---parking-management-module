@@ -29,9 +29,6 @@ const stateMap = { Y: 'present', L: 'late', N: 'absent', R: 'absent with reason'
 
 
 export class MarkAttendancePage implements OnInit {
-
-  @HostListener('window:beforeunload', ['$event'])
-
   doughnutChart = {
     type: 'pie',
     options: {
@@ -453,6 +450,7 @@ export class MarkAttendancePage implements OnInit {
   }
 
   /** Trigger on browser close button */
+  @HostListener('window:beforeunload', ['$event'])
   handleBeforeUnload() {
     return false;
   }
