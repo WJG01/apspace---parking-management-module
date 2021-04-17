@@ -6,18 +6,6 @@
     <ion-grid class="ion-no-padding">
       <ion-row>
         <ion-col size-xs="12" class="dash-padding" [attr.size-md]="activeDashboardSections.length > 0 ? 5 : 7" [class.glob-margin-auto]="activeDashboardSections.length <= 0">
-          <ion-card class="ion-no-margin ion-margin-bottom no-border-rad" color="danger">
-            <ion-card-content>
-              All times in the application are following
-              <span class="timezone-notice-text">
-                {{enableMalaysiaTimezone ? "Local Timezone" : "Malaysia (GMT+8) Timezone"}}
-              </span>.
-              If you want to
-              change the timezone setting to follow {{enableMalaysiaTimezone ? "Malaysia Timezone" : "Local Timezone"}}
-              go to Settings
-              and {{enableMalaysiaTimezone ? "disable" : "enable"}} "Use Local Timezone" option.
-            </ion-card-content>
-          </ion-card>
           <ion-card class="profile ion-no-margin ion-padding-top no-border-rad">
             <ion-avatar tappable="true" class="glob-margin-auto ion-margin-top avatar"
               (click)="navigateToPage('profile')" *ngIf="!hideProfilePicture">
