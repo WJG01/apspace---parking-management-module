@@ -32,8 +32,8 @@
               </ion-item>
             </ng-container>
             <ng-template #loadingIntakes>
-              <ion-item lines="full" class="ion-no-margin ion-no-padding" style="--inner-padding-end: none;">
-                <ion-skeleton-text animated style="width: 100%; height: 100%;"></ion-skeleton-text>
+              <ion-item lines="full">
+                <ion-skeleton-text animated style="width: 100%; height: 35px;"></ion-skeleton-text>
               </ion-item>
             </ng-template>
             <ng-container *ngIf="(COURSE_MODULES$ | async) as intakeModules; else loadingModules">
@@ -47,8 +47,8 @@
               </ion-item>
             </ng-container>
             <ng-template #loadingModules>
-              <ion-item lines="none" class="ion-no-margin ion-no-padding" style="--inner-padding-end: none;">
-                <ion-skeleton-text animated style="width: 100%; height: 100%;"></ion-skeleton-text>
+              <ion-item lines="full">
+                <ion-skeleton-text animated style="width: 100%; height: 35px;"></ion-skeleton-text>
               </ion-item>
             </ng-template>
           </ion-card-content>
