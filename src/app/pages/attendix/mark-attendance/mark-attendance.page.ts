@@ -440,7 +440,7 @@ export class MarkAttendancePage implements OnInit {
     await toast.present();
   }
 
-  /** Trigger on browser back button */
+  /** Trigger on browser back button press */
   handleBeforeGoBack() {
     history.pushState(null, null, window.location.href);
     this.locationStrategy.onPopState(() => {
