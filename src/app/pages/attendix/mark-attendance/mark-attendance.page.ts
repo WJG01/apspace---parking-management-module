@@ -449,7 +449,7 @@ export class MarkAttendancePage implements OnInit {
     });
   }
 
-  /** Trigger on browser close button */
+  /** Trigger on browser button close */
   @HostListener('window:beforeunload', ['$event'])
   handleBeforeUnload() {
     return false;
