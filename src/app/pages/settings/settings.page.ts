@@ -74,6 +74,7 @@ export class SettingsPage implements OnInit {
   profileName$: Observable<string[]>;
   modifiedName: string[];
   mySelectValue: string[];
+  changedName: boolean;
 
   isCordova: boolean;
   constructor(
@@ -142,6 +143,7 @@ export class SettingsPage implements OnInit {
   }
   setProfileName() {
     this.settings.set('userProfileName', this.modifiedName);
+    this.settings.set('changedName', true);
   }
 
   getProfileName(): Observable<string[]> {
