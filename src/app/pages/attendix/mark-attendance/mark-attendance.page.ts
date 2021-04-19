@@ -368,7 +368,7 @@ export class MarkAttendancePage implements OnInit {
     }
   }
 
-  /** Delete attendance, double confirm. */
+  /** Delete attendance, double confirm */
   reset() {
     this.alertCtrl.create({
       cssClass: 'danger-alert',
