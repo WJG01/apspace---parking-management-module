@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, LocationStrategy } from '@angular/common';
 import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
@@ -50,6 +50,7 @@ export class MarkAttendancePage implements OnInit {
   resetable = false;
   hideQr = false;
   lectureUpdate = '';
+  toastPresent = false;
 
   countdown$: Observable<number>;
   otp$: Observable<number>;
@@ -73,7 +74,7 @@ export class MarkAttendancePage implements OnInit {
     public alertCtrl: AlertController,
     public toastCtrl: ToastController,
     public loadingCtrl: LoadingController,
-    // private locationStrategy: LocationStrategy,
+    private locationStrategy: LocationStrategy,
     private datePipe: DatePipe,
     public navCtrl: NavController,
   ) { }
@@ -245,7 +246,7 @@ export class MarkAttendancePage implements OnInit {
       first() // total does not change so stop counting
     );
 
-    // this.handleBeforeGoBack();
+    this.handleBeforeGoBack();
   }
 
 
@@ -433,21 +434,24 @@ export class MarkAttendancePage implements OnInit {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
+            this.toastPresent = false;
           }
         }
       ]
     });
-    await toast.present();
+    await toast.present().then(() => this.toastPresent = true);
   }
 
   /** Trigger on browser back button press */
-  // handleBeforeGoBack() {
-  //   history.pushState(null, null, window.location.href);
-  //   this.locationStrategy.onPopState(() => {
-  //     history.pushState(null, null, window.location.href);
-  //     this.goBackToast();
-  //   });
-  // }
+  handleBeforeGoBack() {
+    // history.pushState(null, null, window.location.href);
+    this.locationStrategy.onPopState(() => {
+      // history.pushState(null, null, window.location.href);
+      if (this.toastPresent) {
+        this.toastCtrl.dismiss().then(() => this.toastPresent = false);
+      }
+    });
+  }
 
   /** Trigger on browser button close */
   @HostListener('window:beforeunload', ['$event'])
