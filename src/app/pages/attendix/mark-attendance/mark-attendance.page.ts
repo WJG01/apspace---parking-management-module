@@ -245,7 +245,7 @@ export class MarkAttendancePage implements OnInit {
       first() // total does not change so stop counting
     );
 
-    this.handleBeforeGoBack();
+    // this.handleBeforeGoBack();
   }
 
 
@@ -441,13 +441,13 @@ export class MarkAttendancePage implements OnInit {
   }
 
   /** Trigger on browser back button press */
-  handleBeforeGoBack() {
-    history.pushState(null, null, window.location.href);
-    this.locationStrategy.onPopState(() => {
-      history.pushState(null, null, window.location.href);
-      this.goBackToast();
-    });
-  }
+  // handleBeforeGoBack() {
+  //   history.pushState(null, null, window.location.href);
+  //   this.locationStrategy.onPopState(() => {
+  //     history.pushState(null, null, window.location.href);
+  //     this.goBackToast();
+  //   });
+  // }
 
   /** Trigger on browser button close */
   @HostListener('window:beforeunload', ['$event'])
