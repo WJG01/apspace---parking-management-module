@@ -1,4 +1,4 @@
-import { DatePipe, LocationStrategy } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
@@ -73,7 +73,7 @@ export class MarkAttendancePage implements OnInit {
     public alertCtrl: AlertController,
     public toastCtrl: ToastController,
     public loadingCtrl: LoadingController,
-    private locationStrategy: LocationStrategy,
+    // private locationStrategy: LocationStrategy,
     private datePipe: DatePipe,
     public navCtrl: NavController,
   ) { }
