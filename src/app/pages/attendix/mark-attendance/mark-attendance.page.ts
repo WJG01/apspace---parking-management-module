@@ -420,7 +420,7 @@ export class MarkAttendancePage implements OnInit {
 
     const toast = await this.toastCtrl.create({
       header: 'Attention -- do you want to save the attendance?',
-      position: 'bottom',
+      position: 'top',
       color: 'danger',
       duration: 8000,
       buttons: [
