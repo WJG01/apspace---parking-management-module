@@ -50,7 +50,7 @@ export class MarkAttendancePage implements OnInit {
   resetable = false;
   hideQr = false;
   lectureUpdate = '';
-  toastPresent = false;
+  toastIsPresent = false;
 
   countdown$: Observable<number>;
   otp$: Observable<number>;
@@ -434,12 +434,12 @@ export class MarkAttendancePage implements OnInit {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
-            this.toastPresent = false;
+            this.toastIsPresent = false;
           }
         }
       ]
     });
-    await toast.present().then(() => this.toastPresent = true);
+    await toast.present().then(() => this.toastIsPresent = true);
   }
 
   /** Trigger on browser back button press */
@@ -447,8 +447,8 @@ export class MarkAttendancePage implements OnInit {
     // history.pushState(null, null, window.location.href);
     this.locationStrategy.onPopState(() => {
       // history.pushState(null, null, window.location.href);
-      if (this.toastPresent) {
-        this.toastCtrl.dismiss().then(() => this.toastPresent = false);
+      if (this.toastIsPresent) {
+        this.toastCtrl.dismiss().then(() => this.toastIsPresent = false);
       }
     });
   }
