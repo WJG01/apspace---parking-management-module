@@ -163,7 +163,7 @@
           <ion-card-content>
             <ng-container *ngIf="viewWeek && profileExists">
               <app-message-with-svg imageUrl="assets/img/empty.svg"
-                messageTitle="Oops! It looks like there is no classes assigned to you on the week that starts on {{selectedWeek | dateWithTimezone:'EEEE, dd MM yyy'}}"
+                messageTitle="Oops! It looks like there are no classes assigned to you on the week that starts on {{selectedWeek | dateWithTimezone:'EEEE, dd MM yyy'}}"
                 messageContent="If you think that there is something wrong, you can try this:" wrapperSize="6"
                 wrapperMarginTop="30px" wrapperOffset="3" [advancedMode]="true">
                 <div class="flex-container">
@@ -179,7 +179,7 @@
             </ng-container>
             <ng-container *ngIf="!viewWeek && profileExists">
               <app-message-with-svg imageUrl="assets/img/empty.svg"
-                messageTitle="Oops! It looks like there is no classes assigned to you on the selected date {{selectedDate | date:'E' | uppercase}}"
+                messageTitle="Oops! It looks like there are no classes assigned to you on the selected date {{selectedDate | date:'E' | uppercase}}"
                 messageContent="If you think that there is something wrong, you can try this:" wrapperSize="6"
                 wrapperMarginTop="30px" wrapperOffset="3" [advancedMode]="true">
                 <div class="flex-container">
