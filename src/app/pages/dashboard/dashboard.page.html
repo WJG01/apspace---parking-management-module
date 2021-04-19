@@ -23,8 +23,7 @@
             <ion-card-header>
               <ion-card-title class="ion-text-center" color="primary" (click)="navigateToPage('profile')"
                 tappable="true">
-                <ion-label *ngIf="!isStudent">{{(userProfileName$ | async)}}</ion-label>
-                <ion-label *ngIf="isStudent">{{userProfile.NAME | uppercase}}</ion-label>
+                {{isStudent ? (userProfile.NAME | uppercase) : (userProfileName$ | async | uppercase)}}
               </ion-card-title>
               <ion-card-subtitle class="ion-text-center">
                 <div

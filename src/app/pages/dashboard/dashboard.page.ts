@@ -93,7 +93,7 @@ export class DashboardPage implements OnInit {
 
   hideProfilePicture;
   userProfileName$: Observable<string>;
-  changedName;
+  changedName: boolean;
 
   activeAccentColor = '';
   lowAttendanceChart: any;
