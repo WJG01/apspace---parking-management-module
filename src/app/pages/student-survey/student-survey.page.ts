@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, MenuController, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, MenuController, ToastController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { map, shareReplay, tap } from 'rxjs/operators';
 
@@ -28,10 +28,8 @@ export class StudentSurveyPage implements OnInit {
   selectedModule: SurveyModule;
   selectedIntake: SurveyIntake;
 
-  // LOADING & ERRORS VARIABLES
-  numOfSkeletons = new Array(3);
-
-  submitting = false;
+  loading: HTMLIonLoadingElement;
+  skeletons = new Array(3);
   showFieldMissingError = false;
 
   // LISTS
@@ -67,7 +65,8 @@ export class StudentSurveyPage implements OnInit {
     private toastCtrl: ToastController,
     public alertCtrl: AlertController,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private loadingCtrl: LoadingController
   ) { }
 
   ngOnInit() {
@@ -310,7 +309,7 @@ export class StudentSurveyPage implements OnInit {
           handler: () => {
             const notAnsweredQuestions = this.response.answers.filter(answer => answer.content === '');
             if (notAnsweredQuestions.length === 0) {
-              this.submitting = true;
+              this.presentLoading();
               this.ws.post(endpoint, { body: this.response }).subscribe({
                 error: (err) => {
                   if (err.status === 400) {
@@ -321,11 +320,11 @@ export class StudentSurveyPage implements OnInit {
                     // tslint:disable-next-line: max-line-length
                     this.toast(`Something went wrong and we could not complete your request. Please try again or contact us via the feedback page`, 'danger');
                   }
-                  this.submitting = false;
+                  this.dismissLoading();
                 },
                 complete: () => {
                   this.toast(`The survey has been submitted successfully.`, 'success');
-                  this.submitting = false;
+                  this.dismissLoading();
                   this.classCode = '';
                   this.onInitData();
                 }
@@ -356,5 +355,19 @@ export class StudentSurveyPage implements OnInit {
         ],
       });
     toast.present();
+  }
+
+  async presentLoading() {
+    this.loading = await this.loadingCtrl.create({
+      spinner: 'dots',
+      duration: 5000,
+      message: 'Loading...',
+      translucent: true,
+    });
+    return await this.loading.present();
+  }
+
+  async dismissLoading() {
+    return await this.loading.dismiss();
   }
 }
