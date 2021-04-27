@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { ModalController } from '@ionic/angular';
 import { format } from 'date-fns';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-import { OnLeaveOnMyCluster, PendingApproval, StaffDirectory, StaffProfile } from 'src/app/interfaces';
+import { OnLeaveOnMyCluster, PendingApproval, StaffDirectory } from 'src/app/interfaces';
 import { WsApiService } from 'src/app/services';
 @Component({
   selector: 'app-hr',
@@ -13,22 +14,6 @@ import { WsApiService } from 'src/app/services';
   styleUrls: ['./hr.page.scss'],
 })
 export class HrPage implements OnInit {
-  // temporary limiting some user for accessing payslip
-  showPaySlip = false;
-  chosenOnes = [
-    'kohyuanyi',
-    'melissa.chow',
-    'kubashni.sumarian',
-    'tehcj',
-    'norasyikin.a',
-    'wendy.tham',
-    'reza.ganji',
-    'mohamad.alghayeb',
-    'pardeep',
-    'param',
-    'we.yuan',
-    'md.fazla'
-  ];
 
   // leaves$: Observable<LeaveBalance[]>;
   history$: Observable<any[]>;
@@ -39,13 +24,11 @@ export class HrPage implements OnInit {
   constructor(
     public modalCtrl: ModalController,
     private ws: WsApiService,
-    private iab: InAppBrowser
+    private iab: InAppBrowser,
+    private router: Router
   ) { }
 
   ngOnInit() {
-    this.ws.get<StaffProfile[]>('/staff/profile', { caching: 'cache-only' }).pipe(
-      tap(profile => this.showPaySlip = this.chosenOnes.includes(profile[0].ID))
-    ).subscribe();
     this.history$ = this.getHistory();
     this.leaveInCluster$ = this.getOnLeaveInMyCluster();
     this.pendingApproval$ = this.getPendingMyApproval();
@@ -128,6 +111,10 @@ export class HrPage implements OnInit {
 
   openHrSystem() {
     this.iab.create('https://hr.apiit.edu.my', '_system', 'location=true');
+  }
+
+  openHrDownload() {
+    this.router.navigate(['/hr/hr-download']);
   }
 
 }
