@@ -18,8 +18,8 @@ import { SearchedFilesDisplayComponent } from './searched-files-display/searched
 export class HrDownloadPage {
 
   files$: Observable<any[]>;
-  ePayslipUrl = 'https://t16rz80rg7.execute-api.ap-southeast-1.amazonaws.com/staging';
-  // payslipsUrl = 'https://api.apiit.edu.my';
+  // ePayslipUrl = 'https://t16rz80rg7.execute-api.ap-southeast-1.amazonaws.com/staging';
+  payslipsUrl = 'https://api.apiit.edu.my';
 
   dateToFilter;
   fileToFilter;
@@ -47,7 +47,7 @@ export class HrDownloadPage {
   }
 
   doRefresh() {
-    this.files$ = this.ws.get<any>('/epayslip/list', { url: this.ePayslipUrl }).pipe(
+    this.files$ = this.ws.get<any>('/epayslip/list', { url: this.payslipsUrl }).pipe(
       map(files => [...files.ea_form, ...files.payslips, ...files.pcb_form]),
       map(files => files.sort((a, b) => 0 - (a > b ? 1 : -1))),
       catchError(error => of(error))
@@ -56,7 +56,7 @@ export class HrDownloadPage {
 
   downloadPayslipPdf(payslip) {
     const downloadPayslipEndpoint = '/epayslip/download/';
-    const link = this.ePayslipUrl + downloadPayslipEndpoint + payslip;
+    const link = this.payslipsUrl + downloadPayslipEndpoint + payslip;
 
     this.cas.getST(link).subscribe(st => {
       fetch(link + `?ticket=${st}`).then(result => result.blob()).then(blob => {
@@ -126,7 +126,7 @@ export class HrDownloadPage {
           text: 'Yes',
           handler: _ => {
             this.presentLoading();
-            this.ws.get<any>('/epayslip/sync', { url: this.ePayslipUrl }).subscribe({
+            this.ws.get<any>('/epayslip/sync', { url: this.payslipsUrl }).subscribe({
               next: () => {
                 this.presentAlert('Success!', 'Synchronized', 'The synchronize is done.', 'success-alert');
               },
