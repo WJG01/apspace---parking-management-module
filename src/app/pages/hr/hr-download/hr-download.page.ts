@@ -47,7 +47,7 @@ export class HrDownloadPage {
   }
 
   doRefresh() {
-    this.files$ = this.ws.get<any>('/epayslip/list', { url: this.payslipsUrl }).pipe(
+    this.files$ = this.ws.get<any>('/epayslip/list').pipe(
       map(files => [...files.ea_form, ...files.payslips, ...files.pcb_form]),
       map(files => files.sort((a, b) => 0 - (a > b ? 1 : -1))),
       catchError(error => of(error))
