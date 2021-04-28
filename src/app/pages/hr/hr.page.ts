@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { ModalController } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
 import { format } from 'date-fns';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -21,17 +22,23 @@ export class HrPage implements OnInit {
   pendingApproval$: Observable<PendingApproval[]>;
   skeletons = new Array(4);
   staffsOnLeave = []; // IDs of all staff on leave
+  canAccessPayslipFileSearch;
+
   constructor(
     public modalCtrl: ModalController,
     private ws: WsApiService,
     private iab: InAppBrowser,
-    private router: Router
+    private router: Router,
+    private storage: Storage
   ) { }
 
   ngOnInit() {
     this.history$ = this.getHistory();
     this.leaveInCluster$ = this.getOnLeaveInMyCluster();
     this.pendingApproval$ = this.getPendingMyApproval();
+    this.storage.get('canAccessPayslipFileSearch').then(
+      canAccessPayslipFileSearch => this.canAccessPayslipFileSearch = canAccessPayslipFileSearch
+    );
   }
 
   getHistory() {
