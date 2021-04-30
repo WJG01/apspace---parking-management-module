@@ -6,6 +6,8 @@ p, h1, h2, h3, h4, h5, h6{
   margin: auto;
   position: relative;
   width: 310px !important;
+  cursor: pointer;
+  user-select: none;
 
   img {
     border-radius: 10px;
@@ -56,6 +58,8 @@ p, h1, h2, h3, h4, h5, h6{
   height: auto;
   margin: auto;
   position: relative;
+  cursor: pointer;
+  user-select: none;
   
   .staff-background{
     border-radius: 10px;

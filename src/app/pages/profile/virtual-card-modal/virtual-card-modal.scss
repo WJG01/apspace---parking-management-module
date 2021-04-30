@@ -1,0 +1,165 @@
+.close {
+  color: #fff;
+  position: absolute;
+  right: 0;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.staff-virtual-card {
+  width: 270px;
+  height: 400px;
+  margin: auto;
+  perspective: 1000px;
+
+  .staff-background {
+    border-radius: 10px;
+  }
+
+  .staff-profile-picture {
+    height: auto;
+    max-width: 120px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0 75px;
+    margin-top: 110px;
+    border-radius: 5px;
+  }
+
+  .staff-details {
+    width: 150px;
+    position: absolute;
+    top: 0;
+    margin-top: 290px;
+    margin-left: 75px;
+    margin-right: 10px;
+    font-size: 0.9rem;
+    color: #fff;
+
+    p {
+      line-height: 20px;
+    }
+  }
+}
+
+.student-virtual-card {
+  width: 412px;
+  height: 262px;
+  margin: auto;
+  perspective: 2000px;
+
+  img {
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  }
+
+  .student-virtual-card-img {
+    position: absolute;
+    bottom: 28px;
+    right: 0;
+    padding: 15px 0;
+    height: 140px;
+    margin-right: 14px;
+  }
+
+  .student-virtual-card-details {
+    position: absolute;
+    top: 110px;
+    color: #000;
+    left: 20px;
+    width: 210px;
+
+    .student-virtual-card-name {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .student-virtual-card-ids {
+      font-size: 0.8rem;
+      margin-top: 18px;
+      margin-bottom: 0;
+
+      .attr {
+        display: inline-block;
+        width: 9em;
+      }
+
+      .attr::after {
+        content: ":";
+      }
+    }
+  }
+}
+
+.virtual-card-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 1s;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  user-select: none;
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+}
+
+.virtual-card-wrapper.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.virtual-card-modal .modal-wrapper {
+  background: transparent !important;
+  --background: transparent !important;
+}
+
+ion-modal {
+  --backdrop-opacity: 0.65;
+}
+
+@media screen and (max-width: 768px) {
+  .close {
+    top: 1rem !important;
+    right: 5px !important;
+  }
+
+  .student-virtual-card {
+    width: 320px !important;
+    height: 170px !important;
+
+    .student-virtual-card-img {
+      position: absolute;
+      bottom: -25px;
+      right: 0;
+      padding: 15px 0;
+      height: 125px;
+      margin-right: 0;
+    }
+
+    .student-virtual-card-details {
+      top: 85px !important;
+      left: 10px !important;
+      width: 200px !important;
+    }
+
+    .student-virtual-card-name {
+      font-size: 0.9rem !important;
+    }
+
+    .student-virtual-card-ids {
+      font-size: 0.7rem !important;
+      margin-top: 12px !important;
+    }
+  }
+}

@@ -227,3 +227,12 @@
   }
 }
 
+.virtual-card-modal .modal-wrapper {
+  background: transparent !important;
+  --background: transparent !important;
+  box-shadow: none;
+}
+
+.virtual-card-modal ion-backdrop{
+  --backdrop-opacity: .9;
+}

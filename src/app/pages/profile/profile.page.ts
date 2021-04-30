@@ -8,6 +8,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { OrientationStudentDetails, Role, StaffDirectory, StaffProfile, StudentPhoto, StudentProfile } from '../../interfaces';
 import { AppLauncherService, WsApiService } from '../../services';
 import { RequestChangeModalPage } from './request-update-modal/request-update-modal';
+import { VirtualCardModalPage } from './virtual-card-modal/virtual-card-modal';
 
 @Component({
   selector: 'app-profile',
@@ -284,5 +285,16 @@ export class ProfilePage implements OnInit {
     }
   }
 
+  async virtualCardModal(profile: StudentProfile | StaffProfile, studentRole: boolean) {
+    const modal = await this.modalCtrl.create({
+      component: VirtualCardModalPage,
+      cssClass: 'virtual-card-modal',
+      componentProps: {
+        profile,
+        studentRole
+      }
+    });
+    return await modal.present();
+  }
 
 }

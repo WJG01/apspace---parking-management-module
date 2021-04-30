@@ -1,0 +1,53 @@
+<ion-icon class="close" name="close-outline" (click)="dismiss()"></ion-icon>
+
+<!-- For Student -->
+<ng-template [ngIf]="studentRole" [ngIfElse]="userIsStaff">
+  <div class="student-virtual-card">
+    <div class="virtual-card-wrapper" (click)="cardClicked()">
+      <div class="card-front">
+        <img src="assets/img/student_card_apu.jpg">
+        <ng-template let-photo [ngIf]="photo$ | async">
+          <ion-img class="profile-photo student-virtual-card-img" [src]="
+                                'data:image/jpg;base64,' +
+                                photo?.base64_photo
+                                " (ionError)="$event.target.src = 'assets/img/no_img.png'">
+          </ion-img>
+        </ng-template>
+        <div class="student-virtual-card-details">
+          <h5 class="glob-text-bold student-virtual-card-name">
+            {{ profile.NAME || 'N/A'}}
+          </h5>
+          <p class="student-virtual-card-ids">
+            <span class="attr">STUDENT ID</span> {{ profile.STUDENT_NUMBER || 'N/A'}}
+          </p>
+          <p class="student-virtual-card-ids">
+            <span class="attr">IC/PASSPORT</span> {{ profile.IC_PASSPORT_NO || 'N/A'}}
+          </p>
+        </div>
+      </div>
+      <div class="card-back">
+        <img class="staff-background" src="assets/img/student_card_back_apu.png">
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- For Staff -->
+<ng-template #userIsStaff>
+  <div class="staff-virtual-card" (click)="cardClicked()">
+    <div class="virtual-card-wrapper">
+      <div class="card-front">
+        <img class="staff-background" src="assets/img/staff_card_apu.jpg">
+        <img class="staff-profile-picture" [src]="profile[0]?.PHOTO"
+          (ionError)="$event.target.src = 'assets/img/no_img.png'">
+        <div class="staff-details">
+          <p>{{ profile[0].FULLNAME }}</p>
+          <p>{{ profile[0].TITLE }}</p>
+        </div>
+      </div>
+      <div class="card-back">
+        <img class="staff-background" src="assets/img/staff_card_back_apu.png">
+      </div>
+    </div>
+  </div>
+</ng-template>

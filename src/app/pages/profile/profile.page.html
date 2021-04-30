@@ -22,7 +22,7 @@
                   <ion-grid>
                     <ion-row class="ion-align-items-center">
                       <ion-col size="12" size-md="6">
-                        <div class="virtual-card">
+                        <div class="virtual-card" (click)="virtualCardModal(profile, studentRole)">
                           <img src="assets/img/student_card_apu.jpg">
                           <ng-template let-photo [ngIf]="photo$ | async">
                             <ion-img class="profile-photo virtual-card-student-img" [src]="
@@ -83,7 +83,7 @@
                             <ng-template [ngIf]='visa[0].VISA_EXPIRY_DATE' [ngIfElse]='noVisa'>
                               <h4>Student Pass Expiry Date</h4>
                               <p>
-                                {{ visa[0].VISA_EXPIRY_DATE | date: "EEE, d MMM y"  }}
+                                {{ visa[0].VISA_EXPIRY_DATE | date: "EEE, d MMM y" }}
                               </p>
                             </ng-template>
                             <ng-template #noVisa>
@@ -267,7 +267,7 @@
                           </ion-col>
                           <ion-col size="6" offset-md="1" size-md="">
                             <h4>: {{orientationProfile.student_details[0].RELIGION || 'N/A'}} <a tappable="true"
-                                                                                                 (click)="change('RELIGION', orientationProfile.student_details[0].RELIGION, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                                (click)="change('RELIGION', orientationProfile.student_details[0].RELIGION, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
                             </h4>
                           </ion-col>
                         </ion-row>
@@ -286,8 +286,8 @@
                           </ion-col>
                           <ion-col size="6" offset-md="1" size-md="">
                             <h4>: {{orientationProfile.student_details[0].STUDENT_MOBILE_NO || 'N/A'}} <a
-                              tappable="true"
-                              (click)="change('STUDENT_MOBILE_NO', orientationProfile.student_details[0].STUDENT_MOBILE_NO, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                                tappable="true"
+                                (click)="change('STUDENT_MOBILE_NO', orientationProfile.student_details[0].STUDENT_MOBILE_NO, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
                             </h4>
                           </ion-col>
                         </ion-row>
@@ -297,7 +297,7 @@
                           </ion-col>
                           <ion-col size="6" offset-md="1" size-md="">
                             <h4>: {{orientationProfile.student_details[0].STUDENT_EMAIL || 'N/A'}} <a tappable="true"
-                                                                                                      (click)="change('STUDENT_EMAIL', orientationProfile.student_details[0].STUDENT_EMAIL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                                (click)="change('STUDENT_EMAIL', orientationProfile.student_details[0].STUDENT_EMAIL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
                             </h4>
                           </ion-col>
                         </ion-row>
@@ -308,7 +308,7 @@
                           <ion-col size="6" offset-md="1" size-md="">
                             <h4>: {{orientationProfile.student_details[0].STUDENT_PERMANENT_ADDRESS || 'N/A'}}
                               <a tappable="true"
-                                 (click)="change('STUDENT_PERMANENT_ADDRESS', orientationProfile.student_details[0].STUDENT_PERMANENT_ADDRESS, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                                (click)="change('STUDENT_PERMANENT_ADDRESS', orientationProfile.student_details[0].STUDENT_PERMANENT_ADDRESS, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
                             </h4>
                           </ion-col>
                         </ion-row>
@@ -327,7 +327,7 @@
                           </ion-col>
                           <ion-col size="6" offset-md="1" size-md="">
                             <h4>: {{orientationProfile.student_details[0].PARENTS_NAME || 'N/A'}} <a tappable="true"
-                                                                                                     (click)="change('PARENTS_NAME', orientationProfile.student_details[0].PARENTS_NAME, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                                (click)="change('PARENTS_NAME', orientationProfile.student_details[0].PARENTS_NAME, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
                             </h4>
                           </ion-col>
                         </ion-row>
@@ -337,8 +337,8 @@
                           </ion-col>
                           <ion-col size="6" offset-md="1" size-md="">
                             <h4>: {{orientationProfile.student_details[0].PARENTS_RELATIONSHIP || 'N/A'}} <a
-                              tappable="true"
-                              (click)="change('PARENTS_RELATIONSHIP', orientationProfile.student_details[0].PARENTS_RELATIONSHIP, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                                tappable="true"
+                                (click)="change('PARENTS_RELATIONSHIP', orientationProfile.student_details[0].PARENTS_RELATIONSHIP, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
                             </h4>
                           </ion-col>
                         </ion-row>
@@ -348,8 +348,8 @@
                           </ion-col>
                           <ion-col size="6" offset-md="1" size-md="">
                             <h4>: {{orientationProfile.student_details[0].PARENTS_MOBILE_TEL || 'N/A'}} <a
-                              tappable="true"
-                              (click)="change('PARENTS_MOBILE_TEL', orientationProfile.student_details[0].PARENTS_MOBILE_TEL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                                tappable="true"
+                                (click)="change('PARENTS_MOBILE_TEL', orientationProfile.student_details[0].PARENTS_MOBILE_TEL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
                             </h4>
                           </ion-col>
                         </ion-row>
@@ -359,7 +359,7 @@
                           </ion-col>
                           <ion-col size="6" offset-md="1" size-md="">
                             <h4>: {{orientationProfile.student_details[0].PARENTS_EMAIL || 'N/A'}} <a tappable="true"
-                                                                                                      (click)="change('PARENTS_EMAIL', orientationProfile.student_details[0].PARENTS_EMAIL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                                (click)="change('PARENTS_EMAIL', orientationProfile.student_details[0].PARENTS_EMAIL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
                             </h4>
                           </ion-col>
                         </ion-row>
@@ -378,7 +378,7 @@
                           </ion-col>
                           <ion-col size="6" offset-md="1" size-md="">
                             <h4>: {{orientationProfile.student_details[0].GUARDIAN_NAME || 'N/A'}} <a tappable="true"
-                                                                                                      (click)="change('GUARDIAN_NAME', orientationProfile.student_details[0].GUARDIAN_NAME, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                                (click)="change('GUARDIAN_NAME', orientationProfile.student_details[0].GUARDIAN_NAME, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
                             </h4>
                           </ion-col>
                         </ion-row>
@@ -388,8 +388,8 @@
                           </ion-col>
                           <ion-col size="6" offset-md="1" size-md="">
                             <h4>: {{orientationProfile.student_details[0].GUARDIAN_RELATIONSHIP || 'N/A'}} <a
-                              tappable="true"
-                              (click)="change('GUARDIAN_RELATIONSHIP', orientationProfile.student_details[0].GUARDIAN_RELATIONSHIP, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                                tappable="true"
+                                (click)="change('GUARDIAN_RELATIONSHIP', orientationProfile.student_details[0].GUARDIAN_RELATIONSHIP, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
                             </h4>
                           </ion-col>
                         </ion-row>
@@ -399,8 +399,8 @@
                           </ion-col>
                           <ion-col size="6" offset-md="1" size-md="">
                             <h4>: {{orientationProfile.student_details[0].GUARDIAN_MOBILE_TEL || 'N/A'}} <a
-                              tappable="true"
-                              (click)="change('GUARDIAN_MOBILE_TEL', orientationProfile.student_details[0].GUARDIAN_MOBILE_TEL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                                tappable="true"
+                                (click)="change('GUARDIAN_MOBILE_TEL', orientationProfile.student_details[0].GUARDIAN_MOBILE_TEL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
                             </h4>
                           </ion-col>
                         </ion-row>
@@ -410,7 +410,7 @@
                           </ion-col>
                           <ion-col size="6" offset-md="1" size-md="">
                             <h4>: {{orientationProfile.student_details[0].GUARDIAN_EMAIL || 'N/A'}} <a tappable="true"
-                                                                                                       (click)="change('GUARDIAN_EMAIL', orientationProfile.student_details[0].GUARDIAN_EMAIL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
+                                (click)="change('GUARDIAN_EMAIL', orientationProfile.student_details[0].GUARDIAN_EMAIL, orientationProfile.student_details[0].STUDENT_NUMBER)">[edit]</a>
                             </h4>
                           </ion-col>
                         </ion-row>
@@ -471,11 +471,11 @@
                           </ion-col>
                           <ion-col size="12" size-md="6">
                             <ion-input type="file" accept="application/pdf, image/jpeg, image/png" button
-                                       (change)="changeListener($event)"></ion-input>
+                              (change)="changeListener($event)"></ion-input>
                           </ion-col>
                           <ion-col size="12" size-md="6">
                             <ion-button color="success" [disabled]="!file"
-                                        (click)="uploadDocument(orientationProfile.student_details[0].STUDENT_NAME, orientationProfile.councelor_details[0].COUNCELOR_NAME, orientationProfile.councelor_details[0].EMAIL)">
+                              (click)="uploadDocument(orientationProfile.student_details[0].STUDENT_NAME, orientationProfile.councelor_details[0].COUNCELOR_NAME, orientationProfile.councelor_details[0].EMAIL)">
                               Upload
                             </ion-button>
                           </ion-col>
@@ -543,8 +543,8 @@
                             <ion-col size="4" size-md="3" push-md="9">
                               <ng-container *ngIf="councelorProfile$ | async as councelorProfile">
                                 <ion-img class="counsellor-profile-photo"
-                                         [src]="'https://d37plr7tnxt7lb.cloudfront.net/' + councelorProfile.RefNo + '.jpg'"
-                                         (ionError)="$event.target.src = 'assets/img/no_img.png'">
+                                  [src]="'https://d37plr7tnxt7lb.cloudfront.net/' + councelorProfile.RefNo + '.jpg'"
+                                  (ionError)="$event.target.src = 'assets/img/no_img.png'">
                                 </ion-img>
                               </ng-container>
                             </ion-col>
@@ -583,7 +583,7 @@
                                 <ion-row>
                                   <ion-col size="12">
                                     <ion-button color="primary" expand="block"
-                                                (click)="chatInTeams(orientationProfile.councelor_details[0].SAMACCOUNTNAME)">
+                                      (click)="chatInTeams(orientationProfile.councelor_details[0].SAMACCOUNTNAME)">
                                       MESSAGE E-COUNSELLOR
                                       <ion-icon name="chatbox-outline" slot="end"></ion-icon>
                                     </ion-button>
@@ -624,11 +624,11 @@
                 <ion-grid>
                   <ion-row>
                     <ion-col size="12" size-md="5" class="ion-align-self-center virtual-card-padding">
-                      <div class="staff-virtual-card">
+                      <div class="staff-virtual-card" (click)="virtualCardModal(staffProfile, studentRole)">
                         <img class="staff-background" src="assets/img/staff_card_apu.jpg">
                         <img class="staff-profile-picture" [src]="staffProfile[0]?.PHOTO"
-                           (ionError)="$event.target.src = 'assets/img/no_img.png'">
-                        <div class = "staff-details">
+                          (ionError)="$event.target.src = 'assets/img/no_img.png'">
+                        <div class="staff-details">
                           <p>{{ staffProfile[0].FULLNAME }}</p>
                           <p>{{ staffProfile[0].TITLE }}</p>
                         </div>
@@ -650,10 +650,13 @@
                         <p class="ion-no-margin">{{ staffProfile[0].CURRENT_JOB_TYPE }}</p>
                       </div>
                       <div class="ion-margin-top">
-                        <h4>{{(staffProfile[0].DEPARTMENT2 || staffProfile[0].DEPARTMENT3) ? 'Functional Areas' : 'Functional Area'}}</h4>
+                        <h4>{{(staffProfile[0].DEPARTMENT2 || staffProfile[0].DEPARTMENT3) ? 'Functional Areas' :
+                          'Functional Area'}}</h4>
                         <p class="ion-no-margin">{{ staffProfile[0].DEPARTMENT }}</p>
-                        <p class="ion-no-margin" *ngIf="staffProfile[0].DEPARTMENT2">{{ staffProfile[0].DEPARTMENT2 }}</p>
-                        <p class="ion-no-margin" *ngIf="staffProfile[0].DEPARTMENT3">{{ staffProfile[0].DEPARTMENT3 }}</p>
+                        <p class="ion-no-margin" *ngIf="staffProfile[0].DEPARTMENT2">{{ staffProfile[0].DEPARTMENT2 }}
+                        </p>
+                        <p class="ion-no-margin" *ngIf="staffProfile[0].DEPARTMENT3">{{ staffProfile[0].DEPARTMENT3 }}
+                        </p>
                       </div>
                       <div class="ion-margin-top">
                         <h4>Nationality</h4>

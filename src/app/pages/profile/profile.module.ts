@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { ProfilePage } from './profile.page';
 import { RequestChangeModalPage } from './request-update-modal/request-update-modal';
+import { VirtualCardModalPage } from './virtual-card-modal/virtual-card-modal';
 
 const routes: Routes = [
   {
@@ -21,6 +22,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ProfilePage, RequestChangeModalPage],
+  declarations: [ProfilePage, RequestChangeModalPage, VirtualCardModalPage],
 })
-export class ProfilePageModule {}
+export class ProfilePageModule { }
