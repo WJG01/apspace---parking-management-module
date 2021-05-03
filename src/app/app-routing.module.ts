@@ -261,12 +261,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: () => import('./pages/apcard-qr-code/apcard-qr-code.module').then(m => m.ApcardQrCodePageModule)
   },
-  /*{
-    path: 'anonymous-feedback',
+  {
+    path: 'new-feedback',
     loadChildren:
-      () => import('./pages/anonymous-feedback/feedback-list.module')
+      () => import('./pages/new-feedback/feedback-list.module')
         .then( m => m.FeedbackListPageModule)
-  },*/
+  },
   { // this path must always be at the end of the routes array
     path: '**',
     canActivate: [AuthGuard],

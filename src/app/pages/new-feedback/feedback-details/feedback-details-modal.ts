@@ -3,7 +3,7 @@ import { LoadingController, ModalController, ToastController } from '@ionic/angu
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { AnonymousFeedback, AnonymousFeedbackSummary } from 'src/app/interfaces';
+import { NewFeedback, NewFeedbackSummary } from 'src/app/interfaces';
 import { WsApiService } from 'src/app/services';
 
 @Component({
@@ -13,11 +13,11 @@ import { WsApiService } from 'src/app/services';
 })
 
 export class FeedbackDetailsModalPage implements OnInit {
-  productionAPI = 'https://api.apiit.edu.my/anonymous_feedback';
-  // productionAPI = 'http://127.0.0.1:5000/anonymous_feedback';
+  // productionAPI = 'https://api.apiit.edu.my/anonymous_feedback';
+  productionAPI = 'https://is04zlrnac.execute-api.ap-southeast-1.amazonaws.com/staging/anonymous_feedback'
 
-  feedback: AnonymousFeedbackSummary;
-  feedbackDetail$: Observable<AnonymousFeedback>;
+  feedback: NewFeedbackSummary;
+  feedbackDetail$: Observable<NewFeedback>;
 
   loading: HTMLIonLoadingElement;
 
@@ -35,7 +35,8 @@ export class FeedbackDetailsModalPage implements OnInit {
   }
 
   getFeedbackDetails() {
-    this.feedbackDetail$ = this.ws.get<AnonymousFeedback>(`/get_issue_details_by_ID/${this.feedback.id}`, { url: this.productionAPI })
+    console.log(this.feedback.id);
+    this.feedbackDetail$ = this.ws.get<NewFeedback>(`/get_issue_details_by_ID/${this.feedback.id}`, { url: this.productionAPI })
       .pipe(map(feedbacks => feedbacks[0]));
   }
 

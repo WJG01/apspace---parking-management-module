@@ -8,7 +8,7 @@ import {SharedPipesModule} from '../../shared/shared-pipes.module';
 import { FeedbackDetailsModalPage } from './feedback-details/feedback-details-modal';
 import { FeedbackListPageRoutingModule } from './feedback-list-routing.module';
 import { FeedbackListPage } from './feedback-list.page';
-import { NewFeedbackModalPage } from './new-feedback/new-feedback-modal';
+import { NewFeedbackModalPage } from './create-feedback/create-feedback-modal';
 @NgModule({
     imports: [
         CommonModule,

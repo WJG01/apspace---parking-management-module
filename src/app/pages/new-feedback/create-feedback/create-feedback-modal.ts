@@ -3,16 +3,15 @@ import { LoadingController, ModalController, ToastController } from '@ionic/angu
 import { Observable } from 'rxjs';
 
 import { FeedbackCategory } from 'src/app/interfaces';
-import { VersionService, WsApiService } from 'src/app/services';
+import { WsApiService } from 'src/app/services';
 
 @Component({
-  selector: 'new-feedback-modal',
-  templateUrl: 'new-feedback-modal.html',
-  styleUrls: ['new-feedback-modal.scss']
+  selector: 'create-feedback-modal',
+  templateUrl: 'create-feedback-modal.html',
+  styleUrls: ['create-feedback-modal.scss']
 })
 
 export class NewFeedbackModalPage implements OnInit {
-  onlineFeedbackSystemURL = 'https://erp.apiit.edu.my/easymoo/web/en/user/feedback/feedbackusersend';
   productionAPI = 'https://api.apiit.edu.my/anonymous_feedback';
 
   phoneNumberValidationPattern = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4,5})$/;
@@ -24,14 +23,10 @@ export class NewFeedbackModalPage implements OnInit {
   phoneNumberValid: boolean;
   emailValid: boolean;
   submitting: boolean;
+  anon: boolean = false;
 
   selectedCategory: number;
-  subject = '';
   message = '';
-  contactNo = '';
-  emailAddress = '';
-  version = '';
-  platform = '';
   attachments = '';
 
   constructor(
@@ -39,35 +34,26 @@ export class NewFeedbackModalPage implements OnInit {
     private ws: WsApiService,
     private loadingController: LoadingController,
     private toastCtrl: ToastController,
-    private versionService: VersionService,
   ) { }
 
   ngOnInit() {
     this.categories$ = this.ws.get<FeedbackCategory[]>('/categories', { url: this.productionAPI });
-    // this.categories$ = this.ws.get<FeedbackCategory[]>('/categories', { url: this.localhost });
-    this.version = this.versionService.version;
-    this.platform = this.versionService.platform;
   }
 
-  onPhoneNumberChange() {
-    this.phoneNumberValid = this.contactNo.match(this.phoneNumberValidationPattern) !== null;
-  }
 
-  onEmailFieldChange() {
-    this.emailValid = this.emailAddress.match(this.emailValidationPattern) !== null;
+  public onAnonChange(){
+    this.anon = true;
+    console.log(this.anon);
   }
 
   submitFeedback() {
     const feedback = {
-      platform: this.platform,
       message: this.message,
       category_id: this.selectedCategory,
-      subject: this.subject,
       attachments: this.attachments,
-      contact_number: this.contactNo,
-      email_address: this.emailAddress,
-      version: this.version
+      anon: this.anon
     };
+    console.log(feedback);
     this.presentLoading();
     this.submitting = true;
 
@@ -76,7 +62,7 @@ export class NewFeedbackModalPage implements OnInit {
       this.message = '';
       this.toastCtrl.create({
         // tslint:disable-next-line: max-line-length
-        message: '<span style="font-weight: bold;">Anonymous Feedback submitted! </span> Your feedback has been submitted without sharing your identity',
+        message: '<span style="font-weight: bold;">Feedback submitted! </span> Your feedback has been submitted successfully. The CTI team will get back to you shortly',
         position: 'top',
         color: 'success',
         duration: 5000,

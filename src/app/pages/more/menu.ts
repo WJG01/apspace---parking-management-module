@@ -71,6 +71,16 @@ export const menusRaw = [
     parents: []
   },*/
   {
+    id: 'new-feedback' as const,
+    title: 'Feedback',
+    group: 'Collaboration & Information Resources',
+    url: 'new-feedback',
+    img: 'assets/img/new-feedback.png',
+    role: Role.Student | Role.Lecturer | Role.Admin,
+    tags: ['anonymous', 'feedback', 'complain', 'issue'],
+    parents: []
+  },
+  {
     id: 'e-forms' as const,
     title: 'e-Forms',
     group: 'Collaboration & Information Resources',

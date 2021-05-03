@@ -3,10 +3,10 @@ import { ModalController, Platform } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
-import { AnonymousFeedbackSummary } from 'src/app/interfaces';
+import { NewFeedbackSummary } from 'src/app/interfaces';
 import { WsApiService } from 'src/app/services';
 import { FeedbackDetailsModalPage } from './feedback-details/feedback-details-modal';
-import { NewFeedbackModalPage } from './new-feedback/new-feedback-modal';
+import { NewFeedbackModalPage } from './create-feedback/create-feedback-modal';
 
 @Component({
   selector: 'app-feedback-list',
@@ -14,10 +14,11 @@ import { NewFeedbackModalPage } from './new-feedback/new-feedback-modal';
   styleUrls: ['./feedback-list.page.scss'],
 })
 export class FeedbackListPage implements OnInit {
-  productionAPI = 'https://api.apiit.edu.my/anonymous_feedback';
+  // productionAPI = 'https://api.apiit.edu.my/anonymous_feedback';
+  productionAPI = 'https://is04zlrnac.execute-api.ap-southeast-1.amazonaws.com/staging/anonymous_feedback'
 
   loadingArray = new Array(5);
-  feedbackList$: Observable<AnonymousFeedbackSummary[]>;
+  feedbackList$: Observable<NewFeedbackSummary[]>;
   mobileApp: boolean;
   constructor(
     private ws: WsApiService,
@@ -31,7 +32,7 @@ export class FeedbackListPage implements OnInit {
   }
 
   doRefresh(refresher?){
-    this.feedbackList$ = this.ws.get<AnonymousFeedbackSummary[]>('/get_all_issues', {url: this.productionAPI}).pipe(
+    this.feedbackList$ = this.ws.get<NewFeedbackSummary[]>('/get_all_issues', {url: this.productionAPI}).pipe(
       finalize(() => refresher && refresher.target.complete())
     );
   }
@@ -49,7 +50,7 @@ export class FeedbackListPage implements OnInit {
     });
   }
 
-  async viewFeedbackDetails(feedback: AnonymousFeedbackSummary) {
+  async viewFeedbackDetails(feedback: NewFeedbackSummary) {
     const modal = await this.modalCtrl.create({
       component: FeedbackDetailsModalPage,
       cssClass: 'custom-modal-style',

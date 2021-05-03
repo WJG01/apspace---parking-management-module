@@ -1,0 +1,49 @@
+<ion-header no-border>
+  <ion-toolbar>
+    <ion-title>
+      New Feedback
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button outline (click)="dismiss()">
+        <ion-icon class="colored-text" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list lines="full" class="ion-no-margin ion-no-padding">
+    <ion-item>
+      <ion-label position="floating">Category <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-select required="true" interface="popover" [(ngModel)]="selectedCategory"
+        *ngIf="categories$ |async as categories; else loadingCategories">
+        <ion-select-option *ngFor="let category of categories" [value]="category.id">{{category.name}}
+        </ion-select-option>
+      </ion-select>
+      <ng-template #loadingCategories>
+        <ion-skeleton-text animated style="width: 100%; line-height: 30px;"></ion-skeleton-text>
+      </ng-template>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Anonymous</ion-label>
+      <p></p>
+      <p>
+        <ion-text color="danger">Checking this box will allow your feedback to remain <span class="glob-text-bold">Anonymous</span>. The agent will receive your feedback and respond to it without knowing your identity.
+        </ion-text>
+      </p>
+      <ion-checkbox color="danger" [(ngModel)]="anon" (change)="onAnonChange()"></ion-checkbox>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Message <ion-text color="danger">*</ion-text>
+      </ion-label>
+      <ion-textarea maxLength="2000" autosize="true" [(ngModel)]="message" required="true" rows="8"
+        placeholder="Enter your message here.."></ion-textarea>
+    </ion-item>
+  </ion-list>
+  <div class="ion-margin-top ion-text-right ion-padding-end ion-padding-start">
+    <ion-button outline (click)="dismiss()" color="light">Cancel</ion-button>
+    <ion-button color="primary" (click)="submitFeedback()"
+    [disabled]="!message || !selectedCategory">Submit</ion-button>
+  </div>
+</ion-content>
