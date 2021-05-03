@@ -145,7 +145,7 @@
                       Modify Dashboard Name
                     </ion-label>
                     <ion-select multiple="true" [compareWith]="mySelectValue" [(ngModel)]="modifiedName" (ngModelChange)="setProfileName()" placeholder="Click to select your name">
-                      <ion-select-option *ngFor="let name of profileName$ | async, let i = index" [value]="changedName">{{name}}</ion-select-option>
+                      <ion-select-option *ngFor="let name of profileName$ | async" [value]="changedName">{{name}}</ion-select-option>
                     </ion-select>
                   </ion-item>
                   <ion-item>
