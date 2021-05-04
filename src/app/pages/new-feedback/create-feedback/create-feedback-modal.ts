@@ -47,8 +47,11 @@ export class NewFeedbackModalPage implements OnInit {
 =======
   public onAnonChange(){
     this.anon = true;
+<<<<<<< HEAD
     console.log(this.anon);
 >>>>>>> feat: added features for feedback sys:src/app/pages/anonymous-feedback/new-feedback/new-feedback-modal.ts
+=======
+>>>>>>> fix: made requested changes
   }
 
   submitFeedback() {

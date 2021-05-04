@@ -26,11 +26,15 @@
           <ng-container *ngIf="feedbackList.length > 0; else userHasNoFeedback">
             <ion-card *ngFor="let feedback of feedbackList">
               <ion-card-header>
+<<<<<<< HEAD
 <<<<<<< HEAD:src/app/pages/new-feedback/feedback-list.page.html
                 <ion-badge color="tertiary" *ngIf="feedback.is_anon">Anonymous</ion-badge>
 =======
                 <ion-badge color="tertiary" *ngIf="feedback.is_anon === true">Anonymous</ion-badge>
 >>>>>>> feat: added features for feedback sys:src/app/pages/anonymous-feedback/feedback-list.page.html
+=======
+                <ion-badge color="tertiary" *ngIf="feedback.is_anon">Anonymous</ion-badge>
+>>>>>>> fix: made requested changes
                 <ion-card-title color="primary">{{feedback.subject}}</ion-card-title>
                 <ion-card-subtitle>{{(feedback.datetime | dateWithTimezone:'time') + ' on ' + (feedback.datetime | dateWithTimezone:'dd MMM yyyy')}}</ion-card-subtitle>
               </ion-card-header>
@@ -57,8 +61,12 @@
                     View Details
                     <ion-icon slot="end" name="chevron-forward-sharp"></ion-icon>
                   </ion-button>
+<<<<<<< HEAD
                   <ion-button color="primary" *ngIf="feedback.is_anon === false" href="https://apiit.atlassian.net/servicedesk/customer/portal/12/{{feedback.issue_id}}">
 >>>>>>> feat: added features for feedback sys:src/app/pages/anonymous-feedback/feedback-list.page.html
+=======
+                  <ion-button color="primary" *ngIf="!feedback.is_anon" href="https://apiit.atlassian.net/servicedesk/customer/portal/12/{{feedback.issue_id}}">
+>>>>>>> fix: made requested changes
                     View Details
                     <ion-icon slot="end" name="chevron-forward-sharp"></ion-icon>
                   </ion-button>

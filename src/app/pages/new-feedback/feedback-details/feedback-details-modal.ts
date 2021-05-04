@@ -13,12 +13,16 @@ import { WsApiService } from 'src/app/services';
 })
 
 export class FeedbackDetailsModalPage implements OnInit {
+<<<<<<< HEAD
 <<<<<<< HEAD:src/app/pages/new-feedback/feedback-details/feedback-details-modal.ts
   productionAPI = 'https://api.apiit.edu.my/anonymous_feedback';
 =======
   // productionAPI = 'https://api.apiit.edu.my/anonymous_feedback';
   productionAPI = 'https://is04zlrnac.execute-api.ap-southeast-1.amazonaws.com/staging/anonymous_feedback'
 >>>>>>> feat: added features for feedback sys:src/app/pages/anonymous-feedback/feedback-details/feedback-details-modal.ts
+=======
+  productionAPI = 'https://api.apiit.edu.my/anonymous_feedback';
+>>>>>>> fix: made requested changes
 
   feedback: NewFeedbackSummary;
   feedbackDetail$: Observable<NewFeedback>;
@@ -39,10 +43,13 @@ export class FeedbackDetailsModalPage implements OnInit {
   }
 
   getFeedbackDetails() {
+<<<<<<< HEAD
 <<<<<<< HEAD:src/app/pages/new-feedback/feedback-details/feedback-details-modal.ts
 =======
     console.log(this.feedback.id);
 >>>>>>> feat: added features for feedback sys:src/app/pages/anonymous-feedback/feedback-details/feedback-details-modal.ts
+=======
+>>>>>>> fix: made requested changes
     this.feedbackDetail$ = this.ws.get<NewFeedback>(`/get_issue_details_by_ID/${this.feedback.id}`, { url: this.productionAPI })
       .pipe(map(feedbacks => feedbacks[0]));
   }
