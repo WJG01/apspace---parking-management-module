@@ -312,6 +312,7 @@ export class DashboardPage implements OnInit {
   cgpaPerIntake$: Observable<CgpaPerIntake>;
   barChartData: any;
   overallCgpa = 0;
+  currentCGPA = [];
   cgpaCardConfigurations: DashboardCardComponentConfigurations = {
     withOptionsButton: false,
     cardTitle: 'CGPA Per Intake',
@@ -1068,6 +1069,7 @@ export class DashboardPage implements OnInit {
             const filteredData = data.reverse().filter((res: any) => res.gpa[res.gpa.length - 2]).reverse();
             const labels = filteredData.map((i: any) => i.intakeCode);
             const gpa = filteredData.map((i: any) => i.gpa[i.gpa.length - 2].IMMIGRATION_GPA);
+            this.currentCGPA = gpa;
             gpa.forEach(intakeGpa => {
               this.overallCgpa += +intakeGpa;
             });

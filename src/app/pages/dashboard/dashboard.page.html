@@ -575,7 +575,7 @@
             <ng-container *ngIf="cgpaPerIntake$ | async">
               <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
                 <ion-card-subtitle>
-                  {{ "Overall: " + (overallCgpa | number: "1.0-2") }}
+                  {{ "Overall: " + (currentCGPA[0] | number: "1.0-2") }}
                 </ion-card-subtitle>
                 <ion-card-title color="primary">
                   CGPA Per Intake
