@@ -14,8 +14,7 @@ import { NewFeedbackModalPage } from './create-feedback/create-feedback-modal';
   styleUrls: ['./feedback-list.page.scss'],
 })
 export class FeedbackListPage implements OnInit {
-  // productionAPI = 'https://api.apiit.edu.my/anonymous_feedback';
-  productionAPI = 'https://is04zlrnac.execute-api.ap-southeast-1.amazonaws.com/staging/anonymous_feedback'
+  productionAPI = 'https://api.apiit.edu.my/anonymous_feedback';
 
   loadingArray = new Array(5);
   feedbackList$: Observable<NewFeedbackSummary[]>;
