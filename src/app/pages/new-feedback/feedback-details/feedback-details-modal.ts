@@ -13,8 +13,7 @@ import { WsApiService } from 'src/app/services';
 })
 
 export class FeedbackDetailsModalPage implements OnInit {
-  // productionAPI = 'https://api.apiit.edu.my/anonymous_feedback';
-  productionAPI = 'https://is04zlrnac.execute-api.ap-southeast-1.amazonaws.com/staging/anonymous_feedback'
+  productionAPI = 'https://api.apiit.edu.my/anonymous_feedback';
 
   feedback: NewFeedbackSummary;
   feedbackDetail$: Observable<NewFeedback>;
@@ -35,7 +34,6 @@ export class FeedbackDetailsModalPage implements OnInit {
   }
 
   getFeedbackDetails() {
-    console.log(this.feedback.id);
     this.feedbackDetail$ = this.ws.get<NewFeedback>(`/get_issue_details_by_ID/${this.feedback.id}`, { url: this.productionAPI })
       .pipe(map(feedbacks => feedbacks[0]));
   }

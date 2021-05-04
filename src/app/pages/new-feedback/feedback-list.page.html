@@ -26,7 +26,7 @@
           <ng-container *ngIf="feedbackList.length > 0; else userHasNoFeedback">
             <ion-card *ngFor="let feedback of feedbackList">
               <ion-card-header>
-                <ion-badge color="tertiary" *ngIf="feedback.is_anon === true">Anonymous</ion-badge>
+                <ion-badge color="tertiary" *ngIf="feedback.is_anon">Anonymous</ion-badge>
                 <ion-card-title color="primary">{{feedback.subject}}</ion-card-title>
                 <ion-card-subtitle>{{(feedback.datetime | dateWithTimezone:'time') + ' on ' + (feedback.datetime | dateWithTimezone:'dd MMM yyyy')}}</ion-card-subtitle>
               </ion-card-header>
@@ -46,7 +46,7 @@
                     View Details
                     <ion-icon slot="end" name="chevron-forward-sharp"></ion-icon>
                   </ion-button>
-                  <ion-button color="primary" *ngIf="feedback.is_anon === false" href="https://apiit.atlassian.net/servicedesk/customer/portal/12/{{feedback.issue_id}}">
+                  <ion-button color="primary" *ngIf="!feedback.is_anon" href="https://apiit.atlassian.net/servicedesk/customer/portal/12/{{feedback.issue_id}}">
                     View Details
                     <ion-icon slot="end" name="chevron-forward-sharp"></ion-icon>
                   </ion-button>

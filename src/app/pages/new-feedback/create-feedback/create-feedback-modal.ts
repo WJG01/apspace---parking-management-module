@@ -43,7 +43,6 @@ export class NewFeedbackModalPage implements OnInit {
 
   public onAnonChange(){
     this.anon = true;
-    console.log(this.anon);
   }
 
   submitFeedback() {

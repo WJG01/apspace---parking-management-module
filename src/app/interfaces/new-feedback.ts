@@ -6,13 +6,17 @@ export interface NewFeedbackSummary {
     issue_id: string;
 }
 
+interface Comments{
+    comment_c: string;
+    datetime: string;
+    username: string[];
+}
+
 export interface NewFeedback {
     feedback_id: number;
     issue_id: string;
     subject: string;
-    comments: {comment_c: string;
-               datetime: string;
-               username: string}[];
+    comments: Comments[];
     message: string[];
     status: string;
 }
