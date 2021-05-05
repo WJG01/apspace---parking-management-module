@@ -403,7 +403,7 @@ export const menusRaw = [
     id: 'obe' as const,
     title: 'OBE',
     group: 'Academic Operation',
-    url: 'https://icgpa.apu.edu.my/',
+    url: 'https://obe.apu.edu.my/',
     attachTicket: false,
     img: 'assets/img/obe.png',
     role: Role.Lecturer | Role.Admin,
