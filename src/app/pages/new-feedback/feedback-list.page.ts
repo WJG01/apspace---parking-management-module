@@ -5,8 +5,8 @@ import { finalize } from 'rxjs/operators';
 
 import { NewFeedbackSummary } from 'src/app/interfaces';
 import { WsApiService } from 'src/app/services';
-import { FeedbackDetailsModalPage } from './feedback-details/feedback-details-modal';
 import { NewFeedbackModalPage } from './create-feedback/create-feedback-modal';
+import { FeedbackDetailsModalPage } from './feedback-details/feedback-details-modal';
 
 @Component({
   selector: 'app-feedback-list',

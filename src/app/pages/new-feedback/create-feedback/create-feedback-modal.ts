@@ -23,7 +23,7 @@ export class NewFeedbackModalPage implements OnInit {
   phoneNumberValid: boolean;
   emailValid: boolean;
   submitting: boolean;
-  anon: boolean = false;
+  anon = false;
 
   selectedCategory: number;
   message = '';
@@ -40,22 +40,8 @@ export class NewFeedbackModalPage implements OnInit {
     this.categories$ = this.ws.get<FeedbackCategory[]>('/categories', { url: this.productionAPI });
   }
 
-
-<<<<<<< HEAD
-<<<<<<< HEAD:src/app/pages/new-feedback/create-feedback/create-feedback-modal.ts
   onAnonChange(){
     this.anon = true;
-=======
-  public onAnonChange(){
-=======
-  onAnonChange(){
->>>>>>> fix: made requested changes
-    this.anon = true;
-<<<<<<< HEAD
-    console.log(this.anon);
->>>>>>> feat: added features for feedback sys:src/app/pages/anonymous-feedback/new-feedback/new-feedback-modal.ts
-=======
->>>>>>> fix: made requested changes
   }
 
   submitFeedback() {
