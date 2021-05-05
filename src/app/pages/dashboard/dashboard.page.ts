@@ -19,7 +19,7 @@ import {
   StaffDirectory, StaffProfile, StudentPhoto, StudentProfile, StudentTimetable
 } from 'src/app/interfaces';
 import {
-  CasTicketService,
+  AppLauncherService, CasTicketService,
   NewsService, NotificationService, SettingsService, StudentTimetableService,
   WsApiService,
 } from 'src/app/services';
@@ -231,6 +231,9 @@ export class DashboardPage implements OnInit {
     withOptionsButton: false
   };
 
+  // CONTACTS
+  lecturerContacts$: Observable<any>;
+
   // NEWS
   news$: Observable<ShortNews[]>;
   newsCardConfigurations: DashboardCardComponentConfigurations = {
@@ -332,6 +335,7 @@ export class DashboardPage implements OnInit {
     private iab: InAppBrowser,
     private cas: CasTicketService,
     private network: Network,
+    private appLauncherService: AppLauncherService,
     private platform: Platform,
     private firebaseX: FirebaseX,
     private toastCtrl: ToastController,
@@ -542,6 +546,7 @@ export class DashboardPage implements OnInit {
       }),
       // tap(studentProfile => this.attendanceDefaultIntake = studentProfile.INTAKE),
       tap(studentProfile => this.userProfile = studentProfile),
+      tap(studentProfile => this.lecturerContacts$ = this.getLecturersContact(studentProfile.INTAKE, refresher)),
       tap(studentProfile => this.getTodaysSchedule(studentProfile.INTAKE, refresher)),
       tap(studentProfile => this.getUpcomingEvents(studentProfile.INTAKE, refresher)), // INTAKE NEEDED FOR EXAMS
       // tap(studentProfile => this.getAttendance(studentProfile.INTAKE, true)), // no-cache for attendance
@@ -676,6 +681,76 @@ export class DashboardPage implements OnInit {
         return timetableEventMode;
       })
     );
+  }
+
+  // Lecturers Contact
+  getLecturersContact(intake: string, refresher) {
+    this.timetableDefaultIntake = intake;
+    return this.studentTimetableService.get(refresher).pipe(
+      // FILTER THE LIST OF TIMETABLES TO GET THE TIMETABLE FOR THE SELECTED INTAKE ONLY
+      map(timetables => timetables.filter(timetable => timetable.INTAKE === intake)),
+
+      // FILTER GROUPING
+      map(timetableContacts => {
+        this.intakeGroup = this.settings.get('intakeGroup');
+        if (this.intakeGroup && this.intakeGroup !== 'All') {
+          timetableContacts.filter(timetable => (timetable.GROUPING === this.intakeGroup));
+
+          // Convert object to array of objects
+          const contacts = Object.keys(timetableContacts).map(res => timetableContacts[res]);
+
+          // Remove same lecturers using lecturer ID
+          const uniqueContacts = Array.from(new Set(contacts.map(contact => contact.LECTID))).map(lectID => {
+            return contacts.find(contact => contact.LECTID === lectID);
+          });
+          return uniqueContacts;
+        } else {
+          // Convert object to array of objects
+          const contacts = Object.keys(timetableContacts).map(res => timetableContacts[res]);
+
+          // Remove same lecturers using lecturer ID
+          const uniqueContacts = Array.from(new Set(contacts.map(contact => contact.LECTID))).map(lectID => {
+            return contacts.find(contact => contact.LECTID === lectID);
+          });
+          return uniqueContacts;
+        }
+      }),
+    );
+  }
+
+
+  chatInTeams(lecturerCasId: string) {
+
+    const androidSchemeUrl = 'com.microsoft.teams';
+
+    const iosSchemeUrl = 'microsoft-teams://';
+
+    const webUrl = `https://teams.microsoft.com/l/chat/0/0?users=${lecturerCasId}@staffemail.apu.edu.my`;
+
+    const appStoreUrl = 'https://itunes.apple.com/us/app/microsoft-teams/id1113153706?mt=8';
+
+    const appViewUrl = 'https://teams.microsoft.com/l/chat/0/0?users=';
+
+    // tslint:disable-next-line: max-line-length
+
+    const playStoreUrl = `https://play.google.com/store/apps/details?id=com.microsoft.teams&hl=en&referrer=utm_source%3Dgoogle%26utm_medium%3Dorganic%26utm_term%3D'com.microsoft.teams'&pcampaignid=APPU_1_NtLTXJaHKYr9vASjs6WwAg`;
+
+    this.appLauncherService.launchExternalApp(
+
+      iosSchemeUrl,
+
+      androidSchemeUrl,
+
+      appViewUrl,
+
+      webUrl,
+
+      playStoreUrl,
+
+      appStoreUrl,
+
+      `${lecturerCasId}@staffemail.apu.edu.my`);
+
   }
 
   // FUNCTION POSSIBLE TO MERGE? M01

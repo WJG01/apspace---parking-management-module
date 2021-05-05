@@ -5,7 +5,8 @@
   <div class="glob-container">
     <ion-grid class="ion-no-padding">
       <ion-row>
-        <ion-col size-xs="12" class="dash-padding" [attr.size-md]="activeDashboardSections.length > 0 ? 5 : 7" [class.glob-margin-auto]="activeDashboardSections.length <= 0">
+        <ion-col size-xs="12" class="dash-padding" [attr.size-md]="activeDashboardSections.length > 0 ? 5 : 7"
+          [class.glob-margin-auto]="activeDashboardSections.length <= 0">
           <ion-card class="profile ion-no-margin ion-padding-top no-border-rad">
             <ion-avatar tappable="true" class="glob-margin-auto ion-margin-top avatar"
               (click)="navigateToPage('profile')" *ngIf="!hideProfilePicture">
@@ -364,7 +365,8 @@
           </ion-card>
         </ion-col>
 
-        <ion-col *ngIf="activeDashboardSections.length > 0" size-xs="12" size-md="7" class="dash-padding dash-padding-bottom">
+        <ion-col *ngIf="activeDashboardSections.length > 0" size-xs="12" size-md="7"
+          class="dash-padding dash-padding-bottom">
           <section class="image-slider ion-margin-bottom" *ngIf="activeDashboardSections.includes('noticeBoard')">
             <ion-slides #imageSliderSlides pager="true" [options]="imageSliderOpts">
               <ng-container *ngIf="noticeBoardItems$ | async as noticeBoardItems; else loadingNoticeBoard">
@@ -372,7 +374,7 @@
                   <ion-slide *ngFor="let noticeBoardItem of noticeBoardItems">
                     <div class="picture">
                       <a href="{{ noticeBoardItem['post-meta-fields']['slideshow_url'] && noticeBoardItem['post-meta-fields']['slideshow_url'][0] ? noticeBoardItem['post-meta-fields']['slideshow_url'][0] : noticeBoardItem.link }}"
-                         target="_blank"> <img src="{{ noticeBoardItem.featured_media_source[0].source_url }}" alt="" />
+                        target="_blank"> <img src="{{ noticeBoardItem.featured_media_source[0].source_url }}" alt="" />
                       </a>
                     </div>
                   </ion-slide>
@@ -390,13 +392,15 @@
               <ion-skeleton-text animated style="height: 150px"></ion-skeleton-text>
             </ng-template>
             <ng-template #noNoticeBoardItems>
-              <app-message-with-svg wrapperSize="6" wrapperOffset="3" imageUrl="assets/img/empty.svg" messageTitle="Nothing to show yet!" messageContent="Try to come later :)">
+              <app-message-with-svg wrapperSize="6" wrapperOffset="3" imageUrl="assets/img/empty.svg"
+                messageTitle="Nothing to show yet!" messageContent="Try to come later :)">
               </app-message-with-svg>
             </ng-template>
           </section>
 
 
-          <ion-card class="ion-no-margin ion-margin-bottom no-border-rad" *ngIf="activeDashboardSections.includes('news')">
+          <ion-card class="ion-no-margin ion-margin-bottom no-border-rad"
+            *ngIf="activeDashboardSections.includes('news')">
             <ion-card-header>
               <ion-card-title color="primary">
                 News
@@ -406,7 +410,7 @@
               <ng-container *ngIf="news$ | async as news; else loadingNews">
                 <ng-container *ngIf="news.length > 0; else noNews">
                   <div *ngFor="let newsItem of news">
-                    <ion-item detail="true"  button="true" lines="none" (click)="openModal(newsItem)">
+                    <ion-item detail="true" button="true" lines="none" (click)="openModal(newsItem)">
                       <ion-thumbnail slot="start">
                         <img src="{{ newsItem.url }}" />
                       </ion-thumbnail>
@@ -425,13 +429,15 @@
               </ion-item>
             </ng-template>
             <ng-template #noNews>
-              <app-message-with-svg wrapperSize="6" wrapperOffset="3" imageUrl="assets/img/empty.svg" messageTitle="No News yet!" messageContent="Try to come later :)">
+              <app-message-with-svg wrapperSize="6" wrapperOffset="3" imageUrl="assets/img/empty.svg"
+                messageTitle="No News yet!" messageContent="Try to come later :)">
               </app-message-with-svg>
             </ng-template>
           </ion-card>
 
           <!--Bus Schedule Card-->
-          <ion-card class="ion-no-margin ion-margin-bottom no-border-rad" *ngIf="activeDashboardSections.includes('upcomingTrips')">
+          <ion-card class="ion-no-margin ion-margin-bottom no-border-rad"
+            *ngIf="activeDashboardSections.includes('upcomingTrips')">
             <ion-card-header class="ion-padding">
               <ion-card-title color="primary">Upcoming Trips</ion-card-title>
             </ion-card-header>
@@ -456,10 +462,14 @@
                                 <span>{{trip.trip_to}}</span>
                               </h3>
                               <p class="timings">
-                                <span class="ion-padding-end timing-1 glob-text-bold" *ngIf="trip.times[0]">{{trip.times[0].slice(0, -8)}}</span>
-                                <span class="ion-padding-end timing-2 glob-text-bold" *ngIf="trip.times[1]">{{trip.times[1].slice(0, -8)}}</span>
-                                <span class="ion-padding-end timing-3 glob-text-bold" *ngIf="trip.times[2]">{{trip.times[2].slice(0, -8)}}</span>
-                                <span class="ion-padding-end timing-4 glob-text-bold" *ngIf="trip.times[3]">{{trip.times[3].slice(0, -8)}}</span>
+                                <span class="ion-padding-end timing-1 glob-text-bold"
+                                  *ngIf="trip.times[0]">{{trip.times[0].slice(0, -8)}}</span>
+                                <span class="ion-padding-end timing-2 glob-text-bold"
+                                  *ngIf="trip.times[1]">{{trip.times[1].slice(0, -8)}}</span>
+                                <span class="ion-padding-end timing-3 glob-text-bold"
+                                  *ngIf="trip.times[2]">{{trip.times[2].slice(0, -8)}}</span>
+                                <span class="ion-padding-end timing-4 glob-text-bold"
+                                  *ngIf="trip.times[3]">{{trip.times[3].slice(0, -8)}}</span>
                               </p>
                             </div>
                           </ion-col>
@@ -479,14 +489,18 @@
                                   <span>{{trip.trip_from}}</span>
                                 </h3>
                                 <p class="timings">
-                                  <span class="ion-padding-end latest-time">No more trips available for this destination</span>
+                                  <span class="ion-padding-end latest-time">No more trips available for this
+                                    destination</span>
                                 </p>
                               </div>
                             </ion-col>
                           </ion-row>
                         </ng-container>
                       </div>
-                      <p class="ion-padding-top"><ion-text class ="glob-text-bold">Note:</ion-text> All of the timings of Upcoming Trips are displayed in the Malaysian Timezone</p>
+                      <p class="ion-padding-top">
+                        <ion-text class="glob-text-bold">Note:</ion-text> All of the timings of Upcoming Trips are
+                        displayed in the Malaysian Timezone
+                      </p>
                     </ng-container>
                     <ng-template #noTrips>
                       <app-message-with-svg messageTitle="No More Trips!"
@@ -531,7 +545,69 @@
             </ion-card-content>
           </ion-card>
 
-          <ion-card class="ion-no-margin ion-margin-bottom no-border-rad" *ngIf="activeDashboardSections.includes('apcard')">
+          <!-- Contacts -->
+          <ion-card class="ion-no-margin ion-margin-bottom no-border-rad"
+            *ngIf="activeDashboardSections.includes('contacts') && isStudent">
+            <ion-card-header>
+              <ion-card-title color="primary">
+                Contacts
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="ion-no-padding ion-no-margin">
+              <ion-grid class="ion-no-padding ion-no-margin">
+                <ng-container *ngIf="lecturerContacts$ | async as lecturerContacts; else loadingContacts">
+                  <ng-container *ngIf="lecturerContacts.length > 0; else noContacts">
+                    <ion-row class="contacts-row ion-padding" *ngFor="let contact of lecturerContacts"
+                      (click)="chatInTeams(contact.SAMACCOUNTNAME)">
+                      <ion-col size="1.4" size-xl="1" class="ion-align-self-center">
+                        <ion-icon class="contacts-icon" name="people-circle-outline"></ion-icon>
+                      </ion-col>
+                      <ion-col size="9.6" size-xl="10">
+                        <ion-row>
+                          <ion-col size="9.6" size-xl="10">
+                            <h3 class="glob-text-bold contacts-lecturer-name">{{ contact.NAME }}</h3>
+                          </ion-col>
+                          <ion-col size="9.6" size-xl="10">
+                            <p>{{ contact.MODID }}</p>
+                          </ion-col>
+                        </ion-row>
+                      </ion-col>
+                      <ion-col size="1" class="ion-align-self-center">
+                        <ion-icon name="chatbubble-ellipses-outline" size="large"></ion-icon>
+                      </ion-col>
+                    </ion-row>
+                  </ng-container>
+
+                  <ng-template #noContacts>
+                    <app-message-with-svg messageTitle="No available contacts"
+                      messageContent="You have got no ongoing classes in your intake. Contacts are shown based on your intake classes."
+                      imageUrl="assets/img/no-contacts.svg" wrapperOffset="3" wrapperSize="6">
+                    </app-message-with-svg>
+                  </ng-template>
+                </ng-container>
+
+                <ng-template #loadingContacts>
+                  <div class="ion-padding">
+                    <ion-skeleton-text class="ion-margin-top ion-margin-bottom" style="width: 100%;
+                            line-height: 30px;" animated>
+                    </ion-skeleton-text>
+                    <ion-skeleton-text class="ion-margin-top ion-margin-bottom" style="width: 100%;
+                            line-height: 30px;" animated>
+                    </ion-skeleton-text>
+                    <ion-skeleton-text class="ion-margin-top ion-margin-bottom" style="width: 100%;
+                            line-height: 30px;" animated>
+                    </ion-skeleton-text>
+                    <ion-skeleton-text class="ion-margin-top ion-margin-bottom" style="width: 100%;
+                            line-height: 30px;" animated>
+                    </ion-skeleton-text>
+                  </div>
+                </ng-template>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+
+          <ion-card class="ion-no-margin ion-margin-bottom no-border-rad"
+            *ngIf="activeDashboardSections.includes('apcard')">
             <ng-container *ngIf="apcardTransaction$ | async">
               <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
                 <ion-card-subtitle>
@@ -552,7 +628,8 @@
           </ion-card>
 
 
-          <ion-card class="ion-no-margin ion-margin-bottom no-border-rad" *ngIf="activeDashboardSections.includes('financials')">
+          <ion-card class="ion-no-margin ion-margin-bottom no-border-rad"
+            *ngIf="activeDashboardSections.includes('financials')">
             <ng-container *ngIf="financial$ | async as financialSummary">
               <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
                 <ion-card-subtitle>

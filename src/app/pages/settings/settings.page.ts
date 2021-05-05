@@ -55,6 +55,7 @@ export class SettingsPage implements OnInit {
     { name: 'Notice Board', value: 'noticeBoard' },
     { name: 'News', value: 'news' },
     { name: 'Upcoming Trips', value: 'upcomingTrips' },
+    { name: 'Contacts', value: 'contacts' },
     { name: 'APCard Chart', value: 'apcard' },
     { name: 'Financial Chart', value: 'financials' },
     { name: 'CGPA Chart', value: 'cgpa' },

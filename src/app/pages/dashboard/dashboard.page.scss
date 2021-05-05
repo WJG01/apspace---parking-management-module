@@ -1,4 +1,5 @@
-ion-col[scrollx=true], ion-col[scrolly=true] {
+ion-col[scrollx="true"],
+ion-col[scrolly="true"] {
   position: relative;
   overflow: hidden;
 
@@ -7,11 +8,11 @@ ion-col[scrollx=true], ion-col[scrolly=true] {
   }
 }
 
-ion-col[scrollx=true] {
+ion-col[scrollx="true"] {
   overflow-x: auto;
 }
 
-ion-col[scrolly=true] {
+ion-col[scrolly="true"] {
   overflow-y: auto;
 }
 
@@ -23,7 +24,7 @@ ion-col[scrolly=true] {
     border: 2px solid var(--ion-color-primary);
     padding: 3px;
 
-    &:hover{
+    &:hover {
       padding: 1px;
       border: 0.5px solid var(--ion-color-primary);
     }
@@ -48,14 +49,14 @@ ion-col[scrolly=true] {
       border-bottom: 1px solid var(--ion-color-step-100);
 
       &.class-type {
-        border-left-color: #8EAF2D;
+        border-left-color: #8eaf2d;
 
         .colored-with-type {
-          color: #8EAF2D;
+          color: #8eaf2d;
         }
 
         .description a {
-          color: #8EAF2D;
+          color: #8eaf2d;
         }
       }
 
@@ -116,50 +117,46 @@ ion-col[scrolly=true] {
         border-left-width: 10px;
       }
     }
-
   }
 }
 
-.locations{
+.locations {
   font-size: 1.2em;
 }
 
-.color-indicator{
-  width:100%; 
-  height:100%; 
+.color-indicator {
+  width: 100%;
+  height: 100%;
   border-radius: 5px 0px 0px 5px;
 }
 
-.schedule-container{
+.schedule-container {
   background-color: var(--ion-color-light);
   border-radius: 0px 5px 5px 0px;
 
-
-  
-  .timing-1{
+  .timing-1 {
     font-size: 1.4em;
   }
 
-  .timing-2{
+  .timing-2 {
     font-size: 1.2em;
-    opacity: .6;
+    opacity: 0.6;
   }
 
-  .timing-3{
+  .timing-3 {
     font-size: 1em;
-    opacity: .6;
+    opacity: 0.6;
   }
 
-  .timing-4{
-    font-size: .9em;
-    opacity: .6;
+  .timing-4 {
+    font-size: 0.9em;
+    opacity: 0.6;
   }
 
-  .bus-icon{
+  .bus-icon {
     color: #fff;
     font-size: 1.5em;
   }
-
 }
 
 .image-slider {
@@ -196,7 +193,7 @@ ion-col[scrolly=true] {
 
   .box {
     border-radius: 5px;
-    box-shadow: 0 2px 30px rgba(black, .2);
+    box-shadow: 0 2px 30px rgba(black, 0.2);
     background: lighten(#f0f4c3, 10%);
     position: relative;
     overflow: hidden;
@@ -209,10 +206,26 @@ ion-col[scrolly=true] {
     ion-icon {
       border-radius: 100%;
       padding: 6px;
-      color: #E50565;
+      color: #e50565;
       background-color: rgba(19, 79, 109, 0.8);
     }
   }
+}
+
+.contacts-row {
+  cursor: pointer;
+
+  .contacts-icon {
+    font-size: 2rem;
+  }
+
+  .contacts-lecturer-name {
+    font-size: 1.2em;
+  }
+}
+
+.contacts-row:hover {
+  background-color: var(--ion-color-light);
 }
 
 .floating-icon {
@@ -223,27 +236,27 @@ ion-col[scrolly=true] {
   font-weight: bold;
 }
 
-.dash-padding{
+.dash-padding {
   padding: 1em 1em 0 1em;
 }
 
-.dash-padding-bottom{
+.dash-padding-bottom {
   padding-bottom: 1em;
 }
 
-@media screen and (max-width: 720px){
-  .dash-padding{
+@media screen and (max-width: 720px) {
+  .dash-padding {
     padding: 1em 0 0 0;
     border-radius: 0;
   }
-  .dash-padding-bottom{
+  .dash-padding-bottom {
     padding-bottom: 1em;
   }
-  .no-border-rad{
+  .no-border-rad {
     border-radius: 0;
   }
-  .image-slider{
-    .swiper-slide{
+  .image-slider {
+    .swiper-slide {
       border-radius: 0;
     }
   }
