@@ -14,6 +14,11 @@
   <ion-grid>
     <ion-row>
       <ion-col size-xs="12" size-md="6" offset-md="3" size-lg="4" offset-lg="4">
+        <ion-card>
+          <ion-card-content>
+            <p>Welcome! to our new Feedback system <span class="glob-text-bold">(beta)</span>. If you would still like to use legacy feedback system, click here - <a href="https://erp.apiit.edu.my/">APiX / ERP (Legacy)</a></p>
+          </ion-card-content>
+        </ion-card>
         <div *ngIf="!mobileApp" class="ion-padding">
           <ion-button expand="full" fill="solid" class="glob-margin-auto" color="tertiary"
             (click)="createNewFeedback()">
