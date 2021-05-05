@@ -81,6 +81,8 @@ const defaultData: Settings = {
   timeFormat: '12',
   busFirstLocation: '',
   busSecondLocation: '',
+  userProfileName: [],
+  changedName: false
 };
 
 const BUCKET_URL = 'https://s3-ap-southeast-1.amazonaws.com/apspace-user-settings-sync';
@@ -145,7 +147,7 @@ export class SettingsService {
         ]).then(items => items.map(data => ({ epoch, data })))
           .then(([
             modulesBlacklist, dashboardSections, menuUI, disableShakespear, shakeSensitivity,
-            accentColor, busFirstLocation, busSecondLocation,
+            accentColor, busFirstLocation, busSecondLocation
           ]) => {
           this.data.next({
             ...this.data.value, // built with default value

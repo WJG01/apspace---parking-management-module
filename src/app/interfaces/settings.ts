@@ -33,6 +33,8 @@ export interface Settings {
   /* bus shuttle service */
   busFirstLocation: string;
   busSecondLocation: string;
+  userProfileName: string[];
+  changedName: boolean;
 }
 
 /** Delete this in the future, used only for migration. */

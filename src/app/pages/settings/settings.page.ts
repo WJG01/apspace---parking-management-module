@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController, NavController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Observable, combineLatest } from 'rxjs';
-import { map, pluck } from 'rxjs/operators';
+import { map, pluck, tap } from 'rxjs/operators';
 
 import { NotifierService } from 'src/app/shared/notifier/notifier.service';
 import { SearchModalComponent } from '../../components/search-modal/search-modal.component';
 import { accentColors } from '../../constants';
-import { APULocation, APULocations, Role, StudentProfile, Venue } from '../../interfaces';
+import { APULocation, APULocations, Role, StaffProfile, StudentProfile, Venue } from '../../interfaces';
 import { SettingsService, StudentTimetableService, WsApiService } from '../../services';
 
 @Component({
@@ -52,23 +52,30 @@ export class SettingsPage implements OnInit {
   ];
 
   studentDashboardSettingValues = [
-    {name: 'Notice Board', value: 'noticeBoard'},
-    {name: 'News', value: 'news'},
-    {name: 'Upcoming Trips', value: 'upcomingTrips'},
-    {name: 'APCard Chart', value: 'apcard'},
-    {name: 'Financial Chart', value: 'financials'},
-    {name: 'CGPA Chart', value: 'cgpa'},
+    { name: 'Notice Board', value: 'noticeBoard' },
+    { name: 'News', value: 'news' },
+    { name: 'Upcoming Trips', value: 'upcomingTrips' },
+    { name: 'APCard Chart', value: 'apcard' },
+    { name: 'Financial Chart', value: 'financials' },
+    { name: 'CGPA Chart', value: 'cgpa' },
   ];
 
   staffDashboardSettingsValues = [
-    {name: 'Notice Board', value: 'noticeBoard'},
-    {name: 'News', value: 'news'},
-    {name: 'APCard Chart', value: 'apcard'},
+    { name: 'Notice Board', value: 'noticeBoard' },
+    { name: 'News', value: 'news' },
+    { name: 'APCard Chart', value: 'apcard' },
   ];
 
   dashboardSections = [];
 
   accentColors = accentColors;
+
+  // modify dashboard name
+  profileName$: Observable<string[]>;
+  modifiedName: string[];
+  mySelectValue: string[];
+  changedName: boolean;
+
   isCordova: boolean;
   constructor(
     private modalCtrl: ModalController,
@@ -94,16 +101,14 @@ export class SettingsPage implements OnInit {
       };
     });
     this.settings.get$('disableShakespear').subscribe(value => {
-        this.disableShakespear = value;
-      }
-    );
+      this.disableShakespear = value;
+    });
     this.settings.get$('shakeSensitivity').subscribe(value => {
       this.shakeSensitivity = this.sensitivityOptions.findIndex(item => item.value === value);
     });
     this.settings.get$('hideProfilePicture').subscribe(value => {
-        this.hideProfilePicture = value;
-      }
-    );
+      this.hideProfilePicture = value;
+    });
     this.settings.get$('enableMalaysiaTimezone').subscribe(value =>
       this.enableMalaysiaTimezone = value
     );
@@ -113,6 +118,10 @@ export class SettingsPage implements OnInit {
     this.settings.get$('dashboardSections').subscribe(value => {
       this.dashboardSections = value;
     });
+    this.settings.get$('userProfileName').subscribe(value => {
+      this.modifiedName = value;
+    });
+    this.mySelectValue = this.modifiedName;
   }
 
   ngOnInit() {
@@ -122,6 +131,7 @@ export class SettingsPage implements OnInit {
       this.isStudent = Boolean(role & Role.Student);
     });
     this.locations$ = this.getLocations();
+    this.profileName$ = this.getProfileName();
     this.getDefaultLocation();
     if (this.defaultCampus) {
       this.getVenues();
@@ -130,6 +140,22 @@ export class SettingsPage implements OnInit {
 
   selectActiveDashboardSections() {
     this.settings.set('dashboardSections', this.dashboardSections);
+  }
+  setProfileName() {
+    this.settings.set('userProfileName', this.modifiedName);
+    this.settings.set('changedName', true);
+  }
+
+  getProfileName(): Observable<string[]> {
+    return this.ws.get<StaffProfile[]>('/staff/profile').pipe(
+      map(res => {
+        this.modifiedName = res[0].FULLNAME.split(' ');
+        return res[0].FULLNAME.split(' ');
+      }),
+      tap(_ => {
+        this.modifiedName = this.mySelectValue;
+      })
+    );
   }
 
   toggleDisableShakespear() {
@@ -161,7 +187,7 @@ export class SettingsPage implements OnInit {
       [
         {
           text: 'OK',
-          handler: () => {}
+          handler: () => { }
         }
       ]
     );
@@ -182,7 +208,6 @@ export class SettingsPage implements OnInit {
   getVenues() {
     this.venues$ = this.ws.get<Venue[]>(`/iconsult/locations?venue=${this.defaultCampus}`);
   }
-
 
   setBusShuttleServicesSettings() {
     this.settings.set('busFirstLocation', this.busShuttleServiceSettings.firstLocation);
@@ -294,7 +319,7 @@ export class SettingsPage implements OnInit {
           text: 'Yes',
           handler: () => {
             this.ws.get('/byod/reset').subscribe(
-              () => {},
+              () => { },
               err => console.error(err),
               async () => {
                 const toast = await this.toastCtrl.create({

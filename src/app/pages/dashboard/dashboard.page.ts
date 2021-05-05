@@ -92,6 +92,8 @@ export class DashboardPage implements OnInit {
   activeDashboardSections: string[] = [];
 
   hideProfilePicture;
+  userProfileName$: Observable<string>;
+  changedName: boolean;
 
   activeAccentColor = '';
   lowAttendanceChart: any;
@@ -546,6 +548,19 @@ export class DashboardPage implements OnInit {
       // tap(studentProfile => this.getUpcomingExam(studentProfile.INTAKE)),
     ) : this.staffProfile$ = this.ws.get<StaffProfile>('/staff/profile', { caching }).pipe(
       tap(staffProfile => this.userProfile = staffProfile[0]),
+      tap(_ => {
+        this.settings.get$('changedName').subscribe(res => {
+          if (res) {
+            this.userProfileName$ = this.settings.get$('userProfileName').pipe(
+              map(data => {
+                return data.join(' ');
+              })
+            );
+          } else {
+            this.userProfileName$ = of(this.userProfile.FULLNAME);
+          }
+        });
+      }),
       tap(staffProfile => this.getTodaysSchedule(staffProfile[0].ID)),
       shareReplay(1)
     );
