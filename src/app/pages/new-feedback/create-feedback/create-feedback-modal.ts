@@ -41,11 +41,15 @@ export class NewFeedbackModalPage implements OnInit {
   }
 
 
+<<<<<<< HEAD
 <<<<<<< HEAD:src/app/pages/new-feedback/create-feedback/create-feedback-modal.ts
   onAnonChange(){
     this.anon = true;
 =======
   public onAnonChange(){
+=======
+  onAnonChange(){
+>>>>>>> fix: made requested changes
     this.anon = true;
 <<<<<<< HEAD
     console.log(this.anon);
@@ -61,7 +65,6 @@ export class NewFeedbackModalPage implements OnInit {
       attachments: this.attachments,
       anon: this.anon
     };
-    console.log(feedback);
     this.presentLoading();
     this.submitting = true;
 

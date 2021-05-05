@@ -50,6 +50,7 @@
                   <ion-badge slot="end" color="warning">{{feedback.issue_id}}</ion-badge>
                 </ion-item>
                 <div class="ion-text-end ion-margin-top">
+<<<<<<< HEAD
 <<<<<<< HEAD:src/app/pages/new-feedback/feedback-list.page.html
                   <ion-button color="primary" (click)="viewFeedbackDetails(feedback)" *ngIf="feedback.is_anon">
                     View Details
@@ -58,6 +59,9 @@
                   <ion-button color="primary" *ngIf="!feedback.is_anon" href="https://apiit.atlassian.net/servicedesk/customer/portal/12/{{feedback.issue_id}}">
 =======
                   <ion-button color="primary" (click)="viewFeedbackDetails(feedback)" *ngIf="feedback.is_anon === true">
+=======
+                  <ion-button color="primary" (click)="viewFeedbackDetails(feedback)" *ngIf="feedback.is_anon">
+>>>>>>> fix: made requested changes
                     View Details
                     <ion-icon slot="end" name="chevron-forward-sharp"></ion-icon>
                   </ion-button>
