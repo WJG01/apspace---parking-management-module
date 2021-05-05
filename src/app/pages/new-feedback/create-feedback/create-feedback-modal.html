@@ -27,12 +27,11 @@
     </ion-item>
     <ion-item>
       <ion-label position="floating">Anonymous</ion-label>
-      <p></p>
       <p>
         <ion-text color="danger">Checking this box will allow your feedback to remain <span class="glob-text-bold">Anonymous</span>. The agent will receive your feedback and respond to it without knowing your identity.
         </ion-text>
+        <ion-checkbox color="danger" [(ngModel)]="anon" (change)="onAnonChange()"></ion-checkbox>
       </p>
-      <ion-checkbox color="danger" [(ngModel)]="anon" (change)="onAnonChange()"></ion-checkbox>
     </ion-item>
     <ion-item>
       <ion-label position="floating">Message <ion-text color="danger">*</ion-text>

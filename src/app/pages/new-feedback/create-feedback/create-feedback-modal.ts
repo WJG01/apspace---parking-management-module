@@ -41,7 +41,7 @@ export class NewFeedbackModalPage implements OnInit {
   }
 
 
-  public onAnonChange(){
+  onAnonChange(){
     this.anon = true;
   }
 
@@ -52,7 +52,6 @@ export class NewFeedbackModalPage implements OnInit {
       attachments: this.attachments,
       anon: this.anon
     };
-    console.log(feedback);
     this.presentLoading();
     this.submitting = true;
 

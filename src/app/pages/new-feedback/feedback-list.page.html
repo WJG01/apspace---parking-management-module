@@ -42,7 +42,7 @@
                   <ion-badge slot="end" color="warning">{{feedback.issue_id}}</ion-badge>
                 </ion-item>
                 <div class="ion-text-end ion-margin-top">
-                  <ion-button color="primary" (click)="viewFeedbackDetails(feedback)" *ngIf="feedback.is_anon === true">
+                  <ion-button color="primary" (click)="viewFeedbackDetails(feedback)" *ngIf="feedback.is_anon">
                     View Details
                     <ion-icon slot="end" name="chevron-forward-sharp"></ion-icon>
                   </ion-button>
