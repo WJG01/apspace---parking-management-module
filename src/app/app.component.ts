@@ -10,6 +10,7 @@ import {
 } from '@ionic/angular';
 import { Observable, combineLatest } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 import { VersionValidator } from './interfaces';
 import { ApcardQrCodePage } from './pages/apcard-qr-code/apcard-qr-code.page';
@@ -53,6 +54,11 @@ export class AppComponent {
     private version: VersionService,
     private ws: WsApiService,
   ) {
+    // Supress all console.log() on prod (If forgot to remove when pushing)
+    if (environment.production) {
+      window.console.log = function() {};
+    }
+
     if (this.network.type !== 'none') {
       this.ws.get<VersionValidator>('/apspace_mandatory_update.json', {
         url: 'https://d370klgwtx3ftb.cloudfront.net',
