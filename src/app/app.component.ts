@@ -10,8 +10,8 @@ import {
 } from '@ionic/angular';
 import { Observable, combineLatest } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 
+import { environment } from 'src/environments/environment';
 import { VersionValidator } from './interfaces';
 import { ApcardQrCodePage } from './pages/apcard-qr-code/apcard-qr-code.page';
 import {
@@ -56,7 +56,7 @@ export class AppComponent {
   ) {
     // Supress all console.log() on prod (If forgot to remove when pushing)
     if (environment.production) {
-      window.console.log = function() {};
+      window.console.log = () => {};
     }
 
     if (this.network.type !== 'none') {
