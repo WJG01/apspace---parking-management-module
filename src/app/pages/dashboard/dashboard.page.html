@@ -415,7 +415,7 @@
                         <img src="{{ newsItem.url }}" />
                       </ion-thumbnail>
                       <ion-label>
-                        <h3 class="ion-text-wrap">{{ newsItem.title }}</h3>
+                        <h3 class="ion-text-wrap" [innerHTML]="newsItem.title"></h3>
                         <p>{{ newsItem.updated | dateWithTimezone: 'dd MMM yy' }}</p>
                       </ion-label>
                     </ion-item>

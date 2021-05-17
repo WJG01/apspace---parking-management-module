@@ -75,7 +75,7 @@
                 <ion-img [src]="newsItem.url"></ion-img>
                 <div class="text-overlay">
                   <ion-label>
-                    <h2>{{ newsItem.title }}</h2>
+                    <h2 [innerHTML]="newsItem.title"></h2>
                     <p>{{ newsItem.updated | dateWithTimezone : 'MMM d, y, h:mm a'}}</p>
                   </ion-label>
                 </div>
