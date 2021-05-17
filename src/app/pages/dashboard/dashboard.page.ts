@@ -26,6 +26,7 @@ import {
 import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-with-timezone.pipe';
 import { NotifierService } from 'src/app/shared/notifier/notifier.service';
 import { NewsModalPage } from '../news/news-modal';
+import { MoodleUpcomingEventsModalPage } from '../moodle-upcoming-events/moodle-upcoming-events-modal.page';
 import { NotificationModalPage } from '../notifications/notification-modal';
 
 @Component({
@@ -137,6 +138,10 @@ export class DashboardPage implements OnInit, DoCheck {
     cardTitle: 'Upcoming Events',
     cardSubtitle: 'Today: ' + format(new Date(), 'dd MMMM yyyy')
   };
+
+  // UPCOMING MOODLE EVENTS
+  upComingMoodleEvent$: Observable<any[]>
+  //upComingMoodleVisible: Boolean = true;
 
   // ATTENDANCE
   // modulesWithLowAttendance$: Observable<Attendance[]>;
@@ -392,6 +397,8 @@ export class DashboardPage implements OnInit, DoCheck {
       this.settings.initialSync();
       this.doRefresh();
     });
+
+    //this.upComingMoodleEvent$ = this.ws.get<any[]>('/moodle/events', {auth: true})
   }
 
   // For Upcoming Trips
@@ -431,6 +438,7 @@ export class DashboardPage implements OnInit, DoCheck {
     this.noticeBoardItems$ = this.news.getSlideshow(refresher, this.isStudent, this.isLecturer || Boolean(this.role & Role.Admin));
     this.upcomingTrips$ = this.getUpcomingTrips(this.firstLocation, this.secondLocation);
     this.photo$ = this.ws.get<StudentPhoto>('/student/photo');  // no-cache for student photo
+    this.upComingMoodleEvent$ = this.ws.get<any[]>('/moodle/events', {auth: true})
     this.displayGreetingMessage();
     if (!this.isStudent) {
       this.getUpcomingEvents();
@@ -609,6 +617,16 @@ export class DashboardPage implements OnInit, DoCheck {
       component: NewsModalPage,
       componentProps: { item, notFound: 'No news Selected' },
     });
+    await modal.present();
+    await modal.onDidDismiss();
+  }
+
+  // MOODLE UPCOMING EVENTS
+  async openMoodleModal(moodleItem: any){
+    const modal = await this.modalCtrl.create({
+      component: MoodleUpcomingEventsModalPage,
+      componentProps: { moodleItem },
+    })
     await modal.present();
     await modal.onDidDismiss();
   }
