@@ -397,8 +397,6 @@ export class DashboardPage implements OnInit, DoCheck {
       this.settings.initialSync();
       this.doRefresh();
     });
-
-    //this.upComingMoodleEvent$ = this.ws.get<any[]>('/moodle/events', {auth: true})
   }
 
   // For Upcoming Trips
