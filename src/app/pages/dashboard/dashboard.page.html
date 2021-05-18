@@ -450,32 +450,24 @@
               <ion-card-title class="ion-text-left" color="primary">Moodle Events</ion-card-title>
             </ion-card-header>
             <ion-card-content class="ion-no-margin ion-no-padding;">
-              <ng-container *ngIf="upComingMoodleEvent$ | async as moodleEvents; else loadingMoodleUpcoming">
+              <ng-container *ngIf="upComingMoodleEvent$ | async as events; else loadingMoodleUpcoming">
                 <!--each event item-->
-                <div *ngFor="let event of moodleEvents">
-                  <div *ngIf="lastMoodleEvent(event, moodleEvents) else lastMEvent">
-                    <ion-item class="ion-no-padding ion-no-margin ion-margin-top" fill="outline" detail="true" button="true" (click)="openMoodleModal(event)">
-                      <ion-label class="ion-text-wrap ion-text-capitalize">
-                        {{event.name}}
-                      </ion-label>
-                    </ion-item>
-                  </div>
-                  <ng-template #lastMEvent>
-                    <ion-item class="ion-no-padding ion-no-margin ion-margin-top" lines="none" fill="outline" detail="true" button="true" (click)="openMoodleModal(event)">
-                      <ion-label class="ion-text-wrap ion-text-capitalize">
-                        {{event.name}}
-                      </ion-label>
-                    </ion-item>
-                  </ng-template>
+                <div *ngFor="let event of events; let isLast = last">
+                  <ion-item lines="isLast ? 'none' : null" class="ion-no-padding ion-no-margin ion-margin-top"
+                  detail="true" button="true" (click)="openMoodleModal(event)">
+                    <ion-label class="ion-text-wrap ion-text-capitalize">
+                      {{event.name}}
+                    </ion-label>
+                  </ion-item>
                 </div>
               </ng-container>
             </ion-card-content>
             <ng-template #loadingMoodleUpcoming >
               <div *ngFor="let _ of skeletons">
-                <ion-item class="ion-no-padding ion-no-margin ion-margin-top" lines="none" fill="outline">
+                <ion-item class="ion-no-padding ion-no-margin ion-margin-top" lines="none">
                   <ion-label class="ion-text-wrap">
-                      <ion-skeleton-text animated class="moodle-skeleton1 ion-no-margin ion-no-padding"></ion-skeleton-text>
-                      <ion-skeleton-text animated class="moodle-skeleton2"></ion-skeleton-text>
+                    <ion-skeleton-text animated style="width: 70%; line-height: 30px">
+                    </ion-skeleton-text>
                   </ion-label>
                 </ion-item>
               </div>

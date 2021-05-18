@@ -27,6 +27,7 @@ export class SettingsPage implements OnInit {
     firstLocation: '',
     secondLocation: '',
   };
+  moodleEvents = '';
 
   locations$: Observable<APULocation[]>;
   venues$: Observable<Venue[]>;

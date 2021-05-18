@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Moodle Event</ion-title>
+    <ion-title>Moodle Events</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">
         <ion-icon name="close"></ion-icon>
@@ -16,7 +16,7 @@
         <ion-text>{{moodleItem.name | titlecase}}</ion-text>
       </ion-col>
     </ion-row>
-    <ion-row *ngIf="checkDescription(moodleItem)" class="ion-no-padding ion-no-margin">
+    <ion-row *ngIf="moodleItem.description !=''" class="ion-no-padding ion-no-margin">
       <ion-col>
         <ion-text class="ion-text-capitalize" [innerHTML]="moodleItem.description"></ion-text>
       </ion-col>
@@ -35,4 +35,3 @@
   <ion-button class="ion-margin-bottom" expand="block" color="primary" [href]="'https://lms2.apiit.edu.my/course/view.php?id=' + moodleItem.courseid" target="_blank">See Course
   </ion-button>
 </ion-content>
-
