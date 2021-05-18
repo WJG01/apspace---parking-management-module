@@ -15,7 +15,7 @@ import {
   Apcard, BusTrips, CgpaPerIntake, ConsultationHour, ConsultationSlot,
   Course, CourseDetails, DashboardCardComponentConfigurations,
   EventComponentConfigurations, ExamSchedule, FeesTotalSummary, Holiday, Holidays, LecturerTimetable,
-  News, OrientationStudentDetails, Quote, Role, ShortNews,
+  MoodleEvent, News, OrientationStudentDetails, Quote, Role, ShortNews,
   StaffDirectory, StaffProfile, StudentPhoto, StudentProfile, StudentTimetable
 } from 'src/app/interfaces';
 import {
@@ -26,7 +26,7 @@ import {
 import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-with-timezone.pipe';
 import { NotifierService } from 'src/app/shared/notifier/notifier.service';
 import { NewsModalPage } from '../news/news-modal';
-import { MoodleUpcomingEventsModalPage } from '../moodle-upcoming-events/moodle-upcoming-events-modal.page';
+import { MoodleEventsModalPage } from '../moodle-events/moodle-events-modal.page';
 import { NotificationModalPage } from '../notifications/notification-modal';
 
 @Component({
@@ -140,8 +140,7 @@ export class DashboardPage implements OnInit, DoCheck {
   };
 
   // UPCOMING MOODLE EVENTS
-  upComingMoodleEvent$: Observable<any[]>
-  //upComingMoodleVisible: Boolean = true;
+  upComingMoodleEvent$: Observable<MoodleEvent[]>
 
   // ATTENDANCE
   // modulesWithLowAttendance$: Observable<Attendance[]>;
@@ -436,7 +435,7 @@ export class DashboardPage implements OnInit, DoCheck {
     this.noticeBoardItems$ = this.news.getSlideshow(refresher, this.isStudent, this.isLecturer || Boolean(this.role & Role.Admin));
     this.upcomingTrips$ = this.getUpcomingTrips(this.firstLocation, this.secondLocation);
     this.photo$ = this.ws.get<StudentPhoto>('/student/photo');  // no-cache for student photo
-    this.upComingMoodleEvent$ = this.ws.get<any[]>('/moodle/events', {auth: true})
+    this.upComingMoodleEvent$ = this.ws.get<MoodleEvent[]>('/moodle/events', {auth: true})
     this.displayGreetingMessage();
     if (!this.isStudent) {
       this.getUpcomingEvents();
@@ -619,14 +618,13 @@ export class DashboardPage implements OnInit, DoCheck {
     await modal.onDidDismiss();
   }
 
-  // MOODLE UPCOMING EVENTS
+  // UPCOMING MOODLE EVENTS
   async openMoodleModal(moodleItem: any){
     const modal = await this.modalCtrl.create({
-      component: MoodleUpcomingEventsModalPage,
+      component: MoodleEventsModalPage,
       componentProps: { moodleItem },
     })
     await modal.present();
-    await modal.onDidDismiss();
   }
 
   // TODAYS SCHEDULE FUNCTIONS
@@ -1398,8 +1396,12 @@ export class DashboardPage implements OnInit, DoCheck {
   }
 
   // UPCOMING MOODLE EVENTS
-  showUpcomingMoodleEvent(){
-    //placeholder method
+  lastMoodleEvent(event:MoodleEvent, moodleEvents:MoodleEvent[]){
+    let numOfEvents = moodleEvents.length;
+    if (event === moodleEvents[numOfEvents-1]){
+      return false
+    }
+    return true
   }
 
 }

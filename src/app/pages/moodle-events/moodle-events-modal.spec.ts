@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { MoodleUpcomingEventsPage } from './moodle-upcoming-events-modal.page';
+import { MoodleEventsModalPage } from './moodle-events-modal.page';
 
-describe('MoodleUpcomingEventsPage', () => {
-  let component: MoodleUpcomingEventsPage;
-  let fixture: ComponentFixture<MoodleUpcomingEventsPage>;
+describe('MoodleEventsModalPage', () => {
+  let component: MoodleEventsModalPage;
+  let fixture: ComponentFixture<MoodleEventsModalPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MoodleUpcomingEventsPage ],
+      declarations: [ MoodleEventsModalPage ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(MoodleUpcomingEventsPage);
+    fixture = TestBed.createComponent(MoodleEventsModalPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

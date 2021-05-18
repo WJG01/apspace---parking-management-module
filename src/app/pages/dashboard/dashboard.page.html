@@ -439,41 +439,35 @@
           <ion-card class="ion-no-margin ion-margin-top no-border-rad ion-margin-bottom"
             *ngIf="activeDashboardSections.includes('moodleUpcomingEvents')">
             <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
-              <ion-card-title class="ion-text-left" color="primary">Upcoming Moodle Events</ion-card-title>
+              <ion-card-title class="ion-text-left" color="primary">Moodle Events</ion-card-title>
             </ion-card-header>
-            <ion-card-content>
-              <ng-container *ngIf="upComingMoodleEvent$ | async as upEvent; else loadingMoodleUpcoming">
+            <ion-card-content class="ion-no-margin ion-no-padding;">
+              <ng-container *ngIf="upComingMoodleEvent$ | async as moodleEvents; else loadingMoodleUpcoming">
                 <!--each event item-->
-                <ion-card-content>
-                  <ion-list slot="start">
-                    <div *ngFor="let event of upEvent">
-                      <ion-item fill="outline" style="cursor: pointer;" button="true" (click)="openMoodleModal(event)">
-                        <ion-avatar slot="start" class="ion-no-margin; ion-no-padding">
-                          <ion-icon name="alert-outline" color="warning" size="large"></ion-icon>
-                        </ion-avatar>
-                        <ion-label class="ion-text-wrap">
-                          <ion-text color="secondary" style="font-weight:bold;">Name: </ion-text>
-                          <p>{{event.name}}</p>
-                        </ion-label>
-                      </ion-item>
-                    </div>
-                  </ion-list>
-                </ion-card-content>
+                <div *ngFor="let event of moodleEvents">
+                  <div *ngIf="lastMoodleEvent(event, moodleEvents) else lastMEvent">
+                    <ion-item class="ion-no-padding ion-no-margin ion-margin-top" fill="outline" detail="true" button="true" (click)="openMoodleModal(event)">
+                      <ion-label class="ion-text-wrap ion-text-capitalize">
+                        {{event.name}}
+                      </ion-label>
+                    </ion-item>
+                  </div>
+                  <ng-template #lastMEvent>
+                    <ion-item class="ion-no-padding ion-no-margin ion-margin-top" lines="none" fill="outline" detail="true" button="true" (click)="openMoodleModal(event)">
+                      <ion-label class="ion-text-wrap ion-text-capitalize">
+                        {{event.name}}
+                      </ion-label>
+                    </ion-item>
+                  </ng-template>
+                </div>
               </ng-container>
             </ion-card-content>
             <ng-template #loadingMoodleUpcoming >
-              <div class="ion-padding">
-                <ion-item *ngFor="let _ of skeletons">
-                  <ion-avatar class="ion-margin-horizontal">
-                    <ion-skeleton-text style="height: 32px;"></ion-skeleton-text>
-                  </ion-avatar>
-                  <ion-label>
-                    <h2 class="glob-text-bold colored-with-type">
-                      <ion-skeleton-text animated style="width:20%"></ion-skeleton-text>
-                    </h2>
-                    <p class="glob-text-bold colored-with-type">
-                      <ion-skeleton-text animated style="width:80%"></ion-skeleton-text>
-                    </p>
+              <div *ngFor="let _ of skeletons">
+                <ion-item class="ion-no-padding ion-no-margin ion-margin-top" lines="none" fill="outline">
+                  <ion-label class="ion-text-wrap">
+                      <ion-skeleton-text animated class="moodle-skeleton1 ion-no-margin ion-no-padding"></ion-skeleton-text>
+                      <ion-skeleton-text animated class="moodle-skeleton2"></ion-skeleton-text>
                   </ion-label>
                 </ion-item>
               </div>

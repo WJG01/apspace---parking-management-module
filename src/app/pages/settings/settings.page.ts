@@ -27,7 +27,6 @@ export class SettingsPage implements OnInit {
     firstLocation: '',
     secondLocation: '',
   };
-  moodleUpcomingEvents = '';
 
   locations$: Observable<APULocation[]>;
   venues$: Observable<Venue[]>;
@@ -60,7 +59,7 @@ export class SettingsPage implements OnInit {
     { name: 'APCard Chart', value: 'apcard' },
     { name: 'Financial Chart', value: 'financials' },
     { name: 'CGPA Chart', value: 'cgpa' },
-    { name: 'Moodle Upcoming Events', value: 'moodleUpcomingEvents'}
+    { name: 'Moodle Events', value: 'moodleUpcomingEvents'}
   ];
 
   staffDashboardSettingsValues = [

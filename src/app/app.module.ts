@@ -30,7 +30,7 @@ import { ShakespearModalPageModule } from './pages/feedback/shakespear-modal/sha
 import { NewsModalPageModule } from './pages/news/news-modal.module';
 import { NotificationModalModule } from './pages/notifications/notification-modal.module';
 import { RequestCache, RequestCacheWithMapStorage } from './services';
-import { MoodleUpcomingEventsPageModalModule} from './pages/moodle-upcoming-events/moodle-upcoming-events-modal.module'
+import { MoodleEventsPageModalModule} from './pages/moodle-events/moodle-events-modal.module'
 // import { Animation } from '@ionic/core';
 
 // export function disableNavAnimation(AnimationC: Animation): Promise<Animation> { return Promise.resolve(new AnimationC()); }
@@ -53,8 +53,7 @@ import { MoodleUpcomingEventsPageModalModule} from './pages/moodle-upcoming-even
     NewsModalPageModule,
     NotificationModalModule,
     ShakespearModalPageModule,
-    IonicModule.forRoot(),
-    MoodleUpcomingEventsPageModalModule
+    MoodleEventsPageModalModule
   ],
   providers: [
     ActionSheet,
