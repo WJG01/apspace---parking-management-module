@@ -244,24 +244,6 @@ ion-col[scrolly="true"] {
   padding-bottom: 1em;
 }
 
-.moodle-skeleton1{
-  width: 22em;
-  line-height: 25px;
-}
-.moodle-skeleton2{
-  display: none;
-}
-
-@media screen and (max-width: 768px){
-  .moodle-skeleton1{
-    width:65vw;
-    line-height:25px;
-  }
-  .moodle-skeleton2{
-    display: none;
-  }
-}
-
 @media screen and (max-width: 720px) {
   .dash-padding {
     padding: 1em 0 0 0;
@@ -277,17 +259,5 @@ ion-col[scrolly="true"] {
     .swiper-slide {
       border-radius: 0;
     }
-  }
-}
-
-@media screen and (max-width: 450px) {
-  .moodle-skeleton1{
-    width: 85vw;
-    line-height: 20px;
-  }
-  .moodle-skeleton2{
-    width: 20vw;
-    line-height: 20px;
-    display: block;
   }
 }

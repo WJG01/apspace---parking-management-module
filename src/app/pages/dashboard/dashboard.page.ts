@@ -26,8 +26,8 @@ import {
 import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-with-timezone.pipe';
 import { NotifierService } from 'src/app/shared/notifier/notifier.service';
 import { NewsModalPage } from '../news/news-modal';
-import { MoodleEventsModalPage } from '../moodle-events/moodle-events-modal.page';
 import { NotificationModalPage } from '../notifications/notification-modal';
+import { MoodleEventsModal } from './moodle-event/moodle-events.modal';
 
 @Component({
   selector: 'app-dashboard',
@@ -621,7 +621,7 @@ export class DashboardPage implements OnInit, DoCheck {
   // UPCOMING MOODLE EVENTS
   async openMoodleModal(moodleItem: any){
     const modal = await this.modalCtrl.create({
-      component: MoodleEventsModalPage,
+      component: MoodleEventsModal,
       componentProps: { moodleItem },
     })
     await modal.present();
@@ -1394,14 +1394,4 @@ export class DashboardPage implements OnInit, DoCheck {
   nextSlide() {
     this.sliderSlides.slideNext();
   }
-
-  // UPCOMING MOODLE EVENTS
-  lastMoodleEvent(event:MoodleEvent, moodleEvents:MoodleEvent[]){
-    let numOfEvents = moodleEvents.length;
-    if (event === moodleEvents[numOfEvents-1]){
-      return false
-    }
-    return true
-  }
-
 }
