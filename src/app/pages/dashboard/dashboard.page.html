@@ -436,28 +436,28 @@
           </ion-card>
 
           <!--The Moodle Upcoming Event Card-->
-          <ion-card class="ion-no-margin ion-margin-top no-border-rad ion-margin-bottom"
+          <ion-card class="ion-no-margin ion-margin-bottom no-border-rad"
             *ngIf="activeDashboardSections.includes('moodleUpcomingEvents')">
-            <ion-card-header class="ion-no-padding ion-padding-top ion-padding-start ion-padding-end">
+            <ion-card-header>
               <ion-card-title class="ion-text-left" color="primary">Moodle Events</ion-card-title>
             </ion-card-header>
-            <ion-card-content class="ion-no-margin ion-no-padding;">
-              <ng-container *ngIf="upComingMoodleEvent$ | async as events; else loadingMoodleUpcoming">
+            <ion-card-content class="ion-no-padding ion-padding-bottom">
+              <ng-container *ngIf="moodleEvents$ | async as events; else loadingMoodle">
                 <!--each event item-->
                 <div *ngFor="let event of events; let isLast = last">
-                  <ion-item lines="isLast ? 'none' : null" class="ion-no-padding ion-no-margin ion-margin-top"
-                  detail="true" button="true" (click)="openMoodleModal(event)">
-                    <ion-label class="ion-text-wrap ion-text-capitalize">
+                  <ion-item [lines]="isLast ? 'none' : null"
+                  detail="true" button="true" [href]="'https://lms2.apiit.edu.my/course/view.php?id=' + event.courseid" target="_blank">
+                    <ion-label class="ion-margin-start ion-text-wrap ion-text-capitalize">
                       {{event.name}}
                     </ion-label>
                   </ion-item>
                 </div>
               </ng-container>
             </ion-card-content>
-            <ng-template #loadingMoodleUpcoming >
+            <ng-template #loadingMoodle>
               <div *ngFor="let _ of skeletons">
-                <ion-item class="ion-no-padding ion-no-margin ion-margin-top" lines="none">
-                  <ion-label class="ion-text-wrap">
+                <ion-item lines="none">
+                  <ion-label class="ion-text-wrap ion-margin-start">
                     <ion-skeleton-text animated style="width: 70%; line-height: 30px">
                     </ion-skeleton-text>
                   </ion-label>

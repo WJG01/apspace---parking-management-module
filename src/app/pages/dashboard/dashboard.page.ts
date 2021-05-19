@@ -27,7 +27,6 @@ import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-wit
 import { NotifierService } from 'src/app/shared/notifier/notifier.service';
 import { NewsModalPage } from '../news/news-modal';
 import { NotificationModalPage } from '../notifications/notification-modal';
-import { MoodleEventsModal } from './moodle-event/moodle-events.modal';
 
 @Component({
   selector: 'app-dashboard',
@@ -140,7 +139,7 @@ export class DashboardPage implements OnInit, DoCheck {
   };
 
   // UPCOMING MOODLE EVENTS
-  upComingMoodleEvent$: Observable<MoodleEvent[]>
+  moodleEvents$: Observable<MoodleEvent[]>
 
   // ATTENDANCE
   // modulesWithLowAttendance$: Observable<Attendance[]>;
@@ -435,7 +434,7 @@ export class DashboardPage implements OnInit, DoCheck {
     this.noticeBoardItems$ = this.news.getSlideshow(refresher, this.isStudent, this.isLecturer || Boolean(this.role & Role.Admin));
     this.upcomingTrips$ = this.getUpcomingTrips(this.firstLocation, this.secondLocation);
     this.photo$ = this.ws.get<StudentPhoto>('/student/photo');  // no-cache for student photo
-    this.upComingMoodleEvent$ = this.ws.get<MoodleEvent[]>('/moodle/events', {auth: true})
+    this.moodleEvents$ = this.ws.get<MoodleEvent[]>('/moodle/events', {auth: true})
     this.displayGreetingMessage();
     if (!this.isStudent) {
       this.getUpcomingEvents();
@@ -616,15 +615,6 @@ export class DashboardPage implements OnInit, DoCheck {
     });
     await modal.present();
     await modal.onDidDismiss();
-  }
-
-  // UPCOMING MOODLE EVENTS
-  async openMoodleModal(moodleItem: any){
-    const modal = await this.modalCtrl.create({
-      component: MoodleEventsModal,
-      componentProps: { moodleItem },
-    })
-    await modal.present();
   }
 
   // TODAYS SCHEDULE FUNCTIONS
