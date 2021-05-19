@@ -51,7 +51,7 @@ import { RequestCache, RequestCacheWithMapStorage } from './services';
     AppRoutingModule,
     NewsModalPageModule,
     NotificationModalModule,
-    ShakespearModalPageModule,
+    ShakespearModalPageModule
   ],
   providers: [
     ActionSheet,
