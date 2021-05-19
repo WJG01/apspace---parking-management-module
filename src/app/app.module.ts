@@ -30,17 +30,13 @@ import { ShakespearModalPageModule } from './pages/feedback/shakespear-modal/sha
 import { NewsModalPageModule } from './pages/news/news-modal.module';
 import { NotificationModalModule } from './pages/notifications/notification-modal.module';
 import { RequestCache, RequestCacheWithMapStorage } from './services';
-import { MoodleEventsModal} from './pages/dashboard/moodle-event/moodle-events.modal';
 // import { Animation } from '@ionic/core';
 
 // export function disableNavAnimation(AnimationC: Animation): Promise<Animation> { return Promise.resolve(new AnimationC()); }
 
 @NgModule({
   // notificationPageModal is needed here because it is called in app.component.ts, NewsModal is called in dashboards also
-  declarations: [
-    AppComponent,
-    MoodleEventsModal
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
