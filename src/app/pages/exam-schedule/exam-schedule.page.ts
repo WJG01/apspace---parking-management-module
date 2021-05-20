@@ -26,6 +26,9 @@ export class ExamSchedulePage {
   // devURL = 'https://jhxum5z8ya.execute-api.ap-southeast-1.amazonaws.com/dev/';
   showNoIntakeMessage = false;
   skeletons = new Array(5);
+
+  devUrl = 'https://jhxum5z8ya.execute-api.ap-southeast-1.amazonaws.com/dev';
+
   constructor(
     public plt: Platform,
     private modalCtrl: ModalController,
@@ -73,7 +76,7 @@ export class ExamSchedulePage {
     const url = `/examination/${this.intake}`;
     const caching = refresher ? 'network-or-cache' : 'cache-only';
     if (this.intake) {
-      this.exam$ = this.ws.get<ExamSchedule[]>(url, { auth: false, caching }).pipe(
+      this.exam$ = this.ws.get<ExamSchedule[]>(url, { auth: false, caching, url: this.devUrl }).pipe(
         map(res => {
           res.forEach(exam => {
             if (exam.endDate) {
