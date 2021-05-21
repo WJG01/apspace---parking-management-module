@@ -394,6 +394,7 @@ export class DashboardPage implements OnInit, DoCheck {
     });
   }
 
+  // For Upcoming Trips
   ngDoCheck() {
     combineLatest([
       this.settings.get$('busFirstLocation'),
