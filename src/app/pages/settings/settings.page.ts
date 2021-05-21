@@ -27,6 +27,7 @@ export class SettingsPage implements OnInit {
     firstLocation: '',
     secondLocation: '',
   };
+
   locations$: Observable<APULocation[]>;
   venues$: Observable<Venue[]>;
   theme$ = this.settings.get$('theme');

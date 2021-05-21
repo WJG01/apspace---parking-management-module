@@ -53,4 +53,4 @@ export { StudentSearch } from './student-search';
 export { OrientationStudentDetails, OrientationStudentsList } from './e-orientation';
 export { Role } from './role';
 export { NewFeedbackSummary, NewFeedback, NewFeedbackComment, FeedbackCategory } from './new-feedback';
-export { MoodleEvent } from "./moodle-event"
+export { MoodleEvent } from "./moodle-event";

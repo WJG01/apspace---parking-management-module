@@ -139,7 +139,7 @@ export class DashboardPage implements OnInit, DoCheck {
   };
 
   // UPCOMING MOODLE EVENTS
-  moodleEvents$: Observable<MoodleEvent[]>
+  moodleEvents$: Observable<MoodleEvent[]>;
 
   // ATTENDANCE
   // modulesWithLowAttendance$: Observable<Attendance[]>;
@@ -434,7 +434,7 @@ export class DashboardPage implements OnInit, DoCheck {
     this.noticeBoardItems$ = this.news.getSlideshow(refresher, this.isStudent, this.isLecturer || Boolean(this.role & Role.Admin));
     this.upcomingTrips$ = this.getUpcomingTrips(this.firstLocation, this.secondLocation);
     this.photo$ = this.ws.get<StudentPhoto>('/student/photo');  // no-cache for student photo
-    this.moodleEvents$ = this.ws.get<MoodleEvent[]>('/moodle/events', {auth: true})
+    this.moodleEvents$ = this.ws.get<MoodleEvent[]>('/moodle/events', {auth: true});
     this.displayGreetingMessage();
     if (!this.isStudent) {
       this.getUpcomingEvents();
