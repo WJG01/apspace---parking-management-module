@@ -304,7 +304,7 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
                   this.presentLoading();
                   const body = new HttpParams({ fromObject: { ...bodyObject } }).toString();
                   const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-                  this.ws.post('/exam/create_exam_schedule', { body, headers, url: this.devUrl }).subscribe({
+                  this.ws.post('/exam/create_exam_schedule', { url: this.devUrl, body, headers  }).subscribe({
                     next: () => {
                       this.showToastMessage(
                         'Exam Schedule added successfully!',
