@@ -15,11 +15,11 @@ export interface MoodleEvent {
   sequence: number;
   subscriptionid: number;
   timeduration: number;
-  timemodified: Date
-  timesort: Date
-  timestart: Date
-  type: number
-  userid: number
+  timemodified: Date;
+  timesort: Date;
+  timestart: Date;
+  type: number;
+  userid: number;
   uuid: string;
-  visible: number
+  visible: number;
 }

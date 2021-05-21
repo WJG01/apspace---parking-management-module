@@ -27,6 +27,7 @@ export class SettingsPage implements OnInit {
     firstLocation: '',
     secondLocation: '',
   };
+
   locations$: Observable<APULocation[]>;
   venues$: Observable<Venue[]>;
   theme$ = this.settings.get$('theme');
@@ -57,8 +58,7 @@ export class SettingsPage implements OnInit {
     { name: 'Contacts', value: 'contacts' },
     { name: 'APCard Chart', value: 'apcard' },
     { name: 'Financial Chart', value: 'financials' },
-    { name: 'CGPA Chart', value: 'cgpa' },
-    { name: 'Moodle Events', value: 'moodleUpcomingEvents'}
+    { name: 'CGPA Chart', value: 'cgpa' }
   ];
 
   staffDashboardSettingsValues = [

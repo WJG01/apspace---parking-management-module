@@ -139,7 +139,7 @@ export class DashboardPage implements OnInit, DoCheck {
   };
 
   // UPCOMING MOODLE EVENTS
-  moodleEvents$: Observable<MoodleEvent[]>
+  moodleEvents$: Observable<MoodleEvent[]>;
 
   // ATTENDANCE
   // modulesWithLowAttendance$: Observable<Attendance[]>;
@@ -434,7 +434,7 @@ export class DashboardPage implements OnInit, DoCheck {
     this.noticeBoardItems$ = this.news.getSlideshow(refresher, this.isStudent, this.isLecturer || Boolean(this.role & Role.Admin));
     this.upcomingTrips$ = this.getUpcomingTrips(this.firstLocation, this.secondLocation);
     this.photo$ = this.ws.get<StudentPhoto>('/student/photo');  // no-cache for student photo
-    this.moodleEvents$ = this.ws.get<MoodleEvent[]>('/moodle/events', {auth: true})
+    this.moodleEvents$ = this.ws.get<MoodleEvent[]>('/moodle/events', {auth: true});
     this.displayGreetingMessage();
     if (!this.isStudent) {
       this.getUpcomingEvents();
@@ -959,7 +959,7 @@ export class DashboardPage implements OnInit, DoCheck {
       this.getUpcomingMoodle(todaysDate, refresher)
     ).pipe(
       map(x => x[0].concat(x[1]).concat(x[2])), // MERGE THE TWO ARRAYS TOGETHER // NOW THREE
-    ) : this.getUpcomingHoliday(todaysDate)
+    ) : this.getUpcomingHoliday(todaysDate);
   }
 
   getupcomingExams(intake: string, todaysDate: Date, refresher: boolean): Observable<EventComponentConfigurations[]> {
@@ -1054,7 +1054,6 @@ export class DashboardPage implements OnInit, DoCheck {
               moodleCourseId: moodleEvent.courseid
             });
           });
-          //console.log(moodleListEventMode)
           return moodleListEventMode;
         })
     );
@@ -1417,24 +1416,6 @@ export class DashboardPage implements OnInit, DoCheck {
     this.sliderSlides.slideNext();
   }
 
-  /*openMoodleEvent(event: MoodleEvent){
-    const courseUrl = `https://lms2.apiit.edu.my/course/view.php`;
-    const url = 'https://lms2.apiit.edu.my/login/index.php';
-    if (this.network.type !== 'none') {
-      if (this.isCordova) {
-        this.cas.getST(url).subscribe(() => {
-          this.iab.create(`${courseUrl}?id=${event.courseid}&`, '_system', 'location=true');
-        });
-      } else {
-        this.cas.getST(url).subscribe(() => {
-          this.iab.create(`${courseUrl}?id=${event.courseid}`, '_blank', 'location=true');
-        });
-      }
-    } else {
-      this.presentToast('External links cannot be opened in offline mode. Please ensure you have a network connection and try again');
-    }
-  }*/
-
   openMoodleEvent(courseId: number){
     const courseUrl = `https://lms2.apiit.edu.my/course/view.php`;
     const url = 'https://lms2.apiit.edu.my/login/index.php';
@@ -1457,11 +1438,10 @@ export class DashboardPage implements OnInit, DoCheck {
   openUpComingLinks(event: EventComponentConfigurations){
     switch(event.type){
       case 'moodle':{
-        this.openMoodleEvent(event.moodleCourseId)
+        this.openMoodleEvent(event.moodleCourseId);
         break;
       }
       default:{
-        console.log('no link')
         break;
       }
     }
