@@ -454,7 +454,7 @@
                 <!--each event item-->
                 <div *ngFor="let event of events; let isLast = last">
                   <ion-item [lines]="isLast ? 'none' : null"
-                  detail="true" button="true" [href]="'https://lms2.apiit.edu.my/course/view.php?id=' + event.courseid" target="_blank">
+                  detail="true" button="true" (click)="openMoodleEvent(event)">
                     <ion-label class="ion-margin-start ion-text-wrap ion-text-capitalize">
                       {{event.name}}
                     </ion-label>
