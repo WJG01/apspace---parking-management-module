@@ -274,50 +274,53 @@
                             'class-type': event.type === 'class',
                             'iconsult-type': event.type === 'iconsult',
                             'exam-type': event.type === 'exam',
-                            'holiday-type': event.type === 'holiday'
+                            'holiday-type': event.type === 'holiday',
+                            'moodle-type': event.type === 'moodle'
                           }">
-                          <h2 class="colored-with-type glob-text-bold">
-                            {{ event.dateOrTime }}
-                          </h2>
-                          <p class="glob-text-bold colored-with-type">
-                            <ion-text color="medium">
-                              {{ event.title }}
-                            </ion-text>
-                          </p>
-                          <ion-grid class="ion-no-padding">
-                            <ion-row class="info-item">
-                              <ion-col size="auto" class="ion-no-padding">
-                                <ion-icon class="ion-no-margin small-margin colored-with-type" size="small" [name]="
-                                    event.type === 'exam'
-                                      ? 'location-outline'
-                                      : 'time-outline'
-                                  "></ion-icon>
-                              </ion-col>
-                              <ion-col class="ion-no-padding">
-                                <p>
-                                  <ion-text class="ion-no-margin">{{
-                                    event.firstDescription
-                                    }}</ion-text>
-                                </p>
-                              </ion-col>
-                            </ion-row>
-                            <ion-row class="info-item" *ngIf="event.type === 'exam'">
-                              <ion-col size="auto" class="ion-no-padding">
-                                <ion-icon class="ion-no-margin small-margin colored-with-type" size="small"
-                                  name="time-outline">
-                                </ion-icon>
-                              </ion-col>
-                              <ion-col class="ion-no-padding">
-                                <p>
-                                  <ion-text class="ion-no-margin">
-                                    {{event.secondDescription| timeParser: timeFormatChangeFlag: true }}
-                                    -
-                                    {{event.thirdDescription| timeParser: timeFormatChangeFlag: true }}
-                                  </ion-text>
-                                </p>
-                              </ion-col>
-                            </ion-row>
-                          </ion-grid>
+                          <a class="on-hover" (click)="event.outputFormat === 'event-with-time-and-hyperlink' || 'event-with-date-and-hyperlink' ? openUpComingLinks(event) : null" detail="true">
+                            <h2 class="colored-with-type glob-text-bold">
+                              {{ event.dateOrTime }}
+                            </h2>
+                            <p class="glob-text-bold colored-with-type">
+                              <ion-text color="medium">
+                                {{ event.title }}
+                              </ion-text>
+                            </p>
+                            <ion-grid class="ion-no-padding">
+                              <ion-row class="info-item">
+                                <ion-col size="auto" class="ion-no-padding">
+                                  <ion-icon class="ion-no-margin small-margin colored-with-type" size="small" [name]="
+                                      event.type === 'exam'
+                                        ? 'location-outline'
+                                        : 'time-outline'
+                                    "></ion-icon>
+                                </ion-col>
+                                <ion-col class="ion-no-padding">
+                                  <p>
+                                    <ion-text class="ion-no-margin">{{
+                                      event.firstDescription
+                                      }}</ion-text>
+                                  </p>
+                                </ion-col>
+                              </ion-row>
+                              <ion-row class="info-item" *ngIf="event.type === 'exam'">
+                                <ion-col size="auto" class="ion-no-padding">
+                                  <ion-icon class="ion-no-margin small-margin colored-with-type" size="small"
+                                    name="time-outline">
+                                  </ion-icon>
+                                </ion-col>
+                                <ion-col class="ion-no-padding">
+                                  <p>
+                                    <ion-text class="ion-no-margin">
+                                      {{event.secondDescription| timeParser: timeFormatChangeFlag: true }}
+                                      -
+                                      {{event.thirdDescription| timeParser: timeFormatChangeFlag: true }}
+                                    </ion-text>
+                                  </p>
+                                </ion-col>
+                              </ion-row>
+                            </ion-grid>
+                          </a>
                         </div>
                       </div>
                     </div>
@@ -446,7 +449,7 @@
                 <!--each event item-->
                 <div *ngFor="let event of events; let isLast = last">
                   <ion-item [lines]="isLast ? 'none' : null"
-                  detail="true" button="true" [href]="'https://lms2.apiit.edu.my/course/view.php?id=' + event.courseid" target="_blank">
+                  detail="true" button="true" (click)="openMoodleEvent(event)">
                     <ion-label class="ion-margin-start ion-text-wrap ion-text-capitalize">
                       {{event.name}}
                     </ion-label>

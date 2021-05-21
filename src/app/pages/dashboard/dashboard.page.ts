@@ -955,10 +955,11 @@ export class DashboardPage implements OnInit, DoCheck {
     this.upcomingEvent$ = this.isStudent ? zip(
       // AP & BP Removed Temp (Requested by Management | DON'T TOUCH)
       this.getupcomingExams(intake.replace(/[(]AP[)]|[(]BP[)]/g, ''), todaysDate, true),
-      this.getUpcomingHoliday(todaysDate, refresher)
+      this.getUpcomingHoliday(todaysDate, refresher),
+      this.getUpcomingMoodle(todaysDate, refresher)
     ).pipe(
-      map(x => x[0].concat(x[1])), // MERGE THE TWO ARRAYS TOGETHER
-    ) : this.getUpcomingHoliday(todaysDate);
+      map(x => x[0].concat(x[1]).concat(x[2])), // MERGE THE TWO ARRAYS TOGETHER // NOW THREE
+    ) : this.getUpcomingHoliday(todaysDate)
   }
 
   getupcomingExams(intake: string, todaysDate: Date, refresher: boolean): Observable<EventComponentConfigurations[]> {
@@ -1026,6 +1027,37 @@ export class DashboardPage implements OnInit, DoCheck {
     const secondsDiff = this.getSecondsDifferenceBetweenTwoDates(startDate, endDate);
     const daysDiff = Math.floor(secondsDiff / (3600 * 24));
     return (daysDiff + 1) + ' day' + (daysDiff === 0 ? '' : 's');
+  }
+
+  getUpcomingMoodle(date: Date, refresher?: boolean):Observable<EventComponentConfigurations[]>{
+    const caching = refresher ? 'network-or-cache' : 'cache-only';
+      return this.ws.get<MoodleEvent[]>('/moodle/events', {auth: true, caching
+      }).pipe(
+        map( moodleList => {
+          return moodleList.filter(moodle => this.eventIsComing(new Date(moodle.timestart), date));
+        }),
+        map(moodleList => {
+          const moodleListEventMode: EventComponentConfigurations[] = [];
+          moodleList.forEach((moodleEvent:MoodleEvent) => {
+            const formattedStartDate = format(new Date(moodleEvent.timestart), 'dd MMM yyyy');
+            moodleListEventMode.push({
+              title: moodleEvent.name,
+              firstDescription: this.getNumberOfDaysForHoliday(
+                date, (new Date(moodleEvent.timestart))
+              ) + ' left',
+              color: '#e85d04',
+              pass: false,
+              passColor: '#d7dee3',
+              outputFormat: 'event-with-time-and-hyperlink',
+              type: 'moodle',
+              dateOrTime: formattedStartDate + ' (Moodle)',
+              moodleCourseId: moodleEvent.courseid
+            });
+          });
+          //console.log(moodleListEventMode)
+          return moodleListEventMode;
+        })
+    );
   }
 
   // APCARD FUNCTIONS
@@ -1383,5 +1415,55 @@ export class DashboardPage implements OnInit, DoCheck {
 
   nextSlide() {
     this.sliderSlides.slideNext();
+  }
+
+  /*openMoodleEvent(event: MoodleEvent){
+    const courseUrl = `https://lms2.apiit.edu.my/course/view.php`;
+    const url = 'https://lms2.apiit.edu.my/login/index.php';
+    if (this.network.type !== 'none') {
+      if (this.isCordova) {
+        this.cas.getST(url).subscribe(() => {
+          this.iab.create(`${courseUrl}?id=${event.courseid}&`, '_system', 'location=true');
+        });
+      } else {
+        this.cas.getST(url).subscribe(() => {
+          this.iab.create(`${courseUrl}?id=${event.courseid}`, '_blank', 'location=true');
+        });
+      }
+    } else {
+      this.presentToast('External links cannot be opened in offline mode. Please ensure you have a network connection and try again');
+    }
+  }*/
+
+  openMoodleEvent(courseId: number){
+    const courseUrl = `https://lms2.apiit.edu.my/course/view.php`;
+    const url = 'https://lms2.apiit.edu.my/login/index.php';
+    if (this.network.type !== 'none') {
+      if (this.isCordova) {
+        this.cas.getST(url).subscribe(() => {
+          this.iab.create(`${courseUrl}?id=${courseId}&`, '_system', 'location=true');
+        });
+      } else {
+        this.cas.getST(url).subscribe(() => {
+          this.iab.create(`${courseUrl}?id=${courseId}`, '_blank', 'location=true');
+        });
+      }
+    } else {
+      this.presentToast('External links cannot be opened in offline mode. Please ensure you have a network connection and try again');
+    }
+  }
+
+  //FOR FUTURE CLICKABLE UPCOMING EVENTS
+  openUpComingLinks(event: EventComponentConfigurations){
+    switch(event.type){
+      case 'moodle':{
+        this.openMoodleEvent(event.moodleCourseId)
+        break;
+      }
+      default:{
+        console.log('no link')
+        break;
+      }
+    }
   }
 }

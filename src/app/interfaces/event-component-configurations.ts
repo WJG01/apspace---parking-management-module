@@ -10,4 +10,5 @@ export interface EventComponentConfigurations {
     secondDescription?: string;
     secondDescriptionIsDate?: boolean;
     thirdDescription?: string;
+    moodleCourseId?: number;
 }

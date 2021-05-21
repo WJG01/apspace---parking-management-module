@@ -104,6 +104,22 @@ ion-col[scrolly="true"] {
         }
       }
 
+      &.moodle-type {
+        border-left-color: #f48c06;
+
+        .colored-with-type {
+          color: #f48c06;
+        }
+
+        .description a {
+          color: #f48c06;
+        }
+
+        .on-hover{
+          cursor: pointer;
+        }
+      }
+
       .info-item {
         margin-top: 9px;
 
