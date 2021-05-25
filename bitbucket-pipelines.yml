@@ -30,7 +30,7 @@ pipelines:
           - git config user.email cti@apiit.edu.my
           - git config user.password $GIT_PASSWORD
           - echo $GOOGLE > google-services.json
-          - git add upstream https://bitbucket.org/ctiteam/apspace-build.git
+          - git remote add upstream https://bitbucket.org/ctiteam/apspace-build.git
           - git add google-services.json
           - git commit -m "chore:add google json file"
           - git push upstream/production
