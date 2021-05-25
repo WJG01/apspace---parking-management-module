@@ -29,7 +29,7 @@ pipelines:
           - git remote add upstream https://bitbucket.org/ctiteam/apspace-build.git
           - git add google-services.json
           - git commit -m "chore:add google json file"
-          - git push upstream/production
+          - git push upstream production
           - npm i
           - ionic build --prod
           - aws s3 sync www/ s3://apspace-production/ --acl public-read
