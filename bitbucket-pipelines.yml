@@ -26,6 +26,14 @@ pipelines:
           - ionic build --prod
           - aws s3 sync www/ s3://apspace-production/ --acl public-read
           - aws cloudfront create-invalidation --distribution-id E2U0MAK0TADMRA --paths "/*"
+          - git config user.name "cti"
+          - git config user.email cti@apiit.edu.my
+          - git config user.password $GIT_PASSWORD
+          - echo $GOOGLE > google-services.json
+          - git add upstream https://bitbucket.org/ctiteam/apspace-build.git
+          - git add google-services.json
+          - git commit -m "chore:add google json file"
+          - git push upstream/production
     staging:
     - step:
         image: cticti/apspace:08.20
