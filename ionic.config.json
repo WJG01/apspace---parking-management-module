@@ -1,7 +1,6 @@
 {
   "name": "apspace",
   "integrations": {
-    "capacitor": {},
     "cordova": {}
   },
   "type": "angular",
