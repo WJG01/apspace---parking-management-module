@@ -27,7 +27,7 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
 
   loading: HTMLIonLoadingElement;
 
-  devUrl = 'https://jeioi258m1.execute-api.ap-southeast-1.amazonaws.com/dev';
+  devUrl = 'https://swze54usn5.execute-api.ap-southeast-1.amazonaws.com/dev';
   assessmentTypes$: Observable<any>;
   notification: Subscription;
   modules = [];
