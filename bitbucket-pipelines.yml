@@ -22,12 +22,12 @@ pipelines:
         caches:
           - node
         script:
-          - git config --global user.name "ctiteam"
+          - git config --global user.name $GIT_USERNAME
           - git config --global user.email cti@apiit.edu.my
           - git config --global user.password $GIT_PASSWORD
           - git config --global credential.helper cache
           - echo $GOOGLE > google-services.json
-          - git remote add upstream https://ctiteam:$GIT_PASSWORDbitbucket.org/ctiteam/apspace-build.git
+          - git remote add upstream https://$GIT_USERNAME:$GIT_PASSWORD@bitbucket.org/ctiteam/apspace-build.git
           - git add google-services.json
           - git commit -m "chore:add google json file"
           - git push upstream production
