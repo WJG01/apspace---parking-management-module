@@ -27,7 +27,7 @@ pipelines:
           - git config --global user.password $GIT_PASSWORD
           - git config --global credential.helper cache
           - echo $GOOGLE > google-services.json
-          - git remote add upstream https://$GIT_USERNAME:$GIT_PASSWORD@bitbucket.org/ctiteam/apspace-build.git
+          - git remote add upstream https://$GIT_USERNAME@bitbucket.org/ctiteam/apspace-build.git
           - git add google-services.json
           - git commit -m "chore:add google json file"
           - git push upstream production
