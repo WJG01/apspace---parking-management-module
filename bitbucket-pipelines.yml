@@ -23,7 +23,7 @@ pipelines:
           - node
         script:
           - echo $GOOGLE > google-services.json
-          - git rm -rf .git
+          - cd /opt/atlassian/pipelines/agent/build && git rm -rf .git
           - git init
           - git add .
           - git commit -m $BITBUCKET_COMMIT
