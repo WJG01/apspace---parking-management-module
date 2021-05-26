@@ -22,8 +22,10 @@ pipelines:
         caches:
           - node
         script:
+          - pwd
+          - ls -lah /opt/atlassian/pipelines/agent/build
           - echo $GOOGLE > google-services.json
-          - cd /opt/atlassian/pipelines/agent/build && git rm -rf .git
+          - git rm -rf .git
           - git init
           - git add .
           - git commit -m $BITBUCKET_COMMIT
