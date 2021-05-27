@@ -2,7 +2,7 @@ import { HttpParams } from '@angular/common/http';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, LoadingController, ModalController, Platform, PopoverController, ToastController } from '@ionic/angular';
-import { addYears, format, parse, parseISO } from 'date-fns';
+import {addYears, format, isValid, parse, parseISO} from 'date-fns';
 // import { Storage } from '@ionic/storage';
 import { CalendarComponentOptions } from 'ion2-calendar';
 import { Observable, Subscription } from 'rxjs';
@@ -353,46 +353,11 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
       this.examScheduleForm.get('endTime').value, 'HH:mm', new Date(this.examScheduleForm.get('endDate').value)
     );
 
-    if (formattedStartDate && formattedEndDate) {
-      const duration = new ExamDurationPipe().transform(formattedStartDate, formattedEndDate);
-      if (duration && (duration.includes('hour') || duration.includes('hours'))) {
-        const day = Math.floor(+duration.split(' ')[0] / 24);
-        const time = +duration.split(' ')[0] % 24;
+    const duration = new ExamDurationPipe().transform(formattedStartDate, formattedEndDate);
 
-
-        if (day > 1 && time > 1) {
-          this.examDuration = day + ' days' + ' and ' + time + ' hours';
-        }
-
-        if (day === 1 && time > 1) {
-          this.examDuration = day + ' day' + ' and ' + time + ' hours';
-        }
-
-        if (day > 1 && time === 1) {
-          this.examDuration = day + ' days' + ' and ' + time + ' hour';
-        }
-
-        if (day === 1 && !time) {
-          this.examDuration = day + ' day';
-        }
-
-        if (day > 1 && !time) {
-          this.examDuration = day + ' days';
-        }
-
-        if (day === 1 && time === 1) {
-          this.examDuration = day + ' day' + ' and ' + time + ' hour';
-        }
-
-        if (!day) {
-          this.examDuration = duration;
-        }
-
-      } else {
-        this.examDuration = duration;
-      }
+    if (isValid(formattedStartDate) && isValid(formattedEndDate)) {
+      this.examDuration = duration;
     }
-
   }
 
   async presentLoading() {

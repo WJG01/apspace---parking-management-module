@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import {differenceInDays, differenceInHours, differenceInMinutes} from 'date-fns';
 
 @Pipe({
   name: 'examDuration'
@@ -6,29 +7,43 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class ExamDurationPipe implements PipeTransform {
 
   transform(startDate: Date, endDate: Date): any {
+    // check if date is too small to avoid negative values
     const seconds = Math.floor((+endDate - +startDate) / 1000);
     if (seconds < 29) {
       return 'Something is wrong, duration is less than 30 seconds';
     }
 
+    let duration = '';
+    const days = differenceInDays(endDate, startDate);
+    let hours = differenceInHours(endDate, startDate);
+    let minutes = differenceInMinutes(endDate, startDate);
 
-    const intervals = {
-      hour: 3600,
-      minute: 60,
-      second: 1
-    };
+    if (days) {
+      hours -= 24 * days;
+      minutes -= 1440 * days;
+      duration += days > 1 ? `${days} days` : `${days} day`;
+    }
 
-    let counter;
-    for (const i of Object.keys(intervals)) {
-      counter = Math.floor(seconds / intervals[i]);
-      if (counter > 0) {
-        if (counter === 1) {
-          return  counter + ' ' + i ; // singular (in 1 hour )
-        } else {
-          return counter + ' ' + i + 's'; // plural (in 2 hours)
-        }
+    if (hours) {
+      minutes -= 60 * hours;
+      if (days) {
+        duration += hours > 1 ? `, ${hours} hours` : `, ${hours} hour`;
+      } else {
+        duration += hours > 1 ? `${hours} hours` : `${hours} hour`;
       }
     }
 
+    if (minutes) {
+
+      if (days || hours) {
+        duration += minutes > 1 ? `, ${minutes} minutes` : `, ${minutes} minute`;
+      } else {
+        duration += minutes > 1 ? `${minutes} minutes` : `${minutes} minute`;
+      }
+    }
+
+    if (duration.length > 0) {
+      return duration;
+    }
   }
 }
