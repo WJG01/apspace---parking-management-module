@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { ModalController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+import { isValid } from 'date-fns';
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 
@@ -76,10 +77,10 @@ export class ExamSchedulePage {
           res.forEach(exam => {
             if (exam.endDate) {
               return Object.assign(
-                exam, {duration: this.showDuration((new Date(exam.endDate + 'T' + exam.until.split('T')[1])), new Date(exam.since))}
+                exam, {duration: this.showDuration(new Date(exam.since), new Date(`${exam.endDate} ${exam.until.split('T')[1]}`))}
               );
             } else {
-              return Object.assign(exam, {duration: this.showDuration(new Date(exam.until), new Date(exam.since))});
+              return Object.assign(exam, {duration: this.showDuration(new Date(exam.since), new Date(exam.until))});
             }
           });
           return res;
@@ -112,49 +113,12 @@ export class ExamSchedulePage {
     }
   }
 
-  showDuration(formattedEndDate: Date, formattedStartDate: Date) {
+  showDuration(formattedStartDate: Date, formattedEndDate: Date) {
+    const duration = new ExamDurationPipe().transform(formattedStartDate, formattedEndDate);
 
-    if (formattedStartDate && formattedEndDate) {
-      const duration = new ExamDurationPipe().transform(formattedStartDate, formattedEndDate);
-      if (duration && (duration.includes('hour') || duration.includes('hours'))) {
-        const day = Math.floor(+duration.split(' ')[0] / 24);
-        const time = +duration.split(' ')[0] % 24;
-
-
-        if (day > 1 && time > 1) {
-          this.examDuration = day + ' days' + ' and ' + time + ' hours';
-        }
-
-        if (day === 1 && time > 1) {
-          this.examDuration = day + ' day' + ' and ' + time + ' hours';
-        }
-
-        if (day > 1 && time === 1) {
-          this.examDuration = day + ' days' + ' and ' + time + ' hour';
-        }
-
-        if (day === 1 && !time) {
-          this.examDuration = day + ' day';
-        }
-
-        if (day > 1 && !time) {
-          this.examDuration = day + ' days';
-        }
-
-        if (day === 1 && time === 1) {
-          this.examDuration = day + ' day' + ' and ' + time + ' hour';
-        }
-
-        if (!day) {
-          this.examDuration = duration;
-        }
-
-        return this.examDuration;
-
-      } else {
-        this.examDuration = duration;
-        return this.examDuration;
-      }
+    if (isValid(formattedStartDate) && isValid(formattedEndDate)) {
+      this.examDuration = duration;
+      return this.examDuration;
     }
   }
 
