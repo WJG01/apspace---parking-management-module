@@ -434,7 +434,7 @@ export class DashboardPage implements OnInit, DoCheck {
     this.noticeBoardItems$ = this.news.getSlideshow(refresher, this.isStudent, this.isLecturer || Boolean(this.role & Role.Admin));
     this.upcomingTrips$ = this.getUpcomingTrips(this.firstLocation, this.secondLocation);
     this.photo$ = this.ws.get<StudentPhoto>('/student/photo');  // no-cache for student photo
-    this.moodleEvents$ = this.ws.get<MoodleEvent[]>('/moodle/events', {auth: true});
+    this.moodleEvents$ = this.ws.get<MoodleEvent[]>('/moodle/events', { auth: true });
     this.displayGreetingMessage();
     if (!this.isStudent) {
       this.getUpcomingEvents();
@@ -1029,16 +1029,20 @@ export class DashboardPage implements OnInit, DoCheck {
     return (daysDiff + 1) + ' day' + (daysDiff === 0 ? '' : 's');
   }
 
-  getUpcomingMoodle(date: Date, refresher?: boolean):Observable<EventComponentConfigurations[]>{
+  getUpcomingMoodle(date: Date, refresher?: boolean): Observable<EventComponentConfigurations[]> {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
-      return this.ws.get<MoodleEvent[]>('/moodle/events', {auth: true, caching
-      }).pipe(
-        map( moodleList => {
+    return this.ws.get<MoodleEvent[]>('/moodle/events',
+    { auth: true, caching },
+      ).pipe(
+      map(moodleList => {
+        if (moodleList) {
           return moodleList.filter(moodle => this.eventIsComing(new Date(moodle.timestart), date));
-        }),
-        map(moodleList => {
-          const moodleListEventMode: EventComponentConfigurations[] = [];
-          moodleList.forEach((moodleEvent:MoodleEvent) => {
+        }
+      }),
+      map(moodleList => {
+        const moodleListEventMode: EventComponentConfigurations[] = [];
+        if (moodleList) {
+          moodleList.forEach((moodleEvent: MoodleEvent) => {
             const formattedStartDate = format(new Date(moodleEvent.timestart), 'dd MMM yyyy');
             moodleListEventMode.push({
               title: moodleEvent.name,
@@ -1054,8 +1058,9 @@ export class DashboardPage implements OnInit, DoCheck {
               moodleCourseId: moodleEvent.courseid
             });
           });
-          return moodleListEventMode;
-        })
+        }
+        return moodleListEventMode;
+      })
     );
   }
 
@@ -1416,7 +1421,7 @@ export class DashboardPage implements OnInit, DoCheck {
     this.sliderSlides.slideNext();
   }
 
-  openMoodleEvent(courseId: number){
+  openMoodleEvent(courseId: number) {
     const courseUrl = `https://lms2.apiit.edu.my/course/view.php`;
     const url = 'https://lms2.apiit.edu.my/login/index.php';
     if (this.network.type !== 'none') {
@@ -1434,14 +1439,14 @@ export class DashboardPage implements OnInit, DoCheck {
     }
   }
 
-  //FOR FUTURE CLICKABLE UPCOMING EVENTS
-  openUpComingLinks(event: EventComponentConfigurations){
-    switch(event.type){
-      case 'moodle':{
+  // FOR FUTURE CLICKABLE UPCOMING EVENTS
+  openUpComingLinks(event: EventComponentConfigurations) {
+    switch (event.type) {
+      case 'moodle': {
         this.openMoodleEvent(event.moodleCourseId);
         break;
       }
-      default:{
+      default: {
         break;
       }
     }

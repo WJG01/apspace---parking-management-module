@@ -277,7 +277,7 @@
                             'holiday-type': event.type === 'holiday',
                             'moodle-type': event.type === 'moodle'
                           }">
-                          <a class="on-hover" (click)="event.outputFormat === 'event-with-time-and-hyperlink' || 'event-with-date-and-hyperlink' ? openUpComingLinks(event) : null" detail="true">
+                          <ion-button [disabled]="event.type!=='moodle'" (click)="event.outputFormat === 'event-with-time-and-hyperlink' || 'event-with-date-and-hyperlink' ? openUpComingLinks(event) : null" detail="true">
                             <h2 class="colored-with-type glob-text-bold">
                               {{ event.dateOrTime }}
                             </h2>
@@ -320,7 +320,7 @@
                                 </ion-col>
                               </ion-row>
                             </ion-grid>
-                          </a>
+                          </ion-button>
                         </div>
                       </div>
                     </div>
