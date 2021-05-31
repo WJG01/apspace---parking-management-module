@@ -218,7 +218,7 @@
                       <div class="picture">
                         <a href="{{ noticeBoardItem['post-meta-fields']['slideshow_url'] && noticeBoardItem['post-meta-fields']['slideshow_url'][0] ? noticeBoardItem['post-meta-fields']['slideshow_url'][0] : noticeBoardItem.link }}"
                           target="_blank">
-                          <img src="{{ noticeBoardItem.featured_media_source[0].source_url }}" alt="" />
+                          <img src="{{ noticeBoardItem.featured_image_src ? noticeBoardItem.featured_image_src : 'assets/img/placeholder.png' }}" alt="" />
                         </a>
                       </div>
                     </ion-slide>

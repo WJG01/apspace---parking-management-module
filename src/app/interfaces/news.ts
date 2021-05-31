@@ -24,6 +24,7 @@ export interface News {
   title: Title;
   type: string;
   featured_media_source?: any;
+  featured_image_src?: string;
 }
 
 export interface Content {
