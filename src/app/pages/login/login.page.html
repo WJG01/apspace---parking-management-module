@@ -301,8 +301,7 @@
                     <ion-card class="ion-no-margin" tappable (click)="openNewsModal(newsItem)">
                       <img style="max-height: 200px; width: 100%;" [src]="newsItem.url">
                       <ion-card-header>
-                        <ion-card-title class="glob-limit-lines glob-one-line">
-                          {{newsItem.title}}
+                        <ion-card-title class="glob-limit-lines glob-one-line" [innerHTML]="newsItem.title">
                         </ion-card-title>
                         <ion-card-subtitle>
                           {{newsItem.updated | dateWithTimezone : 'yyyy-MM-dd HH:mm:ss'}}
