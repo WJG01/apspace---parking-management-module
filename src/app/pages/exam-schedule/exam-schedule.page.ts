@@ -76,7 +76,7 @@ export class ExamSchedulePage {
     const url = `/examination/${this.intake}`;
     const caching = refresher ? 'network-or-cache' : 'cache-only';
     if (this.intake) {
-      this.exam$ = this.ws.get<ExamSchedule[]>(url, { auth: false, caching, url: this.devUrl }).pipe(
+      this.exam$ = this.ws.get<ExamSchedule[]>(url, {auth: false, caching }).pipe(
         map(res => {
           res.forEach(exam => {
             if (exam.endDate) {
