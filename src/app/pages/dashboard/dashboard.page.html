@@ -277,50 +277,55 @@
                             'holiday-type': event.type === 'holiday',
                             'moodle-type': event.type === 'moodle'
                           }">
-                          <ion-button [disabled]="event.type!=='moodle'" (click)="event.outputFormat === 'event-with-time-and-hyperlink' || 'event-with-date-and-hyperlink' ? openUpComingLinks(event) : null" detail="true">
-                            <h2 class="colored-with-type glob-text-bold">
-                              {{ event.dateOrTime }}
-                            </h2>
-                            <p class="glob-text-bold colored-with-type">
-                              <ion-text color="medium">
-                                {{ event.title }}
-                              </ion-text>
-                            </p>
-                            <ion-grid class="ion-no-padding">
-                              <ion-row class="info-item">
-                                <ion-col size="auto" class="ion-no-padding">
-                                  <ion-icon class="ion-no-margin small-margin colored-with-type" size="small" [name]="
-                                      event.type === 'exam'
-                                        ? 'location-outline'
-                                        : 'time-outline'
-                                    "></ion-icon>
-                                </ion-col>
-                                <ion-col class="ion-no-padding">
-                                  <p>
-                                    <ion-text class="ion-no-margin">{{
-                                      event.firstDescription
-                                      }}</ion-text>
-                                  </p>
-                                </ion-col>
-                              </ion-row>
-                              <ion-row class="info-item" *ngIf="event.type === 'exam'">
-                                <ion-col size="auto" class="ion-no-padding">
-                                  <ion-icon class="ion-no-margin small-margin colored-with-type" size="small"
-                                    name="time-outline">
+                          <h2 class="colored-with-type glob-text-bold">
+                            {{ event.dateOrTime }}
+                          </h2>
+                          <p class="glob-text-bold colored-with-type">
+                            <ion-text color="medium">
+                              {{ event.title }}
+                            </ion-text>
+                          </p>
+                          <ion-grid class="ion-no-padding">
+                            <ion-row class="info-item">
+                              <ion-col size="auto" class="ion-no-padding">
+                                <ion-icon class="ion-no-margin small-margin colored-with-type" size="small" [name]="
+                                    event.type === 'exam'
+                                      ? 'location-outline'
+                                      : 'time-outline'
+                                  "></ion-icon>
+                              </ion-col>
+                              <ion-col class="ion-no-padding">
+                                <p>
+                                  <ion-text class="ion-no-margin">{{
+                                    event.firstDescription
+                                    }}</ion-text>
+                                </p>
+                              </ion-col>
+                              <ion-col size="auto" class="ion-no-padding" *ngIf="event.type === 'moodle'">
+                                <div (click)="event.outputFormat === 'event-with-time-and-hyperlink' || 'event-with-date-and-hyperlink' ? openUpComingLinks(event) : null">
+                                  <ion-icon size="small" class="ion-no-margin small-margin colored-with-type" tappable
+                                   name="information-circle-outline" >
                                   </ion-icon>
-                                </ion-col>
-                                <ion-col class="ion-no-padding">
-                                  <p>
-                                    <ion-text class="ion-no-margin">
-                                      {{event.secondDescription| timeParser: timeFormatChangeFlag: true }}
-                                      -
-                                      {{event.thirdDescription| timeParser: timeFormatChangeFlag: true }}
-                                    </ion-text>
-                                  </p>
-                                </ion-col>
-                              </ion-row>
-                            </ion-grid>
-                          </ion-button>
+                                </div>
+                              </ion-col>
+                            </ion-row>
+                            <ion-row class="info-item" *ngIf="event.type === 'exam'">
+                              <ion-col size="auto" class="ion-no-padding">
+                                <ion-icon class="ion-no-margin small-margin colored-with-type" size="small"
+                                  name="time-outline">
+                                </ion-icon>
+                              </ion-col>
+                              <ion-col class="ion-no-padding">
+                                <p>
+                                  <ion-text class="ion-no-margin">
+                                    {{event.secondDescription| timeParser: timeFormatChangeFlag: true }}
+                                    -
+                                    {{event.thirdDescription| timeParser: timeFormatChangeFlag: true }}
+                                  </ion-text>
+                                </p>
+                              </ion-col>
+                            </ion-row>
+                          </ion-grid>
                         </div>
                       </div>
                     </div>

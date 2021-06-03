@@ -958,7 +958,7 @@ export class DashboardPage implements OnInit, DoCheck {
       this.getUpcomingHoliday(todaysDate, refresher),
       this.getUpcomingMoodle(todaysDate, refresher)
     ).pipe(
-      map(x => x[0].concat(x[1]).concat(x[2])), // MERGE THE TWO ARRAYS TOGETHER // NOW THREE
+      map(x => this.getSortEvents(x[0].concat(x[1]).concat(x[2]))) // MERGE THE TWO ARRAYS TOGETHER // NOW THREE
     ) : this.getUpcomingHoliday(todaysDate);
   }
 
@@ -1062,6 +1062,15 @@ export class DashboardPage implements OnInit, DoCheck {
         return moodleListEventMode;
       })
     );
+  }
+
+  getSortEvents(event: EventComponentConfigurations[]): EventComponentConfigurations[]{
+    const sortedEvents: EventComponentConfigurations[] = event.sort((left, right): number => {
+      if (left.dateOrTime < right.dateOrTime) { return 1; }
+      if (left.dateOrTime > right.dateOrTime) { return -1; }
+      return 0;
+    });
+    return sortedEvents;
   }
 
   // APCARD FUNCTIONS
