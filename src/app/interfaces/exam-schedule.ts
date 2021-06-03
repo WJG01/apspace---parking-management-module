@@ -11,4 +11,5 @@ export interface ExamSchedule {
   resultDate: string | null;
   assessmentType?: string | null;
   duration?: string | null;
+  questionReleaseDate?: string | null;
 }
