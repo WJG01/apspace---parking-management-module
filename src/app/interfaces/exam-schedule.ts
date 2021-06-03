@@ -1,4 +1,5 @@
 export interface ExamSchedule {
+  examType: string;
   intake: string;
   module: string;
   subjectDescription: string;

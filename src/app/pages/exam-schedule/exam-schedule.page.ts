@@ -76,12 +76,29 @@ export class ExamSchedulePage {
       this.exam$ = this.ws.get<ExamSchedule[]>(url, { auth: false, caching }).pipe(
         map(res => {
           res.forEach(exam => {
+            console.log(exam);
             if (exam.endDate) {
-              return Object.assign(
-                exam, {duration: this.showDuration(new Date(exam.since), new Date(`${exam.endDate} ${exam.until.split('T')[1]}`))}
-              );
+              if (exam.examType === 'Non Exam'){
+                return Object.assign(
+                  exam, {duration: this.showDuration(new Date(exam.questionReleaseDate), new Date(`${exam.endDate} ${exam.until.split('T')[1]}`))}
+                );
+              }
+              else if (exam.examType === 'Normal Exam'){
+                return Object.assign(
+                  exam, {duration: this.showDuration(new Date(exam.since), new Date(`${exam.endDate} ${exam.until.split('T')[1]}`))}
+                );
+              }
             } else {
-              return Object.assign(exam, {duration: this.showDuration(new Date(exam.since), new Date(exam.until))});
+              if (exam.examType === 'Non Exam'){
+                return Object.assign(
+                  exam, {duration: this.showDuration(new Date(exam.questionReleaseDate), new Date(`${exam.endDate} ${exam.until.split('T')[1]}`))}
+                );
+              }
+              else if (exam.examType === 'Normal Exam'){
+                return Object.assign(
+                  exam, {duration: this.showDuration(new Date(exam.since), new Date(`${exam.endDate} ${exam.until.split('T')[1]}`))}
+                );
+              }
             }
           });
           return res;
