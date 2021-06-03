@@ -76,7 +76,6 @@ export class ExamSchedulePage {
       this.exam$ = this.ws.get<ExamSchedule[]>(url, { auth: false, caching }).pipe(
         map(res => {
           res.forEach(exam => {
-            console.log(exam);
             if (exam.endDate) {
               if (exam.examType === 'Non Exam'){
                 return Object.assign(
