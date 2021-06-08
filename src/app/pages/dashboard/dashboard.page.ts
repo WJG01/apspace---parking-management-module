@@ -1065,10 +1065,10 @@ export class DashboardPage implements OnInit, DoCheck {
   }
 
   getSortEvents(event: EventComponentConfigurations[]): EventComponentConfigurations[]{
-    const sortedEvents: EventComponentConfigurations[] = event.sort((left, right): number => {
-      if (left.dateOrTime < right.dateOrTime) { return 1; }
-      if (left.dateOrTime > right.dateOrTime) { return -1; }
-      return 0;
+    const sortedEvents: EventComponentConfigurations[] = event.sort((a, b): number => {
+      const da = new Date(a.dateOrTime);
+      const db = new Date(b.dateOrTime);
+      return da.getTime() - db.getTime();
     });
     return sortedEvents;
   }
