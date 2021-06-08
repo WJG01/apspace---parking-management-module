@@ -62,7 +62,7 @@
                             <ion-col size="6">
                               <ion-text color="medium">
                                 <p>{{ transaction.SpendDate | dateWithTimezone: "EEE, d MMM y" }} @
-                                  {{todayDate + ' ' + transaction.SpendTime | timeRefresher: timeFormatChangeFlag }}</p>
+                                  {{todayDate + ' ' + transaction.SpendTime| timeRefresher: timeFormatChangeFlag | slice: 0 :-8}}</p>
                               </ion-text>
                             </ion-col>
                             <ion-col size="6" class="ion-text-right">
