@@ -528,18 +528,52 @@
                   </ng-template>
                 </ng-container>
                 <ng-template #loadingTrips>
-                  <ion-skeleton-text class="ion-margin-top ion-margin-bottom" style="width: 50%;
-                  line-height: 30px;" animated>
-                  </ion-skeleton-text>
-                  <ion-skeleton-text class="ion-margin-top ion-margin-bottom" style="width: 50%;
-                  line-height: 30px;" animated>
-                  </ion-skeleton-text>
-                  <ion-skeleton-text class="ion-margin-top ion-margin-bottom" style="width: 50%;
-                  line-height: 30px;" animated>
-                  </ion-skeleton-text>
-                  <ion-skeleton-text class="ion-margin-top ion-margin-bottom" style="width: 50%;
-                  line-height: 30px;" animated>
-                  </ion-skeleton-text>
+                  <!--First Row-->
+                  <ion-row class="ion-margin-bottom schedule-container">
+                    <ion-col size=".5" class="ion-no-padding">
+                      <div class="color-indicator">
+                        <ion-skeleton-text class="ion-no-margin" animated></ion-skeleton-text>
+                      </div>
+                    </ion-col>
+                    <!--Indicates Title and Bus Timing-->
+                    <ion-col size="11.5">
+                      <div class="ion-padding schedule-container">
+                        <h3 class="locations glob-text-bold">
+                          <span class="ion-padding-end">
+                            <ion-skeleton-text style="width: 30%; height: 15px;" animated></ion-skeleton-text>
+                          </span>
+                        </h3>
+                        <p class="timings">
+                          <span class="timing-1 glob-text-bold">
+                            <ion-skeleton-text style="width: 50%; height: 15px;" animated></ion-skeleton-text>
+                          </span>
+                        </p>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                  <!--Second Row-->
+                  <ion-row class="ion-margin-bottom schedule-container">
+                    <ion-col size=".5" class="ion-no-padding ion-no-padding">
+                      <div class="color-indicator">
+                        <ion-skeleton-text class="ion-no-margin" animated></ion-skeleton-text>
+                      </div>
+                    </ion-col>
+                    <!--Indicates Title and Bus Timing-->
+                    <ion-col size="11.5">
+                      <div class="ion-padding schedule-container">
+                        <h3 class="locations glob-text-bold">
+                          <span class="ion-padding-end">
+                            <ion-skeleton-text style="width: 30%; height: 15px;" animated></ion-skeleton-text>
+                          </span>
+                        </h3>
+                        <p class="timings">
+                          <span class="timing-1 glob-text-bold">
+                            <ion-skeleton-text style="width: 50%; height: 15px;" animated></ion-skeleton-text>
+                          </span>
+                        </p>
+                      </div>
+                    </ion-col>
+                  </ion-row>
                 </ng-template>
               </ion-grid>
             </ion-card-content>

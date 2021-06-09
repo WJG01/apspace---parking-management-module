@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, DoCheck, OnInit, ViewChild } from '@angular/core';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { Network } from '@ionic-native/network/ngx';
@@ -34,7 +34,7 @@ import { NotificationModalPage } from '../notifications/notification-modal';
   styleUrls: ['./dashboard.page.scss'],
   providers: [DateWithTimezonePipe]
 })
-export class DashboardPage implements OnInit {
+export class DashboardPage implements OnInit, DoCheck {
   // USER SETTINGS
   @ViewChild('slides') slides: IonSlides;
 
@@ -384,7 +384,6 @@ export class DashboardPage implements OnInit {
       ]).subscribe(([busFirstLocation, busSecondLocation]) => {
         this.firstLocation = busFirstLocation;
         this.secondLocation = busSecondLocation;
-        this.upcomingTrips$ = this.getUpcomingTrips(busFirstLocation, busSecondLocation);
       });
 
       if (this.platform.is('cordova')) {
@@ -392,6 +391,19 @@ export class DashboardPage implements OnInit {
       }
       this.settings.initialSync();
       this.doRefresh();
+    });
+  }
+
+  // For Upcoming Trips
+  ngDoCheck() {
+    combineLatest([
+      this.settings.get$('busFirstLocation'),
+      this.settings.get$('busSecondLocation'),
+    ]).subscribe(([busFirstLocation, busSecondLocation]) => {
+      if (busFirstLocation !== this.firstLocation || busSecondLocation !== this.secondLocation
+        || busFirstLocation !== this.firstLocation && busSecondLocation !== this.secondLocation) {
+        this.upcomingTrips$ = this.getUpcomingTrips(busFirstLocation, busSecondLocation);
+      }
     });
   }
 
@@ -1207,6 +1219,23 @@ export class DashboardPage implements OnInit {
 
 
   // UPCOMING TRIPS
+
+  getLocationColor(locationName: string) {
+    for (const location of this.locations) {
+      if (location.location_name === locationName) {
+        return location.location_color;
+      }
+    }
+  }
+
+  getLocations(refresher: boolean) {
+    const caching = refresher ? 'network-or-cache' : 'cache-only';
+    this.ws.get<APULocations>(`/transix/locations`, { auth: false, caching }).pipe(
+      map((res: APULocations) => res.locations),
+      tap(locations => this.locations = locations)
+    ).subscribe();
+  }
+
   getUpcomingTrips(firstLocation: string, secondLocation: string) {
     if (!firstLocation || !secondLocation) {
       this.showSetLocationsSettings = true;
@@ -1258,25 +1287,6 @@ export class DashboardPage implements OnInit {
       })
     );
   }
-
-
-  getLocations(refresher: boolean) {
-    const caching = refresher ? 'network-or-cache' : 'cache-only';
-    this.ws.get<APULocations>(`/transix/locations`, { auth: false, caching }).pipe(
-      map((res: APULocations) => res.locations),
-      tap(locations => this.locations = locations)
-    ).subscribe();
-  }
-
-
-  getLocationColor(locationName: string) {
-    for (const location of this.locations) {
-      if (location.location_name === locationName) {
-        return location.location_color;
-      }
-    }
-  }
-
 
   // QUICK ACCESS FUNCTIONS
   openMoodle() {
