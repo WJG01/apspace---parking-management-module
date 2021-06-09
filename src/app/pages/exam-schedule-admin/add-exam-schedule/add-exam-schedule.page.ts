@@ -96,6 +96,7 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
     CHECK_WEEK: 0,
     DATEDAY: '',
     DATEDAYEND: '',
+    EXAM_TYPE: '',
     EXAMID: 0,
     FROMDATE: '',
     MODULE_CODE: '',

@@ -19,7 +19,7 @@ import { AddIntakePage } from './add-intake/add-intake.page';
 })
 
 export class ExamScheduleDetailsPage implements OnInit {
-  // devUrl = 'https://jeioi258m1.execute-api.ap-southeast-1.amazonaws.com/dev';
+  devUrl = 'https://swze54usn5.execute-api.ap-southeast-1.amazonaws.com/dev';
   examScheduleDetails$: Observable<any[]>;
   intakes$: Observable<IntakeExamSchedule[]>;
 
@@ -28,6 +28,7 @@ export class ExamScheduleDetailsPage implements OnInit {
   examScheduleDetailsToBeEdited;
   intakesToBeDeleted: IntakeExamSchedule[] = [];
   intakesToBeValidated = [];
+  examDetails: any = [];
 
   onDelete = false;
   examId;
@@ -52,20 +53,24 @@ export class ExamScheduleDetailsPage implements OnInit {
   doRefresh() {
     this.intakesToBeValidated = [];
 
-    this.examScheduleDetails$ = this.ws.get<ExamScheduleAdmin>(`/exam/exam_details?exam_id=${this.examId}`).pipe(
+    this.examScheduleDetails$ = this.ws.get<ExamScheduleAdmin>(`/exam/exam_details?exam_id=${this.examId}`, { url: this.devUrl }).pipe(
       tap(examScheduleDetails => {
         this.examScheduleDetailsToBeEdited = examScheduleDetails;
         this.status = this.examScheduleDetailsToBeEdited.STATUS;
       }),
-      map(examScheduleDetails =>
-        [
+      map(examScheduleDetails => {
+        this.examDetails = [
           {
             title: 'Module',
             detail: `${examScheduleDetails.MODULE_NAME} (${examScheduleDetails.MODULE_CODE})`
           },
           {
-            title: 'Date',
+            title: 'Start Date',
             detail: format(new Date(examScheduleDetails.DATEDAY), 'dd-MMM-yyyy').toUpperCase()
+          },
+          {
+            title: 'End Date',
+            detail: format(new Date(examScheduleDetails.DATEDAYEND), 'dd-MMM-yyyy').toUpperCase()
           },
           {
             title: 'Time',
@@ -80,14 +85,28 @@ export class ExamScheduleDetailsPage implements OnInit {
             detail: examScheduleDetails.ASSESSMENT_TYPE
           },
           {
+            title: 'Exam Type',
+            detail: examScheduleDetails.EXAM_TYPE
+          },
+          {
             title: 'Remarks',
             detail: examScheduleDetails.REMARKS
           }
-        ]
-      )
+        ];
+        // If exam type is non-exam
+        if (examScheduleDetails.QUESTION_RELEASE_DATE) {
+          const questionReleaseDate =
+          {
+            title: 'Question Release Date',
+            detail: format(new Date(examScheduleDetails.QUESTION_RELEASE_DATE), 'dd-MMM-yyyy').toUpperCase()
+          };
+          this.examDetails.splice(3, 0, questionReleaseDate);
+        }
+        return this.examDetails;
+      })
     );
 
-    this.intakes$ = this.ws.get<IntakeExamSchedule[]>(`/exam/intake_details?exam_id=${this.examId}`).pipe(
+    this.intakes$ = this.ws.get<IntakeExamSchedule[]>(`/exam/intake_details?exam_id=${this.examId}`, { url: this.devUrl }).pipe(
       tap(intakesDetails => intakesDetails.forEach(intakeDetails => this.intakesToBeValidated.push(intakeDetails.INTAKE)))
     );
   }
@@ -118,7 +137,7 @@ export class ExamScheduleDetailsPage implements OnInit {
   deleteSelectedIntakes() {
     if (this.intakesToBeDeleted) {
       const bodyObject = {
-        'entries[]' : []
+        'entries[]': []
       };
 
       this.intakesToBeDeleted.forEach(intake => {
@@ -132,7 +151,7 @@ export class ExamScheduleDetailsPage implements OnInit {
           {
             text: 'No',
             role: 'cancel',
-            handler: () => {}
+            handler: () => { }
           },
           {
             text: 'Yes',
@@ -140,7 +159,7 @@ export class ExamScheduleDetailsPage implements OnInit {
               this.presentLoading();
               const body = new HttpParams({ fromObject: { ...bodyObject } }).toString();
               const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-              this.ws.post('/exam/remove_entry', { body, headers }).subscribe({
+              this.ws.post('/exam/remove_entry', { body, headers, url: this.devUrl }).subscribe({
                 next: () => {
                   this.showToastMessage(
                     'Intakes deleted successfully!',
@@ -271,7 +290,7 @@ export class ExamScheduleDetailsPage implements OnInit {
         {
           text: 'No',
           role: 'cancel',
-          handler: () => {}
+          handler: () => { }
         },
         {
           text: 'Yes',
@@ -279,7 +298,7 @@ export class ExamScheduleDetailsPage implements OnInit {
             this.presentLoading();
             const body = new HttpParams({ fromObject: { ...bodyObject } }).toString();
             const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-            this.ws.post('/exam/update_exam_schedule_status', { body, headers }).subscribe({
+            this.ws.post('/exam/update_exam_schedule_status', { body, headers, url: this.devUrl }).subscribe({
               next: () => {
                 this.notifierService.examScheduleUpdated.next('SUCCESS');
                 this.showToastMessage(

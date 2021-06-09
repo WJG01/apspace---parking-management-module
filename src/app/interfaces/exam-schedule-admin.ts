@@ -3,6 +3,8 @@ export interface ExamScheduleAdmin {
     CHECK_WEEK: number;
     DATEDAY: string;
     DATEDAYEND: string;
+    QUESTION_RELEASE_DATE?: string | null;
+    EXAM_TYPE: string;
     EXAMID: number;
     FROMDATE: string;
     MODULE_CODE: string;
