@@ -19,7 +19,7 @@ import { AddIntakePage } from './add-intake/add-intake.page';
 })
 
 export class ExamScheduleDetailsPage implements OnInit {
-  devUrl = 'https://swze54usn5.execute-api.ap-southeast-1.amazonaws.com/dev';
+  // devUrl = 'https://swze54usn5.execute-api.ap-southeast-1.amazonaws.com/dev';
   examScheduleDetails$: Observable<any[]>;
   intakes$: Observable<IntakeExamSchedule[]>;
 
