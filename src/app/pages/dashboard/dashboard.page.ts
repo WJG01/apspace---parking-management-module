@@ -1450,14 +1450,8 @@ export class DashboardPage implements OnInit, DoCheck {
 
   // FOR FUTURE CLICKABLE UPCOMING EVENTS
   openUpComingLinks(event: EventComponentConfigurations) {
-    switch (event.type) {
-      case 'moodle': {
+    if (event.type === 'moodle') {
         this.openMoodleEvent(event.moodleCourseId);
-        break;
-      }
-      default: {
-        break;
       }
     }
   }
-}
