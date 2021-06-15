@@ -87,14 +87,20 @@
               <ion-label position="stacked" class="item-label">
                 Docket Issuance
               </ion-label>
-              <ion-datetime [max]="nextYears" [formControl]="intakeForm.controls['docketIssuance']" class="form-input"></ion-datetime>
+              <ion-input *ngIf="!isCordova else date" type="date" class="form-input" [max]="nextYears" [formControl]="intakeForm.controls['docketIssuance']"></ion-input>
+              <ng-template #date>
+                <ion-datetime [max]="nextYears" [formControl]="intakeForm.controls['docketIssuance']" class="form-input"></ion-datetime>
+              </ng-template>
             </ion-item>
             
             <ion-item lines="none">
               <ion-label position="stacked" class="item-label">
                 Exam Result Date
               </ion-label>
-              <ion-datetime [max]="nextYears" [formControl]="intakeForm.controls['examResultDate']" class="form-input"></ion-datetime>
+              <ion-input *ngIf="!isCordova else date" type="date" class="form-input" [max]="nextYears" [formControl]="intakeForm.controls['examResultDate']"></ion-input>
+              <ng-template #date>
+                <ion-datetime [max]="nextYears" [formControl]="intakeForm.controls['examResultDate']" class="form-input"></ion-datetime>
+              </ng-template>
             </ion-item>
             <ion-button (click)="submit()" [disabled]="intakeForm.invalid" expand="block" color="primary" class="ion-margin">SUBMIT</ion-button>
           </ion-card-content>
