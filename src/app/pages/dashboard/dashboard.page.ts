@@ -1443,11 +1443,5 @@ export class DashboardPage implements OnInit, DoCheck {
       this.presentToast('External links cannot be opened in offline mode. Please ensure you have a network connection and try again');
     }
   }
+}
 
-  // FOR FUTURE CLICKABLE UPCOMING EVENTS
-  openUpComingLinks(event: EventComponentConfigurations) {
-    if (event.type === 'moodle') {
-        this.openMoodleEvent(event.moodleCourseId);
-      }
-    }
-  }

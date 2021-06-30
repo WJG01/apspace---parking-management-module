@@ -302,7 +302,7 @@
                                 </p>
                               </ion-col>
                               <ion-col size="auto" class="ion-no-padding" *ngIf="event.type === 'moodle'">
-                                <div (click)="openUpComingLinks(event)">
+                                <div (click)="openMoodleEvent(event.moodleCourseId)">
                                   <ion-icon size="small" class="ion-no-margin small-margin colored-with-type" tappable
                                    name="open-outline">
                                   </ion-icon>
