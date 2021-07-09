@@ -105,9 +105,9 @@ export class NewsPage implements OnInit {
     this.news$ = this.news.get(refresher, this.isStudent, this.isLecturer).pipe(
       map(newsList => {
         return newsList.map(item => {
-          if (item && item.featured_media_source.length > 0 && item.featured_media_source[0].source_url) {
+          if (item && item.featured_image_src.length > 0) {
             return {
-              url: item.featured_media_source[0].source_url,
+              url: item.featured_image_src,
               title: item.title && item.title.rendered ? item.title.rendered : '',
               updated: item.modified ? new Date(item.modified) : '',
               body: item.content && item.content.rendered ? item.content.rendered : ''
