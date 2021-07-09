@@ -10,7 +10,7 @@ ion-item.radio {
   }
 }
 
-ion-select.select-with-border{
+ion-select.select-with-border {
   border: 1px solid var(--ion-border-color);
   padding-left: 6px;
 }
@@ -52,7 +52,7 @@ ion-select.select-with-border{
       width: 92%;
 
       &.placeholder {
-        opacity: .33;
+        opacity: 0.33;
       }
     }
 
@@ -62,11 +62,10 @@ ion-select.select-with-border{
       text-align: right;
 
       ion-icon {
-        opacity: .33;
+        opacity: 0.33;
         font-size: 17px !important;
       }
     }
-
   }
 }
 
@@ -127,6 +126,30 @@ ion-radio-group.form-input {
   --border-width: 0 0 1px 1px !important;
 }
 
+.tooltip {
+  .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    height: auto;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    text-transform: capitalize;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+  }
+}
+
+.tooltip:hover {
+  .tooltiptext {
+    visibility: visible;
+  }
+}
+
 // media queries for changing table to card design in small devices
 @media (max-width: 575px) {
   // small screen
@@ -169,5 +192,4 @@ ion-radio-group.form-input {
   .bold-on-small-devices {
     font-weight: bold;
   }
-
 }

@@ -25,6 +25,14 @@ const routes: Routes = [
       () => import('./mark-attendance/mark-attendance.module').then(m => m.MarkAttendancePageModule)
   },
   {
+    path: 'view-attendance',
+    canActivate: [AuthGuard],
+    // tslint:disable-next-line:no-bitwise
+    data: { role: Role.Lecturer | Role.Admin },
+    loadChildren:
+      () => import('./view-attendance/view-attendance.module').then(m => m.ViewAttendanceModule)
+  },
+  {
     path: 'update',
     canActivate: [AuthGuard],
     data: { role: Role.Student },
