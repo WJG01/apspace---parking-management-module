@@ -126,30 +126,6 @@ ion-radio-group.form-input {
   --border-width: 0 0 1px 1px !important;
 }
 
-.tooltip {
-  .tooltiptext {
-    visibility: hidden;
-    width: 120px;
-    height: auto;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-    text-transform: capitalize;
-
-    /* Position the tooltip */
-    position: absolute;
-    z-index: 1;
-  }
-}
-
-.tooltip:hover {
-  .tooltiptext {
-    visibility: visible;
-  }
-}
-
 // media queries for changing table to card design in small devices
 @media (max-width: 575px) {
   // small screen

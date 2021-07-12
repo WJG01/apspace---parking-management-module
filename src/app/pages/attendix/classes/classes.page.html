@@ -268,6 +268,11 @@
                         <!-- small devices only -->
                         <div class="show-only-on-small-devices ion-text-right">
                           <ion-button fill="outline" class="ion-margin-end" color="primary"
+                            (click)="view(class.CLASS_CODE, class.DATE, class.TIME_FROM, class.TIME_TO, class.TYPE)">
+                            View
+                            <ion-icon slot="end" name="eye"></ion-icon>
+                          </ion-button>
+                          <ion-button fill="outline" class="ion-margin-end" color="primary"
                             (click)="edit(class.CLASS_CODE, class.DATE, class.TIME_FROM, class.TIME_TO, class.TYPE)">
                             Edit
                             <ion-icon slot="end" name="create"></ion-icon>
@@ -283,7 +288,6 @@
                           <ion-button fill="clear" size="small" color="medium" class="tooltip"
                             (click)="view(class.CLASS_CODE, class.DATE, class.TIME_FROM, class.TIME_TO, class.TYPE)">
                             <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
-                            <!-- <ion-text class="tooltiptext">View</ion-text> -->
                           </ion-button>
                           <ion-button fill="clear" size="small" color="medium"
                             (click)="edit(class.CLASS_CODE, class.DATE, class.TIME_FROM, class.TIME_TO, class.TYPE)">
