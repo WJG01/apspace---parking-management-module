@@ -111,7 +111,7 @@
                               <ion-col size-xs="12" *ngIf="exam.questionReleaseDate">
                                 <p>
                                   <span class="glob-text-bold">Question Release Date:</span>
-                                  {{ exam.questionReleaseDate | date: 'EEE, dd MMM y' }}                                
+                                  {{ exam.questionReleaseDate ? (exam.questionReleaseDate | dateWithTimezone: 'EEEE, dd MMM y') + ' @ ' + (exam.questionReleaseDate | dateWithTimezone: 'time') : '' }}
                                 </p>
                               </ion-col>
                               <ion-col size-xs="12" *ngIf="exam.endDate">
