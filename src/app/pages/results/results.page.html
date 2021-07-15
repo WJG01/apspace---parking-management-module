@@ -45,10 +45,10 @@
                 </ion-card-header>
                 <ion-card-content class="ion-no-padding ion-padding-bottom">
                   <ion-searchbar (keyup.enter)="searchKeyword.length > 2 ? searchForStudents() : ''"
-                    [(ngModel)]="searchKeyword"></ion-searchbar>
+                                 [(ngModel)]="searchKeyword"></ion-searchbar>
                   <div class="ion-text-center ion-padding-end ion-padding-start">
                     <ion-button color="light" fill="outline" [disabled]="searchKeyword.length < 2"
-                      (click)="searchKeyword.length > 2 ? searchForStudents() : ''">
+                                (click)="searchKeyword.length > 2 ? searchForStudents() : ''">
                       Search
                       <ion-icon name="search" slot="end"></ion-icon>
                     </ion-button>
@@ -100,8 +100,8 @@
                         <ion-col size="12" class="ion-text-center ion-no-padding">
                           <ng-container *ngIf="studentCourses$ | async as courses; else loadingCources">
                             <ion-button *ngFor="let course of courses" color="success"
-                              [fill]="selectedIntake === course.INTAKE_CODE ? 'solid' : 'outline'"
-                              (click)="getStudentResultsForStaff(studentProfile, course.INTAKE_CODE)">
+                                        [fill]="selectedIntake === course.INTAKE_CODE ? 'solid' : 'outline'"
+                                        (click)="getStudentResultsForStaff(studentProfile, course.INTAKE_CODE)">
                               {{course.INTAKE_CODE}}
                             </ion-button>
                           </ng-container>
@@ -113,7 +113,7 @@
                         </ion-col>
                         <ion-col size="10" offset="1" *ngIf="studentSelected && intakeSelected">
                           <ion-button class="ion-margin-top" expand="block" color="primary"
-                            (click)="generateInterimPDF()">
+                                      (click)="generateInterimPDF()">
                             Interim Transcript
                             <ion-icon name="print" slot="end"></ion-icon>
                           </ion-button>
@@ -187,7 +187,7 @@
                   <ion-card-content>
                     <div>
                       <app-message-with-svg imageUrl="assets/img/search.svg" messageTitle="" wrapperSize="6"
-                        wrapperMarginTop="10px" wrapperOffset="3">
+                                            wrapperMarginTop="10px" wrapperOffset="3">
                       </app-message-with-svg>
                     </div>
                     <div class="ion-margin-bottom ion-text-center">
@@ -211,7 +211,7 @@
                         <ion-card-content class="ion-no-padding">
                           <ion-list class="ion-no-padding">
                             <ion-item *ngFor="let student of students" tappable="true" detail="true" lines="full"
-                              (click)="getStudentData(student)">
+                                      (click)="getStudentData(student)">
                               <ion-label>
                                 <h4 class="glob-text-bold">{{student.NAME}}</h4>
                                 <p>{{student.STUDENT_NUMBER}}</p>
@@ -230,8 +230,8 @@
                         </ion-card-header>
                         <ion-card-content>
                           <app-message-with-svg imageUrl='/assets/img/no-results.svg'
-                            messageContent='We could not find any records that match the student you are trying to looking for'
-                            wrapperMarginTop="20px" wrapperOffset="3" wrapperSize="6">
+                                                messageContent='We could not find any records that match the student you are trying to looking for'
+                                                wrapperMarginTop="20px" wrapperOffset="3" wrapperSize="6">
                           </app-message-with-svg>
                         </ion-card-content>
                       </ion-card>
@@ -278,7 +278,7 @@
                             <ion-card-content class="ion-no-padding">
                               <ion-list class="ion-no-padding">
                                 <ion-item lines="full" *ngFor="let result of semesterResult.value; trackBy: trackByFn"
-                                  [color]="result.GRADE.toLowerCase() === 'Pending Survey'.toLowerCase() ? 'warning' : ''">
+                                          [color]="result.GRADE.toLowerCase() === 'Pending Survey'.toLowerCase() ? 'warning' : ''">
                                   <ion-label class="ion-no-margin glob-white-space-normal">
                                     <ion-grid>
                                       <ion-row>
@@ -295,7 +295,7 @@
                                           <p>
                                             Result:
                                             <ion-text class="glob-text-bold"
-                                              [color]="result.SUBJECT_PASS_FAIL === 'Pass' ? 'success' : result.SUBJECT_PASS_FAIL === 'Fail' ? 'danger' : ''">
+                                                      [color]="result.SUBJECT_PASS_FAIL === 'Pass' ? 'success' : result.SUBJECT_PASS_FAIL === 'Fail' ? 'danger' : ''">
                                               {{ result.GRADE || "N/A" }}
                                             </ion-text>
                                           </p>
@@ -304,7 +304,7 @@
                                           <p>
                                             Grade:
                                             <ion-text class="glob-text-bold"
-                                              [color]="result.SUBJECT_PASS_FAIL === 'Pass' ? 'success' : result.SUBJECT_PASS_FAIL === 'Fail' ? 'danger' : ''">
+                                                      [color]="result.SUBJECT_PASS_FAIL === 'Pass' ? 'success' : result.SUBJECT_PASS_FAIL === 'Fail' ? 'danger' : ''">
                                               {{ result.GRADE_POINT || "N/A" }}
                                             </ion-text>
                                           </p>
@@ -365,7 +365,7 @@
                     <ion-item color="primary">
                       <ion-label position="floating">Intake</ion-label>
                       <ion-select [(ngModel)]="selectedIntake" (ngModelChange)="intakeChanged()" value="notifications"
-                        interface="action-sheet">
+                                  interface="action-sheet">
                         <ion-select-option *ngFor="let intake of intakeLabels" [value]="intake">{{intake}}
                         </ion-select-option>
                       </ion-select>
@@ -401,12 +401,12 @@
                     </ng-template>
                     <ion-buttons>
                       <ion-button class="ion-no-margin glob-margin-auto" size="small" color="primary" fill="outline"
-                        [routerLink]="['/student-survey']">
+                                  [routerLink]="['/student-survey']">
                         Survey
                         <ion-icon name="newspaper" slot="end"></ion-icon>
                       </ion-button>
                       <ion-button class="ion-no-margin glob-margin-auto" size="small" color="danger" fill="outline"
-                        (click)="generateInterimPDF()">
+                                  (click)="generateInterimPDF()">
                         Interim Transcript
                         <ion-icon name="document" slot="end"></ion-icon>
                       </ion-button>
@@ -438,7 +438,7 @@
                       <ion-card-content class="ion-no-padding">
                         <ion-list class="ion-no-padding">
                           <ion-item lines="full" *ngFor="let result of semesterResult.value; trackBy: trackByFn"
-                            [color]="result.GRADE.toLowerCase() === 'Pending Survey'.toLowerCase() ? 'warning' : ''">
+                                    [color]="result.GRADE.toLowerCase() === 'Pending Survey'.toLowerCase() ? 'warning' : ''">
                             <ion-label class="ion-no-margin glob-white-space-normal">
                               <ion-grid>
                                 <ion-row>
@@ -456,7 +456,7 @@
                                     <p>
                                       Result:
                                       <ion-text class="glob-text-bold"
-                                        [color]="result.SUBJECT_PASS_FAIL === 'Pass' ? 'success' : result.SUBJECT_PASS_FAIL === 'Fail' ? 'danger' : ''">
+                                                [color]="result.SUBJECT_PASS_FAIL === 'Pass' ? 'success' : result.SUBJECT_PASS_FAIL === 'Fail' ? 'danger' : ''">
                                         {{ result.GRADE || "N/A" }}
                                       </ion-text>
                                     </p>
@@ -465,7 +465,7 @@
                                     <p>
                                       Grade:
                                       <ion-text class="glob-text-bold"
-                                        [color]="result.SUBJECT_PASS_FAIL === 'Pass' ? 'success' : result.SUBJECT_PASS_FAIL === 'Fail' ? 'danger' : ''">
+                                                [color]="result.SUBJECT_PASS_FAIL === 'Pass' ? 'success' : result.SUBJECT_PASS_FAIL === 'Fail' ? 'danger' : ''">
                                         {{ result.GRADE_POINT || "N/A" }}
                                       </ion-text>
                                     </p>
@@ -491,7 +491,7 @@
                                         <small>Result & Grade: </small>
                                         <ion-text class="glob-text-bold">
                                           <a tappable (click)="openSurveyPage(result.MODULE_CODE)" color="primary"
-                                            style="text-decoration: underline;">Pending Survey</a>
+                                             style="text-decoration: underline;">Pending Survey</a>
                                         </ion-text>
                                       </p>
                                     </ion-col>
@@ -528,7 +528,7 @@
                         <ion-item color="primary">
                           <ion-label position="floating">Intake</ion-label>
                           <ion-select [(ngModel)]="selectedIntake" (ngModelChange)="intakeChanged()"
-                            value="notifications" interface="action-sheet">
+                                      value="notifications" interface="action-sheet">
                             <ion-select-option *ngFor="let intake of intakeLabels" [value]="intake">{{intake}}
                             </ion-select-option>
                           </ion-select>
@@ -556,7 +556,7 @@
             <ion-row>
               <ion-col size-xs="12" size-md="8" offset-md="2" size-lg="6" offset-lg="3">
                 <ion-button class="ion-margin-top ion-margin-bottom" color="success" expand="block" size="large"
-                  [routerLink]="['/student-survey']">
+                            [routerLink]="['/student-survey']">
                   Survey
                   <ion-icon slot="end" name="newspaper"></ion-icon>
                 </ion-button>
@@ -639,6 +639,9 @@
             <p *ngIf="mpu.length > 0">
               {{ mpu[0].MPU }}
             </p>
+            <p class="glob-text-bold">
+              * Result is subject to External Moderation
+            </p>
           </ng-container>
         </div>
       </ion-card-content>
@@ -675,8 +678,9 @@
   <ion-card class="ion-no-margin ion-margin-top ion-margin-bottom ion-no-padding">
     <ion-card-content>
       <app-message-with-svg imageUrl='/assets/img/no_data.svg' messageTitle='No Results Data for {{selectedIntake}}'
-        messageContent='Either the intake just started or there are no results published yet' wrapperMarginTop="20px"
-        wrapperOffset="3" wrapperSize="6">
+                            messageContent='Either the intake just started or there are no results published yet'
+                            wrapperMarginTop="20px"
+                            wrapperOffset="3" wrapperSize="6">
       </app-message-with-svg>
     </ion-card-content>
   </ion-card>
