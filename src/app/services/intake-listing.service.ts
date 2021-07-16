@@ -12,6 +12,7 @@ import { IntakeListing } from '../interfaces';
 })
 export class IntakeListingService {
 
+  // Intakes API
   intakesUrl = 'https://api.apiit.edu.my/student/intake_listing';
 
   constructor(
