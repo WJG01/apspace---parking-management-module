@@ -93,6 +93,7 @@ export class GenPipe implements PipeTransform {
     return {
       INTAKE: '',
       MODID: 'FREE',
+      MODULE_NAME: '',
       DAY: timetable.DAY,
       LOCATION: timetable.LOCATION,
       ROOM: timetable.ROOM,

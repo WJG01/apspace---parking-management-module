@@ -1,6 +1,7 @@
 export interface StudentTimetable {
   INTAKE: string;
   MODID: string;
+  MODULE_NAME: string;
   DAY: string;
   GROUPING: string;
   LOCATION: string;

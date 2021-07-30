@@ -129,7 +129,6 @@ export class DashboardPage implements OnInit, DoCheck {
     cardTitle: 'Today\'s Schedule',
   };
   intakeGroup = '';
-  studentSurvey$: Observable<SurveyModule[]>; // using this to get the name of the module
 
   // UPCOMING EVENTS
   upcomingEvent$: Observable<EventComponentConfigurations[]> | any;
@@ -639,12 +638,6 @@ export class DashboardPage implements OnInit, DoCheck {
     );
   }
 
-  getCourseName(timetable: StudentTimetable, intake: string){
-    this.studentSurvey$ = this.ws.get(`/survey/modules-list?intake_code=${intake}`).pipe(
-      tap(res => console.log(res)),
-      tap((res: SurveyModule[]) => res.filter(item => item.SUBJECT_CODE === timetable.NAME)));
-  }
-
   // FUNCTION POSSIBLE TO MERGE? M01
   getUpcomingClassesForStudent(intake: string, refresher): Observable<EventComponentConfigurations[]> {
     this.timetableDefaultIntake = intake;
@@ -683,9 +676,9 @@ export class DashboardPage implements OnInit, DoCheck {
             classPass = true;
           }
           timetableEventMode.push({
-            title: timetable.MODID,
+            title: timetable.MODULE_NAME + ' | ' + timetable.MODID,
             firstDescription: timetable.LOCATION + ' | ' + timetable.ROOM,
-            secondDescription: timetable.NAME + ' | ' +  this.getCourseName(timetable, intake),
+            secondDescription: timetable.NAME,
             // tslint:disable-next-line: quotemark
             thirdDescription: timetable.TIME_TO_ISO,
             color: '#27ae60',
