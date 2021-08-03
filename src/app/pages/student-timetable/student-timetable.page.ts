@@ -1,10 +1,13 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
+import { File } from '@ionic-native/file/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import { ActionSheetController, IonRefresher, ModalController } from '@ionic/angular';
+import { ActionSheetController, IonRefresher, ModalController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { formatISO } from 'date-fns';
+import { VCALENDAR, VEVENT } from 'ics-js';
 import { Observable, Subscription, combineLatest } from 'rxjs';
 import { finalize, map, tap } from 'rxjs/operators';
 
@@ -13,6 +16,7 @@ import { SearchModalComponent } from '../../components/search-modal/search-modal
 import { Role, StudentProfile, StudentTimetable } from '../../interfaces';
 import { SettingsService, StudentTimetableService, WsApiService } from '../../services';
 import { ClassesPipe } from './classes.pipe';
+import { TheWeekPipe } from './theweek.pipe';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -97,6 +101,9 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
   timeFormatChangeFlag: boolean;
   notification: Subscription;
 
+  downloadTimetable: string;
+  filename: string;
+
   // timezone
   enableMalaysiaTimezone;
 
@@ -112,6 +119,10 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
     private tt: StudentTimetableService,
     private ws: WsApiService,
     private notifierService: NotifierService,
+    private file: File,
+    private fileOpener: FileOpener,
+    private plt: Platform,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit() {
@@ -402,4 +413,47 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
     this.iab.create(`${this.printUrl}?Week=${week}&Intake=${this.intake}&Intake_Group=${this.selectedGrouping}&print_request=print_tt`, '_system', 'location=true');
   }
 
+  generateCalendar() {
+    this.timetable$.pipe(
+      tap(res => {
+        const data = new ClassesPipe().transform(res, this.intake, this.room, this.selectedGrouping);
+        let newArray = [];
+        newArray = data;
+
+        const finalResponse = new TheWeekPipe().transform(newArray, this.selectedWeek);
+
+        const cal = new VCALENDAR();
+
+        cal.addProp('VERSION', 1);
+        cal.addProp('PRODID', 'Student Timetable');
+
+        finalResponse.forEach(tt => {
+          const event = new VEVENT();
+
+          event.addProp('UID');
+          event.addProp('DTSTAMP', new Date(), { VALUE: 'DATE' });
+          event.addProp('SUMMARY', tt.MODID);
+          event.addProp('DTSTART', new Date(tt.TIME_FROM_ISO), { VALUE: 'DATE-TIME' });
+          event.addProp('DTEND', new Date(tt.TIME_TO_ISO));
+          cal.addComponent(event);
+        });
+
+        const calendarBlob = cal.toBlob();
+        const blob = new Blob([calendarBlob], { type: 'text/calendar' });
+        const fileDate = this.datePipe.transform(new Date(this.selectedWeek), 'dd MMM yyy');
+
+        if (this.plt.is('cordova')) {
+
+          const directoryType = this.plt.is('android') ? this.file.externalDataDirectory : this.file.dataDirectory;
+
+          this.file.writeFile(directoryType, 'student-timetable.ics', blob, { replace: true }).then(() => {
+            this.fileOpener.open(directoryType + 'student-timetable.ics', 'text/calendar');
+          });
+        } else {
+          this.downloadTimetable = window.URL.createObjectURL(blob);
+          this.filename = this.intake + ' (Week ' + fileDate + ') Timetable';
+        }
+      })
+    ).subscribe();
+  }
 }

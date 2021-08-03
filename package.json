@@ -94,6 +94,7 @@
     "fuse.js": "^6.4.0",
     "graphql": "^0.11",
     "graphql-tag": "^2.10.3",
+    "ics-js": "^0.10.2",
     "ion2-calendar": "git+https://github.com/shaneparsons/ion2-calendar.git",
     "ionic-plugin-deeplinks": "^1.0.20",
     "karma-firefox-launcher": "^1.1.0",
