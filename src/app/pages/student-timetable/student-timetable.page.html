@@ -47,7 +47,7 @@
           </ion-button>
         </ion-col>
         <ion-col size="auto" *ngIf="!room">
-          <ion-button color="primary" fill="outline" (click)="sendToPrint()">
+          <ion-button color="primary" fill="outline" (click)="sendToPrint()" [disabled]="availableWeek!.length === 0">
             <ion-icon slot="icon-only" name="print"></ion-icon>
           </ion-button>
         </ion-col>
