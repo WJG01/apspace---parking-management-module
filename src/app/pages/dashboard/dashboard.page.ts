@@ -952,9 +952,9 @@ export class DashboardPage implements OnInit, DoCheck {
       // AP & BP Removed Temp (Requested by Management | DON'T TOUCH)
       this.getupcomingExams(intake.replace(/[(]AP[)]|[(]BP[)]/g, ''), todaysDate, true),
       this.getUpcomingHoliday(todaysDate, refresher),
-      this.getUpcomingMoodle(todaysDate, refresher)
+      // this.getUpcomingMoodle(todaysDate, refresher) //API is down
     ).pipe(
-      map(x => this.getSortEvents(x[0].concat(x[1]).concat(x[2]))) // MERGE THE TWO ARRAYS TOGETHER // NOW THREE
+      map(x => this.getSortEvents(x[0].concat(x[1]))) // MERGE THE TWO ARRAYS TOGETHER // NOW THREE
     ) : this.getUpcomingHoliday(todaysDate);
   }
 
