@@ -1,10 +1,16 @@
-// general
-.margin-auto {
-  margin: auto;
-}
-
 .show-only-on-small-devices {
   display: none !important;
+}
+
+.extra-record-title {
+  text-transform: uppercase;
+  margin: 0;
+  text-align: center;
+  color: var(--ion-color-danger)
+}
+
+.danger-text {
+  color: var(--ion-color-danger);
 }
 
 // attendance logs
