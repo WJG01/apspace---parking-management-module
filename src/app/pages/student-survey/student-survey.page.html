@@ -307,7 +307,7 @@
                   <ng-template #showTextArea>
                     <ion-textarea rows="2" autoGrow="true"
                       [(ngModel)]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content"
-                      type="text" name="note" class="with-padding" placeholder="Enter your answer here">
+                      type="text" name="note" class="with-padding" placeholder="Enter your answer here" maxlength="400">
                     </ion-textarea>
                   </ng-template>
                 </div>
