@@ -424,7 +424,7 @@
                       </ion-thumbnail>
                       <ion-label>
                         <h3 class="ion-text-wrap" [innerHTML]="newsItem.title"></h3>
-                        <p>{{ newsItem.updated | dateWithTimezone: 'dd MMM yy' }}</p>
+                        <p>Posted on {{ newsItem.updated | dateWithTimezone: 'dd MMM yy' }}</p>
                       </ion-label>
                     </ion-item>
                   </div>
