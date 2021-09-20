@@ -76,7 +76,7 @@
                 <div class="text-overlay">
                   <ion-label>
                     <h2 [innerHTML]="newsItem.title"></h2>
-                    <p>{{ newsItem.updated | dateWithTimezone : 'MMM d, y, h:mm a'}}</p>
+                    <p>Posted on {{ newsItem.updated | dateWithTimezone : 'MMM d, y, h:mm a'}}</p>
                   </ion-label>
                 </div>
               </ion-card>
