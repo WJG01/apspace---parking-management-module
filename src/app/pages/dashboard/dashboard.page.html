@@ -304,7 +304,7 @@
                               <ion-col size="auto" class="ion-no-padding" *ngIf="event.type === 'moodle'">
                                 <div (click)="openMoodleEvent(event.moodleCourseId)">
                                   <ion-icon size="small" class="ion-no-margin small-margin colored-with-type" tappable
-                                   name="open-outline">
+                                    name="open-outline">
                                   </ion-icon>
                                 </div>
                               </ion-col>
@@ -382,7 +382,9 @@
                   <ion-slide *ngFor="let noticeBoardItem of noticeBoardItems">
                     <div class="picture">
                       <a href="{{ noticeBoardItem['post-meta-fields']['slideshow_url'] && noticeBoardItem['post-meta-fields']['slideshow_url'][0] ? noticeBoardItem['post-meta-fields']['slideshow_url'][0] : noticeBoardItem.link }}"
-                        target="_blank"> <img src="{{ noticeBoardItem.featured_image_src ? noticeBoardItem.featured_image_src : 'assets/img/placeholder.png' }}" alt="" />
+                        target="_blank"> <img
+                          src="{{ noticeBoardItem.featured_image_src ? noticeBoardItem.featured_image_src : 'assets/img/placeholder.png' }}"
+                          alt="" />
                       </a>
                     </div>
                   </ion-slide>
@@ -429,6 +431,15 @@
                     </ion-item>
                   </div>
                 </ng-container>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="10" offset="1">
+                      <ion-button routerLink="/news" class="colored-background" expand="block">
+                        Read More
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
               </ng-container>
             </ion-card-content>
             <ng-template #loadingNews>
