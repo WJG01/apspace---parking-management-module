@@ -689,6 +689,8 @@
   @include pure-dark-theme;
 }
 
+
+// APTour Guide 
 .joyride-arrow__top {
   border-bottom-color: #2a83ff !important;
 }
@@ -706,3 +708,8 @@
   background-color: #2a83ff !important;
   color: #fff !important;
 }
+
+.joyride-step__close {
+  margin: 3px 10px !important;
+}
+

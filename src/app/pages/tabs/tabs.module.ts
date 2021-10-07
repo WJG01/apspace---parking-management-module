@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import {JoyrideModule} from 'ngx-joyride';
+import { JoyrideModule } from 'ngx-joyride';
 
 import { SharedPipesModule } from '../../shared/shared-pipes.module';
 import { ByGroupPipe } from './by-group.pipe';

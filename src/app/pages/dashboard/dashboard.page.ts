@@ -400,7 +400,7 @@ export class DashboardPage implements OnInit, DoCheck {
       }
 
       // Get Tour Guide status
-      this.settings.get$('apTourGuide').
+      this.settings.get$('tourGuideSeen').
       subscribe(data => this.tourGuideShown = data);
       if (!this.tourGuideShown) {
         this.welcomeTourGuide();
@@ -1493,7 +1493,7 @@ export class DashboardPage implements OnInit, DoCheck {
     };
 
     this.joyrideService.startTour(options);
-    this.settings.set('apTourGuide', true);
+    this.settings.set('tourGuideSeen', true);
   }
 }
 
