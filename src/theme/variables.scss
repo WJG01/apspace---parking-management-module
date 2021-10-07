@@ -15,7 +15,7 @@
     --ion-more-page-light-color: #e9ecee;
     --ion-more-page-card-color: #e9ecee;
     --ion-more-page-background-color: linear-gradient(to right, #148ad9, #3a99d9ee);
-    
+
     --ion-staff-profile-card-color: #e9ecee;
 
     --ion-color-step-50: #f3f3f3;
@@ -687,4 +687,22 @@
 
 :root .dark.pure {
   @include pure-dark-theme;
+}
+
+.joyride-arrow__top {
+  border-bottom-color: #2a83ff !important;
+}
+
+.joyride-arrow__bottom {
+  border-top-color: #2a83ff !important;
+}
+
+.joyride-step__holder {
+  font-family: unset !important;
+}
+
+.joyride-step__container {
+  border-radius: 20px !important;
+  background-color: #2a83ff !important;
+  color: #fff !important;
 }

@@ -26,6 +26,7 @@ export interface Settings {
   dashboardSections: string[];
   menuUI: 'cards' | 'list';
   disableShakespear: boolean;
+  apTourGuide: boolean;
   shakeSensitivity: number;
   hideProfilePicture: boolean;
   enableMalaysiaTimezone: boolean;

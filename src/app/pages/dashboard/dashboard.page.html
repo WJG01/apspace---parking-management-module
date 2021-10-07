@@ -8,7 +8,8 @@
         <ion-col size-xs="12" class="dash-padding" [attr.size-md]="activeDashboardSections.length > 0 ? 5 : 7"
           [class.glob-margin-auto]="activeDashboardSections.length <= 0">
           <ion-card class="profile ion-no-margin ion-padding-top no-border-rad">
-            <ion-avatar tappable="true" class="glob-margin-auto ion-margin-top avatar"
+            <ion-avatar joyrideStep= "step1" [text]="tourGuideStep[0]" [prevTemplate]="prevButton" [nextTemplate]="nextButton"
+                        [doneTemplate]="doneButton" tappable="true" class="glob-margin-auto ion-margin-top avatar"
               (click)="navigateToPage('profile')" *ngIf="!hideProfilePicture">
               <ng-container *ngIf="isStudent; else staffImage">
                 <img [src]="
@@ -28,7 +29,7 @@
               </ion-card-title>
               <ion-card-subtitle class="ion-text-center">
                 <div
-                  *ngIf="(userProfile.STUDENT_NUMBER) || (!isStudent && userProfile.TITLE); else loadingCardSubtitle">
+                  joyrideStep="step2" [text]="tourGuideStep[1]" [prevTemplate]="prevButton" [nextTemplate]="nextButton" [doneTemplate]="doneButton" *ngIf="(userProfile.STUDENT_NUMBER) || (!isStudent && userProfile.TITLE); else loadingCardSubtitle">
                   {{
                   isStudent
                   ? userProfile.STUDENT_NUMBER + " | " + userProfile.INTAKE
@@ -717,4 +718,15 @@
       </ion-row>
     </ion-grid>
   </div>
+
+  <!--  APTour Guide-->
+  <ng-template #prevButton>
+    <ion-button size ="small" fill="outline" color="light">Previous</ion-button>
+  </ng-template>
+  <ng-template #nextButton>
+    <ion-button size ="small" fill="outline" color="light">Next</ion-button>
+  </ng-template>
+  <ng-template #doneButton>
+    <ion-button size ="small" fill="outline" color="light">Done</ion-button>
+  </ng-template>
 </ion-content>

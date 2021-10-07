@@ -1,5 +1,7 @@
+<!--Search Bar & Helpdesk Small Screen-->
 <ion-header *ngIf="smallScreen">
   <ion-toolbar>
+    <!--Logo-->
     <ion-title class="ion-text-left" mode="md">
       <h2 class="glob-system-title system-title ion-no-margin">
         <img src="assets/icon/favicon.png" alt="Icon">
@@ -7,10 +9,14 @@
       </h2>
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button [color]="shownSearchBar ? 'tertiary' : 'primary'" (click)="toggleSearchBar()">
+      <!--Search Bar-->
+      <ion-button joyrideStep="step3" [text]="tourGuideStep[0]" [prevTemplate]="prevButton" [nextTemplate]="nextButton"
+                  [doneTemplate]="doneButton" [color]="shownSearchBar ? 'tertiary' : 'primary'" (click)="toggleSearchBar()">
         <ion-icon slot="icon-only" name="search"></ion-icon>
       </ion-button>
-      <ion-button color="primary" (click)="openHelpCentre()">
+      <!--Help Desk-->
+      <ion-button joyrideStep="step4" [text]="tourGuideStep[6]" [prevTemplate]="prevButton" [nextTemplate]="nextButton"
+                  [doneTemplate]="doneButton" color="primary" (click)="openHelpCentre()">
         <ion-icon slot="icon-only" name="information-circle-sharp"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -23,9 +29,12 @@
 
 <ion-content scrollY="false">
   <ion-tabs>
+    <!--Search Bar & Tab for Large Screen-->
     <ion-tab-bar *ngIf="!smallScreen" slot="top">
-      <ion-searchbar [(ngModel)]="term" (keydown.escape)="$event.target.blur()" (ionFocus)="searching = true"
-        (ionBlur)="stopSearching()" placeholder="(S)earch APSpace" class="tabs-searchbar"></ion-searchbar>
+      <!--Search Bar-->
+      <ion-searchbar joyrideStep="step3" [text]="tourGuideStep[0]" [prevTemplate]="prevButton" [nextTemplate]="nextButton" [doneTemplate]="doneButton"
+                     [(ngModel)]="term" (keydown.escape)="$event.target.blur()" (ionFocus)="searching = true" (ionBlur)="stopSearching()"
+                     placeholder="(S)earch APSpace" class="tabs-searchbar"></ion-searchbar>
       <ion-tab-button class="extra-tab extra-tab-3">
         <ion-label>Empty</ion-label>
         <ion-icon name="home"></ion-icon>
@@ -38,14 +47,20 @@
         <ion-label>Empty</ion-label>
         <ion-icon name="home"></ion-icon>
       </ion-tab-button>
-      <ion-tab-button *ngFor="let tab of tabs" [tab]="tab.path">
+      <!--Tab Items-->
+      <ion-tab-button *ngFor="let tab of tabs; index as i" [tab]="tab.path"
+                      joyrideStep="step{{i + 4}}" [text]="tourGuideStep[i + 1]" [prevTemplate]="prevButton"
+                      [nextTemplate]="nextButton" [doneTemplate]="doneButton" (done)="finishTour()">
         <ion-label>{{ tab.name }}</ion-label>
         <ion-icon [name]="tab.icon"></ion-icon>
       </ion-tab-button>
     </ion-tab-bar>
 
+    <!--Tab for Small Screen-->
     <ion-tab-bar *ngIf="smallScreen">
-      <ion-tab-button *ngFor="let tab of tabs" [tab]="tab.path">
+      <ion-tab-button *ngFor="let tab of tabs; index as i" [tab]="tab.path"
+                      joyrideStep="step{{i + 5}}" [text]="tourGuideStep[i + 1]" [prevTemplate]="prevButton"
+                      [nextTemplate]="nextButton" [doneTemplate]="doneButton" (done)="finishTour()">
         <ion-label class ="tab-label">{{ tab.name }}</ion-label>
         <ion-icon class ="tab-icon" [name]="tab.icon"></ion-icon>
       </ion-tab-button>
@@ -100,4 +115,15 @@
 
     </div>
   </ion-tabs>
+
+  <!--APTour Guide-->
+  <ng-template #prevButton>
+    <ion-button size ="small" fill="outline" color="light">Previous</ion-button>
+  </ng-template>
+  <ng-template #nextButton>
+    <ion-button size ="small" fill="outline" color="light">Next</ion-button>
+  </ng-template>
+  <ng-template #doneButton>
+    <ion-button size ="small" fill="outline" color="light">Done</ion-button>
+  </ng-template>
 </ion-content>

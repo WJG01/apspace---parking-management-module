@@ -6,6 +6,8 @@ import { AlertController, IonSlides, ModalController, NavController, Platform, T
 import { Storage } from '@ionic/storage';
 import { format, parse, parseISO } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
+import { JoyrideService } from 'ngx-joyride';
+import { JoyrideOptions } from 'ngx-joyride/lib/models/joyride-options.class';
 import { Observable, Subscription, combineLatest, forkJoin, of, zip } from 'rxjs';
 import { catchError, concatMap, finalize, map, mergeMap, shareReplay, switchMap, tap, toArray } from 'rxjs/operators';
 
@@ -324,6 +326,13 @@ export class DashboardPage implements OnInit, DoCheck {
   // timezone
   enableMalaysiaTimezone;
 
+  // APTour Guide
+  tourGuideStep = [
+    'Apart from seeing your beautiful face 💃🏻, you can also tap your Profile Picture to view your Profile.',
+    'You can refer to your TP Number & Intake Code from this section 👀'
+  ];
+  tourGuideShown: boolean;
+
   constructor(
     private ws: WsApiService,
     private studentTimetableService: StudentTimetableService,
@@ -342,15 +351,15 @@ export class DashboardPage implements OnInit, DoCheck {
     private settings: SettingsService,
     private storage: Storage,
     private notifierService: NotifierService,
-    private dateWithTimezonePipe: DateWithTimezonePipe
-
+    private dateWithTimezonePipe: DateWithTimezonePipe,
+    private joyrideService: JoyrideService
   ) {
     // getting the main accent color to color the chart.js (Temp until removing chart.js)
     // TODO handle value change
     this.activeAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor')).rgba;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.isCordova = this.platform.is('cordova');
     this.notification = this.notifierService.timeFormatUpdated.subscribe(data => {
       if (data && data === 'SUCCESS') {
@@ -388,6 +397,18 @@ export class DashboardPage implements OnInit, DoCheck {
 
       if (this.platform.is('cordova')) {
         this.runCodeOnReceivingNotification(); // notifications
+      }
+
+      // Get Tour Guide status
+      this.settings.get$('apTourGuide').
+      subscribe(data => this.tourGuideShown = data);
+      if (!this.tourGuideShown) {
+        this.welcomeTourGuide();
+      }
+
+      // Overwrite the tour guide message for staff
+      if (!this.isStudent) {
+        this.tourGuideStep[1] = 'You can check your Job Title from this section 💼';
       }
       this.settings.initialSync();
       this.doRefresh();
@@ -667,7 +688,7 @@ export class DashboardPage implements OnInit, DoCheck {
       // GET TODAYS CLASSES ONLY
       map(intakeTimetable => intakeTimetable.filter(timetable => this.eventIsToday(new Date(timetable.DATESTAMP_ISO), dateNow))),
 
-      // CONVERT TIMETABLE OBJECT TO THE OBJECT EXPECTED IN THE EVENT COMPONENET
+      // CONVERT TIMETABLE OBJECT TO THE OBJECT EXPECTED IN THE EVENT COMPONENT
       map((timetables: StudentTimetable[]) => {
         const timetableEventMode: EventComponentConfigurations[] = [];
         timetables.forEach((timetable: StudentTimetable) => {
@@ -1261,10 +1282,7 @@ export class DashboardPage implements OnInit, DoCheck {
       );
   }
 
-
-
   // UPCOMING TRIPS
-
   getLocationColor(locationName: string) {
     for (const location of this.locations) {
       if (location.location_name === locationName) {
@@ -1442,6 +1460,40 @@ export class DashboardPage implements OnInit, DoCheck {
     } else {
       this.presentToast('External links cannot be opened in offline mode. Please ensure you have a network connection and try again');
     }
+  }
+
+  async welcomeTourGuide() {
+    const alert = await this.alertCtrl.create({
+      header: 'Welcome to APSpace, your digital university companion!',
+      message: 'Please take a tour with us to get familiarized with APSpace.',
+      buttons: [{
+        text: 'Start Tour',
+        handler: () => {
+          this.startTour();
+        }
+      }]
+    });
+    await alert.present();
+  }
+
+  startTour() {
+    let tourSteps;
+    const x = window.matchMedia('(max-width: 720px)');
+
+    if (x.matches) {
+      tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs',
+      'step8@/tabs', 'step9@/tabs'];
+    } else {
+      tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs', 'step8@/tabs'];
+    }
+
+    const options: JoyrideOptions = {
+      steps: tourSteps,
+      themeColor: '#000000'
+    };
+
+    this.joyrideService.startTour(options);
+    this.settings.set('apTourGuide', true);
   }
 }
 

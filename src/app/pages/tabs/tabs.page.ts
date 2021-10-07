@@ -36,6 +36,20 @@ export class TabsPage implements OnInit {
   menusTitle: { [id: string]: string } = menusTitle;
   isMobile = this.platform.is('cordova');
 
+
+  // APTour Guide
+  tourGuideStep = [
+    'Are you feeling lost 🤷‍♀️? Search for any information within APSpace.',
+    'Don\'t miss a class 💁🏾‍♂️! Refer to the Timetable Schedule Tab.',
+    'Don\'t forget to mark your attendance as well 🤦🏽‍♀️! Refer to the Attendance Tab.',
+    '📢 Stay up to date about your academic day from the Dashboard Tab.',
+    'Keep track of your balance and transactions from the APCard Tab 💸',
+    'Can\'t get enough of APSpace? Explore more information from the More Tab 💁🏻‍♂️',
+    'Got a question but no answer 🙇🏿‍♂️? Please open a ticket and ask us!'
+  ];
+  role: Role;
+  isStudent: boolean;
+
   constructor(
     private router: Router,
     private storage: Storage,
@@ -45,7 +59,7 @@ export class TabsPage implements OnInit {
     public navCtrl: NavController,
     private toastCtrl: ToastController,
     private cas: CasTicketService,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
   ) { }
 
   ngOnInit() {
@@ -168,6 +182,17 @@ export class TabsPage implements OnInit {
 
       });
     });
+
+    // Overwrite the tour guide message for staff
+    this.storage.get('role').then((role: Role) => {
+      this.role = role;
+      // tslint:disable-next-line: no-bitwise
+      this.isStudent = Boolean(role & Role.Student);
+      if (!this.isStudent) {
+        this.tourGuideStep[1] = 'Don\'t forget to take your class and attendance 💁🏾‍♂️! Refer to the Timetable Schedule Tab.';
+        this.tourGuideStep[2] = 'You can refer to your Profile from the Profile Tab as well 👤';
+      }
+    });
     // tslint:enable:no-bitwise
   }
 
@@ -274,7 +299,15 @@ export class TabsPage implements OnInit {
         }
       ],
     });
-    toast.present();
+    await toast.present();
   }
 
+  async finishTour() {
+    const alert = await this.alertCtrl.create({
+      header: 'That\'s it!',
+      message: 'Enjoy your experience with APSpace!',
+      buttons: ['Dismiss']
+    });
+    await alert.present();
+  }
 }
