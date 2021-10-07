@@ -125,7 +125,7 @@ export const menusRaw = [
     id: 'knowledge-base' as const,
     title: 'Knowledge Base',
     group: 'Collaboration & Information Resources',
-    url: 'https://apiit.atlassian.net/wiki/home', // no ticket
+    url: 'https://apiit.atlassian.net/wiki/spaces/KB/overview', // no ticket
     img: 'assets/img/kb.png',
     role: Role.Student | Role.Lecturer | Role.Admin,
     tags: ['articles', 'Q&A', 'FAQ', 'questions', 'answers', 'how to', 'kb'],
