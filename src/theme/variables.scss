@@ -15,7 +15,6 @@
     --ion-more-page-light-color: #e9ecee;
     --ion-more-page-card-color: #e9ecee;
     --ion-more-page-background-color: linear-gradient(to right, #148ad9, #3a99d9ee);
-
     --ion-staff-profile-card-color: #e9ecee;
 
     --ion-color-step-50: #f3f3f3;
@@ -688,7 +687,6 @@
 :root .dark.pure {
   @include pure-dark-theme;
 }
-
 
 // APTour Guide
 .joyride-arrow__top {

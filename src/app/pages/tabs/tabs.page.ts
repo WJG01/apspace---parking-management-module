@@ -40,12 +40,12 @@ export class TabsPage implements OnInit {
   // APTour Guide
   tourGuideStep = [
     'Are you feeling lost 🤷‍♀️? Search for any information within APSpace.',
-    'Don\'t miss a class 💁🏾‍♂️! Refer to the Timetable Schedule Tab.',
-    'Don\'t forget to mark your attendance as well 🤦🏽‍♀️! Refer to the Attendance Tab.',
+    'Don\'t miss a class 💁‍♂️! Refer to the Timetable Tab.',
+    'Don\'t forget to mark your attendance as well 🤦‍♀️! Refer to the Attendance Tab.',
     '📢 Stay up to date about your academic day from the Dashboard Tab.',
     'Keep track of your balance and transactions from the APCard Tab 💸',
-    'Can\'t get enough of APSpace? Explore more information from the More Tab 💁🏻‍♂️',
-    'Got a question but no answer 🙇🏿‍♂️? Please open a ticket and ask us!'
+    'Can\'t get enough of APSpace? Explore more information from the More Tab 💁‍♂️',
+    'Got a question but no answer 🙇‍♂️? Please open a ticket and ask us!'
   ];
   role: Role;
   isAdmin: boolean;
@@ -194,13 +194,13 @@ export class TabsPage implements OnInit {
 
       // APTour Guide texts for lecturer or lecturer + admin
       if (this.isLecturer || this.isLecturer && this.isAdmin) {
-        this.tourGuideStep[1] = 'Don\'t forget to take your class and attendance 💁🏾‍♂️! Refer to the Timetable Schedule Tab.';
-        this.tourGuideStep[2] = 'You can refer to your Profile from the Profile Tab as well 👤';
+        this.tourGuideStep[1] = 'See your class schedule or take the class attendance from the Timetable Tab';
+        this.tourGuideStep[2] = 'You can go to your Profile from the quick navigation bar as well 👤';
       }
       // APTour Guide texts for admin
       else if (this.isAdmin) {
-        this.tourGuideStep.splice(1, 2, 'You can refer to your Profile from the Profile Tab as well 👤');
-        this.tourGuideStep[6] = 'Got a question but no answer 🙇🏿‍♂️? Please open a ticket and ask us!';
+        this.tourGuideStep.splice(1, 2, 'You can go to your Profile from the quick navigation bar as well 👤');
+        this.tourGuideStep[6] = 'Got a question but no answer 🙇‍♂️? Please open a ticket and ask us!';
       }
     });
     // tslint:enable:no-bitwise

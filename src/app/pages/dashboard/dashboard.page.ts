@@ -329,7 +329,7 @@ export class DashboardPage implements OnInit, DoCheck {
 
   // APTour Guide
   tourGuideStep = [
-    'Apart from seeing your beautiful face 💃🏻, you can also tap your Profile Picture to view your Profile.',
+    'Apart from seeing your beautiful face 💃, you can also tap your Profile Picture to view your Profile.',
     'You can refer to your TP Number & Intake Code from this section 👀'
   ];
   tourGuideShown: boolean;
@@ -1489,19 +1489,21 @@ export class DashboardPage implements OnInit, DoCheck {
     // For mobile devices an additional step is added for all the roles
 
     // For small screen & students, lecturer, & lecturer + admin
+
+    // For small screen & students, lecturer, & lecturer + admin
     if (x.matches && !this.isAdmin || x.matches && this.isLecturer && this.isAdmin)
     {
       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs',
-      'step8@/tabs', 'step9@/tabs'];
+        'step8@/tabs', 'step9@/tabs'];
+    }
+    // For large screen & students, lecturer, & lecturer + admin
+    else if (!this.isAdmin || this.isLecturer && this.isAdmin) {
+      tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs', 'step8@/tabs'];
     }
     // For small screen & admin
     else if (x.matches && this.isAdmin) {
       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs',
         'step8@/tabs'];
-    }
-    // For large screen & students, lecturer, & lecturer + admin
-    else if (!this.isAdmin || this.isLecturer && this.isAdmin) {
-      tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs', 'step8@/tabs'];
     }
     // For large screen & admin
     else if (this.isAdmin) {
