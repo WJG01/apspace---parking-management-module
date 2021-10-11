@@ -48,7 +48,8 @@ export class TabsPage implements OnInit {
     'Got a question but no answer 🙇🏿‍♂️? Please open a ticket and ask us!'
   ];
   role: Role;
-  isStudent: boolean;
+  isAdmin: boolean;
+  isLecturer: boolean;
 
   constructor(
     private router: Router,
@@ -187,15 +188,23 @@ export class TabsPage implements OnInit {
     this.storage.get('role').then((role: Role) => {
       this.role = role;
       // tslint:disable-next-line: no-bitwise
-      this.isStudent = Boolean(role & Role.Student);
-      if (!this.isStudent) {
+      this.isAdmin = Boolean(role & Role.Admin);
+      // tslint:disable-next-line: no-bitwise
+      this.isLecturer = Boolean(role & Role.Lecturer);
+
+      // APTour Guide texts for lecturer or lecturer + admin
+      if (this.isLecturer || this.isLecturer && this.isAdmin) {
         this.tourGuideStep[1] = 'Don\'t forget to take your class and attendance 💁🏾‍♂️! Refer to the Timetable Schedule Tab.';
         this.tourGuideStep[2] = 'You can refer to your Profile from the Profile Tab as well 👤';
+      }
+      // APTour Guide texts for admin
+      else if (this.isAdmin) {
+        this.tourGuideStep.splice(1, 2, 'You can refer to your Profile from the Profile Tab as well 👤');
+        this.tourGuideStep[6] = 'Got a question but no answer 🙇🏿‍♂️? Please open a ticket and ask us!';
       }
     });
     // tslint:enable:no-bitwise
   }
-
 
   @HostListener('document:keydown.f1')
   @HostListener('document:keydown.?')

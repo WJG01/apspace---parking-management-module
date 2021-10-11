@@ -80,6 +80,7 @@ export class DashboardPage implements OnInit, DoCheck {
   role: Role;
   isStudent: boolean;
   isLecturer: boolean;
+  isAdmin: boolean;
   isCordova: boolean;
   skeletons = new Array(5);
 
@@ -373,6 +374,8 @@ export class DashboardPage implements OnInit, DoCheck {
       this.isStudent = Boolean(role & Role.Student);
       // tslint:disable-next-line: no-bitwise
       this.isLecturer = Boolean(role & Role.Lecturer);
+      // tslint:disable-next-line: no-bitwise
+      this.isAdmin = Boolean(role & Role.Admin);
 
       this.settings.get$('dashboardSections')
         .subscribe(data => this.activeDashboardSections = data);
@@ -1480,11 +1483,29 @@ export class DashboardPage implements OnInit, DoCheck {
     let tourSteps;
     const x = window.matchMedia('(max-width: 720px)');
 
-    if (x.matches) {
+    // Students and Lecturers are using the same array steps
+    // Admins are using different ones
+    // If roles are both admin and lecturer then assign them to the lecturer tour guide
+    // For mobile devices an additional step is added for all the roles
+
+    // For small screen & students, lecturer, & lecturer + admin
+    if (x.matches && !this.isAdmin || x.matches && this.isLecturer && this.isAdmin)
+    {
       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs',
       'step8@/tabs', 'step9@/tabs'];
-    } else {
+    }
+    // For small screen & admin
+    else if (x.matches && this.isAdmin) {
+      tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs',
+        'step8@/tabs'];
+    }
+    // For large screen & students, lecturer, & lecturer + admin
+    else if (!this.isAdmin || this.isLecturer && this.isAdmin) {
       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs', 'step8@/tabs'];
+    }
+    // For large screen & admin
+    else if (this.isAdmin) {
+      tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs'];
     }
 
     const options: JoyrideOptions = {
