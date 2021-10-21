@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
+import { parseISO } from 'date-fns';
 import { CalendarComponentOptions, DayConfig } from 'ion2-calendar';
 import { Observable } from 'rxjs';
 
@@ -62,8 +63,10 @@ export class AttendanceDetailsModalPage implements OnInit {
           records.map((record) => {
             const css = 'attendance';
 
+            const date = this.formatDate(record.CLASS_DATE);
+
             this.datesConfig.push({
-                        date: new Date(record.CLASS_DATE),
+                        date,
                         subTitle: '.',
                         marked: true,
                         cssClass: css,
@@ -72,7 +75,7 @@ export class AttendanceDetailsModalPage implements OnInit {
 
             this.recordsArray.push({
                         ATTENDANCE_STATUS: record.ATTENDANCE_STATUS,
-                        CLASS_DATE: record.CLASS_DATE,
+                        CLASS_DATE: date.toDateString(),
                         CLASS_TYPE: record.CLASS_TYPE,
                         TIME_FROM: record.TIME_FROM,
                         TIME_TO: record.TIME_TO
@@ -81,7 +84,7 @@ export class AttendanceDetailsModalPage implements OnInit {
         },
         complete: () => {
           // picks first date from array(most recent) and opens it in calendar
-          this.openDate = this.datePipe.transform(new Date(this.recordsArray[0].CLASS_DATE), 'yyyy-MM-dd');
+          this.openDate = this.datePipe.transform(this.recordsArray[0].CLASS_DATE, 'yyyy-MM-dd');
           this.options.from = new Date(this.recordsArray[this.recordsArray.length - 1].CLASS_DATE);
           this.options.to = null;
           this.loaded = true;
@@ -95,7 +98,7 @@ export class AttendanceDetailsModalPage implements OnInit {
     this.detailsList = [];
 
     this.recordsArray.map((record) => {
-      const date = this.datePipe.transform(new Date(record.CLASS_DATE), 'yyyy-MM-dd');
+      const date = this.datePipe.transform(record.CLASS_DATE, 'yyyy-MM-dd');
 
       if ($event === date) {
         this.detailsList.push({
@@ -108,6 +111,10 @@ export class AttendanceDetailsModalPage implements OnInit {
         this.showDetails = true;
       }
     });
+  }
+
+  formatDate(date: string) {
+    return new Date(new Date(parseISO(date + 'Z')).getTime() + (new Date().getTimezoneOffset() * 60 * 1000));
   }
 
   dismiss() {
