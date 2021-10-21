@@ -360,7 +360,7 @@ export class DashboardPage implements OnInit, DoCheck {
     this.activeAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor')).rgba;
   }
 
-    ngOnInit() {
+  ngOnInit() {
     this.isCordova = this.platform.is('cordova');
     this.notification = this.notifierService.timeFormatUpdated.subscribe(data => {
       if (data && data === 'SUCCESS') {
