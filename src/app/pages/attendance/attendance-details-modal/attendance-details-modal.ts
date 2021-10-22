@@ -114,7 +114,7 @@ export class AttendanceDetailsModalPage implements OnInit {
   }
 
   formatDate(date: string) {
-    return new Date(new Date(parseISO(date + 'Z')).getTime() + (new Date().getTimezoneOffset() * 60 * 1000));
+    return new Date(new Date(parseISO(date)).getTime() + (new Date().getTimezoneOffset() * 60 * 1000));
   }
 
   dismiss() {
