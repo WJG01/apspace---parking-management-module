@@ -23,6 +23,7 @@ pipelines:
           - node
         script:
           - echo $GOOGLE > google-services.json
+          - echo $GOOGLE_PLIST > GoogleService-info.plist
           - git config --global user.name $GIT_USERNAME
           - git config --global user.email cti@apiit.edu.my
           - git config --global user.password $GIT_PASSWORD
