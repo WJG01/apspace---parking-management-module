@@ -402,17 +402,17 @@ export class DashboardPage implements OnInit, DoCheck {
         this.runCodeOnReceivingNotification(); // notifications
       }
 
-      // Get Tour Guide status
-      this.settings.get$('tourGuideSeen').
-      subscribe(data => this.tourGuideShown = data);
-      if (!this.tourGuideShown) {
-        this.welcomeTourGuide();
-      }
-
-      // Overwrite the tour guide message for staff
-      if (!this.isStudent) {
-        this.tourGuideStep[1] = 'You can check your Job Title from this section 💼';
-      }
+      // // Get Tour Guide status
+      // this.settings.get$('tourGuideSeen').
+      // subscribe(data => this.tourGuideShown = data);
+      // if (!this.tourGuideShown) {
+      //   this.welcomeTourGuide();
+      // }
+      //
+      // // Overwrite the tour guide message for staff
+      // if (!this.isStudent) {
+      //   this.tourGuideStep[1] = 'You can check your Job Title from this section 💼';
+      // }
       this.settings.initialSync();
       this.doRefresh();
     });
@@ -1465,82 +1465,61 @@ export class DashboardPage implements OnInit, DoCheck {
     }
   }
 
-  async welcomeTourGuide() {
-    const alert = await this.alertCtrl.create({
-      header: 'Welcome to APSpace, your digital university companion!',
-      message: 'Please take a tour with us to get familiarized with APSpace.',
-      buttons: [{
-        text: 'Start Tour',
-        handler: () => {
-          this.startTour();
-        }
-      }]
-    });
-    await alert.present();
-  }
-
-  startTour() {
-    let tourSteps;
-    const x = window.matchMedia('(max-width: 720px)');
-
-    // Students and Lecturers are using the same array steps
-    // Admins are using different ones
-    // If roles are both admin and lecturer then assign them to the lecturer tour guide
-    // For mobile devices an additional step is added for all the roles
-
-    // For small screen
-    if (x.matches) {
-      // For students, lecturer, & lecturer + admin
-      if (!this.isAdmin || this.isLecturer && this.isAdmin) {
-        tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs',
-          'step8@/tabs', 'step9@/tabs'];
-      }
-      // For admin
-      if (!this.isLecturer && this.isAdmin) {
-        tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs',
-          'step8@/tabs'];
-      }
-    }
-    // For large screen
-    if (!x.matches) {
-      // For admin
-      if (!this.isLecturer && this.isAdmin) {
-        tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs'];
-      }
-      // For students, lecturer, & lecturer + admin
-      if (!this.isAdmin || this.isLecturer && this.isAdmin) {
-        tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs', 'step8@/tabs'];
-      }
-    }
-
-
-
-    // if (x.matches && !this.isAdmin || x.matches && this.isLecturer && this.isAdmin)
-    // {
-    //   tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs',
-    //     'step8@/tabs', 'step9@/tabs'];
-    // }
-    // // For large screen & students, lecturer, & lecturer + admin
-    // if (!this.isAdmin || this.isLecturer && this.isAdmin) {
-    //   tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs', 'step8@/tabs'];
-    // }
-    // // For small screen & admin
-    // else if (x.matches && this.isAdmin) {
-    //   tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs',
-    //     'step8@/tabs'];
-    // }
-    // // For large screen & admin
-    // else if (this.isAdmin) {
-    //   tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs'];
-    // }
-
-    const options: JoyrideOptions = {
-      steps: tourSteps,
-      themeColor: '#000000'
-    };
-
-    this.joyrideService.startTour(options);
-    this.settings.set('tourGuideSeen', true);
-  }
+  // async welcomeTourGuide() {
+  //   const alert = await this.alertCtrl.create({
+  //     header: 'Welcome to APSpace, your digital university companion!',
+  //     message: 'Please take a tour with us to get familiarized with APSpace.',
+  //     buttons: [{
+  //       text: 'Start Tour',
+  //       handler: () => {
+  //         this.startTour();
+  //       }
+  //     }]
+  //   });
+  //   await alert.present();
+  // }
+  //
+  // startTour() {
+  //   let tourSteps;
+  //   const x = window.matchMedia('(max-width: 720px)');
+  //
+  //   // Students and Lecturers are using the same array steps
+  //   // Admins are using different ones
+  //   // If roles are both admin and lecturer then assign them to the lecturer tour guide
+  //   // For mobile devices an additional step is added for all the roles
+  //
+  //   // For small screen
+  //   if (x.matches) {
+  //     // For students, lecturer, & lecturer + admin
+  //     if (!this.isAdmin || this.isLecturer && this.isAdmin) {
+  //       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs',
+  //         'step8@/tabs', 'step9@/tabs'];
+  //     }
+  //     // For admin
+  //     if (!this.isLecturer && this.isAdmin) {
+  //       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs',
+  //         'step8@/tabs'];
+  //     }
+  //   }
+  //   // For large screen
+  //   if (!x.matches) {
+  //     // For admin
+  //     if (!this.isLecturer && this.isAdmin) {
+  //       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs'];
+  //     }
+  //     // For students, lecturer, & lecturer + admin
+  //     if (!this.isAdmin || this.isLecturer && this.isAdmin) {
+  //       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs', 'step8@/tabs'];
+  //     }
+  //   }
+  //
+  //   const options: JoyrideOptions = {
+  //     steps: tourSteps,
+  //     themeColor: '#000000'
+  //   };
+  //
+  //   this.joyrideService.startTour(options);
+  //   this.settings.set('tourGuideSeen', true);
+  // }
 }
 
