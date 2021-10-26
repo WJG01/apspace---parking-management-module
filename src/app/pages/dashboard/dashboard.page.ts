@@ -6,8 +6,8 @@ import { AlertController, IonSlides, ModalController, NavController, Platform, T
 import { Storage } from '@ionic/storage';
 import { format, parse, parseISO } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
-import { JoyrideService } from 'ngx-joyride';
-import { JoyrideOptions } from 'ngx-joyride/lib/models/joyride-options.class';
+// import { JoyrideService } from 'ngx-joyride';
+// import { JoyrideOptions } from 'ngx-joyride/lib/models/joyride-options.class';
 import { Observable, Subscription, combineLatest, forkJoin, of, zip } from 'rxjs';
 import { catchError, concatMap, finalize, map, mergeMap, shareReplay, switchMap, tap, toArray } from 'rxjs/operators';
 
@@ -353,7 +353,7 @@ export class DashboardPage implements OnInit, DoCheck {
     private storage: Storage,
     private notifierService: NotifierService,
     private dateWithTimezonePipe: DateWithTimezonePipe,
-    private joyrideService: JoyrideService
+    // private joyrideService: JoyrideService
   ) {
     // getting the main accent color to color the chart.js (Temp until removing chart.js)
     // TODO handle value change
