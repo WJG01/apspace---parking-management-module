@@ -72,7 +72,6 @@ export class StudentSurveyPage implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(() => {
       if (this.router.getCurrentNavigation().extras.state && this.router.getCurrentNavigation().extras.state.moduleCode) {
-
         this.userComingFromResultsPage = true;
         this.classCode = this.router.getCurrentNavigation().extras.state.moduleCode;
         this.intakeCode = this.router.getCurrentNavigation().extras.state.intakeCode;
@@ -114,7 +113,6 @@ export class StudentSurveyPage implements OnInit {
     this.COURSE_MODULES$ = this.getModules(this.intakeCode).pipe(shareReplay(1));
     this.classCode = ''; // empty class code
     this.surveyType = ''; // empty survey type
-
   }
 
   onClassCodeChanged() {
@@ -183,17 +181,19 @@ export class StudentSurveyPage implements OnInit {
       ),
       tap(res => this.modules = res),
       tap(res => {
-        if (!this.courseType.toLowerCase().includes('master') && !this.courseType.toLowerCase().includes('phd')) {
-          if (
-            res.length === 0 // If user did all of the end semester surverys in the selected intake
-            && !this.selectedIntake.PROGRAM_APPRAISAL // User did not do program survey and
-            && Date.parse(this.selectedIntake.PROGRAM_APPRAISAL_DATE) < Date.parse(this.todaysDate.toISOString()) // Time for program survey
-          ) {
-            this.surveyType = 'Programme Evaluation';
-            this.getSurveys(this.intakeCode);
+        if (this.courseType) {
+          if (!this.courseType.toLowerCase().includes('master') && !this.courseType.toLowerCase().includes('phd')) {
+            if (
+              res.length === 0 // If user did all of the end semester surverys in the selected intake
+              && !this.selectedIntake.PROGRAM_APPRAISAL // User did not do program survey and
+              // tslint:disable-next-line:max-line-length
+              && Date.parse(this.selectedIntake.PROGRAM_APPRAISAL_DATE) < Date.parse(this.todaysDate.toISOString()) // Time for program survey
+            ) {
+              this.surveyType = 'Programme Evaluation';
+              this.getSurveys(this.intakeCode);
+            }
           }
         }
-
       })
     );
   }
@@ -267,7 +267,6 @@ export class StudentSurveyPage implements OnInit {
               if (todaysDate >= startDateForMid && todaysDate < endDateForMid) { // week 10 is not included (11-Feb-2020, week 10 included)
                 this.surveyType = 'Mid-Semester';
               }
-
             }
           }
         }
