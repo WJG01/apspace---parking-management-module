@@ -88,7 +88,7 @@ export class StudentSurveyPage implements OnInit {
       this.COURSE_CODE$ = this.getIntakes().pipe( // get all intakes
         tap(intakes => {
           if (intakes.length > 0) {
-            const findIntake = intakes.find(d => d.INTAKE_CODE === this.currentIntake);
+            const findIntake = intakes.find(intake => intake.INTAKE_CODE === this.currentIntake);
             // Check if student active intake is available
             if (findIntake) {
               this.selectedIntake = findIntake;
