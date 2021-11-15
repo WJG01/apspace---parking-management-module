@@ -4,7 +4,7 @@ import { AlertController, LoadingController, MenuController, ToastController } f
 import { Observable } from 'rxjs';
 import { map, shareReplay, tap } from 'rxjs/operators';
 
-import { SurveyIntake, SurveyModule } from 'src/app/interfaces';
+import { StudentProfile, SurveyIntake, SurveyModule } from 'src/app/interfaces';
 import { WsApiService } from 'src/app/services';
 
 @Component({
@@ -58,6 +58,7 @@ export class StudentSurveyPage implements OnInit {
   COURSE_CODE$: Observable<SurveyIntake[]>;
   COURSE_MODULES$: Observable<SurveyModule[]>;
   navParams: any;
+  currentIntake: string;
 
   constructor(
     public menu: MenuController,
@@ -77,6 +78,8 @@ export class StudentSurveyPage implements OnInit {
         this.intakeCode = this.router.getCurrentNavigation().extras.state.intakeCode;
       }
     });
+    this.getStudentProfile().subscribe(studentProfile => this.currentIntake = studentProfile.INTAKE);
+
     this.onInitData();
   }
 
@@ -85,8 +88,13 @@ export class StudentSurveyPage implements OnInit {
       this.COURSE_CODE$ = this.getIntakes().pipe( // get all intakes
         tap(intakes => {
           if (intakes.length > 0) {
-            const latestIntake = intakes[0]; // select latest intake by default
-            this.selectedIntake = latestIntake;
+            const findIntake = intakes.find(d => d.INTAKE_CODE === this.currentIntake);
+            // Check if student active intake is available
+            if (findIntake) {
+              this.selectedIntake = findIntake;
+            } else {
+              this.selectedIntake = intakes[0];
+            }
           }
         }),
         tap(_ => this.onIntakeCodeChanged()) // call intake changed
@@ -122,6 +130,10 @@ export class StudentSurveyPage implements OnInit {
     this.getSurveyType(this.classCode);
     this.getModuleByClassCode(this.classCode);
     this.showFieldMissingError = false;
+  }
+
+  getStudentProfile() {
+    return this.ws.get<StudentProfile>('/student/profile');
   }
 
   getIntakes() {
