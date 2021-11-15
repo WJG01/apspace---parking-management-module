@@ -85,7 +85,7 @@ export class StudentSurveyPage implements OnInit {
       this.COURSE_CODE$ = this.getIntakes().pipe( // get all intakes
         tap(intakes => {
           if (intakes.length > 0) {
-            const latestIntake = intakes[intakes.length - 1]; // select latest intake by default
+            const latestIntake = intakes[0]; // select latest intake by default
             this.selectedIntake = latestIntake;
           }
         }),

@@ -26,7 +26,7 @@
               <ion-item lines="full">
                 <ion-label>Intake</ion-label>
                 <ion-select [(ngModel)]="selectedIntake" (ngModelChange)="onIntakeCodeChanged()" interface="popover">
-                  <ion-select-option *ngFor="let intake of intakeCourseCode | reverse" [value]="intake">
+                  <ion-select-option *ngFor="let intake of intakeCourseCode" [value]="intake">
                     {{intake.COURSE_CODE_ALIAS}}</ion-select-option>
                 </ion-select>
               </ion-item>
