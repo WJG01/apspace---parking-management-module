@@ -40,7 +40,6 @@
                       <ion-select-option value="">Auto (Default)</ion-select-option>
                       <ion-select-option value="light">Light</ion-select-option>
                       <ion-select-option value="dark">Dark</ion-select-option>
-                      <ion-select-option value="dark pure">Dark (Pure)</ion-select-option>
                     </ion-select>
                   </ion-item>
                   <ion-item>
@@ -50,7 +49,7 @@
                       <ng-container *ngFor="let accentColor of accentColors">
                         <ion-select-option
                           *ngIf="(theme$ | async | isPure) ? accentColor.name === 'white' : accentColor.name !== 'white'"
-                          [value]="accentColor.name">
+                          [value]="accentColor.name" class="accentColor.name" [style.background-color]="accentColor.value">
                           {{ accentColor.title }}
                         </ion-select-option>
                       </ng-container>
