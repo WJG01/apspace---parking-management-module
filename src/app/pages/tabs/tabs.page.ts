@@ -25,7 +25,7 @@ export class TabsPage implements OnInit {
   tabs: TabItem[];
   smallScreen;
   shownSearchBar = false;
-  lightOrDark;
+  logoSource;
 
 
   @ViewChild(IonSearchbar, { static: false }) searchbar: IonSearchbar;
@@ -84,7 +84,7 @@ export class TabsPage implements OnInit {
     });
 
     this.onResize();
-    this.logoChanger();
+    this.checkLogoType();
     this.storage.get('role').then((role: Role) => {
       // tslint:disable:no-bitwise
       if (role & Role.Student) {
@@ -327,17 +327,16 @@ export class TabsPage implements OnInit {
     await alert.present();
   }
 
-  logoChanger() {
+  checkLogoType() {
     this.appComponent.theme$ = this.settings.get$('theme').pipe(
       tap(theme => {
-        // TODO handle media query change
         const autoDark = theme === '' && window.matchMedia('(prefers-color-scheme: dark)').matches;
         // change logo to white text logo
         if (autoDark || theme.includes('dark')) {
-          this.lightOrDark = '../../../assets/icon/apspace-logo-white-text.svg';
+          this.logoSource = 'assets/icon/apspace-logo-white-text.svg';
         // change logo to black text logo
         } else {
-          this.lightOrDark = '../../../assets/icon/apspace-logo-black-text.svg';
+          this.logoSource = 'assets/icon/apspace-logo-black-text.svg';
           }
         }),
       );
