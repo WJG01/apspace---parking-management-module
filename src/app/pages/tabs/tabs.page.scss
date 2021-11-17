@@ -76,9 +76,13 @@
 
 .tab-icon {
   display: block;
-  width: 50%;
-  height: 50%;
+  width: 40%;
+  padding: 10px;
 }
+
+.logo-img {
+  height: 45px;
+} 
 
 @media screen and (min-width: 720px) {
   .tabs-searchbar {
