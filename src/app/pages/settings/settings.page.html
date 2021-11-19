@@ -49,7 +49,7 @@
                       <ng-container *ngFor="let accentColor of accentColors">
                         <ion-select-option
                           *ngIf="(theme$ | async | isPure) ? accentColor.name === 'white' : accentColor.name !== 'white'"
-                          [value]="accentColor.name" class="accentColor.name" [style.background-color]="accentColor.value">
+                          [value]="accentColor.name">
                           {{ accentColor.title }}
                         </ion-select-option>
                       </ng-container>
