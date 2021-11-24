@@ -1,8 +1,7 @@
 export const accentColors = [
-  { title: 'Sky (Default)', name: 'blue', value: '#3a99d9', rgba: '58, 153, 217' },
-  { title: 'Forest', name: 'green', value: '#08a14f', rgba: '8, 161, 79' },
-  { title: 'Fire', name: 'red', value: '#e54d42', rgba: '229, 77, 66' },
-  { title: 'Flower', name: 'pink', value: '#ec2a4d', rgba: '236, 42, 77' },
-  { title: 'Lightning', name: 'yellow', value: '#dfa847', rgba: '223, 168, 71' },
-  { title: 'White', name: 'white', value: '#b0acac', rgba: '175, 175, 175' }, // only for pure dark
+  { title: 'Clear Blue (Default)', name: 'blue', value: '#2a83ff', rgba: '42, 131, 255' },
+  { title: 'Light Indigo', name: 'purple', value: '#6d54d4', rgba: '109, 84, 212' },
+  { title: 'Terracotta', name: 'pink', value: '#de6a62', rgba: '222, 106, 98' },
+  { title: 'Mango Orange', name: 'orange', value: '#ff8b33', rgba: '255, 139, 51' },
+  { title: 'Neutral', name: 'grey', value: '#669299', rgba: '102, 146, 153' }
 ];
