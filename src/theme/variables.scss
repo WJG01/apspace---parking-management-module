@@ -333,7 +333,8 @@
 
 // fallback if prefers-color-scheme is not recognized
 :root {
-  @include light-theme
+  @include light-theme;
+  --ion-font-family: "Nunito";
 }
 
 // by media queries
