@@ -25,8 +25,7 @@ export class TabsPage implements OnInit {
   tabs: TabItem[];
   smallScreen;
   shownSearchBar = false;
-  logoSource;
-
+  logoSource = '';
 
   @ViewChild(IonSearchbar, { static: false }) searchbar: IonSearchbar;
 
