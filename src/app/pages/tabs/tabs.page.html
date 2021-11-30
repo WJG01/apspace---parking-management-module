@@ -2,11 +2,8 @@
 <ion-header *ngIf="smallScreen">
   <ion-toolbar>
     <!--Logo-->
-    <ion-title class="ion-text-left" mode="md">
-      <h2 class="glob-system-title system-title ion-no-margin">
-        <img src="assets/icon/favicon.png" alt="Icon">
-        <span>AP</span>Space
-      </h2>
+    <ion-title mode="md" class="tab-icon ion-text-left">
+      <img class="logo-img" alt="APSpace Logo" [src]="logoSource" />
     </ion-title>
     <ion-buttons slot="end">
       <!--Search Bar-->
