@@ -334,6 +334,8 @@ export class DashboardPage implements OnInit, DoCheck {
   ];
   tourGuideShown: boolean;
 
+  getAccentColor: any;
+
   constructor(
     private ws: WsApiService,
     private studentTimetableService: StudentTimetableService,
@@ -357,7 +359,18 @@ export class DashboardPage implements OnInit, DoCheck {
   ) {
     // getting the main accent color to color the chart.js (Temp until removing chart.js)
     // TODO handle value change
-    this.activeAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor')).rgba;
+
+    // Check if the accent color in user's storage exists in new accent-color.ts.
+    // If it doesn't then rollback to standard blue
+    this.getAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor'));
+    if (typeof this.getAccentColor === 'undefined') {
+      this.getAccentColor = accentColors.find(ac => ac.name === 'blue').name;
+      this.activeAccentColor = accentColors.find(ac => ac.name === 'blue').rgba;
+      this.settings.set('accentColor', this.getAccentColor);
+    }
+    else {
+      this.activeAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor')).rgba;
+    }
   }
 
   ngOnInit() {
