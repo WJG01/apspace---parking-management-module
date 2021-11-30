@@ -5,9 +5,12 @@ import { Network } from '@ionic-native/network/ngx';
 import { AlertController, IonSearchbar, NavController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import Fuse from 'fuse.js';
+import { tap } from 'rxjs/operators';
 
+import { AppComponent } from 'src/app/app.component';
 import { CasTicketService } from 'src/app/services';
 import { Role } from '../../interfaces';
+import { SettingsService } from '../../services/settings.service';
 import { menus, menusTitle } from '../more/menu';
 import { MenuItem } from '../more/menu.interface';
 import { TabItem } from './tab-item.interface';
@@ -22,6 +25,7 @@ export class TabsPage implements OnInit {
   tabs: TabItem[];
   smallScreen;
   shownSearchBar = false;
+  logoSource = '';
 
   @ViewChild(IonSearchbar, { static: false }) searchbar: IonSearchbar;
 
@@ -61,6 +65,8 @@ export class TabsPage implements OnInit {
     private toastCtrl: ToastController,
     private cas: CasTicketService,
     private alertCtrl: AlertController,
+    private appComponent: AppComponent,
+    private settings: SettingsService
   ) { }
 
   ngOnInit() {
@@ -77,7 +83,7 @@ export class TabsPage implements OnInit {
     });
 
     this.onResize();
-
+    this.checkLogoType();
     this.storage.get('role').then((role: Role) => {
       // tslint:disable:no-bitwise
       if (role & Role.Student) {
@@ -318,5 +324,20 @@ export class TabsPage implements OnInit {
       buttons: ['Dismiss']
     });
     await alert.present();
+  }
+
+  checkLogoType() {
+    this.appComponent.theme$ = this.settings.get$('theme').pipe(
+      tap(theme => {
+        const autoDark = theme === '' && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        // change logo to white text logo
+        if (autoDark || theme.includes('dark')) {
+          this.logoSource = 'assets/icon/apspace-logo-white-text.svg';
+        // change logo to black text logo
+        } else {
+          this.logoSource = 'assets/icon/apspace-logo-black-text.svg';
+          }
+        }),
+      );
   }
 }
