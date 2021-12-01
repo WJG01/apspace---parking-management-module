@@ -33,6 +33,7 @@ export class ApcardPage implements OnInit, OnDestroy {
     type: 'all',
     showThisMonthOnly: false
   };
+  noBalance: boolean;
 
   constructor(
     private ws: WsApiService,
@@ -91,6 +92,7 @@ export class ApcardPage implements OnInit, OnDestroy {
     this.transaction$ = this.ws.get<Apcard[]>('/apcard/', refresher).pipe(
       tap(transactions => {
         if (transactions.length < 1) {
+          this.noBalance = true;
           return;
         }
         for (const t of transactions) {
