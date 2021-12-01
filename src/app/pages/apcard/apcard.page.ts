@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { format } from 'date-fns';
 import { Observable, Subscription } from 'rxjs';
-import { finalize, tap } from 'rxjs/operators';
+import { finalize, map, tap } from 'rxjs/operators';
 
 import { WsApiService } from 'src/app/services';
 import { NotifierService } from 'src/app/shared/notifier/notifier.service';
@@ -23,8 +23,16 @@ export class ApcardPage implements OnInit, OnDestroy {
   balance: number;
   indecitor = false;
   todayDate = format(new Date(), 'dd MMM yyyy');
+  currentYear = new Date().getFullYear();
   timeFormatChangeFlag: boolean;
   notification: Subscription;
+  showFilterMenu: boolean;
+  transactionYears = [];
+  filterObject = {
+    year: this.currentYear,
+    type: 'all',
+    showThisMonthOnly: false
+  };
 
   constructor(
     private ws: WsApiService,
@@ -85,9 +93,53 @@ export class ApcardPage implements OnInit, OnDestroy {
         if (transactions.length < 1) {
           return;
         }
+        for (const t of transactions) {
+          const spendYear = new Date(t.SpendDate).getFullYear();
+          if (this.transactionYears.indexOf(spendYear) <= -1) {
+            this.transactionYears.push(spendYear);
+          }
+        }
+        // Check if current year exists in the array
+        if (!this.transactionYears.includes(this.currentYear)) {
+          this.transactionYears.unshift(this.currentYear);
+        }
 
         this.transactions = transactions;
         this.balance = transactions[0].Balance;
+      }),
+      map(transactions => {
+        let filteredtransactions = transactions.filter(t => {
+          const transactionYear = new Date(t.SpendDate).getFullYear();
+
+          return transactionYear === this.filterObject.year;
+        });
+
+        if (this.filterObject.year !== this.currentYear) {
+          filteredtransactions = filteredtransactions.filter(t => {
+            const transactionYear = new Date(t.SpendDate).getFullYear();
+
+            return transactionYear === this.filterObject.year;
+          });
+        }
+
+        if (this.filterObject.type !== 'all') {
+          return filteredtransactions =
+            filteredtransactions.filter(t =>
+              this.filterObject.type === 'credit' ? t.SpendVal >= 0 : t.SpendVal < 0);
+        }
+
+        if (this.filterObject.showThisMonthOnly) {
+          const currentMonth = new Date().getMonth() + 1;
+          const currentYear = new Date().getFullYear();
+
+          filteredtransactions = filteredtransactions.filter(e => {
+            const formattedDate = format(new Date(e.SpendDate), 'yyyy-MM-dd');
+            const yearMonth = currentYear + '-' + currentMonth;
+            return formattedDate.indexOf(yearMonth) !== -1;
+          });
+        }
+
+        return filteredtransactions;
       }),
       finalize(() => {
         if (refresher) {
@@ -102,6 +154,15 @@ export class ApcardPage implements OnInit, OnDestroy {
       return true;
     }
     return false;
+  }
+
+  resetFilters() {
+    this.filterObject = {
+      year: this.currentYear,
+      type: 'all',
+      showThisMonthOnly: false
+    };
+    this.doRefresh();
   }
 
   async generateMonthlyTransactionsPdf() {

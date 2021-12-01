@@ -35,6 +35,42 @@
             </ion-card>
           </ion-col>
           <ion-col size-xs="12" size-md="8" pull-md="4">
+            <!-- TODO: Replace with ion-accordion in Ionic V6 -->
+            <ion-card class="ion-no-margin ion-margin-bottom">
+              <ion-item [lines]="showFilterMenu ? 'full' : 'none'" (click)="showFilterMenu = !showFilterMenu" [button]="true" [detail]="false">
+                <ion-icon class="ion-padding-end" name="filter"></ion-icon>
+                Filters
+                <ion-icon slot="end" size="small" [name]="showFilterMenu ? 'caret-up' : 'caret-down'">
+                </ion-icon>
+              </ion-item>
+
+              <ion-list *ngIf="showFilterMenu">
+                <ion-item lines="inset">
+                  <ion-label>Year</ion-label>
+                  <ion-select [(ngModel)]="filterObject.year" (ngModelChange)="doRefresh()">
+                    <ion-select-option *ngFor="let year of transactionYears" [value]="year">{{ year }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+                <ion-item lines="inset">
+                  <ion-label>Type</ion-label>
+                  <ion-select [(ngModel)]="filterObject.type" (ngModelChange)="doRefresh()">
+                    <ion-select-option value="all">All</ion-select-option>
+                    <ion-select-option value="credit">Credit</ion-select-option>
+                    <ion-select-option value="debit">Debit</ion-select-option>
+                  </ion-select>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-label>This Month</ion-label>
+                  <ion-toggle [(ngModel)]="filterObject.showThisMonthOnly" (ngModelChange)="doRefresh()"></ion-toggle>
+                </ion-item>
+
+                <ion-button class="ion-float-right ion-margin-end" color="danger" (click)="resetFilters()" [disabled]="filterObject.year !== currentYear || filterObject.type !== 'all' || filterObject.showThisMonthOnly ? false : true">
+                  Reset
+                </ion-button>
+              </ion-list>
+            </ion-card>
+
             <ion-card class="ion-no-margin">
               <ion-card-content class="ion-no-padding">
                 <ion-virtual-scroll [items]="transactions" approxItemHeight="92px" approxHeaderHeight="46" approx
@@ -96,6 +132,15 @@
         </ion-card>
       </ion-col>
       <ion-col size-xs="12" size-md="8" pull-md="4">
+        <ion-card class="ion-no-margin ion-margin-bottom">
+          <ion-item lines="none" [disabled]="true">
+            <ion-icon class="ion-padding-end" name="filter"></ion-icon>
+            Filters
+            <ion-icon slot="end" size="small" name="caret-down">
+            </ion-icon>
+          </ion-item>
+        </ion-card>
+
         <ion-card class="ion-no-margin">
           <ng-container *ngFor="let _ of skeleton">
             <ion-item-divider lines="none" color="light">
