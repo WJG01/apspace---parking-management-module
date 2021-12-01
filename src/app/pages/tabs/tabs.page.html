@@ -2,7 +2,7 @@
 <ion-header *ngIf="smallScreen">
   <ion-toolbar>
     <!--Logo-->
-    <ion-title mode="md" class="tab-icon ion-text-left">
+    <ion-title mode="md" class="tab-icon ion-text-left logo-container">
       <img class="logo-img" alt="APSpace Logo" [src]="logoSource" />
     </ion-title>
     <ion-buttons slot="end">
@@ -25,41 +25,36 @@
 </ion-header>
 
 <ion-content scrollY="false">
-  <ion-tabs>
+  <ion-tabs (ionTabsDidChange)="onChange()">
     <!--Search Bar & Tab for Large Screen-->
-    <ion-tab-bar *ngIf="!smallScreen" slot="top">
-      <!--Search Bar-->
-      <ion-searchbar joyrideStep="step3" [text]="tourGuideStep[0]" [prevTemplate]="prevButton" [nextTemplate]="nextButton" [doneTemplate]="doneButton"
-                     [(ngModel)]="term" (keydown.escape)="$event.target.blur()" (ionFocus)="searching = true" (ionBlur)="stopSearching()"
-                     placeholder="(S)earch APSpace" class="tabs-searchbar"></ion-searchbar>
-      <ion-tab-button class="extra-tab extra-tab-3">
-        <ion-label>Empty</ion-label>
-        <ion-icon name="home"></ion-icon>
-      </ion-tab-button>
-      <ion-tab-button class="extra-tab extra-tab-2">
-        <ion-label>Empty</ion-label>
-        <ion-icon name="home"></ion-icon>
-      </ion-tab-button>
-      <ion-tab-button class="extra-tab extra-tab-1">
-        <ion-label>Empty</ion-label>
-        <ion-icon name="home"></ion-icon>
-      </ion-tab-button>
+    <ion-tab-bar *ngIf="!smallScreen" slot="top" translucent="true">
+      <ion-row class="tab-bar-content-left">
+        <!--Logo-->
+        <ion-col>
+          <img [src]="logoSource" class="large-screen-logo" alt="APSpace Logo" width="110" [routerLink]="['/tabs/dashboard']" />
+        </ion-col>
+        <!--Search Bar-->
+        <ion-col class="ion-no-padding">
+          <ion-searchbar joyrideStep="step3" [text]="tourGuideStep[0]" [prevTemplate]="prevButton" [nextTemplate]="nextButton" [doneTemplate]="doneButton"
+                                        [(ngModel)]="term" (keydown.escape)="$event.target.blur()" (ionFocus)="searching = true" (ionBlur)="stopSearching()"
+                                        placeholder="(S)earch APSpace" class="tabs-searchbar"></ion-searchbar>
+        </ion-col>
+      </ion-row>
       <!--Tab Items-->
-      <ion-tab-button *ngFor="let tab of tabs; index as i" [tab]="tab.path"
+      <ion-tab-button [ngClass]="{'active-button-large-screen': activeButton === tab.path}" *ngFor="let tab of tabs; index as i" [tab]="tab.path"
                       joyrideStep="step{{i + 4}}" [text]="tourGuideStep[i + 1]" [prevTemplate]="prevButton"
                       [nextTemplate]="nextButton" [doneTemplate]="doneButton" (done)="finishTour()">
-        <ion-label>{{ tab.name }}</ion-label>
-        <ion-icon [name]="tab.icon"></ion-icon>
+        <ion-icon class="tab-icons" [name]="activeButton === tab.path? tab.icon : tab.outlinedIcon"></ion-icon>
       </ion-tab-button>
     </ion-tab-bar>
 
     <!--Tab for Small Screen-->
-    <ion-tab-bar *ngIf="smallScreen">
-      <ion-tab-button *ngFor="let tab of tabs; index as i" [tab]="tab.path"
+    <ion-tab-bar *ngIf="smallScreen" translucent="true">
+      <ion-tab-button [ngClass]="{'active-button-small-screen': activeButton === tab.path}" *ngFor="let tab of tabs; index as i" [tab]="tab.path"
                       joyrideStep="step{{i + 5}}" [text]="tourGuideStep[i + 1]" [prevTemplate]="prevButton"
                       [nextTemplate]="nextButton" [doneTemplate]="doneButton" (done)="finishTour()">
         <ion-label class ="tab-label">{{ tab.name }}</ion-label>
-        <ion-icon class ="tab-icon" [name]="tab.icon"></ion-icon>
+        <ion-icon class ="tab-icon" [name]="activeButton === tab.path? tab.icon : tab.outlinedIcon"></ion-icon>
       </ion-tab-button>
     </ion-tab-bar>
 
