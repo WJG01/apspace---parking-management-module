@@ -7,80 +7,64 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content id="content">
+<ion-content>
   <ion-refresher slot="fixed" pullMax="400" pullMin="60" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
   </ion-refresher>
 
   <div class="glob-container">
-    <ng-container *ngIf="transaction$ | async as transactions; else apCardBalanceLoading">
+    <ng-container *ngIf="(transaction$ | async) as transactions; else loading">
       <ng-container *ngIf="transactions.length > 0 else noTransactions">
-        <ion-grid>
-          <ion-row>
-            <ion-col size-xs="12" size-md="4" push-md="8">
-              <ion-card class="ion-no-margin" color="primary">
-                <ion-card-header class="ion-text-center">
-                  <ion-card-subtitle>Balance</ion-card-subtitle>
-                  <ion-card-title class="glob-text-bold">
-                    <h2 class="ion-no-margin">{{ transactions[0].Balance | currency:"RM" }}</h2>
-                  </ion-card-title>
-                </ion-card-header>
-                <ion-card-content class="ion-text-center ion-no-padding ion-padding-bottom">
-                  <ion-button color="light" size="small" fill="outline" (click)="generateMonthlyTransactionsPdf()">
-                    Generate PDF
-                    <ion-icon slot="end" name="print"></ion-icon>
-                  </ion-button>
-                </ion-card-content>
-              </ion-card>
-            </ion-col>
-            <ion-col size-xs="12" size-md="8" pull-md="4">
-              <ion-card class="ion-no-margin">
-                <ion-card-header color="secondary">
-                  <ion-card-title>
-                    Transactions History
-                  </ion-card-title>
-                </ion-card-header>
-                <ion-card-content class="ion-no-padding">
-                  <ion-virtual-scroll [items]="transactions" approxItemHeight="92px" approxHeaderHeight="46" approx
-                    [headerFn]="seperatebyMonth">
-                    <ion-item-divider lines="none" color="light" *virtualHeader="let header">
-                      <ion-label class="glob-text-bold">
-                        {{ header }}
-                      </ion-label>
-                    </ion-item-divider>
-                    <ion-item lines="full" [class.credit]="0 < transaction.SpendVal"
-                      [class.deposit]="0 > transaction.SpendVal" *virtualItem="let transaction">
-                      <ion-avatar slot="start">
-                        <ion-icon class="transaction-icon"
-                          [name]="transaction.SpendVal >= 0 ? 'trending-up' : 'trending-down'">
-                        </ion-icon>
-                      </ion-avatar>
-                      <ion-label>
-                        <h5 class="glob-text-bold item-name">{{ transaction.ItemName }}</h5>
-                        <ion-grid class="ion-no-padding">
-                          <ion-row>
-                            <ion-col size="6">
-                              <ion-text color="medium">
-                                <p>{{ transaction.SpendDate | dateWithTimezone: "EEE, d MMM y" }} @
-                                  {{todayDate + ' ' + transaction.SpendTime | timeRefresher: timeFormatChangeFlag | slice: 0 :-8}}</p>
-                              </ion-text>
-                            </ion-col>
-                            <ion-col size="6" class="ion-text-right">
-                              <ion-badge [color]="transaction.SpendVal >= 0 ? 'success' : 'danger'">
-                                {{ getAbsoluteValue(transaction.SpendVal) | currency: "RM" }}</ion-badge>
-                            </ion-col>
-                          </ion-row>
-                        </ion-grid>
-                      </ion-label>
-                    </ion-item>
-                  </ion-virtual-scroll>
-                </ion-card-content>
-              </ion-card>
+        <ion-row>
+          <ion-col size-xs="12" size-md="4" push-md="8">
+            <ion-card class="ion-no-margin sticky">
+              <ion-card-header class="ion-text-center">
+                <ion-card-subtitle color="primary" class="glob-text-bold">Balance</ion-card-subtitle>
+                <ion-card-title class="glob-text-bold"
+                  [color]="balance >= 2 ? 'success' : balance < 2 && balance > 0 ? 'warning' : 'danger'">
+                  {{ balance | currency:'RM' }}
+                </ion-card-title>
+                <ion-button class="ion-margin-top" size="small" (click)="generateMonthlyTransactionsPdf()">
+                  Generate PDF
+                  <ion-icon slot="end" name="print"></ion-icon>
+                </ion-button>
+              </ion-card-header>
 
-
-            </ion-col>
-          </ion-row>
-        </ion-grid>
+              <ion-progress-bar [color]="balance >= 2 ? 'success' : balance < 2 && balance > 0 ? 'warning' : 'danger'"
+                [value]="1"></ion-progress-bar>
+            </ion-card>
+          </ion-col>
+          <ion-col size-xs="12" size-md="8" pull-md="4">
+            <ion-card class="ion-no-margin">
+              <ion-card-content class="ion-no-padding">
+                <ion-virtual-scroll [items]="transactions" approxItemHeight="92px" approxHeaderHeight="46" approx
+                  [headerFn]="seperatebyMonth">
+                  <ion-item-divider lines="none" color="light" *virtualHeader="let header">
+                    <ion-label class="glob-text-bold">
+                      {{ header }}
+                    </ion-label>
+                  </ion-item-divider>
+                  <ion-item *virtualItem="let transaction">
+                    <ion-label>
+                      <h4 class="glob-text-bold">
+                        {{ transaction.ItemName }}
+                      </h4>
+                      <p>
+                        {{ transaction.SpendDate | date: "EEE, d MMM" }} @
+                        {{ todayDate + ' ' + transaction.SpendTime | timeRefresher: timeFormatChangeFlag | slice: 0 :-8
+                        }}
+                      </p>
+                    </ion-label>
+                    <ion-note slot="end" [color]="transaction.SpendVal >= 0 ? 'success' : 'danger'">
+                      <span>{{ transaction.SpendVal >= 0 ? '+' : '-' }}</span>
+                      {{ getAbsoluteValue(transaction.SpendVal) | currency: 'RM' }}
+                    </ion-note>
+                  </ion-item>
+                </ion-virtual-scroll>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
       </ng-container>
 
       <ng-template #noTransactions>
@@ -92,59 +76,44 @@
     </ng-container>
   </div>
 
-  <!-- LOADING TEMPLATE -->
-  <ng-template #apCardBalanceLoading>
-    <ion-grid>
-      <ion-row>
-        <ion-col size-xs="12" size-md="4" push-md="8">
-          <ion-card class="ion-no-margin" color="primary">
-            <ion-card-header class="ion-text-center">
-              <ion-card-subtitle>Balance</ion-card-subtitle>
-              <ion-card-title>
-                <ion-skeleton-text class="ion-no-margin" animated style="height: 120px; width: 100%;">
-                </ion-skeleton-text>
-              </ion-card-title>
-            </ion-card-header>
-          </ion-card>
-        </ion-col>
-        <ion-col size-xs="12" size-md="8" pull-md="4">
-          <ion-card class="ion-no-margin">
-            <ion-card-header color="secondary">
-              <ion-card-title>
-                Transactions History
-              </ion-card-title>
-            </ion-card-header>
-            <ion-card-content class="ion-no-padding">
-              <ion-item-divider lines="none" color="light">
-                <ion-skeleton-text animated style="width: 57%; height: 20px;"></ion-skeleton-text>
-              </ion-item-divider>
-              <ion-item lines="full" *ngFor="let _ of skeletonConfig" style="border-left: none;">
-                <ion-avatar slot="start">
-                  <ion-skeleton-text animated></ion-skeleton-text>
-                </ion-avatar>
-                <ion-label>
-                  <ion-grid class="ion-no-padding">
-                    <ion-row class="ion-no-padding">
-                      <ion-col size="12" class="ion-no-padding">
-                        <ion-text>
-                          <ion-skeleton-text style="width: 57%;" animated></ion-skeleton-text>
-                        </ion-text>
-                      </ion-col>
-                    </ion-row>
-                    <ion-row>
-                      <ion-col size="6">
-                        <ion-text>
-                          <ion-skeleton-text animated></ion-skeleton-text>
-                        </ion-text>
-                      </ion-col>
-                    </ion-row>
-                  </ion-grid>
-                </ion-label>
-              </ion-item>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+  <ng-template #loading>
+    <ion-row>
+      <ion-col size-xs="12" size-md="4" push-md="8">
+        <ion-card class="ion-no-margin">
+          <ion-card-header class="ion-text-center">
+            <ion-card-subtitle color="primary" class="glob-text-bold">Balance</ion-card-subtitle>
+            <ion-card-title>
+              <ion-skeleton-text class="glob-margin-auto" animated style="line-height: 25px; width: 30%;">
+              </ion-skeleton-text>
+            </ion-card-title>
+            <ion-button class="ion-margin-top" size="small" [disabled]="true">
+              Generate PDF
+              <ion-icon slot="end" name="print"></ion-icon>
+            </ion-button>
+          </ion-card-header>
+
+          <ion-progress-bar></ion-progress-bar>
+        </ion-card>
+      </ion-col>
+      <ion-col size-xs="12" size-md="8" pull-md="4">
+        <ion-card class="ion-no-margin">
+          <ng-container *ngFor="let _ of skeleton">
+            <ion-item-divider lines="none" color="light">
+              <ion-skeleton-text animated style="width: 40%; height: 15px"></ion-skeleton-text>
+            </ion-item-divider>
+
+            <ion-item *ngFor="let _ of skeleton; let last = last" [lines]="last ? 'none' : null">
+              <ion-label>
+                <ion-skeleton-text animated style="width: 40%; height: 15px"></ion-skeleton-text>
+                <ion-skeleton-text animated style="width: 30%; height: 15px"></ion-skeleton-text>
+              </ion-label>
+              <ion-note slot="end" style="width: 5%;">
+                <ion-skeleton-text animated style="height: 15px"></ion-skeleton-text>
+              </ion-note>
+            </ion-item>
+          </ng-container>
+        </ion-card>
+      </ion-col>
+    </ion-row>
   </ng-template>
 </ion-content>

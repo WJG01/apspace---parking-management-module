@@ -8,8 +8,7 @@ import { ComponentsModule } from 'src/app/components/components.module';
 import { SharedPipesModule } from '../../shared/shared-pipes.module';
 import { ApcardPage } from './apcard.page';
 import { PrintTransactionsModalPage } from './print-transactions-modal/print-transactions-modal';
-import { TimeRefresherPipe } from './time-refresher.pipe';
-import { TimePipe } from './time.pipe';
+import { TimeRefresherPipe } from './time-refresher/time-refresher.pipe';
 
 const routes: Routes = [
   {
@@ -27,6 +26,6 @@ const routes: Routes = [
     FormsModule,
     SharedPipesModule
   ],
-  declarations: [ApcardPage, PrintTransactionsModalPage, TimePipe, TimeRefresherPipe],
+  declarations: [ApcardPage, PrintTransactionsModalPage, TimeRefresherPipe],
 })
 export class ApcardPageModule { }

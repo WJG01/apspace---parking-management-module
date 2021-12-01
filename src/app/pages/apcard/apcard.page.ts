@@ -16,20 +16,13 @@ import { PrintTransactionsModalPage } from './print-transactions-modal/print-tra
   styleUrls: ['./apcard.page.scss'],
 })
 export class ApcardPage implements OnInit, OnDestroy {
+
   transaction$: Observable<Apcard[]>;
+  skeleton = new Array(2);
   transactions: Apcard[];
+  balance: number;
   indecitor = false;
-  skeletonConfig = [
-    { numOfTrans: new Array(4) },
-    { numOfTrans: new Array(1) },
-    { numOfTrans: new Array(7) },
-    { numOfTrans: new Array(2) },
-    { numOfTrans: new Array(6) }
-  ];
-  isLoading: boolean;
-
   todayDate = format(new Date(), 'dd MMM yyyy');
-
   timeFormatChangeFlag: boolean;
   notification: Subscription;
 
@@ -87,11 +80,20 @@ export class ApcardPage implements OnInit, OnDestroy {
   }
 
   doRefresh(refresher?) {
-    this.isLoading = true;
     this.transaction$ = this.ws.get<Apcard[]>('/apcard/', refresher).pipe(
-      tap(transactions => this.transactions = transactions),
-      finalize(() => refresher && refresher.target.complete()),
-      finalize(() => (this.isLoading = false))
+      tap(transactions => {
+        if (transactions.length < 1) {
+          return;
+        }
+
+        this.transactions = transactions;
+        this.balance = transactions[0].Balance;
+      }),
+      finalize(() => {
+        if (refresher) {
+          refresher.target.complete();
+        }
+      })
     );
   }
 
