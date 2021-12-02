@@ -27,7 +27,7 @@
 <ion-content scrollY="false">
   <ion-tabs (ionTabsDidChange)="onChange()">
     <!--Search Bar & Tab for Large Screen-->
-    <ion-tab-bar *ngIf="!smallScreen" slot="top" translucent="true">
+    <ion-tab-bar *ngIf="!smallScreen" slot="top">
       <ion-row class="tab-bar-content-left">
         <!--Logo-->
         <ion-col>
@@ -49,7 +49,7 @@
     </ion-tab-bar>
 
     <!--Tab for Small Screen-->
-    <ion-tab-bar *ngIf="smallScreen" translucent="true">
+    <ion-tab-bar *ngIf="smallScreen">
       <ion-tab-button [ngClass]="{'active-button-small-screen': activeButton === tab.path}" *ngFor="let tab of tabs; index as i" [tab]="tab.path"
                       joyrideStep="step{{i + 5}}" [text]="tourGuideStep[i + 1]" [prevTemplate]="prevButton"
                       [nextTemplate]="nextButton" [doneTemplate]="doneButton" (done)="finishTour()">
