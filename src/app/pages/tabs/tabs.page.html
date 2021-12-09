@@ -45,6 +45,7 @@
                       joyrideStep="step{{i + 4}}" [text]="tourGuideStep[i + 1]" [prevTemplate]="prevButton"
                       [nextTemplate]="nextButton" [doneTemplate]="doneButton" (done)="finishTour()">
         <ion-icon class="tab-icons" [name]="activeButton === tab.path? tab.icon : tab.outlinedIcon"></ion-icon>
+        <ion-label class ="tab-label">{{ tab.name }}</ion-label>
       </ion-tab-button>
     </ion-tab-bar>
 
