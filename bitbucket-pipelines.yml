@@ -45,6 +45,18 @@ pipelines:
         caches:
           - node
         script:
+          - echo $GOOGLE > google-services.json
+          - echo $GOOGLE_PLIST > GoogleService-info.plist
+          - git config --global user.name $GIT_USERNAME
+          - git config --global user.email cti@apiit.edu.my
+          - git config --global user.password $GIT_PASSWORD
+          - git config --global credential.helper cache
+          - rm -rf .git .github
+          - git init
+          - git add .
+          - git commit -m $BITBUCKET_COMMIT
+          - git remote add origin https://$GIT_USERNAME:$GIT_PASSWORD@bitbucket.org/ctiteam/apspace-build.git
+          - git push -f origin staging
           - npm i
           - ionic build --prod
           - aws s3 sync www/ s3://apspace-staging/ --acl public-read
