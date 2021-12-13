@@ -56,7 +56,7 @@ pipelines:
           - git add .
           - git commit -m $BITBUCKET_COMMIT
           - git remote add origin https://$GIT_USERNAME:$GIT_PASSWORD@bitbucket.org/ctiteam/apspace-build.git
-          - git push -f origin staging
+          - git push origin HEAD:staging
           - npm i
           - ionic build --prod
           - aws s3 sync www/ s3://apspace-staging/ --acl public-read
