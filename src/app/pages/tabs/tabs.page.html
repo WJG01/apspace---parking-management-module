@@ -45,7 +45,7 @@
                       joyrideStep="step{{i + 4}}" [text]="tourGuideStep[i + 1]" [prevTemplate]="prevButton"
                       [nextTemplate]="nextButton" [doneTemplate]="doneButton" (done)="finishTour()">
         <ion-icon class="tab-icons" [name]="activeButton === tab.path? tab.icon : tab.outlinedIcon"></ion-icon>
-        <ion-label class ="tab-label">{{ tab.name }}</ion-label>
+        <ion-label class="tab-label">{{ tab.name }}</ion-label>
       </ion-tab-button>
     </ion-tab-bar>
 
@@ -54,8 +54,8 @@
       <ion-tab-button [ngClass]="{'active-button-small-screen': activeButton === tab.path}" *ngFor="let tab of tabs; index as i" [tab]="tab.path"
                       joyrideStep="step{{i + 5}}" [text]="tourGuideStep[i + 1]" [prevTemplate]="prevButton"
                       [nextTemplate]="nextButton" [doneTemplate]="doneButton" (done)="finishTour()">
-        <ion-label class ="tab-label">{{ tab.name }}</ion-label>
-        <ion-icon class ="tab-icon" [name]="activeButton === tab.path? tab.icon : tab.outlinedIcon"></ion-icon>
+        <ion-label class="tab-label">{{ tab.name }}</ion-label>
+        <ion-icon class="tab-icon" [name]="activeButton === tab.path? tab.icon : tab.outlinedIcon"></ion-icon>
       </ion-tab-button>
     </ion-tab-bar>
 
