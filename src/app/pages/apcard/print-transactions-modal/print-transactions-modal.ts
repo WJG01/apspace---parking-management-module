@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { File } from '@ionic-native/file/ngx';
-import { LoadingController, ModalController, Platform } from '@ionic/angular';
+import { LoadingController, ModalController, Platform, ToastController } from '@ionic/angular';
 import { format, formatISO } from 'date-fns';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -15,58 +16,50 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
   templateUrl: 'print-transactions-modal.html',
 })
 export class PrintTransactionsModalPage implements OnInit {
-  loading: HTMLIonLoadingElement;
+
   transactions: Apcard[];
-  now = new Date();
-  max = formatISO(this.now, { representation: 'date' });
-  transactionTypes = ['all', 'credit', 'debit'];
-  transactionTypeModel = '';
-  yearMonthModel = '';
-  pdfObj = null; // used to generate report
+  createReport: FormGroup;
+  types = ['all', 'credit', 'debit'];
+  todayDate = new Date();
+  max = formatISO(this.todayDate, { representation: 'date' }); // Only show current date (ex: 2021-11-05);
+  loading: HTMLIonLoadingElement;
+  // For PDF
+  pdfObj = null; // Used to generate report
   tableBody: any;
   summaryBody: any;
-  noRecordsForSelectedMonth = false;
   pdfTitle = '';
-
-  ngOnInit() {
-    this.createLoading();
-  }
 
   constructor(
     private modalCtrl: ModalController,
     private plt: Platform,
     private file: File,
     private fileOpener: FileOpener,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private fb: FormBuilder,
+    private toastCtrl: ToastController
   ) { }
 
-  dismiss() {
-    this.modalCtrl.dismiss();
-  }
-
-  async createLoading() {
-    this.loading = await this.loadingCtrl.create({
-      spinner: 'dots',
-      duration: 5000,
-      message: 'Please wait...',
-      translucent: true,
+  ngOnInit() {
+    this.createReport = this.fb.group({
+      month: ['', Validators.required],
+      type: ['', Validators.required]
     });
-  }
 
-  async presentLoading() {
-    await this.loading.present();
-  }
-
-  async dismissLoading() {
-    await this.loading.dismiss();
+    this.createLoading();
   }
 
   generatePdf() {
+    if (this.month.value === '') {
+      return this.toastMessage('Please select a Month!', 'danger');
+    }
+
+    if (this.type.value === '') {
+      return this.toastMessage('Please select a Type', 'danger');
+    }
+
     this.presentLoading();
-    const yearMonthDate = new Date(this.yearMonthModel);
+    const yearMonthDate = new Date(this.month.value);
     let numberOfItems = 0, totalSpent = 0, totalTopup = 0;
-    // let firstTransaction: Apcard;
-    // let lastTransaction: Apcard;
     this.tableBody = [ // empty the list whenever there is an update
       [
         { text: '#', bold: true, style: 'tableHeader' },
@@ -76,12 +69,13 @@ export class PrintTransactionsModalPage implements OnInit {
         { text: 'Value', bold: true, style: 'tableHeader', alignment: 'center' },
       ]
     ];
+
     this.transactions.filter(transaction => {
       const spendDateObj = new Date(transaction.SpendDate);
       return (spendDateObj.getMonth() === yearMonthDate.getMonth() && spendDateObj.getFullYear() === yearMonthDate.getFullYear()) &&
-        (this.transactionTypeModel === 'credit'
+        (this.type.value === 'credit'
           ? transaction.ItemName.toLowerCase() === 'top up'
-          : this.transactionTypeModel === 'debit'
+          : this.type.value === 'debit'
             ? transaction.ItemName.toLowerCase() !== 'top up'
             : true
         );
@@ -97,34 +91,29 @@ export class PrintTransactionsModalPage implements OnInit {
       numberOfItems += 1;
       totalSpent += transaction.ItemName.toLowerCase() !== 'Top Up'.toLowerCase() ? Math.abs(transaction.SpendVal) : 0;
       totalTopup += transaction.ItemName.toLowerCase() === 'Top Up'.toLowerCase() ? Math.abs(transaction.SpendVal) : 0;
-      // if (index === 0) { // first transaction
-      //   firstTransaction = transaction;
-      // }
-      // if (index === array.length - 1) { // last transaction
-      //   lastTransaction = transaction;
-      // }
+
       this.tableBody.push(studentData);
     });
 
     if (this.tableBody.length === 1) {
       this.dismissLoading();
-      this.noRecordsForSelectedMonth = true;
+      this.toastMessage(`No Transactions For ${format(yearMonthDate, 'MMMM yyyy')}`, 'warning');
       return false;
     }
 
 
-    this.pdfTitle = `${this.transactionTypeModel}_apcard_transactions_for_${yearMonthDate.getFullYear()}_${yearMonthDate.getMonth() + 1}`;
+    this.pdfTitle = `${this.type.value}_apcard_transactions_for_${yearMonthDate.getFullYear()}_${yearMonthDate.getMonth() + 1}`;
 
     const docDefinition = {
       info: {
         title: this.pdfTitle,
         author: 'APSpace_Reports',
-        subject: `APCard @ ${this.now.toString()}`,
+        subject: `APCard @ ${this.todayDate.toString()}`,
         keywords: 'APCard APSpace Reports',
         creator: 'APSpace_Reports',
         producer: 'APSpace_Reports',
-        creationDate: this.now.toDateString(),
-        modDate: this.now.toDateString()
+        creationDate: this.todayDate.toDateString(),
+        modDate: this.todayDate.toDateString()
       },
       content: [
         {
@@ -149,10 +138,10 @@ export class PrintTransactionsModalPage implements OnInit {
         },
 
         {
-          text: this.transactionTypeModel === 'credit' ? '** Credit Only **' : this.transactionTypeModel === 'debit' ? '** Debit Only **' : '',
-          style: this.transactionTypeModel === 'credit' ? 'green_subheader' : this.transactionTypeModel === 'debit' ? 'red_subheader' : '',
+          text: this.type.value === 'credit' ? '** Credit Only **' : this.type.value === 'debit' ? '** Debit Only **' : '',
+          style: this.type.value === 'credit' ? 'green_subheader' : this.type.value === 'debit' ? 'red_subheader' : '',
           alignment: 'center',
-          margin: this.transactionTypeModel === 'all' ? [0, 0, 0, 0] : [0, 10, 0, 0]
+          margin: this.type.value === 'all' ? [0, 0, 0, 0] : [0, 10, 0, 0]
         },
 
         { text: '', margin: [5, 20, 5, 10] },
@@ -171,9 +160,10 @@ export class PrintTransactionsModalPage implements OnInit {
               ],
               [
                 { text: 'Number of items', bold: true, margin: [5, 5, 5, 5] },
-
-                // tslint:disable-next-line: max-line-length
-                { text: (numberOfItems === 1 ? numberOfItems + ' Item' : numberOfItems + ' Items'), alignment: 'right', margin: [5, 5, 5, 5] }
+                {
+                  text: (numberOfItems === 1 ? numberOfItems + ' Item' : numberOfItems + ' Items'),
+                  alignment: 'right', margin: [5, 5, 5, 5]
+                }
               ],
               [
                 { text: 'Total debit in the month:', bold: true, margin: [5, 5, 5, 5] },
@@ -182,15 +172,7 @@ export class PrintTransactionsModalPage implements OnInit {
               [
                 { text: 'Total credit in the month:', bold: true, margin: [5, 5, 5, 5] },
                 { text: ('RM' + totalTopup.toFixed(2)), alignment: 'right', margin: [5, 5, 5, 5], color: '#346948' }
-              ],
-              // [
-              //   { text: 'Balance At the begining of the month:', bold: true, margin: [5, 5, 5, 5] },
-              //   { text: ('RM' + firstTransaction.Balance.toFixed(2)), alignment: 'right', margin: [5, 5, 5, 5] }
-              // ],
-              // [
-              //   { text: 'Balance At the end of the month:', bold: true, margin: [5, 5, 5, 5] },
-              //   { text: ('RM' + lastTransaction.Balance.toFixed(2)), alignment: 'right', margin: [5, 5, 5, 5] }
-              // ]
+              ]
             ],
             pageBreak: 'after'
           }
@@ -215,7 +197,7 @@ export class PrintTransactionsModalPage implements OnInit {
             { width: '5%', text: '' },
             {
               width: '75%',
-              text: `Generated using APSpace (${this.now.toDateString()})`,
+              text: `Generated using APSpace (${this.todayDate.toDateString()})`,
               alignment: 'left',
               style: 'greyColor'
             },
@@ -297,8 +279,8 @@ export class PrintTransactionsModalPage implements OnInit {
       }
     };
     this.pdfObj = pdfMake.createPdf(docDefinition);
+
     this.downloadFile();
-    // this.pdfObj.download(pdfTitle + '.pdf');
   }
 
   downloadFile() {
@@ -321,4 +303,53 @@ export class PrintTransactionsModalPage implements OnInit {
     }
   }
 
+  reset() {
+    this.createReport.reset();
+  }
+
+  async createLoading() {
+    this.loading = await this.loadingCtrl.create({
+      spinner: 'dots',
+      duration: 5000,
+      message: 'Generating PDF...',
+      translucent: true,
+    });
+  }
+
+  dismiss() {
+    this.modalCtrl.dismiss();
+  }
+
+  async presentLoading() {
+    await this.loading.present();
+  }
+
+  async dismissLoading() {
+    await this.loading.dismiss();
+  }
+
+  async toastMessage(message: string, color: string) {
+    const toast = await this.toastCtrl.create({
+      message,
+      color,
+      position: 'top',
+      duration: 3000,
+      animated: true,
+      buttons: [
+        {
+          icon: 'close',
+          role: 'cancel'
+        }
+      ]
+    });
+    await toast.present();
+  }
+
+  get month() {
+    return this.createReport.get('month');
+  }
+
+  get type() {
+    return this.createReport.get('type');
+  }
 }
