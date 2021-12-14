@@ -23,8 +23,6 @@ export class ClassroomFinderPage implements OnInit {
 
   days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
-  excludeRooms = ['ONL', 'Online'];
-
   timetables$: Observable<StudentTimetable[]>;
 
   constructor(
@@ -49,6 +47,7 @@ export class ClassroomFinderPage implements OnInit {
   }
 
   getTimetableData() {
+    const excludeRooms = ['ONL', 'Online'];
     return this.tt.get()
       .pipe(
         tap(data => {
@@ -60,7 +59,7 @@ export class ClassroomFinderPage implements OnInit {
           });
         }),
         tap(_ => this.location = this.locations[0]),
-        map(data => data.filter(res => this.excludeRooms.every(room => !res.ROOM.includes(room)))) // Exclude Online and ONL room data
+        map(data => data.filter(res => excludeRooms.every(room => !res.ROOM.includes(room)))) // Exclude Online and ONL room data
       );
   }
 
