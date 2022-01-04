@@ -227,7 +227,7 @@ const routes: Routes = [
   {
     path: 'beapu',
     canActivate: [AuthGuard],
-    // data: { role: Role.Admin | Role.Lecturer },
+    data: { role: Role.Admin | Role.Lecturer },
     loadChildren: () => import('./pages/filing-report/filing-report.module').then(m => m.FilingReportPageModule)
   },
   {
