@@ -22,7 +22,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Vibration } from '@ionic-native/vibration/ngx';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage';
-import { JoyrideModule } from 'ngx-joyride';
+// import { JoyrideModule } from 'ngx-joyride';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -53,7 +53,7 @@ import { RequestCache, RequestCacheWithMapStorage } from './services';
     NewsModalPageModule,
     NotificationModalModule,
     ShakespearModalPageModule,
-    JoyrideModule.forRoot()
+    // JoyrideModule.forRoot()
   ],
   providers: [
     ActionSheet,
