@@ -548,6 +548,16 @@ export const menusRaw = [
     parents: [],
   },
   {
+    id: 'easy-generator' as const,
+    title: 'Easy Generator',
+    group: 'Academic & Enrollment',
+    url: 'https://live.easygenerator.com/saml/sp/login/asia_pacific_university',
+    img: 'assets/img/easy-generator.png',
+    role: Role.Lecturer | Role.Admin,
+    tags: ['course', 'material', 'generate'],
+    parents: [],
+  },
+  {
     id: 'lecturer-timetable' as const,
     title: 'My Timetable',
     group: 'Academic & Enrollment',
