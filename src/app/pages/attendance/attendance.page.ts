@@ -5,7 +5,7 @@ import { ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { finalize, map, tap } from 'rxjs/operators';
 
-import { Attendance, AttendanceLegend, Course } from 'src/app/interfaces';
+import { Attendance, AttendanceLegend, Course, MappedAttendance } from 'src/app/interfaces';
 import { WsApiService } from 'src/app/services';
 import { AttendanceDetailsModalPage } from './attendance-details-modal/attendance-details-modal';
 
@@ -15,15 +15,13 @@ import { AttendanceDetailsModalPage } from './attendance-details-modal/attendanc
   styleUrls: ['./attendance.page.scss'],
 })
 export class AttendancePage implements OnInit {
-  indecitor = false;
-  attendance$: Observable<any[]>;
-  course$: Observable<Course[]>;
-  legend$: Observable<AttendanceLegend>;
 
-  selectedIntake = '';
+  course$: Observable<Course[]>;
+  attendance$: Observable<MappedAttendance[]>;
+  legend$: Observable<AttendanceLegend>;
+  studentIntakes: string[] = [];
+  selectedIntake: string;
   average: number;
-  averageColor = '';
-  intakeLabels: any;
   skeletons = new Array(5);
 
   constructor(
@@ -34,65 +32,57 @@ export class AttendancePage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.indecitor = true;
-  }
-
-  ionViewDidEnter() {
-    /*
-    * The page's response is very huge, which is causing issues on ios if we use oninit
-    * the indecitor is used to define if the page should call the dorefresh of not
-    * If we do not use the indecitor, the page in the tabs (tabs/attendance) will be reloading every time we enter the tab
-    */
-    if (this.indecitor) {
-      this.doRefresh();
-      this.indecitor = false;
-    }
+    this.doRefresh();
   }
 
   doRefresh(refresher?) {
+    const caching = refresher ? 'network-or-cache' : 'cache-only';
+    this.studentIntakes = [];
+
     this.course$ = this.ws.get<Course[]>('/student/courses', { caching: 'network-or-cache' }).pipe(
-      tap(c => (this.selectedIntake = c[0].INTAKE_CODE)),
-      tap(_ => this.attendance$ = this.getAttendance(this.selectedIntake)),
-      tap(
-        c =>
-          (this.intakeLabels = Array.from(
-            new Set((c || []).map(t => t.INTAKE_CODE)),
-          )),
-      ),
-      tap(_ => this.getLegend(refresher)),
-      finalize(() => refresher && refresher.target.complete())
+      tap(intakes => {
+        // Select latest intake by default
+        this.selectedIntake = intakes[0].INTAKE_CODE;
+        // Get all of Student Courses and store in an array
+        for (const intake of intakes) {
+          if (this.studentIntakes.indexOf(intake.INTAKE_CODE)) {
+            this.studentIntakes.push(intake.INTAKE_CODE);
+          }
+        }
+        // Get Attendance based on Intake
+        this.attendance$ = this.getAttendances(this.selectedIntake);
+        // Get Legends
+        this.legend$ = this.ws.get<AttendanceLegend>('/student/attendance_legend', { caching });
+      }),
+      finalize(() => {
+        if (refresher) {
+          refresher.target.complete();
+        }
+      })
+    );
+  }
+
+  getAttendances(intake: string): Observable<MappedAttendance[]> {
+    this.average = -2;
+    return this.ws.get<Attendance[]>(`/student/attendance?intake=${intake}`, { caching: 'network-or-cache' }).pipe(
+      tap(a => this.calculateAverage(a)),
+      map(a => {
+        // Map data to [{ semester: '1', attendances: Attendance[] }]
+        const attendancePerSemester = a.reduce((previous: any, current: any) => {
+          if (!previous[current.SEMESTER]) {
+            previous[current.SEMESTER] = [current];
+          } else {
+            previous[current.SEMESTER].push(current);
+          }
+          return previous;
+        }, {});
+        return Object.keys(attendancePerSemester).map(semester => ({ semester, attendances: attendancePerSemester[semester] })).reverse();
+      })
     );
   }
 
   intakeChanged() {
-    this.attendance$ = this.getAttendance(this.selectedIntake);
-  }
-
-  getAttendance(intake: string): Observable<any[]> {
-    this.average = -2;
-    const url = `/student/attendance?intake=${intake}`;
-    return (this.attendance$ = this.ws.get<Attendance[]>(url, { caching: 'network-or-cache' }).pipe(
-      tap(a => this.calculateAverage(a)),
-      map(res => this.groupAttendanceBySemester(res)),
-    ));
-  }
-
-  groupAttendanceBySemester(attendance: any) {
-    const attendancePerSemester = attendance
-      .reduce((previous: any, current: any) => {
-        if (!previous[current.SEMESTER]) {
-          previous[current.SEMESTER] = [current];
-        } else {
-          previous[current.SEMESTER].push(current);
-        }
-        return previous;
-      }, {});
-    return Object.keys(attendancePerSemester).map(semester => ({ semester, value: attendancePerSemester[semester] }));
-  }
-
-  getLegend(refresh: boolean) {
-    const caching = refresh ? 'network-or-cache' : 'cache-only';
-    this.legend$ = this.ws.get<AttendanceLegend>('/student/attendance_legend', { caching });
+    this.attendance$ = this.getAttendances(this.selectedIntake);
   }
 
   calculateAverage(aa: Attendance[] | null) {

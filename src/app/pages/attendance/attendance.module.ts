@@ -6,7 +6,6 @@ import { IonicModule } from '@ionic/angular';
 import { CalendarModule } from 'ion2-calendar';
 
 import { ComponentsModule } from 'src/app/components/components.module';
-import { SharedPipesModule } from '../../shared/shared-pipes.module';
 import { AttendanceDetailsModalPage } from './attendance-details-modal/attendance-details-modal';
 import { AttendancePage } from './attendance.page';
 
@@ -23,7 +22,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     ComponentsModule,
-    SharedPipesModule,
     FormsModule,
     CalendarModule
   ],

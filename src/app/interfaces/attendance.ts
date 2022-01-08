@@ -14,3 +14,8 @@ export interface Attendance {
   TOTAL_CLASSES: number;
   bankdraft_amount: number;
 }
+
+export interface MappedAttendance {
+  semester: string;
+  attendances: Attendance[];
+}

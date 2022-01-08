@@ -2,14 +2,11 @@
   display: none;
 }
 
-
-.small-padding {
-  padding: 5px;
-  padding-bottom: 10px;
+ion-note {
+  font-size: 13px;
 }
 
-@media (min-width: 576px) {
-
+@media (min-width: 768px) {
   // large screens => table settings
   .h-mobile-d-desktop {
     display: block;
