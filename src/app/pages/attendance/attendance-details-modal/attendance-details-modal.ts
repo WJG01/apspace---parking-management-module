@@ -43,7 +43,7 @@ export class AttendanceDetailsModalPage implements OnInit {
   ngOnInit() {
     this.title = this.navPrms.data.title;
 
-    // this.showOnCalendar();
+    this.showOnCalendar();
   }
 
   getRecords(): Observable<AttendanceDetails[]> {
