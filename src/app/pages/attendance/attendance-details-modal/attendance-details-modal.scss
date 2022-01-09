@@ -1,31 +1,18 @@
-.dot {
-  height: 8px;
-  width: 8px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-ion-item {
-  border-left: 5px solid;
-  padding: 0px;
+ion-note {
+  font-size: 13px;
   &.attended {
-    border-color: #49B571;
+    --color: #28a745;
   }
+
   &.absent {
-    border-color: #E54D42;
+    --color: #dc3545;
   }
+
   &.absent-reason {
-    border-color: #36A2EB;
+    --color: #1070a1;
   }
+
   &.late {
-    border-color: #D49A0D;
+    --color: #ffc409;
   }
-}
-
-.calendar {
-  background-color: var(--ion-color-light) !important;
-}
-
-.legend {
-  margin-left: 8px;
 }
