@@ -236,3 +236,7 @@
 .virtual-card-modal ion-backdrop{
   --backdrop-opacity: .9;
 }
+
+ion-select-popover {
+  overflow: scroll !important;
+}
