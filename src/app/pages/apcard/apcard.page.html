@@ -17,7 +17,9 @@
       <ion-col size-xs="12" size-md="4" push-md="8">
         <ion-card class="ion-no-margin sticky">
           <ion-card-header class="ion-text-center">
-            <ion-card-subtitle color="primary" class="glob-text-bold">Balance</ion-card-subtitle>
+            <ion-card-subtitle color="medium" class="glob-text-bold">
+              Balance
+            </ion-card-subtitle>
             <ng-container *ngIf="!noBalance; else none">
               <ion-card-title class="glob-text-bold"
                 [color]="balance >= 2 ? 'success' : balance < 2 && balance > 0 ? 'warning' : 'danger'"
