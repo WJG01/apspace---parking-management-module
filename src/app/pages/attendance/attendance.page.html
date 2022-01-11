@@ -23,7 +23,7 @@
               <ion-label position="floating">Intake</ion-label>
               <ion-select [(ngModel)]="selectedIntake" (ngModelChange)="intakeChanged()" interface="action-sheet">
                 <ion-select-option *ngFor="let intake of studentIntakes" [value]="intake">
-                  {{intake}}
+                  {{ intake }}
                 </ion-select-option>
               </ion-select>
             </ion-item>
@@ -120,11 +120,11 @@
                     detail="true" button="true" mode="md"
                     (click)="attendanceDetails(module.MODULE_ATTENDANCE, selectedIntake, module.SUBJECT_CODE)">
                     <ion-label class="ion-text-wrap">
-                      <h3 class="glob-text-bold">{{ module.MODULE_ATTENDANCE }} <span class="danger-text"
-                          *ngIf="module.RETAKE">[Retake]</span></h3>
-                      <p *ngIf="module.RETAKE">
-                        {{ module.START_DATE | date: 'EEE, d MMM y' }} - {{ module.END_DATE | date: 'EEE, d MMM y' }}
-                      </p>
+                      <h3 class="glob-text-bold">{{ module.MODULE_ATTENDANCE }}
+                        <span class="danger-text" *ngIf="module.RETAKE">
+                          [Retake]
+                        </span>
+                      </h3>
                       <ion-row class="ion-no-padding">
                         <ion-col size="6" class="ion-no-padding col-padding">
                           <p>Classes: <span class="glob-text-bold"
