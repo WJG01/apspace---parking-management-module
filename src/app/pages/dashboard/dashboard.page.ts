@@ -1326,7 +1326,8 @@ export class DashboardPage implements OnInit, DoCheck {
       map(res => res.trips),
       map(trips => {
         return trips.filter(trip => {
-          return parse(trip.trip_time, 'kk:mm', new Date()) >= currentDate
+          const dateObject = new Date(trip.trip_time);
+          return dateObject >= currentDate
             && trip.trip_day === this.getTodayDay(currentDate)
             && ((trip.trip_from === firstLocation && trip.trip_to === secondLocation)
               || (trip.trip_from === secondLocation && trip.trip_to === firstLocation));
@@ -1343,16 +1344,14 @@ export class DashboardPage implements OnInit, DoCheck {
               times: []
             };
             // Convert to dateObject for time format
-            const localToUtcOffset = (currentDate.getTimezoneOffset());
-            const localParsedDate = Date.parse(currentDate.toString());
-
-            const utcDate = new Date(localParsedDate + (localToUtcOffset * 60000));
-            const utcParsedDate = Date.parse(utcDate.toUTCString());
-
-            const d = new Date(utcParsedDate + (480 * 60000));
-            const dateObject = parse(curr.trip_time, 'HH:mm', d);
-            curr.trip_time = this.dateWithTimezonePipe.transform(dateObject, 'bus');
-
+            // const localToUtcOffset = (currentDate.getTimezoneOffset());
+            // const localParsedDate = Date.parse(currentDate.toString());
+            //
+            // const utcDate = new Date(localParsedDate + (localToUtcOffset * 60000));
+            // const utcParsedDate = Date.parse(utcDate.toUTCString());
+            //
+            // const d = new Date(utcParsedDate + (480 * 60000));
+            curr.trip_time = this.dateWithTimezonePipe.transform(curr.trip_time, 'bus');
             prev[curr.trip_from + curr.trip_to].times.push(curr.trip_time);
             return prev;
           },
