@@ -61,7 +61,7 @@
           </ion-item>
 
           <ion-list *ngIf="showFilterMenu">
-            <ion-item lines="inset">
+            <ion-item lines="inset" [disabled]="filterObject.showThisMonthOnly">
               <ion-label>Year</ion-label>
               <ion-select [(ngModel)]="filterObject.year" (ngModelChange)="doRefresh()">
                 <ion-select-option *ngFor="let year of transactionYears" [value]="year">{{ year }}
