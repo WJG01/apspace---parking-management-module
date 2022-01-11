@@ -120,24 +120,33 @@
                     detail="true" button="true" mode="md"
                     (click)="attendanceDetails(module.MODULE_ATTENDANCE, selectedIntake, module.SUBJECT_CODE)">
                     <ion-label class="ion-text-wrap">
-                      <h3 class="glob-text-bold">{{ module.MODULE_ATTENDANCE }}</h3>
+                      <h3 class="glob-text-bold">{{ module.MODULE_ATTENDANCE }} <span class="danger-text"
+                          *ngIf="module.RETAKE">[Retake]</span></h3>
                       <p *ngIf="module.RETAKE">
                         {{ module.START_DATE | date: 'EEE, d MMM y' }} - {{ module.END_DATE | date: 'EEE, d MMM y' }}
                       </p>
-                      <p class="glob-text-bold" [ngClass]="module.PERCENTAGE >= 80 ? 'success-text' : 'danger-text'">
-                        {{ module.TOTAL_CLASSES -
-                        module.TOTAL_ABSENT +
-                        "/" +
-                        module.TOTAL_CLASSES +
-                        " (" +
-                        module.PERCENTAGE +
-                        "%)" }}
-                      </p>
-                      <ion-badge color="danger" *ngIf="module.RETAKE">RETAKE</ion-badge>
+                      <ion-row class="ion-no-padding">
+                        <ion-col size="6" class="ion-no-padding col-padding">
+                          <p>Classes: <span class="glob-text-bold"
+                              [ngClass]="module.PERCENTAGE >= 80 ? 'success-text' : 'danger-text'">
+                              {{ module.TOTAL_CLASSES -
+                              module.TOTAL_ABSENT +
+                              "/" +
+                              module.TOTAL_CLASSES +
+                              " (" +
+                              module.PERCENTAGE +
+                              "%)" }}
+                            </span></p>
+                        </ion-col>
+                        <ion-col size="6" class="ion-no-padding col-padding">
+                          <p>
+                            Exam Eligibility: <span class="glob-text-bold"
+                              [ngClass]="module.EXAM_ELIGIBILITY === 'Eligible' ? 'success-text' : 'danger-text'">{{
+                              module.EXAM_ELIGIBILITY }}</span>
+                          </p>
+                        </ion-col>
+                      </ion-row>
                     </ion-label>
-                    <ion-note slot="end" [color]="module.EXAM_ELIGIBILITY === 'Eligible' ? 'success' : 'danger'">
-                      {{ module.EXAM_ELIGIBILITY }}
-                    </ion-note>
                   </ion-item>
                 </ion-card>
               </ng-container>
