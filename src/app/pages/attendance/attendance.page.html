@@ -70,6 +70,8 @@
                 Sign Class Attendance
               </ion-button>
             </ion-card-content>
+
+            <ion-progress-bar value="1" [color]="average >= 0.8 ? 'success' : 'danger'"></ion-progress-bar>
           </ion-card>
 
           <div class="h-mobile-d-desktop ion-margin-top">
