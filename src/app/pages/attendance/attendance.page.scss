@@ -15,7 +15,11 @@ ion-note {
 }
 
 .col-padding {
-  padding: 5px 5px 5px 0px;
+  padding: 0 5px 5px 0;
+}
+
+.medium-size-text {
+  font-size: 15px;
 }
 
 @media (min-width: 768px) {

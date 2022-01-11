@@ -127,7 +127,7 @@
                       </h3>
                       <ion-row class="ion-no-padding">
                         <ion-col size="6" class="ion-no-padding col-padding">
-                          <p>Classes: <span class="glob-text-bold"
+                          <small>Classes: <span class="medium-size-text"
                               [ngClass]="module.PERCENTAGE >= 80 ? 'success-text' : 'danger-text'">
                               {{ module.TOTAL_CLASSES -
                               module.TOTAL_ABSENT +
@@ -136,14 +136,15 @@
                               " (" +
                               module.PERCENTAGE +
                               "%)" }}
-                            </span></p>
+                            </span>
+                          </small>
                         </ion-col>
                         <ion-col size="6" class="ion-no-padding col-padding">
-                          <p>
-                            Exam Eligibility: <span class="glob-text-bold"
-                              [ngClass]="module.EXAM_ELIGIBILITY === 'Eligible' ? 'success-text' : 'danger-text'">{{
-                              module.EXAM_ELIGIBILITY }}</span>
-                          </p>
+                          <small>Exam Eligibility: <span class="medium-size-text"
+                              [ngClass]="module.EXAM_ELIGIBILITY === 'Eligible' ? 'success-text' : 'danger-text'">
+                              {{ module.EXAM_ELIGIBILITY }}
+                            </span>
+                          </small>
                         </ion-col>
                       </ion-row>
                     </ion-label>
