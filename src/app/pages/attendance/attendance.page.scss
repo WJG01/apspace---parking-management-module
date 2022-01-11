@@ -6,6 +6,14 @@ ion-note {
   font-size: 13px;
 }
 
+.success-text {
+  color: var(--ion-color-success);
+}
+
+.danger-text {
+  color: var(--ion-color-danger);
+}
+
 @media (min-width: 768px) {
   // large screens => table settings
   .h-mobile-d-desktop {

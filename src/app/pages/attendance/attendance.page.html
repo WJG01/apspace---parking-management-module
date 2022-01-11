@@ -124,7 +124,7 @@
                       <p *ngIf="module.RETAKE">
                         {{ module.START_DATE | date: 'EEE, d MMM y' }} - {{ module.END_DATE | date: 'EEE, d MMM y' }}
                       </p>
-                      <p>
+                      <p class="glob-text-bold" [ngClass]="module.PERCENTAGE >= 80 ? 'success-text' : 'danger-text'">
                         {{ module.TOTAL_CLASSES -
                         module.TOTAL_ABSENT +
                         "/" +
@@ -207,3 +207,4 @@
     </ion-row>
   </div>
 </ion-content>
+<!-- module.PERCENTAGE >= 80 ? 'success' : 'danger'" -->
