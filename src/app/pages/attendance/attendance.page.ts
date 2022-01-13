@@ -106,8 +106,7 @@ export class AttendancePage implements OnInit {
       componentProps: {
         module,
         intake: intakeCode
-      },
-      cssClass: 'attendanceDetailsModal'
+      }
     });
     await modal.present();
   }
