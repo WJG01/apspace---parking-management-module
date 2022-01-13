@@ -120,14 +120,14 @@
                     detail="true" button="true" mode="md" (click)="attendanceDetails(module, selectedIntake)">
                     <ion-label class="ion-text-wrap">
                       <h3 class="glob-text-bold">{{ module.MODULE_ATTENDANCE }}
-                        <span class="danger-text" *ngIf="module.RETAKE">
+                        <span class="glob-danger-text" *ngIf="module.RETAKE">
                           [Retake]
                         </span>
                       </h3>
                       <ion-row class="ion-no-padding">
                         <ion-col size="6" class="ion-no-padding col-padding">
                           <small>Classes: <span class="medium-size-text"
-                              [ngClass]="module.PERCENTAGE >= 80 ? 'success-text' : 'danger-text'">
+                              [ngClass]="module.PERCENTAGE >= 80 ? 'glob-success-text' : 'glob-danger-text'">
                               {{ module.TOTAL_CLASSES -
                               module.TOTAL_ABSENT +
                               "/" +
@@ -140,7 +140,7 @@
                         </ion-col>
                         <ion-col size="6" class="ion-no-padding col-padding">
                           <small>Exam Eligibility: <span class="medium-size-text"
-                              [ngClass]="module.EXAM_ELIGIBILITY === 'Eligible' ? 'success-text' : 'danger-text'">
+                              [ngClass]="module.EXAM_ELIGIBILITY === 'Eligible' ? 'glob-success-text' : 'glob-danger-text'">
                               {{ module.EXAM_ELIGIBILITY }}
                             </span>
                           </small>

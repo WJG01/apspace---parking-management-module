@@ -20,14 +20,14 @@
         <ion-col size="4">
           <ion-card class="ion-no-margin">
             <h6 class="small-margin">{{ moduleDetails.TOTAL_CLASSES - moduleDetails.TOTAL_ABSENT }}</h6>
-            <p class="glob-text-bold success-text small-margin">Present</p>
+            <p class="glob-text-bold glob-success-text small-margin">Present</p>
           </ion-card>
         </ion-col>
 
         <ion-col size="4">
           <ion-card class="ion-no-margin">
             <h6 class="small-margin">{{ moduleDetails.TOTAL_ABSENT }}</h6>
-            <p class="glob-text-bold danger-text small-margin">Absent</p>
+            <p class="glob-text-bold glob-danger-text small-margin">Absent</p>
           </ion-card>
         </ion-col>
 
@@ -43,7 +43,7 @@
         <ion-col size="12">
           <ion-card class="ion-no-margin">
             <h6 class="small-margin"
-              [ngClass]="moduleDetails.EXAM_ELIGIBILITY === 'Eligible' ? 'success-text' : 'danger-text'">{{
+              [ngClass]="moduleDetails.EXAM_ELIGIBILITY === 'Eligible' ? 'glob-success-text' : 'glob-danger-text'">{{
               moduleDetails.EXAM_ELIGIBILITY }}</h6>
             <p class="glob-text-bold small-margin">Exam Eligability</p>
           </ion-card>
