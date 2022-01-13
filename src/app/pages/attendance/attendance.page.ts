@@ -100,13 +100,12 @@ export class AttendancePage implements OnInit {
     }
   }
 
-  async attendanceDetails(moduleName: string, intakeCode: string, moduleCode: string ) {
+  async attendanceDetails(module: Attendance, intakeCode: string) {
     const modal = await this.modalCtrl.create({
       component: AttendanceDetailsModalPage,
       componentProps: {
-        title: moduleName,
-        intake: intakeCode,
-        module: moduleCode
+        module,
+        intake: intakeCode
       },
       cssClass: 'attendanceDetailsModal'
     });

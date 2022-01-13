@@ -6,8 +6,7 @@ import { CalendarComponentOptions, DayConfig } from 'ion2-calendar';
 import { Observable } from 'rxjs';
 import { finalize, map, tap } from 'rxjs/operators';
 
-
-import { AttendanceDetails } from 'src/app/interfaces/attendance-details';
+import { Attendance, AttendanceDetails } from 'src/app/interfaces';
 import { WsApiService } from 'src/app/services';
 
 @Component({
@@ -18,7 +17,7 @@ import { WsApiService } from 'src/app/services';
 })
 export class AttendanceDetailsModalPage implements OnInit {
 
-  title: string;
+  moduleDetails: Attendance;
   details$: Observable<AttendanceDetails[]>;
   details: AttendanceDetails[] = [];
   recordsArray: AttendanceDetails[] = [];
@@ -41,16 +40,15 @@ export class AttendanceDetailsModalPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.title = this.navPrms.data.title;
+    this.moduleDetails = this.navPrms.data.module;
 
     this.showOnCalendar();
   }
 
   getRecords(): Observable<AttendanceDetails[]> {
     const intake = this.navPrms.data.intake;
-    const module = this.navPrms.data.module;
 
-    return this.ws.get<AttendanceDetails[]>(`/student/attendance_details?intake_code=${intake}&module_code=${module}`);
+    return this.ws.get<AttendanceDetails[]>(`/student/attendance_details?intake_code=${intake}&module_code=${this.moduleDetails.SUBJECT_CODE}`);
   }
 
   showOnCalendar() {

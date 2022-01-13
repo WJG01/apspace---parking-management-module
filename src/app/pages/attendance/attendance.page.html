@@ -117,8 +117,7 @@
                   </ion-item-divider>
 
                   <ion-item *ngFor="let module of a.attendances; let isLast = last" [lines]="isLast ? 'none' : 'full'"
-                    detail="true" button="true" mode="md"
-                    (click)="attendanceDetails(module.MODULE_ATTENDANCE, selectedIntake, module.SUBJECT_CODE)">
+                    detail="true" button="true" mode="md" (click)="attendanceDetails(module, selectedIntake)">
                     <ion-label class="ion-text-wrap">
                       <h3 class="glob-text-bold">{{ module.MODULE_ATTENDANCE }}
                         <span class="danger-text" *ngIf="module.RETAKE">
