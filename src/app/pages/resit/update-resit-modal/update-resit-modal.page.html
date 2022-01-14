@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Update Resit {{ resit.id }} Dates</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col>
+      <ion-card class="ion-no-margin ion-margin-bottom">
+        <ion-item color="danger" lines="none">
+          <ion-label class="ion-text-wrap ion-text-center">
+           <p>You are not allowed to update this resit date once it has passed the current date!</p>
+          </ion-label>
+        </ion-item>
+      </ion-card>
+
+      <form [formGroup]="resitForm">
+        <ion-card class="ion-no-margin" [disabled]="!allowUpdate">
+          <ion-item lines="none">
+            <ion-label>
+              Start Date
+            </ion-label>
+            <ion-datetime [min]="todaysDate" placeholder="Select Start Date" formControlName="registration_start_date">
+            </ion-datetime>
+          </ion-item>
+
+          <ion-item [disabled]="!startDate.value" lines="none">
+            <ion-label>
+              End Date
+            </ion-label>
+            <ion-datetime [min]="startDate.value" placeholder="Select End Date"
+              formControlName="registration_end_date"></ion-datetime>
+          </ion-item>
+
+          <ion-item [disabled]="!startDate.value" lines="none">
+            <ion-label>
+              Referal Date
+            </ion-label>
+            <ion-datetime placeholder="Select Referal Date" formControlName="referral_date">
+            </ion-datetime>
+          </ion-item>
+
+          <ion-item lines="none">
+            <ion-label>
+              Enable Date
+            </ion-label>
+            <ion-datetime [min]="currentYear" placeholder="Select Enable Date" formControlName="enable_date">
+            </ion-datetime>
+          </ion-item>
+        </ion-card>
+      </form>
+
+      <ion-button class="ion-margin-top" expand="block" color="success" (click)="update()" [disabled]="!allowUpdate">
+        Update Resit
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-content>
