@@ -124,6 +124,9 @@
                           [Retake]
                         </span>
                       </h3>
+                      <small *ngIf="module.RETAKE">
+                        {{ module.START_DATE | date: 'EEE, d MMM y' }} - {{ module.END_DATE | date: 'EEE, d MMM y' }}
+                      </small>
                       <ion-row class="ion-no-padding">
                         <ion-col size="6" class="ion-no-padding col-padding">
                           <small>Classes: <span class="medium-size-text"
