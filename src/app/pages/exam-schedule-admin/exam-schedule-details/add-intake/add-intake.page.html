@@ -36,7 +36,7 @@
                       <ion-label class="ion-text-wrap">
                         {{intake.value}}
                       </ion-label>
-                      <ion-checkbox (ngModelChange)="addSelectedIntakes(intake)" [(ngModel)]="intake.isChecked"></ion-checkbox> 
+                      <ion-checkbox (ngModelChange)="addSelectedIntakes(intake)" [(ngModel)]="intake.isChecked"></ion-checkbox>
                     </ion-item>
                   </ion-list> -->
                 </div>
@@ -62,45 +62,39 @@
             <!-- <ion-grid class="ion-no-padding">
               <ion-row class="ion-no-padding ion-align-items-end">
                 <ion-col size="12" size-sm="6" class="ion-no-padding"> -->
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="item-label">
-                      Venue
-                    </ion-label>
-                    <!-- <ion-input [formControl]="intakeForm.controls['location']" class="form-input"></ion-input> -->
-                    <ion-select [formControl]="intakeForm.controls['venue']" class="form-input">
-                      <ion-select-option *ngFor="let venue of venues" [value]="venue">{{ venue }}</ion-select-option>
-                    </ion-select>
-                  </ion-item>
-                <!-- </ion-col> -->
-                <!-- <ion-col size="12" size-sm="6" class="ion-no-padding">
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="item-label"></ion-label>
-                    <ion-select [formControl]="intakeForm.controls['venue']" class="form-input">
-                      <ion-select-option *ngFor="let venue of venues" [value]="venue">{{ venue }}</ion-select-option>
-                    </ion-select>
-                  </ion-item>
-                </ion-col>
-              </ion-row>
-            </ion-grid> -->
+            <ion-item lines="none">
+              <ion-label position="stacked" class="item-label">
+                Venue
+              </ion-label>
+              <!-- <ion-input [formControl]="intakeForm.controls['location']" class="form-input"></ion-input> -->
+              <ion-select [formControl]="intakeForm.controls['venue']" class="form-input">
+                <ion-select-option *ngFor="let venue of venues" [value]="venue">{{ venue }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <!-- </ion-col> -->
+            <!-- <ion-col size="12" size-sm="6" class="ion-no-padding">
+              <ion-item lines="none">
+                <ion-label position="stacked" class="item-label"></ion-label>
+                <ion-select [formControl]="intakeForm.controls['venue']" class="form-input">
+                  <ion-select-option *ngFor="let venue of venues" [value]="venue">{{ venue }}</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid> -->
 
             <ion-item lines="none">
               <ion-label position="stacked" class="item-label">
                 Docket Issuance
               </ion-label>
-              <ion-input *ngIf="!isCordova else date" type="date" class="form-input" [max]="nextYears" [formControl]="intakeForm.controls['docketIssuance']"></ion-input>
-              <ng-template #date>
-                <ion-datetime [max]="nextYears" [formControl]="intakeForm.controls['docketIssuance']" class="form-input"></ion-datetime>
-              </ng-template>
+              <ion-datetime [max]="nextYears" [formControl]="intakeForm.controls['docketIssuance']" class="form-input"></ion-datetime>
             </ion-item>
-            
+
             <ion-item lines="none">
               <ion-label position="stacked" class="item-label">
                 Exam Result Date
               </ion-label>
-              <ion-input *ngIf="!isCordova else date" type="date" class="form-input" [max]="nextYears" [formControl]="intakeForm.controls['examResultDate']"></ion-input>
-              <ng-template #date>
-                <ion-datetime [max]="nextYears" [formControl]="intakeForm.controls['examResultDate']" class="form-input"></ion-datetime>
-              </ng-template>
+              <ion-datetime [max]="nextYears" [formControl]="intakeForm.controls['examResultDate']" class="form-input"></ion-datetime>
             </ion-item>
             <ion-button (click)="submit()" [disabled]="intakeForm.invalid" expand="block" color="primary" class="ion-margin">SUBMIT</ion-button>
           </ion-card-content>
