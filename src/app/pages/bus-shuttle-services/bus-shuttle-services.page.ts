@@ -97,7 +97,6 @@ export class BusShuttleServicesPage {
           return item;
         });
       }),
-      tap(r => r.forEach(item => console.log('updated timing ', item.trip_time)))
     );
   }
 
