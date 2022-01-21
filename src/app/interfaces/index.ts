@@ -18,6 +18,7 @@ export { LecturerTimetable } from './lecturer-timetable';
 export { MPULegend } from './mpu-legend';
 export { News, ShortNews } from './news';
 export { OperationHours } from './operation-hours';
+export { RegistrationDate, ResitDate } from './resit';
 export { Settings, SettingsOld } from './settings';
 export { SecurityQuestionsAndAnswers } from './security-questions-and-answers';
 export { StaffDirectory } from './staff-directory';
