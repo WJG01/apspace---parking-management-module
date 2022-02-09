@@ -76,18 +76,18 @@ export class BusShuttleServicesPage {
       map(r => {
         return r.map(item => {
           if (!item.trip_time.includes(' ')) {
-            const newDate = new Date();
+            // const newDate = new Date();
 
-            const localToUtcOffset = (newDate.getTimezoneOffset());
-            const localParsedDate = Date.parse(newDate.toString());
+            // const localToUtcOffset = (newDate.getTimezoneOffset());
+            // const localParsedDate = Date.parse(newDate.toString());
 
-            const utcDate = new Date(localParsedDate + (localToUtcOffset * 60000));
-            const utcParsedDate = Date.parse(utcDate.toUTCString());
+            // const utcDate = new Date(localParsedDate + (localToUtcOffset * 60000));
+            // const utcParsedDate = Date.parse(utcDate.toUTCString());
 
-            const d = new Date(utcParsedDate + (480 * 60000));
+            // const d = new Date(utcParsedDate + (480 * 60000));
 
             // console.log('malaysianTimeIsoString: ', malaysianTimeIsoString);
-            const dateObject = parse(item.trip_time, 'HH:mm', d);
+            const dateObject = new Date(item.trip_time);
             item.trip_time = this.dateWithTimezonePipe.transform(dateObject, 'bus');
           }
 

@@ -2,15 +2,14 @@ import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { Network } from '@ionic-native/network/ngx';
-import { AlertController, IonSearchbar, NavController, Platform, ToastController } from '@ionic/angular';
+import { AlertController, IonSearchbar, IonTabs, NavController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import Fuse from 'fuse.js';
 import { tap } from 'rxjs/operators';
 
-import { AppComponent } from 'src/app/app.component';
-import { CasTicketService } from 'src/app/services';
+import { CasTicketService, SettingsService } from 'src/app/services';
+import { AppComponent } from '../../app.component';
 import { Role } from '../../interfaces';
-import { SettingsService } from '../../services/settings.service';
 import { menus, menusTitle } from '../more/menu';
 import { MenuItem } from '../more/menu.interface';
 import { TabItem } from './tab-item.interface';
@@ -22,7 +21,9 @@ import { TabItem } from './tab-item.interface';
 })
 export class TabsPage implements OnInit {
   selectedTab: string;
+  @ViewChild(IonTabs) tab: IonTabs;
   tabs: TabItem[];
+  activeButton: string;
   smallScreen;
   shownSearchBar = false;
   logoSource = '';
@@ -91,26 +92,31 @@ export class TabsPage implements OnInit {
           {
             name: 'Timetable',
             path: 'student-timetable',
+            outlinedIcon: 'calendar-outline',
             icon: 'calendar'
           },
           {
             name: 'Attendance',
             path: 'attendance',
-            icon: 'alarm'
+            outlinedIcon: 'time-outline',
+            icon: 'time'
           },
           {
             name: 'Dashboard',
             path: 'dashboard',
-            icon: 'pulse'
+            outlinedIcon: 'grid-outline',
+            icon: 'grid'
           },
           {
             name: 'APCard',
             path: 'apcard',
+            outlinedIcon: 'card-outline',
             icon: 'card'
           },
           {
             name: 'More',
             path: 'more',
+            outlinedIcon: 'ellipsis-vertical-outline',
             icon: 'ellipsis-vertical'
           }
         ];
@@ -119,26 +125,31 @@ export class TabsPage implements OnInit {
           {
             name: 'Timetable',
             path: 'lecturer-timetable',
+            outlinedIcon: 'calendar-outline',
             icon: 'calendar'
           },
           {
             name: 'Profile',
             path: 'profile',
+            outlinedIcon: 'person-outline',
             icon: 'person'
           },
           {
             name: 'Dashboard',
             path: 'dashboard',
-            icon: 'pulse'
+            outlinedIcon: 'grid-outline',
+            icon: 'grid'
           },
           {
             name: 'APCard',
             path: 'apcard',
+            outlinedIcon: 'card-outline',
             icon: 'card'
           },
           {
             name: 'More',
             path: 'more',
+            outlinedIcon: 'ellipsis-vertical-outline',
             icon: 'ellipsis-vertical'
           }
         ];
@@ -147,21 +158,25 @@ export class TabsPage implements OnInit {
           {
             name: 'Profile',
             path: 'profile',
+            outlinedIcon: 'person-outline',
             icon: 'person'
           },
           {
             name: 'Dashboard',
             path: 'dashboard',
-            icon: 'pulse'
+            outlinedIcon: 'grid-outline',
+            icon: 'grid'
           },
           {
             name: 'APCard',
             path: 'apcard',
+            outlinedIcon: 'card-outline',
             icon: 'card'
           },
           {
             name: 'More',
             path: 'more',
+            outlinedIcon: 'ellipsis-vertical-outline',
             icon: 'ellipsis-vertical'
           }
         ];
@@ -333,11 +348,15 @@ export class TabsPage implements OnInit {
         // change logo to white text logo
         if (autoDark || theme.includes('dark')) {
           this.logoSource = 'assets/icon/apspace-logo-white-text.svg';
-        // change logo to black text logo
+          // change logo to black text logo
         } else {
           this.logoSource = 'assets/icon/apspace-logo-black-text.svg';
-          }
-        }),
-      );
+        }
+      }),
+    );
+  }
+
+  onChange() {
+    this.activeButton = this.tab.getSelected();
   }
 }

@@ -8,9 +8,22 @@
         <ion-col size-xs="12" class="dash-padding" [attr.size-md]="activeDashboardSections.length > 0 ? 5 : 7"
           [class.glob-margin-auto]="activeDashboardSections.length <= 0">
           <ion-card class="profile ion-no-margin ion-padding-top no-border-rad">
-            <ion-avatar joyrideStep= "step1" [text]="tourGuideStep[0]" [prevTemplate]="prevButton" [nextTemplate]="nextButton"
+            <!--<ion-avatar joyrideStep= "step1" [text]="tourGuideStep[0]" [prevTemplate]="prevButton" [nextTemplate]="nextButton"
                         [doneTemplate]="doneButton" tappable="true" class="glob-margin-auto ion-margin-top avatar"
               (click)="navigateToPage('profile')" *ngIf="!hideProfilePicture">
+              <ng-container *ngIf="isStudent; else staffImage">
+                <img [src]="
+                    'data:image/jpg;base64,' + (photo$ | async)?.base64_photo
+                  " onerror="this.src='assets/img/no_img.png'" alt="Profile" />
+              </ng-container>
+              <ng-template #staffImage>
+                <ng-container *ngIf="staffProfile$ | async as staffProfile">
+                  <img [src]="staffProfile[0].PHOTO" onerror="this.src='assets/img/no_img.png'" alt="Profile" />
+                </ng-container>
+              </ng-template>
+            </ion-avatar>-->
+            <ion-avatar tappable="true" class="glob-margin-auto ion-margin-top avatar"
+                        (click)="navigateToPage('profile')" *ngIf="!hideProfilePicture">
               <ng-container *ngIf="isStudent; else staffImage">
                 <img [src]="
                     'data:image/jpg;base64,' + (photo$ | async)?.base64_photo
@@ -28,12 +41,19 @@
                 {{isStudent ? (userProfile.NAME | uppercase) : (userProfileName$ | async | uppercase)}}
               </ion-card-title>
               <ion-card-subtitle class="ion-text-center">
-                <div
+                <!--<div
                   joyrideStep="step2" [text]="tourGuideStep[1]" [prevTemplate]="prevButton" [nextTemplate]="nextButton" [doneTemplate]="doneButton" *ngIf="(userProfile.STUDENT_NUMBER) || (!isStudent && userProfile.TITLE); else loadingCardSubtitle">
                   {{
                   isStudent
                   ? userProfile.STUDENT_NUMBER + " | " + userProfile.INTAKE
                   : (userProfile.TITLE | titlecase)
+                  }}
+                </div>-->
+                <div *ngIf="(userProfile.STUDENT_NUMBER) || (!isStudent && userProfile.TITLE); else loadingCardSubtitle">
+                  {{
+                  isStudent
+                    ? userProfile.STUDENT_NUMBER + " | " + userProfile.INTAKE
+                    : (userProfile.TITLE | titlecase)
                   }}
                 </div>
                 <ng-template #loadingCardSubtitle>

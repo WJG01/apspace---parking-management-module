@@ -47,18 +47,19 @@ export class ClassroomFinderPage implements OnInit {
   }
 
   getTimetableData() {
+    const excludeRooms = ['ONL', 'Online'];
     return this.tt.get()
       .pipe(
         tap(data => {
           this.locations = []; // Clean the array (just incase)
           data.map(item => {
-            if (this.locations.indexOf(item.LOCATION) === -1) {
+            if (this.locations.indexOf(item.LOCATION) === -1 && item.LOCATION !== 'ONL') {
               this.locations.push(item.LOCATION);
             }
           });
         }),
         tap(_ => this.location = this.locations[0]),
-        map(data => data)
+        map(data => data.filter(res => excludeRooms.every(room => !res.ROOM.includes(room)))) // Exclude Online and ONL room data
       );
   }
 

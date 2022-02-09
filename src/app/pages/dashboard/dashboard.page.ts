@@ -334,6 +334,8 @@ export class DashboardPage implements OnInit, DoCheck {
   ];
   tourGuideShown: boolean;
 
+  getAccentColor: any;
+
   constructor(
     private ws: WsApiService,
     private studentTimetableService: StudentTimetableService,
@@ -357,7 +359,18 @@ export class DashboardPage implements OnInit, DoCheck {
   ) {
     // getting the main accent color to color the chart.js (Temp until removing chart.js)
     // TODO handle value change
-    this.activeAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor')).rgba;
+
+    // Check if the accent color in user's storage exists in new accent-color.ts.
+    // If it doesn't then rollback to standard blue
+    this.getAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor'));
+    if (typeof this.getAccentColor === 'undefined') {
+      this.getAccentColor = accentColors.find(ac => ac.name === 'blue').name;
+      this.activeAccentColor = accentColors.find(ac => ac.name === 'blue').rgba;
+      this.settings.set('accentColor', this.getAccentColor);
+    }
+    else {
+      this.activeAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor')).rgba;
+    }
   }
 
   ngOnInit() {
@@ -1313,7 +1326,8 @@ export class DashboardPage implements OnInit, DoCheck {
       map(res => res.trips),
       map(trips => {
         return trips.filter(trip => {
-          return parse(trip.trip_time, 'kk:mm', new Date()) >= currentDate
+          const dateObject = new Date(trip.trip_time);
+          return dateObject >= currentDate
             && trip.trip_day === this.getTodayDay(currentDate)
             && ((trip.trip_from === firstLocation && trip.trip_to === secondLocation)
               || (trip.trip_from === secondLocation && trip.trip_to === firstLocation));
@@ -1330,16 +1344,14 @@ export class DashboardPage implements OnInit, DoCheck {
               times: []
             };
             // Convert to dateObject for time format
-            const localToUtcOffset = (currentDate.getTimezoneOffset());
-            const localParsedDate = Date.parse(currentDate.toString());
-
-            const utcDate = new Date(localParsedDate + (localToUtcOffset * 60000));
-            const utcParsedDate = Date.parse(utcDate.toUTCString());
-
-            const d = new Date(utcParsedDate + (480 * 60000));
-            const dateObject = parse(curr.trip_time, 'HH:mm', d);
-            curr.trip_time = this.dateWithTimezonePipe.transform(dateObject, 'bus');
-
+            // const localToUtcOffset = (currentDate.getTimezoneOffset());
+            // const localParsedDate = Date.parse(currentDate.toString());
+            //
+            // const utcDate = new Date(localParsedDate + (localToUtcOffset * 60000));
+            // const utcParsedDate = Date.parse(utcDate.toUTCString());
+            //
+            // const d = new Date(utcParsedDate + (480 * 60000));
+            curr.trip_time = this.dateWithTimezonePipe.transform(curr.trip_time, 'bus');
             prev[curr.trip_from + curr.trip_to].times.push(curr.trip_time);
             return prev;
           },
