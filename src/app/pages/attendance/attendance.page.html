@@ -18,7 +18,7 @@
     <ion-row>
       <ng-container *ngIf="(course$ | async) as course">
         <ion-col size="12" size-md="4" push-md="8">
-          <ion-card class="ion-no-margin">
+          <ion-card class="ion-no-margin ion-margin-top">
             <ion-item>
               <ion-label position="floating">Intake</ion-label>
               <ion-select [(ngModel)]="selectedIntake" (ngModelChange)="intakeChanged()" interface="action-sheet">
@@ -109,7 +109,7 @@
           <ng-container *ngIf="(attendance$ | async) as attendances; else loadAttendance">
             <ng-container *ngIf="attendances.length > 0; else noAttendance">
               <ng-container *ngFor="let a of attendances; let isLast = last">
-                <ion-card class="ion-no-margin" [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+                <ion-card class="ion-no-margin ion-margin-top" [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
                   <ion-item-divider color="light" mode="md">
                     <ion-label color="primary" class="glob-text-bold">
                       Semester {{ a.semester }}
@@ -155,7 +155,7 @@
               </ng-container>
             </ng-container>
             <ng-template #noAttendance>
-              <ion-card class="ion-no-margin">
+              <ion-card class="ion-no-margin ion-margin-top">
                 <ion-card-content>
                   <app-message-with-svg imageUrl="assets/img/search-not-found.svg"
                     messageTitle="Oops! No Attendance Records Found for {{selectedIntake}}."
@@ -176,7 +176,7 @@
             </ng-template>
           </ng-container>
           <ng-template #loadAttendance>
-            <ion-card class="ion-no-margin">
+            <ion-card class="ion-no-margin ion-margin-top">
               <ion-item-divider lines="none" color="light">
                 <ion-skeleton-text animated style="width: 40%; height: 15px"></ion-skeleton-text>
               </ion-item-divider>
