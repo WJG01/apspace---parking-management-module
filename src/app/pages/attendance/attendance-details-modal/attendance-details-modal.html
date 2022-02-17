@@ -17,22 +17,22 @@
         <p>{{ moduleDetails.SUBJECT_CODE }}</p>
       </div>
 
-      <ion-row class="ion-text-center ion-margin-bottom">
-        <ion-col size="4">
-          <ion-card class="ion-no-margin">
+      <ion-row class="ion-text-center small-margin-bottom ">
+        <ion-col size="4" class="ion-no-padding">
+          <ion-card class="ion-no-margin ">
             <h6 class="small-margin">{{ moduleDetails.TOTAL_CLASSES - moduleDetails.TOTAL_ABSENT }}</h6>
             <p class="glob-text-bold glob-success-text small-margin">Present</p>
           </ion-card>
         </ion-col>
 
-        <ion-col size="4">
-          <ion-card class="ion-no-margin">
+        <ion-col size="4" class="ion-no-padding">
+          <ion-card class="ion-no-margin ion-margin-start ion-margin-end">
             <h6 class="small-margin">{{ moduleDetails.TOTAL_ABSENT }}</h6>
             <p class="glob-text-bold glob-danger-text small-margin">Absent</p>
           </ion-card>
         </ion-col>
 
-        <ion-col size="4">
+        <ion-col size="4" class="ion-no-padding">
           <ion-card class="ion-no-margin">
             <h6 class="small-margin">{{ moduleDetails.TOTAL_CLASSES }}</h6>
             <p class="glob-text-bold small-margin">Total Classes</p>
@@ -40,8 +40,8 @@
         </ion-col>
       </ion-row>
 
-      <ion-row class="ion-text-center ion-margin-bottom">
-        <ion-col size="12">
+      <ion-row class="ion-text-center small-margin-bottom ion-no-padding">
+        <ion-col size="12" class="ion-no-padding">
           <ion-card class="ion-no-margin">
             <h6 class="small-margin"
               [ngClass]="moduleDetails.EXAM_ELIGIBILITY === 'Eligible' ? 'glob-success-text' : 'glob-danger-text'">{{
