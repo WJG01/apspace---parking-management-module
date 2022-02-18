@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { format } from 'date-fns';
 import { Observable, Subscription } from 'rxjs';
-import { finalize, tap } from 'rxjs/operators';
+import { finalize, map, tap } from 'rxjs/operators';
 
 import { WsApiService } from 'src/app/services';
 import { NotifierService } from 'src/app/shared/notifier/notifier.service';
@@ -16,22 +16,24 @@ import { PrintTransactionsModalPage } from './print-transactions-modal/print-tra
   styleUrls: ['./apcard.page.scss'],
 })
 export class ApcardPage implements OnInit, OnDestroy {
+
   transaction$: Observable<Apcard[]>;
+  skeleton = new Array(2);
   transactions: Apcard[];
+  balance: number;
   indecitor = false;
-  skeletonConfig = [
-    { numOfTrans: new Array(4) },
-    { numOfTrans: new Array(1) },
-    { numOfTrans: new Array(7) },
-    { numOfTrans: new Array(2) },
-    { numOfTrans: new Array(6) }
-  ];
-  isLoading: boolean;
-
   todayDate = format(new Date(), 'dd MMM yyyy');
-
+  currentYear = new Date().getFullYear();
   timeFormatChangeFlag: boolean;
   notification: Subscription;
+  showFilterMenu: boolean;
+  transactionYears = [];
+  filterObject = {
+    year: this.currentYear,
+    type: 'all',
+    showThisMonthOnly: false
+  };
+  noBalance: boolean;
 
   constructor(
     private ws: WsApiService,
@@ -87,11 +89,65 @@ export class ApcardPage implements OnInit, OnDestroy {
   }
 
   doRefresh(refresher?) {
-    this.isLoading = true;
     this.transaction$ = this.ws.get<Apcard[]>('/apcard/', refresher).pipe(
-      tap(transactions => this.transactions = transactions),
-      finalize(() => refresher && refresher.target.complete()),
-      finalize(() => (this.isLoading = false))
+      tap(transactions => {
+        if (transactions.length < 1) {
+          this.noBalance = true;
+          return;
+        }
+        for (const t of transactions) {
+          const spendYear = new Date(t.SpendDate).getFullYear();
+          if (this.transactionYears.indexOf(spendYear) <= -1) {
+            this.transactionYears.push(spendYear);
+          }
+        }
+        // Check if current year exists in the array
+        if (!this.transactionYears.includes(this.currentYear)) {
+          this.transactionYears.unshift(this.currentYear);
+        }
+
+        this.transactions = transactions;
+        this.balance = transactions[0].Balance;
+      }),
+      map(transactions => {
+        let filteredtransactions = transactions.filter(t => {
+          const transactionYear = new Date(t.SpendDate).getFullYear();
+
+          return transactionYear === this.filterObject.year;
+        });
+
+        if (this.filterObject.year !== this.currentYear) {
+          filteredtransactions = filteredtransactions.filter(t => {
+            const transactionYear = new Date(t.SpendDate).getFullYear();
+
+            return transactionYear === this.filterObject.year;
+          });
+        }
+
+        if (this.filterObject.type !== 'all') {
+          return filteredtransactions =
+            filteredtransactions.filter(t =>
+              this.filterObject.type === 'credit' ? t.SpendVal >= 0 : t.SpendVal < 0);
+        }
+
+        if (this.filterObject.showThisMonthOnly) {
+          const currentMonth = new Date().getMonth() + 1;
+          const currentYear = new Date().getFullYear();
+
+          filteredtransactions = filteredtransactions.filter(e => {
+            const formattedDate = format(new Date(e.SpendDate), 'yyyy-MM-dd');
+            const yearMonth = currentYear + '-' + currentMonth;
+            return formattedDate.indexOf(yearMonth) !== -1;
+          });
+        }
+
+        return filteredtransactions;
+      }),
+      finalize(() => {
+        if (refresher) {
+          refresher.target.complete();
+        }
+      })
     );
   }
 
@@ -102,16 +158,22 @@ export class ApcardPage implements OnInit, OnDestroy {
     return false;
   }
 
+  resetFilters() {
+    this.filterObject = {
+      year: this.currentYear,
+      type: 'all',
+      showThisMonthOnly: false
+    };
+    this.doRefresh();
+  }
+
   async generateMonthlyTransactionsPdf() {
     const modal = await this.modalCtrl.create({
       component: PrintTransactionsModalPage,
       componentProps: {
         transactions: this.transactions
-      },
-      cssClass: 'glob-partial-page-modal',
+      }
     });
     await modal.present();
-    await modal.onDidDismiss();
   }
-
 }

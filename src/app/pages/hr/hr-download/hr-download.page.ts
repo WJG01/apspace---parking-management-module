@@ -126,7 +126,7 @@ export class HrDownloadPage {
           text: 'Yes',
           handler: _ => {
             this.presentLoading();
-            this.ws.get<any>('/epayslip/sync', { url: this.payslipsUrl }).subscribe({
+            this.ws.get<any>('/epayslip/sync').subscribe({
               next: () => {
                 this.presentAlert('Success!', 'Synchronized', 'The synchronize is done.', 'success-alert');
               },
