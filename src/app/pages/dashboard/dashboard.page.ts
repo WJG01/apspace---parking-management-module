@@ -6,6 +6,8 @@ import { AlertController, IonSlides, ModalController, NavController, Platform, T
 import { Storage } from '@ionic/storage';
 import { format, parse, parseISO } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
+// import { JoyrideService } from 'ngx-joyride';
+// import { JoyrideOptions } from 'ngx-joyride/lib/models/joyride-options.class';
 import { Observable, Subscription, combineLatest, forkJoin, of, zip } from 'rxjs';
 import { catchError, concatMap, finalize, map, mergeMap, shareReplay, switchMap, tap, toArray } from 'rxjs/operators';
 
@@ -78,6 +80,7 @@ export class DashboardPage implements OnInit, DoCheck {
   role: Role;
   isStudent: boolean;
   isLecturer: boolean;
+  isAdmin: boolean;
   isCordova: boolean;
   skeletons = new Array(5);
 
@@ -324,6 +327,15 @@ export class DashboardPage implements OnInit, DoCheck {
   // timezone
   enableMalaysiaTimezone;
 
+  // APTour Guide
+  tourGuideStep = [
+    'Apart from seeing your beautiful face 💃, you can also tap your Profile Picture to view your Profile.',
+    'You can refer to your TP Number & Intake Code from this section 👀'
+  ];
+  tourGuideShown: boolean;
+
+  getAccentColor: any;
+
   constructor(
     private ws: WsApiService,
     private studentTimetableService: StudentTimetableService,
@@ -342,12 +354,23 @@ export class DashboardPage implements OnInit, DoCheck {
     private settings: SettingsService,
     private storage: Storage,
     private notifierService: NotifierService,
-    private dateWithTimezonePipe: DateWithTimezonePipe
-
+    private dateWithTimezonePipe: DateWithTimezonePipe,
+    // private joyrideService: JoyrideService
   ) {
     // getting the main accent color to color the chart.js (Temp until removing chart.js)
     // TODO handle value change
-    this.activeAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor')).rgba;
+
+    // Check if the accent color in user's storage exists in new accent-color.ts.
+    // If it doesn't then rollback to standard blue
+    this.getAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor'));
+    if (typeof this.getAccentColor === 'undefined') {
+      this.getAccentColor = accentColors.find(ac => ac.name === 'blue').name;
+      this.activeAccentColor = accentColors.find(ac => ac.name === 'blue').rgba;
+      this.settings.set('accentColor', this.getAccentColor);
+    }
+    else {
+      this.activeAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor')).rgba;
+    }
   }
 
   ngOnInit() {
@@ -364,6 +387,8 @@ export class DashboardPage implements OnInit, DoCheck {
       this.isStudent = Boolean(role & Role.Student);
       // tslint:disable-next-line: no-bitwise
       this.isLecturer = Boolean(role & Role.Lecturer);
+      // tslint:disable-next-line: no-bitwise
+      this.isAdmin = Boolean(role & Role.Admin);
 
       this.settings.get$('dashboardSections')
         .subscribe(data => this.activeDashboardSections = data);
@@ -389,6 +414,18 @@ export class DashboardPage implements OnInit, DoCheck {
       if (this.platform.is('cordova')) {
         this.runCodeOnReceivingNotification(); // notifications
       }
+
+      // // Get Tour Guide status
+      // this.settings.get$('tourGuideSeen').
+      // subscribe(data => this.tourGuideShown = data);
+      // if (!this.tourGuideShown) {
+      //   this.welcomeTourGuide();
+      // }
+      //
+      // // Overwrite the tour guide message for staff
+      // if (!this.isStudent) {
+      //   this.tourGuideStep[1] = 'You can check your Job Title from this section 💼';
+      // }
       this.settings.initialSync();
       this.doRefresh();
     });
@@ -667,7 +704,7 @@ export class DashboardPage implements OnInit, DoCheck {
       // GET TODAYS CLASSES ONLY
       map(intakeTimetable => intakeTimetable.filter(timetable => this.eventIsToday(new Date(timetable.DATESTAMP_ISO), dateNow))),
 
-      // CONVERT TIMETABLE OBJECT TO THE OBJECT EXPECTED IN THE EVENT COMPONENET
+      // CONVERT TIMETABLE OBJECT TO THE OBJECT EXPECTED IN THE EVENT COMPONENT
       map((timetables: StudentTimetable[]) => {
         const timetableEventMode: EventComponentConfigurations[] = [];
         timetables.forEach((timetable: StudentTimetable) => {
@@ -676,7 +713,7 @@ export class DashboardPage implements OnInit, DoCheck {
             classPass = true;
           }
           timetableEventMode.push({
-            title: timetable.MODID,
+            title: timetable.MODULE_NAME + ' | ' + timetable.MODID,
             firstDescription: timetable.LOCATION + ' | ' + timetable.ROOM,
             secondDescription: timetable.NAME,
             // tslint:disable-next-line: quotemark
@@ -952,9 +989,9 @@ export class DashboardPage implements OnInit, DoCheck {
       // AP & BP Removed Temp (Requested by Management | DON'T TOUCH)
       this.getupcomingExams(intake.replace(/[(]AP[)]|[(]BP[)]/g, ''), todaysDate, true),
       this.getUpcomingHoliday(todaysDate, refresher),
-      this.getUpcomingMoodle(todaysDate, refresher)
+      // this.getUpcomingMoodle(todaysDate, refresher) //API is down
     ).pipe(
-      map(x => this.getSortEvents(x[0].concat(x[1]).concat(x[2]))) // MERGE THE TWO ARRAYS TOGETHER // NOW THREE
+      map(x => this.getSortEvents(x[0].concat(x[1]))) // MERGE THE TWO ARRAYS TOGETHER // NOW THREE
     ) : this.getUpcomingHoliday(todaysDate);
   }
 
@@ -1261,10 +1298,7 @@ export class DashboardPage implements OnInit, DoCheck {
       );
   }
 
-
-
   // UPCOMING TRIPS
-
   getLocationColor(locationName: string) {
     for (const location of this.locations) {
       if (location.location_name === locationName) {
@@ -1292,7 +1326,8 @@ export class DashboardPage implements OnInit, DoCheck {
       map(res => res.trips),
       map(trips => {
         return trips.filter(trip => {
-          return parse(trip.trip_time, 'kk:mm', new Date()) >= currentDate
+          const dateObject = new Date(trip.trip_time);
+          return dateObject >= currentDate
             && trip.trip_day === this.getTodayDay(currentDate)
             && ((trip.trip_from === firstLocation && trip.trip_to === secondLocation)
               || (trip.trip_from === secondLocation && trip.trip_to === firstLocation));
@@ -1309,16 +1344,14 @@ export class DashboardPage implements OnInit, DoCheck {
               times: []
             };
             // Convert to dateObject for time format
-            const localToUtcOffset = (currentDate.getTimezoneOffset());
-            const localParsedDate = Date.parse(currentDate.toString());
-
-            const utcDate = new Date(localParsedDate + (localToUtcOffset * 60000));
-            const utcParsedDate = Date.parse(utcDate.toUTCString());
-
-            const d = new Date(utcParsedDate + (480 * 60000));
-            const dateObject = parse(curr.trip_time, 'HH:mm', d);
-            curr.trip_time = this.dateWithTimezonePipe.transform(dateObject, 'bus');
-
+            // const localToUtcOffset = (currentDate.getTimezoneOffset());
+            // const localParsedDate = Date.parse(currentDate.toString());
+            //
+            // const utcDate = new Date(localParsedDate + (localToUtcOffset * 60000));
+            // const utcParsedDate = Date.parse(utcDate.toUTCString());
+            //
+            // const d = new Date(utcParsedDate + (480 * 60000));
+            curr.trip_time = this.dateWithTimezonePipe.transform(curr.trip_time, 'bus');
             prev[curr.trip_from + curr.trip_to].times.push(curr.trip_time);
             return prev;
           },
@@ -1443,5 +1476,62 @@ export class DashboardPage implements OnInit, DoCheck {
       this.presentToast('External links cannot be opened in offline mode. Please ensure you have a network connection and try again');
     }
   }
+
+  // async welcomeTourGuide() {
+  //   const alert = await this.alertCtrl.create({
+  //     header: 'Welcome to APSpace, your digital university companion!',
+  //     message: 'Please take a tour with us to get familiarized with APSpace.',
+  //     buttons: [{
+  //       text: 'Start Tour',
+  //       handler: () => {
+  //         this.startTour();
+  //       }
+  //     }]
+  //   });
+  //   await alert.present();
+  // }
+  //
+  // startTour() {
+  //   let tourSteps;
+  //   const x = window.matchMedia('(max-width: 720px)');
+  //
+  //   // Students and Lecturers are using the same array steps
+  //   // Admins are using different ones
+  //   // If roles are both admin and lecturer then assign them to the lecturer tour guide
+  //   // For mobile devices an additional step is added for all the roles
+  //
+  //   // For small screen
+  //   if (x.matches) {
+  //     // For students, lecturer, & lecturer + admin
+  //     if (!this.isAdmin || this.isLecturer && this.isAdmin) {
+  //       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs',
+  //         'step8@/tabs', 'step9@/tabs'];
+  //     }
+  //     // For admin
+  //     if (!this.isLecturer && this.isAdmin) {
+  //       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs',
+  //         'step8@/tabs'];
+  //     }
+  //   }
+  //   // For large screen
+  //   if (!x.matches) {
+  //     // For admin
+  //     if (!this.isLecturer && this.isAdmin) {
+  //       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs'];
+  //     }
+  //     // For students, lecturer, & lecturer + admin
+  //     if (!this.isAdmin || this.isLecturer && this.isAdmin) {
+  //       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs', 'step8@/tabs'];
+  //     }
+  //   }
+  //
+  //   const options: JoyrideOptions = {
+  //     steps: tourSteps,
+  //     themeColor: '#000000'
+  //   };
+  //
+  //   this.joyrideService.startTour(options);
+  //   this.settings.set('tourGuideSeen', true);
+  // }
 }
 

@@ -2,11 +2,13 @@ import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { Network } from '@ionic-native/network/ngx';
-import { AlertController, IonSearchbar, NavController, Platform, ToastController } from '@ionic/angular';
+import { AlertController, IonSearchbar, IonTabs, NavController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import Fuse from 'fuse.js';
+import { tap } from 'rxjs/operators';
 
-import { CasTicketService } from 'src/app/services';
+import { CasTicketService, SettingsService } from 'src/app/services';
+import { AppComponent } from '../../app.component';
 import { Role } from '../../interfaces';
 import { menus, menusTitle } from '../more/menu';
 import { MenuItem } from '../more/menu.interface';
@@ -19,9 +21,12 @@ import { TabItem } from './tab-item.interface';
 })
 export class TabsPage implements OnInit {
   selectedTab: string;
+  @ViewChild(IonTabs) tab: IonTabs;
   tabs: TabItem[];
+  activeButton: string;
   smallScreen;
   shownSearchBar = false;
+  logoSource = '';
 
   @ViewChild(IonSearchbar, { static: false }) searchbar: IonSearchbar;
 
@@ -36,6 +41,21 @@ export class TabsPage implements OnInit {
   menusTitle: { [id: string]: string } = menusTitle;
   isMobile = this.platform.is('cordova');
 
+
+  // APTour Guide
+  tourGuideStep = [
+    'Are you feeling lost 🤷‍♀️? Search for any information within APSpace.',
+    'Don\'t miss a class 💁‍♂️! Refer to the Timetable Tab.',
+    'Don\'t forget to mark your attendance as well 🤦‍♀️! Refer to the Attendance Tab.',
+    '📢 Stay up to date about your academic day from the Dashboard Tab.',
+    'Keep track of your balance and transactions from the APCard Tab 💸',
+    'Can\'t get enough of APSpace? Explore more information from the More Tab 💁‍♂️',
+    'Got a question but no answer 🙇‍♂️? Please open a ticket and ask us!'
+  ];
+  role: Role;
+  isAdmin: boolean;
+  isLecturer: boolean;
+
   constructor(
     private router: Router,
     private storage: Storage,
@@ -45,7 +65,9 @@ export class TabsPage implements OnInit {
     public navCtrl: NavController,
     private toastCtrl: ToastController,
     private cas: CasTicketService,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private appComponent: AppComponent,
+    private settings: SettingsService
   ) { }
 
   ngOnInit() {
@@ -62,7 +84,7 @@ export class TabsPage implements OnInit {
     });
 
     this.onResize();
-
+    this.checkLogoType();
     this.storage.get('role').then((role: Role) => {
       // tslint:disable:no-bitwise
       if (role & Role.Student) {
@@ -70,26 +92,31 @@ export class TabsPage implements OnInit {
           {
             name: 'Timetable',
             path: 'student-timetable',
+            outlinedIcon: 'calendar-outline',
             icon: 'calendar'
           },
           {
             name: 'Attendance',
             path: 'attendance',
-            icon: 'alarm'
+            outlinedIcon: 'time-outline',
+            icon: 'time'
           },
           {
             name: 'Dashboard',
             path: 'dashboard',
-            icon: 'pulse'
+            outlinedIcon: 'grid-outline',
+            icon: 'grid'
           },
           {
             name: 'APCard',
             path: 'apcard',
+            outlinedIcon: 'card-outline',
             icon: 'card'
           },
           {
             name: 'More',
             path: 'more',
+            outlinedIcon: 'ellipsis-vertical-outline',
             icon: 'ellipsis-vertical'
           }
         ];
@@ -98,26 +125,31 @@ export class TabsPage implements OnInit {
           {
             name: 'Timetable',
             path: 'lecturer-timetable',
+            outlinedIcon: 'calendar-outline',
             icon: 'calendar'
           },
           {
             name: 'Profile',
             path: 'profile',
+            outlinedIcon: 'person-outline',
             icon: 'person'
           },
           {
             name: 'Dashboard',
             path: 'dashboard',
-            icon: 'pulse'
+            outlinedIcon: 'grid-outline',
+            icon: 'grid'
           },
           {
             name: 'APCard',
             path: 'apcard',
+            outlinedIcon: 'card-outline',
             icon: 'card'
           },
           {
             name: 'More',
             path: 'more',
+            outlinedIcon: 'ellipsis-vertical-outline',
             icon: 'ellipsis-vertical'
           }
         ];
@@ -126,21 +158,25 @@ export class TabsPage implements OnInit {
           {
             name: 'Profile',
             path: 'profile',
+            outlinedIcon: 'person-outline',
             icon: 'person'
           },
           {
             name: 'Dashboard',
             path: 'dashboard',
-            icon: 'pulse'
+            outlinedIcon: 'grid-outline',
+            icon: 'grid'
           },
           {
             name: 'APCard',
             path: 'apcard',
+            outlinedIcon: 'card-outline',
             icon: 'card'
           },
           {
             name: 'More',
             path: 'more',
+            outlinedIcon: 'ellipsis-vertical-outline',
             icon: 'ellipsis-vertical'
           }
         ];
@@ -168,9 +204,28 @@ export class TabsPage implements OnInit {
 
       });
     });
+
+    // Overwrite the tour guide message for staff
+    this.storage.get('role').then((role: Role) => {
+      this.role = role;
+      // tslint:disable-next-line: no-bitwise
+      this.isAdmin = Boolean(role & Role.Admin);
+      // tslint:disable-next-line: no-bitwise
+      this.isLecturer = Boolean(role & Role.Lecturer);
+
+      // APTour Guide texts for lecturer or lecturer + admin
+      if (this.isLecturer || this.isLecturer && this.isAdmin) {
+        this.tourGuideStep[1] = 'See your class schedule or take the class attendance from the Timetable Tab';
+        this.tourGuideStep[2] = 'You can go to your Profile from the quick navigation bar as well 👤';
+      }
+      // APTour Guide texts for admin
+      else if (this.isAdmin) {
+        this.tourGuideStep.splice(1, 2, 'You can go to your Profile from the quick navigation bar as well 👤');
+        this.tourGuideStep[6] = 'Got a question but no answer 🙇‍♂️? Please open a ticket and ask us!';
+      }
+    });
     // tslint:enable:no-bitwise
   }
-
 
   @HostListener('document:keydown.f1')
   @HostListener('document:keydown.?')
@@ -274,7 +329,34 @@ export class TabsPage implements OnInit {
         }
       ],
     });
-    toast.present();
+    await toast.present();
   }
 
+  async finishTour() {
+    const alert = await this.alertCtrl.create({
+      header: 'That\'s it!',
+      message: 'Enjoy your experience with APSpace!',
+      buttons: ['Dismiss']
+    });
+    await alert.present();
+  }
+
+  checkLogoType() {
+    this.appComponent.theme$ = this.settings.get$('theme').pipe(
+      tap(theme => {
+        const autoDark = theme === '' && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        // change logo to white text logo
+        if (autoDark || theme.includes('dark')) {
+          this.logoSource = 'assets/icon/apspace-logo-white-text.svg';
+          // change logo to black text logo
+        } else {
+          this.logoSource = 'assets/icon/apspace-logo-black-text.svg';
+        }
+      }),
+    );
+  }
+
+  onChange() {
+    this.activeButton = this.tab.getSelected();
+  }
 }

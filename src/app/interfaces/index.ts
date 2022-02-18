@@ -1,6 +1,7 @@
 export { Apcard } from './apcard';
 export { APLCClass, APLCClassDescription, APLCStudentBehaviour, APLCSubject } from './aplc';
-export { Attendance } from './attendance';
+export { Attendance, MappedAttendance } from './attendance';
+export { AttendanceDetails } from './attendance-details';
 export { AttendanceLegend } from './attendance-legend';
 export { BusTrips, APULocations, APULocation, BusTrip } from './bus-shuttle-services';
 export { AttendixClass, Classcode, Classcodev1, FlatClasscodev1 } from './classcode';
@@ -18,6 +19,7 @@ export { LecturerTimetable } from './lecturer-timetable';
 export { MPULegend } from './mpu-legend';
 export { News, ShortNews } from './news';
 export { OperationHours } from './operation-hours';
+export { RegistrationDate, ResitDate } from './resit';
 export { Settings, SettingsOld } from './settings';
 export { SecurityQuestionsAndAnswers } from './security-questions-and-answers';
 export { StaffDirectory } from './staff-directory';

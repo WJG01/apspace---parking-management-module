@@ -6,8 +6,18 @@
   margin: auto !important;
 }
 
+.glob-success-text {
+  color: var(--ion-color-success);
+  --color: var(--ion-color-success);
+}
+
+.glob-danger-text {
+  color: var(--ion-color-danger);
+  --color: var(--ion-color-danger);
+}
+
 .glob-text-bold {
-  font-weight: bold !important;
+  font-weight: 900 !important;
 }
 
 .glob-white-space-normal {
@@ -235,4 +245,8 @@
 
 .virtual-card-modal ion-backdrop{
   --backdrop-opacity: .9;
+}
+
+ion-select-popover {
+  overflow: scroll !important;
 }

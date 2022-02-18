@@ -13,171 +13,153 @@
   <ion-refresher slot="fixed" pullMax="400" pullMin="60" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
   </ion-refresher>
+
   <div class="glob-container">
-    <ion-grid *ngIf="course$ | async">
-      <ion-row>
+    <ion-row>
+      <ng-container *ngIf="(course$ | async) as course">
         <ion-col size="12" size-md="4" push-md="8">
-          <ng-container *ngIf="average >= 0; else noAverageAvailable">
-            <ion-card class="ion-no-margin ion-margin-top" [color]="average >= 0.8 ? 'success' : 'danger'">
+          <ion-card class="ion-no-margin ion-margin-top">
+            <ion-item>
+              <ion-label position="floating">Intake</ion-label>
+              <ion-select [(ngModel)]="selectedIntake" (ngModelChange)="intakeChanged()" interface="action-sheet">
+                <ion-select-option *ngFor="let intake of studentIntakes" [value]="intake">
+                  {{ intake }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ng-container *ngIf="average >= 0; else noAverage">
               <ion-card-header class="ion-no-padding ion-padding-bottom">
-                <ion-item [color]="average >= 0.8 ? 'success' : 'danger'">
-                  <ion-label position="floating">Intake</ion-label>
-                  <ion-select [(ngModel)]="selectedIntake" (ngModelChange)="intakeChanged()" value="notifications"
-                    interface="action-sheet">
-                    <ion-select-option *ngFor="let intake of intakeLabels" [value]="intake">{{intake}}
-                    </ion-select-option>
-                  </ion-select>
-                </ion-item>
-                <ion-card-subtitle class="ion-text-center ion-padding-top"
-                  color="medium">
+                <ion-card-subtitle class="ion-text-center ion-padding-top" color="medium">
                   Overall Intake Attendance
                 </ion-card-subtitle>
-                <ion-card-title
-                  class="ion-text-center glob-text-bold"
-                  [color]="average >= 0.8 ? 'success' : 'danger'">
+                <ion-card-title class="ion-text-center glob-text-bold" [color]="average >= 0.8 ? 'success' : 'danger'">
                   <h2 class="ion-no-margin">{{ average * 100 | number: "1.0-1" }}%</h2>
                 </ion-card-title>
               </ion-card-header>
-              <ion-card-content class="ion-no-padding ion-padding-bottom ion-text-center">
-                <ion-button class="ion-no-margin" size="small" color="light" fill="outline"
-                  [routerLink]="['/attendix/update']">
-                  Sign Class Attendance
-                  <ion-icon name="checkmark-done-circle-outline" slot="end"></ion-icon>
-                </ion-button>
-              </ion-card-content>
-            </ion-card>
-          </ng-container>
-          <ng-template #noAverageAvailable>
-            <ng-container *ngIf="average == -1; else loadingAverage">
-              <ion-card class="ion-no-margin ion-margin-top">
+            </ng-container>
+            <ng-template #noAverage>
+              <ng-container *ngIf="average == -1; else loadingAverage">
                 <ion-card-header class="ion-no-padding">
-                  <ion-item [color]="average == -1 ? '' : average >= 0.8 ? 'success' : 'danger'">
-                    <ion-label position="floating">Intake</ion-label>
-                    <ion-select [(ngModel)]="selectedIntake" (ngModelChange)="intakeChanged()" value="notifications"
-                      interface="action-sheet">
-                      <ion-select-option *ngFor="let intake of intakeLabels" [value]="intake">{{intake}}
-                      </ion-select-option>
-                    </ion-select>
-                  </ion-item>
                   <ion-card-title color="danger" class="ion-text-center ion-padding-start ion-padding-end">
-                    No Attendance Data for {{selectedIntake}}
+                    No Attendance for {{ selectedIntake }}
                   </ion-card-title>
                   <ion-card-subtitle class="ion-padding-start ion-padding-end ion-padding-bottom">
                     Either the intake just started or your lecturers did not upload your attendance for any of your
                     modules
                   </ion-card-subtitle>
                 </ion-card-header>
-              </ion-card>
-            </ng-container>
-            <ng-template #loadingAverage>
-              <ion-card class="ion-no-margin ion-margin-top">
-                <ion-card-header class="ion-no-padding">
-                  <ion-item>
-                    <ion-label position="floating">Intake</ion-label>
-                    <ion-select [(ngModel)]="selectedIntake" (ngModelChange)="intakeChanged()" value="notifications"
-                      interface="action-sheet">
-                      <ion-select-option *ngFor="let intake of intakeLabels" [value]="intake">{{intake}}
-                      </ion-select-option>
-                    </ion-select>
-                  </ion-item>
+              </ng-container>
+              <ng-template #loadingAverage>
+                <ion-card-header>
+                  <ion-card-subtitle>
+                    <ion-skeleton-text class="glob-margin-auto" animated style="line-height: 25px; width: 45%;">
+                    </ion-skeleton-text>
+                  </ion-card-subtitle>
+                  <ion-card-title>
+                    <ion-skeleton-text class="glob-margin-auto" animated style="line-height: 25px; width: 30%;">
+                    </ion-skeleton-text>
+                  </ion-card-title>
                 </ion-card-header>
-                <ion-card-content class="ion-no-padding">
-                  <ion-skeleton-text class="ion-no-margin" animated style="height: 120px; width: 100%;">
-                  </ion-skeleton-text>
-                </ion-card-content>
-              </ion-card>
+              </ng-template>
             </ng-template>
-          </ng-template>
+
+            <ion-card-content class="ion-no-padding ion-padding-bottom ion-text-center">
+              <ion-button class="ion-no-margin" size="small" [routerLink]="['/attendix/update']"
+                [disabled]="average == -1 || average >= 0 ? false : true">
+                Sign Class Attendance
+              </ion-button>
+            </ion-card-content>
+
+            <ion-progress-bar value="1" [color]="average >= 0.8 ? 'success' : 'danger'"></ion-progress-bar>
+          </ion-card>
 
           <div class="h-mobile-d-desktop ion-margin-top">
-            <div *ngIf="legend$ | async as legend; else loadLegend">
-              <ion-card class="legend ion-no-margin">
-                <ion-card-header>
-                  <ion-card-title color="primary">Legend</ion-card-title>
-                </ion-card-header>
-                <ion-card-content>
+            <ion-card class="ion-no-margin">
+              <ion-item-divider color="light">
+                <ion-label color="primary" class="glob-text-bold">
+                  Legend
+                </ion-label>
+              </ion-item-divider>
+              <ion-card-content>
+                <ng-container *ngIf="(legend$ | async) as legend; else loadLegend">
                   <ion-row *ngFor="let l of legend | keyvalue">
-                    <ion-col col-3>{{ l.key }}</ion-col>
-                    <ion-col col-9>{{ l.value }}</ion-col>
+                    <ion-col size="3">{{ l.key }}</ion-col>
+                    <ion-col size="9">{{ l.value }}</ion-col>
                   </ion-row>
-                </ion-card-content>
-              </ion-card>
-            </div>
+                </ng-container>
 
-            <ng-template #loadLegend>
-              <ion-card>
-                <ion-item>
-                  <ion-skeleton-text style="width: 100%; height: 200px;" animated></ion-skeleton-text>
-                </ion-item>
-              </ion-card>
-            </ng-template>
+                <ng-template #loadLegend>
+                  <ion-row *ngFor="let _ of skeletons">
+                    <ion-col size="3">
+                      <ion-skeleton-text animated style="line-height: 25px; width: 100%;">
+                      </ion-skeleton-text>
+                    </ion-col>
+                    <ion-col size="9">
+                      <ion-skeleton-text animated style="line-height: 25px; width: 100%;">
+                      </ion-skeleton-text>
+                    </ion-col>
+                  </ion-row>
+                </ng-template>
+              </ion-card-content>
+            </ion-card>
           </div>
         </ion-col>
 
         <ion-col size="12" size-md="8" pull-md="4">
-          <ng-template let-attendances [ngIf]="attendance$ | async" [ngIfElse]="loadAttendance">
-            <ng-container *ngIf="attendances.length > 0; else noAttendanceRecords">
-              <ng-container *ngFor="let semester of attendances | reverse">
-                <ion-card class="ion-no-margin ion-margin-top">
-                  <ion-card-header color="secondary">
-                    <ion-card-title>Semester {{semester.semester}}</ion-card-title>
-                  </ion-card-header>
-                  <ion-card-content class="ion-no-padding">
-                    <ion-list class="ion-no-padding">
-                      <ion-item lines="full" *ngFor="let module of semester.value" detail="true" button="true"
-                        tappable="true" (click)="attendanceDetails(module.MODULE_ATTENDANCE, selectedIntake, module.SUBJECT_CODE)">
-                        <ion-label class="glob-white-space-normal">
-                          <ion-grid>
-                            <ion-row>
-                              <ion-col size="12">
-                                <ion-text>
-                                  <h3 class="glob-text-bold">
-                                    {{ module.MODULE_ATTENDANCE }}
-                                    <ion-badge *ngIf="module.RETAKE" color="danger">Retake</ion-badge>
-                                  </h3>
-                                  <small *ngIf="module.RETAKE">{{module.START_DATE}} To {{module.END_DATE}}</small>
-                                </ion-text>
-                              </ion-col>
-                            </ion-row>
-                            <ion-row>
-                              <ion-col size="6">
-                                <p>
-                                  <small>Classes:</small>
-                                  <ion-text [color]="module.PERCENTAGE >= 80 ? 'success' : 'danger'"
-                                    class="glob-text-bold">
-                                    {{ module.TOTAL_CLASSES -
-                                                module.TOTAL_ABSENT +
-                                                  "/" +
-                                                  module.TOTAL_CLASSES +
-                                                  " (" +
-                                                  module.PERCENTAGE +
-                                                  "%)" }}
-                                  </ion-text>
-                                </p>
-                              </ion-col>
-                              <ion-col size="6">
-                                <p>
-                                  <small>Exam Eligibility:</small>
-                                  <ion-text class="glob-text-bold"
-                                    [color]="module.EXAM_ELIGIBILITY === 'Eligible' ? 'success' : 'danger'">
-                                    {{ module.EXAM_ELIGIBILITY }}
-                                  </ion-text>
-                                </p>
-                              </ion-col>
-                            </ion-row>
-                          </ion-grid>
-                        </ion-label>
-                      </ion-item>
-                    </ion-list>
-                  </ion-card-content>
+          <ng-container *ngIf="(attendance$ | async) as attendances; else loadAttendance">
+            <ng-container *ngIf="attendances.length > 0; else noAttendance">
+              <ng-container *ngFor="let a of attendances; let isLast = last">
+                <ion-card class="ion-no-margin ion-margin-top" [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+                  <ion-item-divider color="light" mode="md">
+                    <ion-label color="primary" class="glob-text-bold">
+                      Semester {{ a.semester }}
+                    </ion-label>
+                  </ion-item-divider>
+
+                  <ion-item *ngFor="let module of a.attendances; let isLast = last" [lines]="isLast ? 'none' : 'full'"
+                    detail="true" button="true" mode="md" (click)="attendanceDetails(module, selectedIntake)">
+                    <ion-label class="ion-text-wrap">
+                      <h3 class="glob-text-bold">{{ module.MODULE_ATTENDANCE }}
+                        <span class="glob-danger-text" *ngIf="module.RETAKE">
+                          [Retake]
+                        </span>
+                      </h3>
+                      <small *ngIf="module.RETAKE">
+                        {{ module.START_DATE | date: 'EEE, d MMM y' }} - {{ module.END_DATE | date: 'EEE, d MMM y' }}
+                      </small>
+                      <ion-row class="ion-no-padding">
+                        <ion-col size="6" class="ion-no-padding col-padding">
+                          <small>Classes: <span class="medium-size-text"
+                              [ngClass]="module.PERCENTAGE >= 80 ? 'glob-success-text' : 'glob-danger-text'">
+                              {{ module.TOTAL_CLASSES -
+                              module.TOTAL_ABSENT +
+                              "/" +
+                              module.TOTAL_CLASSES +
+                              " (" +
+                              module.PERCENTAGE +
+                              "%)" }}
+                            </span>
+                          </small>
+                        </ion-col>
+                        <ion-col size="6" class="ion-no-padding col-padding">
+                          <small>Exam Eligibility: <span class="medium-size-text"
+                              [ngClass]="module.EXAM_ELIGIBILITY === 'Eligible' ? 'glob-success-text' : 'glob-danger-text'">
+                              {{ module.EXAM_ELIGIBILITY }}
+                            </span>
+                          </small>
+                        </ion-col>
+                      </ion-row>
+                    </ion-label>
+                  </ion-item>
                 </ion-card>
               </ng-container>
             </ng-container>
-            <ng-template #noAttendanceRecords>
-              <ion-card class="ion-no-margin">
+            <ng-template #noAttendance>
+              <ion-card class="ion-no-margin ion-margin-top">
                 <ion-card-content>
                   <app-message-with-svg imageUrl="assets/img/search-not-found.svg"
-                    messageTitle="Opps! No Attendance Records Found for {{selectedIntake}}."
+                    messageTitle="Oops! No Attendance Records Found for {{selectedIntake}}."
                     messageContent="Perhaps you can try this:" wrapperSize="4" wrapperMarginTop="30px" wrapperOffset="4"
                     [advancedMode]="true">
                     <div class="flex-container">
@@ -193,102 +175,55 @@
                 </ion-card-content>
               </ion-card>
             </ng-template>
-          </ng-template>
+          </ng-container>
           <ng-template #loadAttendance>
             <ion-card class="ion-no-margin ion-margin-top">
-              <ion-card-header color="secondary">
-                <ion-card-title>
-                  <ion-skeleton-text animated style="width: 57%; height: 20px;"></ion-skeleton-text>
-                </ion-card-title>
-              </ion-card-header>
-              <ion-card-content class="ion-no-padding">
-                <ion-item lines="full" *ngFor="let _ of skeletons">
-                  <ion-label>
-                    <ion-skeleton-text animated style="width: 100%; height: 20px;"></ion-skeleton-text>
-                    <ion-skeleton-text animated style="width: 40%; height: 20px; float:left"></ion-skeleton-text>
-                    <div style="width: 30%; height: 20px; float: left;"></div>
-                    <ion-skeleton-text animated style="width: 20%; height: 20px; float:left"></ion-skeleton-text>
-                  </ion-label>
-                </ion-item>
-              </ion-card-content>
-            </ion-card>
+              <ion-item-divider lines="none" color="light">
+                <ion-skeleton-text animated style="width: 40%; height: 15px"></ion-skeleton-text>
+              </ion-item-divider>
 
-            <ion-card>
-              <ion-grid>
-                <ion-row>
-                  <ion-col size="12" size-md="6">
-                    <ion-card>
-                      <ion-item>
-                        <ion-skeleton-text style="width: 100%" animated></ion-skeleton-text>
-                      </ion-item>
-                    </ion-card>
-                  </ion-col>
-                  <ion-col size="12" size-md="6">
-                    <ion-card>
-                      <ion-item>
-                        <ion-skeleton-text style="width: 100%" animated></ion-skeleton-text>
-                      </ion-item>
-                    </ion-card>
-                  </ion-col>
-                  <ion-col size="12" size-md="6">
-                    <ion-card>
-                      <ion-item>
-                        <ion-skeleton-text style="width: 100%" animated></ion-skeleton-text>
-                      </ion-item>
-                    </ion-card>
-                  </ion-col>
-                  <ion-col size="12" size-md="6">
-                    <ion-card>
-                      <ion-item>
-                        <ion-skeleton-text style="width: 100%" animated></ion-skeleton-text>
-                      </ion-item>
-                    </ion-card>
-                  </ion-col>
-                  <ion-col size="12" size-md="6">
-                    <ion-card>
-                      <ion-item>
-                        <ion-skeleton-text style="width: 100%" animated></ion-skeleton-text>
-                      </ion-item>
-                    </ion-card>
-                  </ion-col>
-                  <ion-col size="12" size-md="6">
-                    <ion-card>
-                      <ion-item>
-                        <ion-skeleton-text style="width: 100%" animated></ion-skeleton-text>
-                      </ion-item>
-                    </ion-card>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
+              <ion-item *ngFor="let _ of skeletons; let isLast = last" [lines]="isLast ? 'none' : 'full'">
+                <ion-label>
+                  <ion-skeleton-text animated style="width: 40%; line-height: 15px"></ion-skeleton-text>
+                  <ion-skeleton-text animated style="width: 20%; line-height: 10px"></ion-skeleton-text>
+                </ion-label>
+              </ion-item>
             </ion-card>
           </ng-template>
         </ion-col>
 
         <ion-col size="12" size-md="4" class="h-desktop-d-mobile">
-          <div *ngIf="legend$ | async as legend; else loadLegend">
-            <ion-card class="legend ion-no-margin">
-              <ion-card-header>
-                <ion-card-title color="primary">Legend</ion-card-title>
-              </ion-card-header>
-              <ion-card-content>
+          <ion-card class="ion-no-margin">
+            <ion-item-divider color="light">
+              <ion-label color="primary" class="glob-text-bold">
+                Legend
+              </ion-label>
+            </ion-item-divider>
+            <ion-card-content>
+              <ng-container *ngIf="(legend$ | async) as legend; else loadLegend">
                 <ion-row *ngFor="let l of legend | keyvalue">
-                  <ion-col col-3>{{ l.key }}</ion-col>
-                  <ion-col col-9>{{ l.value }}</ion-col>
+                  <ion-col size="3">{{ l.key }}</ion-col>
+                  <ion-col size="9">{{ l.value }}</ion-col>
                 </ion-row>
-              </ion-card-content>
-            </ion-card>
-          </div>
+              </ng-container>
 
-          <ng-template #loadLegend>
-            <ion-card>
-              <ion-item>
-                <ion-skeleton-text style="width: 100%; height: 200px;" animated></ion-skeleton-text>
-              </ion-item>
-            </ion-card>
-          </ng-template>
+              <ng-template #loadLegend>
+                <ion-row *ngFor="let _ of skeletons">
+                  <ion-col size="3">
+                    <ion-skeleton-text animated style="line-height: 25px; width: 100%;">
+                    </ion-skeleton-text>
+                  </ion-col>
+                  <ion-col size="9">
+                    <ion-skeleton-text animated style="line-height: 25px; width: 100%;">
+                    </ion-skeleton-text>
+                  </ion-col>
+                </ion-row>
+              </ng-template>
+            </ion-card-content>
+          </ion-card>
+
         </ion-col>
-      </ion-row>
-    </ion-grid>
+      </ng-container>
+    </ion-row>
   </div>
-
 </ion-content>

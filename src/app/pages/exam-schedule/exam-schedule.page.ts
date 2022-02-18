@@ -79,23 +79,23 @@ export class ExamSchedulePage {
             if (exam.endDate) {
               if (exam.examType === 'Non Exam'){
                 return Object.assign(
-                  exam, {duration: this.showDuration(new Date(exam.questionReleaseDate), new Date(`${exam.endDate} ${exam.until.split('T')[1]}`))}
+                  exam, {duration: this.showDuration(new Date(exam.questionReleaseDate), new Date(`${exam.endDate}T${exam.until.split('T')[1]}`))}
                 );
               }
               else if (exam.examType === 'Normal Exam'){
                 return Object.assign(
-                  exam, {duration: this.showDuration(new Date(exam.since), new Date(`${exam.endDate} ${exam.until.split('T')[1]}`))}
+                  exam, {duration: this.showDuration(new Date(exam.since), new Date(`${exam.endDate}T${exam.until.split('T')[1]}`))}
                 );
               }
             } else {
               if (exam.examType === 'Non Exam'){
                 return Object.assign(
-                  exam, {duration: this.showDuration(new Date(exam.questionReleaseDate), new Date(`${exam.endDate} ${exam.until.split('T')[1]}`))}
+                  exam, {duration: this.showDuration(new Date(exam.questionReleaseDate), new Date(`${exam.endDate}T${exam.until.split('T')[1]}`))}
                 );
               }
               else if (exam.examType === 'Normal Exam'){
                 return Object.assign(
-                  exam, {duration: this.showDuration(new Date(exam.since), new Date(`${exam.endDate} ${exam.until.split('T')[1]}`))}
+                  exam, {duration: this.showDuration(new Date(exam.since), new Date(`${exam.endDate}T${exam.until.split('T')[1]}`))}
                 );
               }
             }

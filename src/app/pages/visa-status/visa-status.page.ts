@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
-import { finalize, tap } from 'rxjs/operators';
+import { finalize, map, tap } from 'rxjs/operators';
 
 import { CountryData, Role, StudentProfile, VisaDetails } from '../../interfaces';
 import { WsApiService } from '../../services';
@@ -12,6 +12,7 @@ import { WsApiService } from '../../services';
   templateUrl: './visa-status.page.html',
   styleUrls: ['./visa-status.page.scss'],
 })
+
 export class VisaStatusPage implements OnInit {
   // observables
   profile$: Observable<StudentProfile>;
@@ -46,12 +47,21 @@ export class VisaStatusPage implements OnInit {
   }
 
   getListOfCountries() {
-    this.ws.get<CountryData[]>(`/all/?fields=name;alpha3Code`, {
-      url: 'https://restcountries.eu/rest/v2',
+    this.ws.get<CountryData[]>(`/all/?fields=name,cca3`, {
+      url: 'https://restcountries.com/v3.1',
       auth: false,
       caching: 'cache-only',
     }).pipe(
-      tap(res => this.listOfCountries = res),
+      map(res => {
+        return res.sort((first, next) => {
+          if (first.name.common < next.name.common) { return -1; }
+          if (first.name.common > next.name.common) { return 1; }
+          return 0;
+        });
+      }),
+      tap(res => {
+        this.listOfCountries = res;
+      }),
     ).subscribe();
   }
 
@@ -59,6 +69,7 @@ export class VisaStatusPage implements OnInit {
     this.ws.get<StudentProfile>('/student/profile', { caching: 'cache-only' }).pipe(
       tap(p => {
         this.countryName = p.COUNTRY;
+
         this.passportNumber = p.IC_PASSPORT_NO;
         if (p.COUNTRY === 'Malaysia') {
           this.local = true;
@@ -72,12 +83,14 @@ export class VisaStatusPage implements OnInit {
 
   getAlpha3Code() {
     // alpha 3 code example: Libya => LBY
-    this.ws.get<CountryData[]>(`/name/${this.countryName}?fields=name;alpha3Code`, {
-      url: 'https://restcountries.eu/rest/v2',
+    this.ws.get<CountryData[]>(`/name/${this.countryName}?fields=name,cca3`, {
+      url: 'https://restcountries.com/v3.1',
       auth: false,
       caching: 'cache-only',
     }).pipe(
-      tap(res => this.alpha3Code = res[0].alpha3Code),
+      tap(res => {
+        this.alpha3Code = res[0].cca3;
+      }),
       tap(_ => this.getVisa()),
     ).subscribe();
   }

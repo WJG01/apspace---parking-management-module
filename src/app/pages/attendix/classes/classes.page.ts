@@ -418,6 +418,12 @@ export class ClassesPage implements OnInit {
     this.userCameFromTimetableFlag = '';
   }
 
+  /** View current attendance. */
+  view(classcode: string, date: string, startTime: string, endTime: string, classType: string){
+    this.router.navigate(['/attendix/view-attendance', { classcode, date, startTime, endTime, classType }]);
+  }
+
+
   /** Edit current attendance. */
   edit(classcode: string, date: string, startTime: string, endTime: string, classType: string) {
     this.router.navigate(['/attendix/mark-attendance', { classcode, date, startTime, endTime, classType }]);

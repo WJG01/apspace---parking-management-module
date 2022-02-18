@@ -82,7 +82,8 @@ const defaultData: Settings = {
   busFirstLocation: '',
   busSecondLocation: '',
   userProfileName: [],
-  changedName: false
+  changedName: false,
+  tourGuideSeen: false
 };
 
 const BUCKET_URL = 'https://s3-ap-southeast-1.amazonaws.com/apspace-user-settings-sync';

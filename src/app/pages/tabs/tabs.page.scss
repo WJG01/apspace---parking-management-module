@@ -42,10 +42,6 @@
   font-size: 0.6rem;
 }
 
-.tab-icon{
-  font-size: 1.375rem;
-}
-
 .system-title {
   position: relative;
   left: 36px;
@@ -59,18 +55,35 @@
   }
 }
 
+ion-tab-button {
+  max-width: inherit;
+}
+
+ion-searchbar {
+  --box-shadow: 0;
+}
+
+.tab-bar-content-left {
+  margin-left: 1rem;
+}
+
+.active-button-large-screen {
+  border-bottom: 3px solid var(--ion-color-primary);
+}
+
+.active-button-small-screen {
+  border-top: 3px solid var(--ion-color-primary);
+}
+
 .tabs-searchbar {
   width: 277px;
-  position: absolute;
-  top: 0px;
-  left: 28px;
   --border-radius: 50px;
   text-align: left;
   --background: var(--ion-color-step-100);
   --placeholder-color: var(--ion-color-step-950);
   display: none;
-  padding-left: 0;
-  padding-right: 0;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .extra-tab {
@@ -78,43 +91,37 @@
   visibility: hidden;
 }
 
+.tab-icons {
+  font-size: 1.6rem;
+}
+
+.tab-icon {
+  font-size: 1.375rem;
+}
+
+.logo-img {
+  padding: 5px 0 0 0;
+  height: 45px;
+}
+
+.large-screen-logo {
+  -webkit-user-drag: none;
+  cursor: pointer;
+}
+
 @media screen and (min-width: 720px) {
   .tabs-searchbar {
     display: block;
   }
+}
 
-  .extra-tab {
-    display: block;
+@media screen and (min-width: 1100px) {
+  .tab-bar-content-left {
+    margin-right: 22.5rem;
+  }
+
+  ion-tab-button {
+    max-width: 100px;
   }
 }
 
-
-@media screen and (min-width: 976px) {
-  .extra-tab.extra-tab-1 {
-    display: none;
-  }
-}
-
-@media screen and (min-width: 1240px) {
-  .extra-tab.extra-tab-1 {
-    display: none;
-  }
-
-  .extra-tab.extra-tab-2 {
-    display: none;
-  }
-}
-
-@media screen and (min-width: 1425px) {
-  .extra-tab.extra-tab-1 {
-    display: none;
-  }
-
-  .extra-tab.extra-tab-2 {
-    display: none;
-  }
-
-  .extra-tab.extra-tab-3 {
-    display: none;
-  }
-}

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import Fuse from 'fuse.js';
 import { Observable, Subscription } from 'rxjs';
 import { filter, finalize, map } from 'rxjs/operators';
@@ -14,6 +14,7 @@ import { WsApiService } from '../../services';
 })
 export class StaffDirectoryComponent implements OnInit, OnDestroy{
   @Output() staffID = new EventEmitter<string>();
+  @Input() payslip = false;
 
   notification: Subscription;
 
@@ -54,10 +55,12 @@ export class StaffDirectoryComponent implements OnInit, OnDestroy{
 
   doRefresh(refresher?) {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
-    this.staff$ = this.ws.get<StaffDirectory[]>('/staff/listing', { caching });
+    const apiUrl = this.payslip ? '/staff/listing_v2' : '/staff/listing';
+    this.staff$ = this.ws.get<StaffDirectory[]>(apiUrl, { caching });
     this.staffType$ = this.staff$.pipe(
       filter(ss => ss instanceof Array),
       map(ss => Array.from(new Set(ss.map(s => s.DEPARTMENT))).sort()),
+      map(ss => ss.filter(s => s !== '')),
       finalize(() => refresher && refresher.target.complete()),
     );
   }

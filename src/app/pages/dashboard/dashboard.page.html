@@ -8,8 +8,22 @@
         <ion-col size-xs="12" class="dash-padding" [attr.size-md]="activeDashboardSections.length > 0 ? 5 : 7"
           [class.glob-margin-auto]="activeDashboardSections.length <= 0">
           <ion-card class="profile ion-no-margin ion-padding-top no-border-rad">
-            <ion-avatar tappable="true" class="glob-margin-auto ion-margin-top avatar"
+            <!--<ion-avatar joyrideStep= "step1" [text]="tourGuideStep[0]" [prevTemplate]="prevButton" [nextTemplate]="nextButton"
+                        [doneTemplate]="doneButton" tappable="true" class="glob-margin-auto ion-margin-top avatar"
               (click)="navigateToPage('profile')" *ngIf="!hideProfilePicture">
+              <ng-container *ngIf="isStudent; else staffImage">
+                <img [src]="
+                    'data:image/jpg;base64,' + (photo$ | async)?.base64_photo
+                  " onerror="this.src='assets/img/no_img.png'" alt="Profile" />
+              </ng-container>
+              <ng-template #staffImage>
+                <ng-container *ngIf="staffProfile$ | async as staffProfile">
+                  <img [src]="staffProfile[0].PHOTO" onerror="this.src='assets/img/no_img.png'" alt="Profile" />
+                </ng-container>
+              </ng-template>
+            </ion-avatar>-->
+            <ion-avatar tappable="true" class="glob-margin-auto ion-margin-top avatar"
+                        (click)="navigateToPage('profile')" *ngIf="!hideProfilePicture">
               <ng-container *ngIf="isStudent; else staffImage">
                 <img [src]="
                     'data:image/jpg;base64,' + (photo$ | async)?.base64_photo
@@ -27,12 +41,19 @@
                 {{isStudent ? (userProfile.NAME | uppercase) : (userProfileName$ | async | uppercase)}}
               </ion-card-title>
               <ion-card-subtitle class="ion-text-center">
-                <div
-                  *ngIf="(userProfile.STUDENT_NUMBER) || (!isStudent && userProfile.TITLE); else loadingCardSubtitle">
+                <!--<div
+                  joyrideStep="step2" [text]="tourGuideStep[1]" [prevTemplate]="prevButton" [nextTemplate]="nextButton" [doneTemplate]="doneButton" *ngIf="(userProfile.STUDENT_NUMBER) || (!isStudent && userProfile.TITLE); else loadingCardSubtitle">
                   {{
                   isStudent
                   ? userProfile.STUDENT_NUMBER + " | " + userProfile.INTAKE
                   : (userProfile.TITLE | titlecase)
+                  }}
+                </div>-->
+                <div *ngIf="(userProfile.STUDENT_NUMBER) || (!isStudent && userProfile.TITLE); else loadingCardSubtitle">
+                  {{
+                  isStudent
+                    ? userProfile.STUDENT_NUMBER + " | " + userProfile.INTAKE
+                    : (userProfile.TITLE | titlecase)
                   }}
                 </div>
                 <ng-template #loadingCardSubtitle>
@@ -304,7 +325,7 @@
                               <ion-col size="auto" class="ion-no-padding" *ngIf="event.type === 'moodle'">
                                 <div (click)="openMoodleEvent(event.moodleCourseId)">
                                   <ion-icon size="small" class="ion-no-margin small-margin colored-with-type" tappable
-                                   name="open-outline">
+                                    name="open-outline">
                                   </ion-icon>
                                 </div>
                               </ion-col>
@@ -382,7 +403,9 @@
                   <ion-slide *ngFor="let noticeBoardItem of noticeBoardItems">
                     <div class="picture">
                       <a href="{{ noticeBoardItem['post-meta-fields']['slideshow_url'] && noticeBoardItem['post-meta-fields']['slideshow_url'][0] ? noticeBoardItem['post-meta-fields']['slideshow_url'][0] : noticeBoardItem.link }}"
-                        target="_blank"> <img src="{{ noticeBoardItem.featured_image_src ? noticeBoardItem.featured_image_src : 'assets/img/placeholder.png' }}" alt="" />
+                        target="_blank"> <img
+                          src="{{ noticeBoardItem.featured_image_src ? noticeBoardItem.featured_image_src : 'assets/img/placeholder.png' }}"
+                          alt="" />
                       </a>
                     </div>
                   </ion-slide>
@@ -424,11 +447,18 @@
                       </ion-thumbnail>
                       <ion-label>
                         <h3 class="ion-text-wrap" [innerHTML]="newsItem.title"></h3>
-                        <p>{{ newsItem.updated | dateWithTimezone: 'dd MMM yy' }}</p>
+                        <p>Posted on {{ newsItem.updated | dateWithTimezone: 'dd MMM yy' }}</p>
                       </ion-label>
                     </ion-item>
                   </div>
                 </ng-container>
+                <ion-row>
+                  <ion-col size="10" offset="1">
+                    <ion-button routerLink="/news" fill="clear" expand="block">
+                      Read More
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
               </ng-container>
             </ion-card-content>
             <ng-template #loadingNews>
@@ -610,7 +640,7 @@
                             <h3 class="glob-text-bold contacts-lecturer-name">{{ contact.NAME }}</h3>
                           </ion-col>
                           <ion-col size="9.6" size-xl="10">
-                            <p>{{ contact.MODID }}</p>
+                            <p class="ion-text-uppercase">{{ contact.MODULE_NAME }}</p>
                           </ion-col>
                         </ion-row>
                       </ion-col>
@@ -708,4 +738,15 @@
       </ion-row>
     </ion-grid>
   </div>
+
+  <!--  APTour Guide-->
+  <ng-template #prevButton>
+    <ion-button size ="small" fill="outline" color="light">Previous</ion-button>
+  </ng-template>
+  <ng-template #nextButton>
+    <ion-button size ="small" fill="outline" color="light">Next</ion-button>
+  </ng-template>
+  <ng-template #doneButton>
+    <ion-button size ="small" fill="outline" color="light">Done</ion-button>
+  </ng-template>
 </ion-content>

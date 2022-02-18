@@ -17,6 +17,7 @@
 
   <!-- do not add filter pipe here as it affects loading -->
   <div class="glob-container">
+    <!--Buttons-->
     <ion-grid>
       <ion-row class="ion-justify-content-end">
         <ion-col size="auto">
@@ -47,7 +48,7 @@
           </ion-button>
         </ion-col>
         <ion-col size="auto" *ngIf="!room">
-          <ion-button color="primary" fill="outline" (click)="sendToPrint()">
+          <ion-button color="primary" fill="outline" (click)="sendToPrint()" [disabled]="availableWeek!.length === 0">
             <ion-icon slot="icon-only" name="print"></ion-icon>
           </ion-button>
         </ion-col>
@@ -95,7 +96,10 @@
                       <ion-row class="ion-no-padding">
                         <ion-col size="12">
                           <ion-text [color]="timetable.COLOR ? 'danger' : ''">
-                            <h3 class="glob-text-bold">{{ timetable.MODID }}</h3>
+                            <h3 class="glob-text-bold"> {{timetable.MODID}} </h3>
+                          </ion-text>
+                          <ion-text color="medium">
+                            <h3 class="ion-text-uppercase"> {{timetable.MODULE_NAME}}</h3>
                           </ion-text>
                         </ion-col>
                       </ion-row>

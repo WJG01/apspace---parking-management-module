@@ -25,8 +25,8 @@
                 <ion-item lines="full">
                   <ion-label position="stacked">Nationality</ion-label>
                   <ion-select [(ngModel)]="alpha3Code" interface="popover" placeholder="Click to select">
-                    <ion-select-option *ngFor="let country of listOfCountries" [value]="country.alpha3Code">
-                      {{ country.name }}
+                    <ion-select-option *ngFor="let country of listOfCountries" [value]="country.cca3">
+                      {{ country.name.common }}
                     </ion-select-option>
                   </ion-select>
                 </ion-item>

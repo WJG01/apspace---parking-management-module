@@ -1,4 +1,8 @@
 export interface CountryData {
-    name: string;
-    alpha3Code: string;
+    name: Name;
+    cca3: string;
+}
+
+export interface Name {
+    common: string;
 }

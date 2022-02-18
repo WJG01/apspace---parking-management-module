@@ -125,7 +125,7 @@ export const menusRaw = [
     id: 'knowledge-base' as const,
     title: 'Knowledge Base',
     group: 'Collaboration & Information Resources',
-    url: 'https://apiit.atlassian.net/wiki/home', // no ticket
+    url: 'https://apiit.atlassian.net/wiki/spaces/KB/overview', // no ticket
     img: 'assets/img/kb.png',
     role: Role.Student | Role.Lecturer | Role.Admin,
     tags: ['articles', 'Q&A', 'FAQ', 'questions', 'answers', 'how to', 'kb'],
@@ -420,6 +420,17 @@ export const menusRaw = [
     tags: ['obe', 'marks', 'results', 'icgpa', 'cgpa'],
     parents: [],
   },
+  {
+    id: 'resit' as const,
+    title: 'Resit',
+    group: 'Academic Operation',
+    url: 'resit',
+    attachTicket: true,
+    img: 'assets/img/mentorship.png',
+    role: Role.Admin,
+    tags: ['resit'],
+    parents: [],
+  },
   // END OF Academic Operations
 
   // START OF Corporate
@@ -545,6 +556,16 @@ export const menusRaw = [
     role: Role.Student | Role.Lecturer | Role.Admin,
     attachTicket: true,
     tags: ['material', 'modules', 'lecturer note', 'assignment'],
+    parents: [],
+  },
+  {
+    id: 'easy-generator' as const,
+    title: 'Easy Generator',
+    group: 'Academic & Enrollment',
+    url: 'https://live.easygenerator.com/saml/sp/login/asia_pacific_university',
+    img: 'assets/img/easy-generator.png',
+    role: Role.Lecturer | Role.Admin,
+    tags: ['course', 'material', 'generate'],
     parents: [],
   },
   {

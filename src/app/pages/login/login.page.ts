@@ -438,7 +438,7 @@ export class LoginPage implements OnInit {
         url = '/student-timetable';
         break;
       case 'holiday':
-        url = 'https://dif7uuh3zqcps.cloudfront.net/wp-content/uploads/sites/67/2021/01/26095204/2021-APU-student-holidays.pdf';
+        url = 'https://dif7uuh3zqcps.cloudfront.net/wp-content/uploads/sites/67/2022/01/07143327/2022-APU-student-holidays.pdf';
         break;
       case 'moodle':
         url = 'https://lms2.apiit.edu.my/login/index.php?authCAS=CAS';
