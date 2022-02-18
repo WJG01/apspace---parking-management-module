@@ -4,9 +4,9 @@ import { ModalController, NavParams } from '@ionic/angular';
 import { parseISO } from 'date-fns';
 import { CalendarComponentOptions, DayConfig } from 'ion2-calendar';
 import { Observable } from 'rxjs';
+import { finalize, map, tap } from 'rxjs/operators';
 
-
-import { AttendanceDetails } from 'src/app/interfaces/attendance-details';
+import { Attendance, AttendanceDetails } from 'src/app/interfaces';
 import { WsApiService } from 'src/app/services';
 
 @Component({
@@ -17,19 +17,14 @@ import { WsApiService } from 'src/app/services';
 })
 export class AttendanceDetailsModalPage implements OnInit {
 
-  title: string;
-  intake: string;
-  module: string;
-
+  moduleDetails: Attendance;
+  details$: Observable<AttendanceDetails[]>;
+  details: AttendanceDetails[] = [];
   recordsArray: AttendanceDetails[] = [];
+  detailsList: AttendanceDetails[] = [];
   datesConfig: DayConfig[] = [];
   openDate: string;
-
-
-  detailsList: AttendanceDetails[] = [];
   showDetails = false;
-
-  loaded = false;
 
 
   options: CalendarComponentOptions = {
@@ -42,62 +37,55 @@ export class AttendanceDetailsModalPage implements OnInit {
     private navPrms: NavParams,
     private ws: WsApiService,
     private datePipe: DatePipe
-  ) {
-    this.title = this.navPrms.data.title;
-    this.intake = this.navPrms.data.intake;
-    this.module = this.navPrms.data.module;
-  }
+  ) { }
 
   ngOnInit() {
+    this.moduleDetails = this.navPrms.data.module;
+
     this.showOnCalendar();
   }
 
   getRecords(): Observable<AttendanceDetails[]> {
-    return this.ws.get<AttendanceDetails[]>(`/student/attendance_details?intake_code=${this.intake}&module_code=${this.module}`);
+    const intake = this.navPrms.data.intake;
+
+    return this.ws.get<AttendanceDetails[]>(`/student/attendance_details?intake_code=${intake}&module_code=${this.moduleDetails.SUBJECT_CODE}`);
   }
 
   showOnCalendar() {
-    this.getRecords().subscribe(
-      {
-        next: (records) => {
-          records.map((record) => {
-            const css = 'attendance';
+    this.details$ = this.getRecords().pipe(
+      map(records => {
+        records.map(record => {
+          const css = 'attendance';
+          const date = this.formatDate(record.CLASS_DATE);
 
-            const date = this.formatDate(record.CLASS_DATE);
-
-            this.datesConfig.push({
-                        date,
-                        subTitle: '.',
-                        marked: true,
-                        cssClass: css,
-                        disable: false
-                      });
-
-            this.recordsArray.push({
-                        ATTENDANCE_STATUS: record.ATTENDANCE_STATUS,
-                        CLASS_DATE: date.toDateString(),
-                        CLASS_TYPE: record.CLASS_TYPE,
-                        TIME_FROM: record.TIME_FROM,
-                        TIME_TO: record.TIME_TO
-                      });
+          this.datesConfig.push({
+            date,
+            marked: true,
+            disable: false,
+            subTitle: '',
+            cssClass: css
           });
-        },
-        complete: () => {
-          // picks first date from array(most recent) and opens it in calendar
-          this.openDate = this.datePipe.transform(this.recordsArray[0].CLASS_DATE, 'yyyy-MM-dd');
-          this.options.from = new Date(this.recordsArray[this.recordsArray.length - 1].CLASS_DATE);
-          this.options.to = null;
-          this.loaded = true;
-        }
-      }
+
+          record.CLASS_DATE = date.toDateString();
+        });
+        return records;
+      }),
+      tap(res => {
+        this.details = res;
+      }),
+      finalize(() => {
+        this.openDate = this.datePipe.transform(this.details[0].CLASS_DATE, 'yyyy-MM-dd');
+        this.options.from = new Date(this.details[this.details.length - 1].CLASS_DATE);
+        this.options.to = null;
+      })
     );
   }
 
   // show additional info about class on click
-  onChange($event: string) {
-    this.detailsList = [];
+  calendarOnChange($event) {
+    this.detailsList = []; // Ensure array is empty before pushing new details
 
-    this.recordsArray.map((record) => {
+    this.details.map((record) => {
       const date = this.datePipe.transform(record.CLASS_DATE, 'yyyy-MM-dd');
 
       if ($event === date) {
