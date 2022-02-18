@@ -336,6 +336,9 @@ export class DashboardPage implements OnInit, DoCheck {
 
   getAccentColor: any;
 
+  // For upcoming trips loading skeleton
+  items = [0, 1];
+
   constructor(
     private ws: WsApiService,
     private studentTimetableService: StudentTimetableService,
@@ -607,6 +610,7 @@ export class DashboardPage implements OnInit, DoCheck {
           if (res) {
             this.userProfileName$ = this.settings.get$('userProfileName').pipe(
               map(data => {
+                console.log(this.userProfileName$);
                 return data.join(' ');
               })
             );
@@ -1150,6 +1154,7 @@ export class DashboardPage implements OnInit, DoCheck {
     );
     // plot graph
     this.apcardChart.data.datasets[0].data = this.monthlyData.cr[now.getFullYear()];
+    console.log(this.apcardChart.data.datasets[0].data);
     this.apcardChart.data.datasets[1].data = this.monthlyData.dr[now.getFullYear()];
   }
 

@@ -16,30 +16,108 @@ ion-col[scrolly="true"] {
   overflow-y: auto;
 }
 
-.profile {
-  .avatar {
-    width: 100px;
-    height: 100px;
-    transition: 0.5s all;
-    border: 2px solid var(--ion-color-primary);
-    padding: 3px;
+.clickable {
+  cursor: pointer;
+}
 
-    &:hover {
-      padding: 1px;
-      border: 0.5px solid var(--ion-color-primary);
+// Profile Content
+.profile-card {
+  background: transparent;
+  margin: 0 1rem;
+
+  .profile-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background: transparent;
+
+    .profile-title {
+      margin-right: auto;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      transition: 0.5s all;
+      border: 2px solid var(--ion-color-primary);
+      padding: 3px;
+
+      &:hover {
+        padding: 1px;
+      }
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: 0;
+      right: -4px;
+      z-index: 100;
+      font-size: 0.8em;
+      padding: 3px 3px 3px 4px;
     }
   }
 
-  .notification-badge {
-    position: absolute;
-    top: 0;
-    right: -6px;
-    z-index: 100;
-    font-size: 0.8em;
-    padding: 3px 3px 3px 4px;
+  .orientation-image {
+    width: 40%;
   }
 }
 
+// Quick Access
+.quick-access-item {
+  margin: .4rem 0;
+  padding: 2rem 1.5rem;
+  overflow: hidden;
+  transition: all 0.5s ease;
+  cursor: pointer;
+
+  p {
+    font-size: 1rem;
+    color: #fff;
+    font-weight: 900;
+    z-index: 1;
+  }
+}
+
+.quick-access-item:hover {
+  background-size: auto 85%;
+  transition: all 0.5s ease;
+}
+
+.quick-access-attendance{
+  background-color: var(--ion-color-primary);
+  background-image: url("/assets/img/attendance.svg");
+  background-size: auto 80%;
+  background-repeat: no-repeat;
+  background-position: right;
+}
+
+.quick-access-location {
+  background-color: var(--ion-color-primary);
+  background-image: url("../../../assets/img/update-location.svg");
+  background-size: auto 80%;
+  background-repeat: no-repeat;
+  background-position: right;
+}
+
+.quick-access-hr{
+  background-color: var(--ion-color-primary);
+  background-image: url("../../../assets/img/hr.svg");
+  background-size: auto 80%;
+  background-repeat: no-repeat;
+  background-position: right;
+}
+
+.quick-access-moodle {
+  background-color: var(--ion-color-primary);
+  background-image: url("/assets/img/moodle.svg");
+  background-size: auto 80%;
+  background-repeat: no-repeat;
+  background-position: right;
+}
+
+// Today's Schedule
 .todays-schedule {
   .todays-schedule-container {
     .event-container {
@@ -132,6 +210,7 @@ ion-col[scrolly="true"] {
   }
 }
 
+// Upcoming Trips
 .locations {
   font-size: 1.2em;
 }
@@ -142,37 +221,27 @@ ion-col[scrolly="true"] {
   border-radius: 5px 0px 0px 5px;
 }
 
-.schedule-container {
+.bus-timing-container {
   background-color: var(--ion-color-light);
-  border-radius: 0px 5px 5px 0px;
+  border-radius: 5px;
 
-  .timing-1 {
-    font-size: 1.4em;
+  .bus-border {
+    border-radius: 5px 20px 20px 0;
   }
 
-  .timing-2 {
+  .current-timing {
     font-size: 1.2em;
-    opacity: 0.6;
   }
 
-  .timing-3 {
-    font-size: 1em;
+  .timing{
     opacity: 0.6;
-  }
-
-  .timing-4 {
-    font-size: 0.9em;
-    opacity: 0.6;
-  }
-
-  .bus-icon {
-    color: #fff;
-    font-size: 1.5em;
   }
 }
 
+// Notice board
 .image-slider {
   position: relative;
+
   .swiper-container {
     width: 100%;
     height: 256px;
@@ -193,16 +262,13 @@ ion-col[scrolly="true"] {
       width: 100%;
       img {
         width: 100%;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -o-user-select: none;
+        user-select: none;
       }
     }
-  }
-
-  .swiper-button-prev {
-    left: 2px;
-  }
-
-  .swiper-button-next {
-    right: 20px;
   }
 
   .box {
@@ -211,20 +277,23 @@ ion-col[scrolly="true"] {
     position: relative;
     overflow: hidden;
   }
+}
 
-  .swiper-button-next,
-  .swiper-button-prev {
-    background-image: none !important;
+// News
+.news-card {
+  background: #252525 !important;
 
-    ion-icon {
-      border-radius: 100%;
-      padding: 6px;
-      color: #e50565;
-      background-color: rgba(19, 79, 109, 0.8);
-    }
+  .news-description {
+    height: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* number of lines to show */
+    -webkit-box-orient: vertical;
   }
 }
 
+// Contacts
 .contacts-row {
   cursor: pointer;
 
@@ -241,16 +310,9 @@ ion-col[scrolly="true"] {
   background-color: var(--ion-color-light);
 }
 
-.floating-icon {
-  font-size: 30px;
-}
-
-.timezone-notice-text {
-  font-weight: bold;
-}
-
+// Global classes
 .dash-padding {
-  padding: 1em 1em 0 1em;
+  padding: 0 1em 0 1em;
 }
 
 .dash-padding-bottom {
@@ -272,5 +334,37 @@ ion-col[scrolly="true"] {
     .swiper-slide {
       border-radius: 0;
     }
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .profile-card {
+    margin: 1rem 0 0 0 !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .profile-card {
+    background: var(--ion-item-background);
+    margin: 1rem;
+
+    .profile-container {
+      flex-direction: column;
+
+      .profile-title {
+        margin-right: 0;
+        text-align: center;
+      }
+    }
+
+    .orientation-image {
+      width: 100% !important;
+    }
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .profile-card {
+    box-shadow: none !important;
   }
 }
