@@ -60,6 +60,7 @@ export class StaffDirectoryComponent implements OnInit, OnDestroy{
     this.staffType$ = this.staff$.pipe(
       filter(ss => ss instanceof Array),
       map(ss => Array.from(new Set(ss.map(s => s.DEPARTMENT))).sort()),
+      map(ss => ss.filter(s => s !== '')),
       finalize(() => refresher && refresher.target.complete()),
     );
   }
