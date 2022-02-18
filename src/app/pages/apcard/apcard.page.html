@@ -94,12 +94,12 @@
               <ion-card-content class="ion-no-padding">
                 <ion-virtual-scroll [items]="transactions" approxItemHeight="92px" approxHeaderHeight="46" approx
                   [headerFn]="seperatebyMonth">
-                  <ion-item-divider lines="none" color="light" *virtualHeader="let header">
+                  <ion-item-divider lines="none" color="light" *virtualHeader="let header" mode="md">
                     <ion-label class="glob-text-bold">
                       {{ header }}
                     </ion-label>
                   </ion-item-divider>
-                  <ion-item *virtualItem="let transaction">
+                  <ion-item *virtualItem="let transaction" mode="md">
                     <ion-label>
                       <h4 class="glob-text-bold">
                         {{ transaction.ItemName }}
@@ -123,7 +123,7 @@
         <ng-template #loading>
           <ion-card class="ion-no-margin">
             <ng-container *ngFor="let _ of skeleton">
-              <ion-item-divider lines="none" color="light">
+              <ion-item-divider lines="none" color="light" mode="md">
                 <ion-skeleton-text animated style="width: 40%; height: 15px"></ion-skeleton-text>
               </ion-item-divider>
 
@@ -145,9 +145,9 @@
     <ng-template #noTransactions>
       <ion-card class="ion-no-margin">
         <app-message-with-svg messageTitle="No Data Available!"
-        messageContent="Either your APCard is not activated or you have not made any transactions yet."
-        imageUrl="assets/img/card_not_activated.svg" wrapperOffset="4" wrapperSize="4" wrapperMarginTop="50px">
-      </app-message-with-svg>
+          messageContent="Either your APCard is not activated or you have not made any transactions yet."
+          imageUrl="assets/img/card_not_activated.svg" wrapperOffset="4" wrapperSize="4" wrapperMarginTop="50px">
+        </app-message-with-svg>
       </ion-card>
     </ng-template>
   </div>
