@@ -12,7 +12,7 @@ import { NotifierService } from 'src/app/shared/notifier/notifier.service';
   styleUrls: ['./manage-assessment-types.page.scss'],
 })
 export class ManageAssessmentTypesPage implements OnInit {
-  // devUrl = 'https://jeioi258m1.execute-api.ap-southeast-1.amazonaws.com/dev';
+  // devUrl = 'https://swze54usn5.execute-api.ap-southeast-1.amazonaws.com/dev';
   loading: HTMLIonLoadingElement;
 
   assessmentType: string;
