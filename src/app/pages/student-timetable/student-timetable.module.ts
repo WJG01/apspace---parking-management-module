@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
@@ -45,5 +45,6 @@ const routes: Routes = [
     StrToColorPipe, // TODO: remove this if possible temporary fix
     TimeParserPipe
   ],
+  providers: [DatePipe]
 })
 export class StudentTimetablePageModule { }
