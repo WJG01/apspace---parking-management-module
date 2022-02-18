@@ -6,6 +6,16 @@
   margin: auto !important;
 }
 
+.glob-success-text {
+  color: var(--ion-color-success);
+  --color: var(--ion-color-success);
+}
+
+.glob-danger-text {
+  color: var(--ion-color-danger);
+  --color: var(--ion-color-danger);
+}
+
 .glob-text-bold {
   font-weight: 900 !important;
 }

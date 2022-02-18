@@ -1,76 +1,97 @@
-<ion-header class="ion-no-border">
+<ion-header>
   <ion-toolbar mode="md">
-    <ion-title>{{ title }}</ion-title>
+    <ion-title>Attendance Details</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">
-        <ion-icon name="close"></ion-icon>
+        <ion-icon name="close" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-col size="12" size-md="8" size-xl="10" offset-md="2" offset-xl="1">
-        <ion-card *ngIf="loaded; else loadingCalendar">
-          <ion-card-content class="ion-no-padding">
-            <ion-calendar 
-                            [(ngModel)]="openDate" 
-                            (change)="onChange($event)" 
-                            [options]="options" 
-                            [type]="'string'"
-                            [format]="'YYYY-MM-DD'"
-                            class="glob-calendar calendar "
-                            >
-            </ion-calendar>
-              <div *ngIf="showDetails; else noDetails">
-                <ion-list >
-                  <ion-item *ngFor="let detail of detailsList; let last=last" [lines]="last ? 'none' : 'full'" [class]="detail.ATTENDANCE_STATUS === 'Y'
-                                                                                                              ? 'attended'
-                                                                                                              : detail.ATTENDANCE_STATUS === 'N'
-                                                                                                              ? 'absent'
-                                                                                                              : detail.ATTENDANCE_STATUS === 'R'
-                                                                                                              ? 'absent-reason'
-                                                                                                              : detail.ATTENDANCE_STATUS === 'L'
-                                                                                                              ? 'late'
-                                                                                                              : ''">
-                    <ion-label>
-                      <h3 class="glob-text-bold">{{ detail.CLASS_TYPE }}</h3>
-                      <p>{{ detail.TIME_FROM + ' - ' + detail.TIME_TO }}</p>
-                    </ion-label>
-                  </ion-item>
-                </ion-list>
-                <ion-row class="ion-justify-content-center" style="padding-top: 5px;">
-                  <p> <span class="dot" style="background: #49B571"></span>  Present </p> 
-                  <p class="legend"> <span class="dot" style="background: #E54D42"></span>  Absent </p> 
-                  <p class="legend"> <span class="dot" style="background: #36A2EB"></span>  Absent with Reason </p> 
-                  <p class="legend"> <span class="dot" style="background: #D49A0D"></span>  Late </p> 
-                </ion-row>
-              </div>
+  <ion-row>
+    <ion-col>
+      <div class="module-text">
+        <h4>{{ moduleDetails.MODULE_ATTENDANCE }}</h4>
+        <p>{{ moduleDetails.SUBJECT_CODE }}</p>
+      </div>
 
-              <ng-template #noDetails>
-                <ion-text color="primary" class="ion-text-center">
-                  <p>Please select a day to view more details</p>
-                </ion-text>
-              </ng-template>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-  <ng-template #loadingCalendar>
-    <ion-grid>
-      <ion-row>
-        <ion-col size="12" size-xl="10" offset-xl="1">
-          <ion-card>
-            <ion-card-content>
-              <ion-skeleton-text animated style="width: 100%; line-height: 300px"></ion-skeleton-text>
-              <ion-skeleton-text class="glob-margin-auto" animated style="width: 80%; line-height: 10px; margin-top: 30px;"></ion-skeleton-text>
-            </ion-card-content>
+      <ion-row class="ion-text-center small-margin-bottom ">
+        <ion-col size="4" class="ion-no-padding">
+          <ion-card class="ion-no-margin ">
+            <h6 class="small-margin">{{ moduleDetails.TOTAL_CLASSES - moduleDetails.TOTAL_ABSENT }}</h6>
+            <p class="glob-text-bold glob-success-text small-margin">Present</p>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="4" class="ion-no-padding">
+          <ion-card class="ion-no-margin ion-margin-start ion-margin-end">
+            <h6 class="small-margin">{{ moduleDetails.TOTAL_ABSENT }}</h6>
+            <p class="glob-text-bold glob-danger-text small-margin">Absent</p>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="4" class="ion-no-padding">
+          <ion-card class="ion-no-margin">
+            <h6 class="small-margin">{{ moduleDetails.TOTAL_CLASSES }}</h6>
+            <p class="glob-text-bold small-margin">Total Classes</p>
           </ion-card>
         </ion-col>
       </ion-row>
-    </ion-grid>
-  </ng-template>
+
+      <ion-row class="ion-text-center small-margin-bottom ion-no-padding">
+        <ion-col size="12" class="ion-no-padding">
+          <ion-card class="ion-no-margin">
+            <h6 class="small-margin"
+              [ngClass]="moduleDetails.EXAM_ELIGIBILITY === 'Eligible' ? 'glob-success-text' : 'glob-danger-text'">{{
+              moduleDetails.EXAM_ELIGIBILITY }}</h6>
+            <p class="glob-text-bold small-margin">Exam Eligability</p>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      <ion-card class="ion-no-margin">
+        <ion-card-content>
+          <ng-container *ngIf="(details$ | async) as details; else loadCalendar">
+            <ion-calendar class="glob-calendar" (change)="calendarOnChange($event)" [options]="options"
+              [type]="'string'" [format]="'YYYY-MM-DD'" [(ngModel)]="openDate">
+            </ion-calendar>
+            <ng-container *ngIf="showDetails; else noClick">
+              <ion-item *ngFor="let detail of detailsList; let isLast = last" [lines]="isLast ? 'none' : 'full'"
+                mode="md">
+                <ion-label>
+                  <h3 class="glob-text-bold">{{ detail.CLASS_TYPE }}</h3>
+                  <p>{{ detail.TIME_FROM + ' - ' + detail.TIME_TO }}</p>
+                </ion-label>
+                <ion-note slot="end" [ngClass]="detail.ATTENDANCE_STATUS | attendanceStatus:true">
+                  {{ detail.ATTENDANCE_STATUS | attendanceStatus:false }}
+                </ion-note>
+              </ion-item>
+            </ng-container>
+            <ng-template #noClick>
+              <ion-list>
+                <ion-item lines="none">
+                  <ion-label color="primary" class="ion-text-center ion-margin-top">
+                    <p>Please select a day to view more details</p>
+                  </ion-label>
+                </ion-item>
+              </ion-list>
+            </ng-template>
+          </ng-container>
+          <ng-template #loadCalendar>
+            <ion-skeleton-text animated style="width: 100%; line-height: 300px"></ion-skeleton-text>
+
+            <ion-item lines="none">
+              <ion-label>
+                <ion-skeleton-text animated style="width: 40%; line-height: 15px"></ion-skeleton-text>
+                <ion-skeleton-text animated style="width: 20%; line-height: 10px"></ion-skeleton-text>
+              </ion-label>
+              <ion-skeleton-text animated style="width: 10%; line-height: 20px"></ion-skeleton-text>
+            </ion-item>
+          </ng-template>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
 </ion-content>

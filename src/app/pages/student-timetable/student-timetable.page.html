@@ -52,6 +52,11 @@
             <ion-icon slot="icon-only" name="print"></ion-icon>
           </ion-button>
         </ion-col>
+        <ion-col size="auto">
+          <ion-button color="primary" fill="outline" (click)="generateCalendar()" [download]="filename" [href]="downloadTimetable">
+            <ion-icon slot="icon-only" name="calendar"></ion-icon>
+          </ion-button>
+        </ion-col>
       </ion-row>
     </ion-grid>
     <ng-container *ngIf="(timetable$ | async) as timetables; else loading">
