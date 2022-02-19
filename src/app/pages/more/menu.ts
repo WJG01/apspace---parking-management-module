@@ -420,17 +420,6 @@ export const menusRaw = [
     tags: ['obe', 'marks', 'results', 'icgpa', 'cgpa'],
     parents: [],
   },
-  {
-    id: 'resit' as const,
-    title: 'Resit',
-    group: 'Academic Operation',
-    url: 'resit',
-    attachTicket: true,
-    img: 'assets/img/mentorship.png',
-    role: Role.Admin,
-    tags: ['resit'],
-    parents: [],
-  },
   // END OF Academic Operations
 
   // START OF Corporate

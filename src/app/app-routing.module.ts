@@ -265,13 +265,7 @@ const routes: Routes = [
     path: 'new-feedback',
     loadChildren:
       () => import('./pages/new-feedback/feedback-list.module')
-        .then(m => m.FeedbackListPageModule)
-  },
-  {
-    path: 'resit',
-    canActivate: [AuthGuard],
-    data: { role: Role.Admin },
-    loadChildren: () => import('./pages/resit/resit.module').then(m => m.ResitPageModule)
+        .then( m => m.FeedbackListPageModule)
   },
   { // this path must always be at the end of the routes array
     path: '**',
