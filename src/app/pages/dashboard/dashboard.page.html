@@ -57,8 +57,14 @@
                   }}
                 </div>
                 <ng-template #loadingCardSubtitle>
-                  <ion-skeleton-text animated style="line-height: 20px; width:100%">
-                  </ion-skeleton-text>
+                  <ion-label>
+                    <div>
+                      <ion-skeleton-text animated style="line-height: 15px; width: 140px;">
+                      </ion-skeleton-text>
+                      <ion-skeleton-text animated style="line-height: 15px; width: 140px;">
+                      </ion-skeleton-text>
+                    </div>
+                  </ion-label>
                 </ng-template>
               </ion-col>
             </ion-row>
@@ -439,9 +445,11 @@
             </ng-container>
           </ion-card-content>
           <ng-template #loadingNews>
-            <ion-item lines="none" *ngFor="let _ of skeletons">
-              <ion-skeleton-text animated style="height: 25px"></ion-skeleton-text>
-            </ion-item>
+            <ion-row class="ion-align-items-center ion-margin-horizontal">
+              <ion-col *ngFor="let _ of skeletons" size="6" size-lg="6" size-md="12" size-sm="6" size-xs="12">
+                <ion-skeleton-text animated style="width: 100%; height: 40px;"></ion-skeleton-text>
+              </ion-col>
+            </ion-row>
           </ng-template>
           <ng-template #noNews>
             <app-message-with-svg wrapperSize="6" wrapperOffset="3" imageUrl="assets/img/empty.svg"
