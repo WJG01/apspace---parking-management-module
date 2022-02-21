@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { format, max, parse, parseISO } from 'date-fns';
 import { Observable, forkJoin } from 'rxjs';
 import { finalize, map, tap } from 'rxjs/operators';
@@ -14,42 +13,32 @@ import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-wit
   styleUrls: ['./bus-shuttle-services.page.scss'],
   providers: [DateWithTimezonePipe]
 })
-export class BusShuttleServicesPage {
-  trip$: Observable<BusTrip[]>;
-  filteredTrip$: any;
+export class BusShuttleServicesPage implements OnInit {
+
+  trip$: Observable<any>;
   locations: APULocation[];
-  dateNow = new Date();
-  latestUpdate = '';
-
+  todaysDate = new Date();
+  latestUpdate: string;
   detailedView = false;
-
-  filterMenuHidden = true;
-  filterObject: {
-    tripDay: string,
-    toLocation: string,
-    fromLocation: string,
-  } = {
-      toLocation: '',
-      fromLocation: '',
-      tripDay: this.getTodayDay(this.dateNow)
-    };
-
-  skeletonSettings = {
-    numberOfSkeltons: new Array(6),
-    numberOfLocationsPerSource: new Array(3),
-    numberOfTimesPerTrip: new Array(9)
+  filterObject = {
+    toLocation: '',
+    fromLocation: '',
+    tripDay: this.getTodayDay(this.todaysDate)
   };
-
-  numberOfTrips = 1;
+  skeletonConfig = {
+    tripsSkeleton: new Array(2),
+    timeSkeleton: new Array(4)
+  };
+  // TODO: Remove in Ionic V6
+  filterMenuHidden = true;
 
   constructor(
     private settings: SettingsService,
     private ws: WsApiService,
-    private router: Router,
     private dateWithTimezonePipe: DateWithTimezonePipe
   ) { }
 
-  ionViewDidEnter() {
+  ngOnInit() {
     // GETTING FILTER SETTINGS FROM STORAGE:
     if (this.settings.get('tripFrom')) {
       this.filterObject.fromLocation = this.settings.get('tripFrom');
@@ -57,21 +46,81 @@ export class BusShuttleServicesPage {
     if (this.settings.get('tripTo')) {
       this.filterObject.toLocation = this.settings.get('tripTo');
     }
-    this.doRefresh(false);
+    this.doRefresh();
   }
 
-  doRefresh(refresher) {
-    // update current time when user refresh
-    this.filteredTrip$ = forkJoin([this.getLocations(refresher), this.getTrips(refresher)]).pipe(
+  doRefresh(refresher?) {
+    if (refresher) { // clear the filter data if user refresh the page
+      this.filterObject = {
+        fromLocation: '',
+        toLocation: '',
+        tripDay: this.getTodayDay(this.todaysDate),
+      };
+    }
+
+    this.trip$ = forkJoin([this.getLocations(refresher), this.getTrips(refresher)]).pipe(
       map(res => res[1]),
-      tap(_ => this.onFilter(refresher)),
+      map(trips => {
+        let filteredArray = trips.filter(trip => {
+          // FILTER TRIPS BY (FROM, TO) LOCATIONS, AND DAY
+          if (this.filterObject.tripDay === 'mon-fri') {
+            return (
+              trip.trip_from.includes(this.filterObject.fromLocation) &&
+              trip.trip_to.includes(this.filterObject.toLocation) &&
+              (trip.trip_day === 'mon-fri' || trip.trip_day === 'fri')
+            );
+          } else {
+            return (
+              trip.trip_from.includes(this.filterObject.fromLocation) &&
+              trip.trip_to.includes(this.filterObject.toLocation) &&
+              trip.trip_day === this.filterObject.tripDay
+            );
+          }
+        });
+        if (this.detailedView === false) {
+          filteredArray = filteredArray.filter(trip => {
+            // FILTER TRIPS TO UPCOMING TRIPS ONLY
+            const timeFilter = this.settings.get('timeFormat') === '24' ?
+              parse(trip.trip_time.replace(' (GMT+8)', ''), 'HH:mm', new Date()) >= this.todaysDate :
+              parse(trip.trip_time.replace(' (GMT+8)', ''), 'hh:mm aa', new Date()) >= this.todaysDate;
+
+            return timeFilter;
+          });
+        }
+
+        return filteredArray;
+      }),
+      tap(trips => {
+        if (trips.length > 0) {
+          // STORE LATEST UPDATE DATE
+          const applicableFroms = [...new Set(trips.map(trip => trip.applicable_from))];
+          const latestUpdate = max(applicableFroms.map(applicableFrom => parseISO(applicableFrom)));
+          this.latestUpdate = format(latestUpdate, 'do MMMM yyyy') || '';
+        }
+      }),
+      map(trips => {
+        const result = trips.reduce((r, a) => {
+          r[a.trip_from] = r[a.trip_from] || {};  // {acadimea: , apu: ...}
+          r[a.trip_from][a.trip_to] = r[a.trip_from][a.trip_to] || [];
+
+          r[a.trip_from][a.trip_to].push(a);
+          return r;
+        }, {});
+
+        return result;
+      }),
+      tap(_ => {
+        this.settings.set('tripFrom', this.filterObject.fromLocation);
+        this.settings.set('tripTo', this.filterObject.toLocation);
+      }),
       finalize(() => refresher && refresher.target.complete()),
     );
   }
 
-  getTrips(refresher: boolean) {
+  getTrips(refresher: boolean): Observable<BusTrip[]> {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
-    return this.trip$ = this.ws.get<BusTrips>(`/transix/trips/applicable`, { auth: false, caching }).pipe(
+
+    return this.ws.get<BusTrips>(`/transix/trips/applicable`, { auth: false, caching }).pipe(
       map(res => res.trips),
       map(r => {
         return r.map(item => {
@@ -100,83 +149,16 @@ export class BusShuttleServicesPage {
     );
   }
 
-  getLocations(refresher: boolean) {
+  getLocations(refresher: boolean): Observable<APULocation[]> {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
+
     return this.ws.get<APULocations>(`/transix/locations`, { auth: false, caching }).pipe(
       map((res: APULocations) => res.locations),
       tap(locations => this.locations = locations)
     );
   }
 
-  onFilter(refresher = false) {
-    if (refresher) { // clear the filter data if user refresh the page
-      this.filterObject = {
-        fromLocation: '',
-        toLocation: '',
-        tripDay: this.getTodayDay(this.dateNow),
-      };
-    }
-    this.filteredTrip$ = this.trip$.pipe(
-      map(trips => {
-        this.numberOfTrips = 1; // HIDE 'THERE ARE NO TRIPS' MESSAGE
-        let filteredArray = trips.filter(trip => {
-          // FILTER TRIPS BY (FROM, TO) LOCATIONS, AND DAY
-          if (this.filterObject.tripDay === 'mon-fri') {
-            return (
-              trip.trip_from.includes(this.filterObject.fromLocation) &&
-              trip.trip_to.includes(this.filterObject.toLocation) &&
-              (trip.trip_day === 'mon-fri' || trip.trip_day === 'fri')
-            );
-          } else {
-            return (
-              trip.trip_from.includes(this.filterObject.fromLocation) &&
-              trip.trip_to.includes(this.filterObject.toLocation) &&
-              trip.trip_day === this.filterObject.tripDay
-            );
-          }
-        });
-        if (this.detailedView === false) {
-          filteredArray = filteredArray.filter(trip => {
-            // FILTER TRIPS TO UPCOMING TRIPS ONLY
-            const timeFilter = this.settings.get('timeFormat') === '24' ?
-              parse(trip.trip_time.replace(' (GMT+8)', ''), 'HH:mm', new Date()) >= this.dateNow :
-              parse(trip.trip_time.replace(' (GMT+8)', ''), 'hh:mm aa', new Date()) >= this.dateNow;
-
-            return timeFilter;
-          });
-        }
-        if (filteredArray.length === 0) { // NO RESULTS => SHOW 'THERE ARE NO TRIPS' MESSAGE
-          this.numberOfTrips = 0;
-        }
-
-        return filteredArray;
-      }),
-      tap(trips => {
-        if (trips.length > 0) {
-          // STORE LATEST UPDATE DATE
-          const applicableFroms = [...new Set(trips.map(trip => trip.applicable_from))];
-          const latestUpdate = max(applicableFroms.map(applicableFrom => parseISO(applicableFrom)));
-          this.latestUpdate = format(latestUpdate, 'do MMMM yyyy') || '';
-        }
-      }),
-      map(trips => {
-        const result = trips.reduce((r, a) => {
-          r[a.trip_from] = r[a.trip_from] || {};  // {acadimea: , apu: ...}
-          r[a.trip_from][a.trip_to] = r[a.trip_from][a.trip_to] || [];
-
-          r[a.trip_from][a.trip_to].push(a);
-          return r;
-        }, {});
-
-        return result;
-      }),
-      tap(_ => {
-        this.settings.set('tripFrom', this.filterObject.fromLocation);
-        this.settings.set('tripTo', this.filterObject.toLocation);
-      })
-    );
-  }
-
+  // TODO: Remove in Ionic V6
   showFilterMenu() {
     if (this.filterMenuHidden === true) {
       this.filterMenuHidden = false;
@@ -185,21 +167,13 @@ export class BusShuttleServicesPage {
     }
   }
 
-  // SWAP FROM AND TO LOCATIONS
-  swapLocations() {
-    const temp = this.filterObject.toLocation;
-    this.filterObject.toLocation = this.filterObject.fromLocation;
-    this.filterObject.fromLocation = temp;
-    this.onFilter();
-  }
-
   clearFilter() {
     this.filterObject = {
       fromLocation: '',
       toLocation: '',
-      tripDay: this.getTodayDay(this.dateNow),
+      tripDay: this.getTodayDay(this.todaysDate),
     };
-    this.onFilter();
+    this.doRefresh();
   }
 
   // GET DAY SHORT NAME (LIKE 'SAT' FOR SATURDAY)
@@ -230,12 +204,5 @@ export class BusShuttleServicesPage {
         return location.location_color;
       }
     }
-  }
-
-  comingFromTabs() {
-    if (this.router.url.split('/')[1].split('/')[0] === 'tabs') {
-      return true;
-    }
-    return false;
   }
 }
