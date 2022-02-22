@@ -133,10 +133,11 @@ export class ApcardPage implements OnInit, OnDestroy {
         if (this.filterObject.showThisMonthOnly) {
           const currentMonth = new Date().getMonth() + 1;
           const currentYear = new Date().getFullYear();
+          const formattedMonth = currentMonth < 10 ? `0${currentMonth}` : currentMonth;
 
           filteredtransactions = filteredtransactions.filter(e => {
             const formattedDate = format(new Date(e.SpendDate), 'yyyy-MM-dd');
-            const yearMonth = currentYear + '-' + currentMonth;
+            const yearMonth = `${currentYear}-${formattedMonth}`;
             return formattedDate.indexOf(yearMonth) !== -1;
           });
         }
