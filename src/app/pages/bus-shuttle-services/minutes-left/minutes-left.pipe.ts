@@ -1,12 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {parse} from 'date-fns';
+import { parse } from 'date-fns';
 
 @Pipe({
   name: 'minutesLeft'
 })
 export class MinutesLeftPipe implements PipeTransform {
 
-  transform(value: string ): any {
+  transform(value: string): string {
     let parsedTime = null;
 
     if (value.includes('AM') || value.includes('PM')) {
@@ -27,19 +27,18 @@ export class MinutesLeftPipe implements PipeTransform {
         sec: 1
       };
 
-      let counter;
+      let counter: number;
       for (const i of Object.keys(intervals)) {
         counter = Math.floor(seconds / intervals[i]);
         if (counter > 0) {
           if (counter === 1) {
-            return 'in' + ' ' + counter + ' ' + i + ''; // singular (in 1 hour )
+            return `in ${counter} ${i}`; // singular (in 1 hour )
           } else {
-            return 'in' + ' ' + counter + ' ' + i + 's'; // plural (in 2 hours)
+            return `in ${counter} ${i}s`; // plural (in 2 hours)
           }
         }
       }
     }
     return value;
   }
-
 }
