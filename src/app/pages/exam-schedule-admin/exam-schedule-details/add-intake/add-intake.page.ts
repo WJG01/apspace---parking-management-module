@@ -23,8 +23,6 @@ export class AddIntakePage implements OnInit {
   loading: HTMLIonLoadingElement;
 
 
-  devUrl = 'https://swze54usn5.execute-api.ap-southeast-1.amazonaws.com/dev';
-
   intakeForm: FormGroup;
   intakes = [];
 
@@ -53,7 +51,7 @@ export class AddIntakePage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.ws.get<any>('/exam/intake_listing', {url: this.devUrl}).pipe(
+    this.ws.get<any>('/exam/intake_listing').pipe(
       tap(intakes => {
         intakes.forEach(intake => this.intakes.push(intake.COURSE_CODE_ALIAS));
       })
@@ -167,7 +165,6 @@ export class AddIntakePage implements OnInit {
         const body = new HttpParams({ fromObject: { ...entryIdAndIntake, ...bodyObject } }).toString();
         const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
         this.ws.post<any>('/exam/update_intake_entry', {
-          url: this.devUrl,
           body,
           headers
         })
@@ -218,7 +215,6 @@ export class AddIntakePage implements OnInit {
                 const body = new HttpParams({ fromObject: { ...bodyArray, ...bodyObject } }).toString();
                 const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
                 this.ws.post('/exam/create_intake_entry', {
-                  url: this.devUrl,
                   body,
                   headers
                 }).subscribe({

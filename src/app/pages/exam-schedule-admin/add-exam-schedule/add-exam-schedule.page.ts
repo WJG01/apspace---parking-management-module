@@ -27,7 +27,6 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
 
   loading: HTMLIonLoadingElement;
 
-  devUrl = 'https://swze54usn5.execute-api.ap-southeast-1.amazonaws.com/dev';
   assessmentTypes$: Observable<any>;
   notification: Subscription;
   modules = [];
@@ -70,7 +69,7 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
 
     this.isCordova = this.platform.is('cordova');
 
-    this.ws.get<any>('/exam/module_list', {url: this.devUrl}).pipe(
+    this.ws.get<any>('/exam/module_list').pipe(
       tap(modules => {
         modules.forEach(module => this.modules.push(module.MODULE_CODE));
       })
@@ -137,7 +136,7 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
   }
 
   refreshAssessmentTypes() {
-    this.assessmentTypes$ = this.ws.get<any>('/exam/assessment_type', {url: this.devUrl});
+    this.assessmentTypes$ = this.ws.get<any>('/exam/assessment_type');
   }
 
   // initializeModule() {
@@ -201,7 +200,7 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
     if (this.examScheduleForm.valid) {
       let isDuplicated = false;
 
-      this.ws.get<ExamScheduleAdmin[]>('/exam/current_exam', {url: this.devUrl}).pipe(
+      this.ws.get<ExamScheduleAdmin[]>('/exam/current_exam').pipe(
         tap(examSchedules => {
           let filteredExamSchedule = examSchedules;
 
@@ -257,8 +256,7 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
           const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
           this.ws.post<any>('/exam/update_exam_schedule', {
             body,
-            headers,
-            url: this.devUrl
+            headers
           })
             .subscribe({
               next: () => {
@@ -304,7 +302,7 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
                   this.presentLoading();
                   const body = new HttpParams({ fromObject: { ...bodyObject } }).toString();
                   const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-                  this.ws.post('/exam/create_exam_schedule', { url: this.devUrl, body, headers  }).subscribe({
+                  this.ws.post('/exam/create_exam_schedule', { body, headers  }).subscribe({
                     next: () => {
                       this.showToastMessage(
                         'Exam Schedule added successfully!',

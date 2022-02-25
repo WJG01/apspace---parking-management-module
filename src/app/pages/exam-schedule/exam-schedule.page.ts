@@ -27,8 +27,6 @@ export class ExamSchedulePage {
   showNoIntakeMessage = false;
   skeletons = new Array(5);
 
-  devUrl = 'https://jhxum5z8ya.execute-api.ap-southeast-1.amazonaws.com/dev';
-
   constructor(
     public plt: Platform,
     private modalCtrl: ModalController,

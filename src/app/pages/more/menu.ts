@@ -60,7 +60,7 @@ export const menusRaw = [
     parents: [],
   },
   // TODO add later
-  {
+  /* {
     id: 'anonymous-feedback' as const,
     title: 'Anonymous Feedback',
     group: 'Collaboration & Information Resources',
@@ -69,7 +69,7 @@ export const menusRaw = [
     role: Role.Student | Role.Lecturer | Role.Admin,
     tags: ['anonymous', 'feedback', 'complain', 'issue'],
     parents: []
-  },
+  }, */
   {
     id: 'new-feedback' as const,
     title: 'Feedback',
