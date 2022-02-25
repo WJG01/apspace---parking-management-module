@@ -1,18 +1,10 @@
-.swap-button ion-icon {
-  transform: rotate(90deg);
-}
-
-.passed{
+.passed {
   color: var(--ion-color-medium) !important;
   font-weight: normal !important;
 }
 
 .primary-color {
   color: var(--ion-color-primary) !important;
-}
-
-.minutes-left-wrap {
- padding-left: 3px;
 }
 
 .trips {
@@ -30,13 +22,12 @@
   color: var(--ion-color-primary);
 }
 
-
 .simple-view-trip-duration-first {
-  opacity: .6;
+  opacity: 0.6;
 }
 
 .simple-view-trip-duration {
-  opacity: .6;
+  opacity: 0.6;
 }
 
 .trip-section {
@@ -45,14 +36,8 @@
   margin-bottom: 20px;
 }
 
-
 .trip-section:not(:last-child) {
-
   @media (min-width: 768px) {
     border-right: solid 1.5px;
   }
-}
-
-.cursor-pointer {
-  cursor: pointer;
 }

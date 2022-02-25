@@ -9,7 +9,7 @@ import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-wit
 })
 export class CheckPassedTimePipe implements PipeTransform {
 
-  constructor(private settings: SettingsService, private dateWithTimezonePipe: DateWithTimezonePipe) {}
+  constructor(private settings: SettingsService, private dateWithTimezonePipe: DateWithTimezonePipe) { }
 
   transform(passedTime: string): boolean {
     const currentTime = this.dateWithTimezonePipe.transform(new Date(), 'HH:mm');
@@ -24,5 +24,4 @@ export class CheckPassedTimePipe implements PipeTransform {
       return currentTime >= passedTime;
     }
   }
-
 }

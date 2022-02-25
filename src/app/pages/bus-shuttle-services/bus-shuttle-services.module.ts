@@ -7,8 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { SharedPipesModule } from 'src/app/shared/shared-pipes.module';
 import { BusShuttleServicesPage } from './bus-shuttle-services.page';
-import { CheckPassedTimePipe } from './check-passed-time.pipe';
-import { MinutesLeftPipe } from './minutes-left.pipe';
+import { CheckPassedTimePipe } from './check-passed-time/check-passed-time.pipe';
+import { MinutesLeftPipe } from './minutes-left/minutes-left.pipe';
 
 const routes: Routes = [
   {
