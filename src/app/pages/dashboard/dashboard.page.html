@@ -97,7 +97,7 @@
       <ion-col size-xs="12" class="dash-padding" [attr.size-md]="activeDashboardSections.length > 0 ? 5 : 7"
                [class.glob-margin-auto]="activeDashboardSections.length <= 0">
 
-        <ion-card class="ion-no-margin ion-margin-top no-border-rad covid-info-card" button="true">
+        <ion-card class="ion-no-margin ion-margin-vertical no-border-rad covid-info-card" button="true">
                 <ng-container *ngIf="userVaccinationInfo$ | async as userVaccinationStatus else loading">
                   <ng-container *ngIf="(userVaccinationStatus | keyvalue)?.length else neutral">
                     <div [routerLink]="['/covid-forms']">
@@ -119,7 +119,7 @@
                           </ion-row>
                         </ion-card-content>
                       </div>
-    
+
                       <!--Expired Status-->
                       <div class="covid-info-blue" *ngIf="userVaccinationStatus.status_color === 'Blue'" >
                         <ion-card-header>
@@ -138,7 +138,7 @@
                           </ion-row>
                         </ion-card-content>
                       </div>
-    
+
                       <!--High Risk Status-->
                       <div class="covid-info-red" *ngIf="userVaccinationStatus.status_color === 'Red'">
                         <ion-card-header>
