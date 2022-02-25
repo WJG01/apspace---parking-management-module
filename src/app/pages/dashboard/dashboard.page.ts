@@ -27,6 +27,7 @@ import {
 } from 'src/app/services';
 import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-with-timezone.pipe';
 import { NotifierService } from 'src/app/shared/notifier/notifier.service';
+import { UserVaccineInfo } from '../../interfaces/covid-forms';
 import { NewsModalPage } from '../news/news-modal';
 import { NotificationModalPage } from '../notifications/notification-modal';
 
@@ -104,6 +105,11 @@ export class DashboardPage implements OnInit, DoCheck {
   busShuttleServiceSettings: any;
   secondLocation: string;
   firstLocation: string;
+
+  // User Vaccination Information
+  devUrl = 'https://9t7k8i4yu5.execute-api.ap-southeast-1.amazonaws.com/dev/covid19';
+  userVaccinationInfo$: Observable<UserVaccineInfo[]>;
+  userVaccinationStatus: any = {};
 
   // QUOTE
   quote$: Observable<Quote>;
@@ -478,7 +484,7 @@ export class DashboardPage implements OnInit, DoCheck {
     this.apcardTransaction$ = this.getTransactions(true); // no-cache for APCard transactions
     this.getBadge();
     const forkJoinArray = [this.getProfile(refresher)];
-
+    this.getUserVaccinationInfo();
     if (this.isStudent) {
       forkJoinArray.push(this.financial$ = this.getOverdueFee(true));
     }
@@ -633,6 +639,10 @@ export class DashboardPage implements OnInit, DoCheck {
     } else {
       this.greetingMessage = 'Good evening';
     }
+  }
+
+  getUserVaccinationInfo() {
+    this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo[]>('', {url: this.devUrl + '/user'});
   }
 
   // NEWS

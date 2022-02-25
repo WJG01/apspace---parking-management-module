@@ -267,6 +267,26 @@ const routes: Routes = [
       () => import('./pages/new-feedback/feedback-list.module')
         .then( m => m.FeedbackListPageModule)
   },
+  {
+    path: 'covid-forms',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./pages/covid-forms/covid-forms.module').then( m => m.CovidFormsPageModule)
+  },
+  {
+    path: 'covid-information-form',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./pages/covid-forms/covid-information-form/covid-information-form.module')
+      .then( m => m.CovidInformationFormPageModule)
+  },
+  {
+    path: 'covid-rtk-form',
+    loadChildren: () => import('./pages/covid-forms/covid-rtk-form/covid-rtk-form.module').then( m => m.CovidRtkFormPageModule)
+  },
+  // {
+  //   path: 'covid-vaccination-status-form',
+  //   loadChildren: () => import('./pages/covid-forms/covid-vaccination-status-form/covid-vaccination-status-form.module')
+  //     .then( m => m.CovidVaccinationStatusFormPageModule)
+  // },
   { // this path must always be at the end of the routes array
     path: '**',
     canActivate: [AuthGuard],

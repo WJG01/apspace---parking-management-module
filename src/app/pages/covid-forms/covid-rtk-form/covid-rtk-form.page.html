@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar mode="md">
+    <ion-title>COVID-19 RTK Test Status Form</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" pullMax="400" pullMin="60" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
+  </ion-refresher>
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="6" size-lg="6" size-md="10" size-sm="12" size-xs="12" class="form-container ion-margin ion-padding">
+        <ion-row class="ion-align-items-center ion-justify-content-between">
+          <ion-col size="auto">
+            <ion-title class="ion-no-padding glob-text-bold">COVID-19 RTK Test Form</ion-title>
+          </ion-col>
+          <ion-col size="auto">
+            <p class="form-subtitle">Note: All fields are required to be filled up.</p>
+          </ion-col>
+        </ion-row>
+        <div *ngIf="userVaccinationInfo$ | async as userVaccinationStatus">
+          <div *ngIf="(userVaccinationStatus | keyvalue)?.length else disable">
+            <!--Full Name-->
+            <ion-item>
+              <ion-label position="stacked" class="ion-margin-horizontal">Full Name</ion-label>
+              <ion-input [disabled]="!userProfile ? true : false" type="text" style="text-transform: uppercase;" onkeyup="this.value = this.value.toUpperCase();" required autocapitalize="characters" maxlength="64" [value]="isStudent ? userProfile.NAME : userProfile.FULLNAME" [(ngModel)]="fullName"></ion-input>
+            </ion-item>
+            <!--RTK Test Date-->
+            <ion-item>
+              <ion-label>RTK Test Date</ion-label>
+              <ion-datetime displayFormat="DD-MMM-YYYY" placeholder="Select Date" [min]=getDate() [max]="todaysDate" required [(ngModel)]="rtkEvidenceDate"></ion-datetime>
+            </ion-item>
+            <!--RTK Result-->
+            <ion-item>
+              <ion-label>RTK Result</ion-label>
+              <ion-select interface="popover" required [(ngModel)]="rtkResult">
+                <ion-select-option value="Negative">Negative</ion-select-option>
+                <ion-select-option value="Positive">Positive</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <!--File Uploader-->
+            <ion-item>
+              <ion-label position="stacked">Upload RTK Result Evidence (Format: JPG/PNG/PDF)<p class="form-subtitle">Maximum File Size: 2MB</p></ion-label>
+              <ion-input class="ion-margin-top" type="file" accept="application/pdf, image/jpeg, image/png" button (change)="uploadFile($event)" required></ion-input>
+            </ion-item>
+            <p class="ion-margin-horizontal form-subtitle">By clicking the submit button, I hereby declare that the above is accurate and complete information. I understand that any misleading or falsified information can lead to action to be taken against me.</p>
+            <ion-button expand="block" [disabled]="!rtkResult || !rtkEvidenceDate || !rtkEvidence" (click)="onSubmit()">Submit</ion-button>
+          </div>
+        </div>
+        <ng-template #disable>
+          <ion-row class="ion-justify-content-center ion-align-items-center">
+            <ion-col>Please submit a PCR form first.</ion-col>
+          </ion-row>
+        </ng-template>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

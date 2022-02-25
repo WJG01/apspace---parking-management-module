@@ -96,6 +96,94 @@
     <ion-row>
       <ion-col size-xs="12" class="dash-padding" [attr.size-md]="activeDashboardSections.length > 0 ? 5 : 7"
                [class.glob-margin-auto]="activeDashboardSections.length <= 0">
+
+        <ion-card class="ion-no-margin ion-margin-top no-border-rad covid-info-card" button="true">
+                <ng-container *ngIf="userVaccinationInfo$ | async as userVaccinationStatus else loading">
+                  <ng-container *ngIf="(userVaccinationStatus | keyvalue)?.length else neutral">
+                    <div [routerLink]="['/covid-forms']">
+                      <!--Low Risk Status-->
+                      <div class="covid-info-yellow" *ngIf="userVaccinationStatus.status_color === 'Yellow'" >
+                        <ion-card-header>
+                          <ion-card-title class="covid-info-title">
+                            COVID-19 Risk Status
+                          </ion-card-title>
+                        </ion-card-header>
+                        <ion-card-content>
+                          <ion-row class="ion-align-items-center">
+                            <ion-col size-lg="1.8" size-md="2.4" size-sm="1.4" size-xs="1.8">
+                              <img class="covid-info-icon" src="assets/img/covid-icon.png" alt="COVID-19 Icon">
+                            </ion-col>
+                            <ion-col class="covid-info-status glob-text-bold">
+                              Low Risk
+                            </ion-col>
+                          </ion-row>
+                        </ion-card-content>
+                      </div>
+    
+                      <!--Expired Status-->
+                      <div class="covid-info-blue" *ngIf="userVaccinationStatus.status_color === 'Blue'" >
+                        <ion-card-header>
+                          <ion-card-title class="covid-info-title">
+                            COVID-19 Risk Status
+                          </ion-card-title>
+                        </ion-card-header>
+                        <ion-card-content>
+                          <ion-row class="ion-align-items-center">
+                            <ion-col size-lg="1.8" size-md="2.4" size-sm="1.4" size-xs="1.8">
+                              <img class="covid-info-icon" src="assets/img/covid-icon.png" alt="COVID-19 Icon">
+                            </ion-col>
+                            <ion-col class="covid-info-status glob-text-bold">
+                              Test Result Expired - Update Result
+                            </ion-col>
+                          </ion-row>
+                        </ion-card-content>
+                      </div>
+    
+                      <!--High Risk Status-->
+                      <div class="covid-info-red" *ngIf="userVaccinationStatus.status_color === 'Red'">
+                        <ion-card-header>
+                          <ion-card-title class="covid-info-title">
+                            COVID-19 Risk Status
+                          </ion-card-title>
+                        </ion-card-header>
+                        <ion-card-content>
+                          <ion-row class="ion-align-items-center">
+                            <ion-col size-lg="1.8" size-md="2.4" size-sm="1.4" size-xs="1.8">
+                              <img class="covid-info-icon" src="assets/img/covid-icon.png" alt="COVID-19 Icon">
+                            </ion-col>
+                            <ion-col class="covid-info-status glob-text-bold">
+                              High Risk
+                            </ion-col>
+                          </ion-row>
+                        </ion-card-content>
+                      </div>
+                    </div>
+                  </ng-container>
+                </ng-container>
+                <ng-template #neutral>
+                  <!--Neutral Status-->
+                  <div class="covid-info-neutral" [routerLink]="['/covid-information-form']">
+                    <ion-card-header>
+                      <ion-card-title class="covid-info-title">
+                        COVID-19 Risk Status
+                      </ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                      <ion-row class="ion-align-items-center">
+                        <ion-col size-lg="1.8" size-md="2.4" size-sm="1.4" size-xs="1.8">
+                          <img class="covid-info-icon" src="assets/img/covid-icon.png" alt="COVID-19 Icon">
+                        </ion-col>
+                        <ion-col class="covid-info-status glob-text-bold">
+                          No Status - Fill up Form
+                        </ion-col>
+                      </ion-row>
+                    </ion-card-content>
+                  </div>
+                </ng-template>
+                <ng-template #loading>
+                  <ion-skeleton-text style="width: 100%; line-height: 140px" animated></ion-skeleton-text>
+                </ng-template>
+        </ion-card>
         <ion-card class="quick-access-buttons ion-no-margin no-border-rad">
           <ion-card-header class="ion-padding">
             <ion-card-title color="primary"> Quick Access </ion-card-title>
@@ -138,6 +226,48 @@
                 {{ quote.AUTHOR }}
               </h4>
             </ng-container>
+
+          <ion-card class="quick-access-buttons ion-no-margin ion-margin-top no-border-rad">
+            <ion-card-header class="ion-padding">
+              <ion-card-title color="primary"> Quick Access </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-grid>
+                <ion-row>
+                  <ion-col size="12" *ngIf="isCordova">
+                    <ion-button expand="block" [routerLink]="['/apcard-qr-code']">
+                      Scan Qr Code
+                      <ion-icon name="qr-code-outline" slot="end"></ion-icon>
+                    </ion-button>
+                  </ion-col>
+                  <ion-col size="12" *ngIf="isStudent">
+                    <ion-button expand="block" [routerLink]="['/attendix/update']">
+                      Sign Class Attendance
+                      <ion-icon name="checkmark-done-circle-outline" slot="end"></ion-icon>
+                    </ion-button>
+                  </ion-col>
+                  <ion-col size="12" *ngIf="isLecturer">
+                    <ion-button expand="block" [routerLink]="['/attendix/classes']">
+                      Mark Class Attendance
+                      <ion-icon name="checkmark-done-circle-outline" slot="end"></ion-icon>
+                    </ion-button>
+                  </ion-col>
+                  <ion-col size="12" *ngIf="!isStudent">
+                    <ion-button expand="block" [routerLink]="['/hr']">
+                      Human Resources
+                      <ion-icon name="people-circle" slot="end"></ion-icon>
+                    </ion-button>
+                  </ion-col>
+                  <ion-col size="12">
+                    <ion-button expand="block" (click)="openMoodle()">
+                      Moodle (Course Material)
+                      <ion-icon name="library" slot="end"></ion-icon>
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
 
             <ng-template #loadingQuotes>
               <p>
