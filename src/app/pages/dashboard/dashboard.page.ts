@@ -642,7 +642,7 @@ export class DashboardPage implements OnInit, DoCheck {
   }
 
   getUserVaccinationInfo() {
-    this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo[]>('', {url: this.devUrl + '/user'});
+    this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo[]>('/covid19/user');
   }
 
   // NEWS

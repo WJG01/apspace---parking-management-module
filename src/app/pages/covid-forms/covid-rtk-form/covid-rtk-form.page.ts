@@ -81,7 +81,7 @@ export class CovidRtkFormPage implements OnInit {
   }
 
   getUserVaccinationInfo() {
-    this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo[]>('', {url: this.devUrl});
+    this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo[]>('/covid19/user');
   }
 
   // Returns date from 7 days ago
@@ -113,7 +113,7 @@ export class CovidRtkFormPage implements OnInit {
     body.append('rtk_date', format(rtkDate, 'yyyy-MM-dd'));
     body.append('rtk_evidence', this.rtkEvidence);
     if (body) {
-      this.ws.post<any>('', {url: this.devUrl + '/add/covid_test_result', body}).subscribe(
+      this.ws.post<any>('/covid19/user/add/covid_test_result', {body}).subscribe(
         () => {
           this.showToastMessage('You have successfully submitted the form.', 'success');
           this.router.navigate(['/tabs/dashboard']);
