@@ -118,6 +118,33 @@ ion-col[scrolly="true"] {
 }
 
 // Today's Schedule
+.covid-info-card {
+  color: #000000;
+
+  .covid-info-title {
+    color: #000000 !important;
+  }
+  .covid-info-icon {
+    width: 50px;
+  }
+  .covid-info-status {
+    font-size: 1.2rem;
+  }
+
+  .covid-info-neutral {
+    background: var(--ion-color-medium);
+  }
+  .covid-info-yellow {
+    background: #FFDE8E url("/assets/img/covid-info/covid-1.png") no-repeat right;
+  }
+  .covid-info-blue {
+    background: #8EB5FF url("/assets/img/covid-info/covid-2.png") no-repeat right;
+  }
+  .covid-info-red {
+    background: #FF8E8E url("/assets/img/covid-info/covid-3.png") no-repeat right;
+  }
+}
+
 .todays-schedule {
   .todays-schedule-container {
     .event-container {

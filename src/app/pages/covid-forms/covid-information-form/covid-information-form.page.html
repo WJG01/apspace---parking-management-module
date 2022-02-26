@@ -1,0 +1,141 @@
+<ion-header>
+  <ion-toolbar mode="md">
+    <ion-title>COVID-19 Information Form</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-refresher slot="fixed" pullMax="400" pullMin="60" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
+  </ion-refresher>
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="6" size-lg="6" size-md="10" size-sm="12" size-xs="12" class="form-container ion-margin ion-padding">
+        <ion-row class="ion-align-items-center ion-justify-content-between">
+          <ion-col size="auto">
+            <ion-title class="ion-no-padding glob-text-bold">COVID-19 Information Form</ion-title>
+          </ion-col>
+          <ion-col size="auto">
+            <p class="form-subtitle">Note: All fields are required to be filled up.</p>
+          </ion-col>
+        </ion-row>
+        <div *ngIf="userVaccinationInfo$ | async as userVaccinationStatus">
+          <div *ngIf="!(userVaccinationStatus | keyvalue)?.length else disable">
+            <!--Full Name-->
+            <ion-item>
+              <ion-label position="stacked" class="ion-margin-horizontal">Full Name</ion-label>
+              <ion-input [disabled]="!userProfile ? true : false" type="text" style="text-transform: uppercase;" onkeyup="this.value = this.value.toUpperCase();" required autocapitalize="characters" maxlength="64" [value]="isStudent ? userProfile.NAME : userProfile.FULLNAME" [(ngModel)]="fullName"></ion-input>
+            </ion-item>
+            <ion-title class="ion-no-padding ion-margin-vertical ion-margin-horizontal">Vaccination Information</ion-title>
+            <!--Vaccination Status-->
+            <ion-item lines="full" *ngIf="vaccinationStatus$ | async as vaccinationStatuses else loading">
+              <ion-label>Vaccination Status</ion-label>
+              <ion-select interface="popover" required [(ngModel)]="vaccinationStatus">
+                <ion-select-option [value]="vaccinationStatus.id" *ngFor="let vaccinationStatus of vaccinationStatuses">
+                  {{vaccinationStatus.vaccination_status}}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+            <!--Vaccine Type-->
+            <ion-item *ngIf="vaccinationStatus && vaccinationStatus !== notVaccinated">
+              <ng-container *ngIf="vaccinationType$ | async as vaccinationTypes else loading">
+                <ion-label>Vaccination Type</ion-label>
+                <ion-select interface="popover" required ngModel (ngModelChange)="onVaccineTypeChange($event)">
+                  <ion-select-option [value]="vaccinationType.id" *ngFor="let vaccinationType of vaccinationTypes">
+                    {{vaccinationType.vaccine_name}}
+                  </ion-select-option>
+                </ion-select>
+              </ng-container>
+            </ion-item>
+            <!--Number of Doses (Others)-->
+            <ion-item *ngIf="vaccinationType === other && vaccinationStatus !== notVaccinated">
+              <ion-label>Number of Doses</ion-label>
+              <ion-select placeholder="Select One" required [(ngModel)]="numberOfDoses">
+                <ion-select-option value="1">1</ion-select-option>
+                <ion-select-option value="2">2</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <!--Dose Date-->
+            <ion-row *ngIf="vaccinationStatus && vaccinationStatus !== notVaccinated">
+              <ion-col class="ion-no-padding" size="12" *ngIf="maxDate && vaccinationStatus !== partiallyVaccinated && numberOfDoses === number">
+                <p class="form-subtitle ion-margin-horizontal">Dose 1 date is today's date. Please select another date to enable dose 2 date.</p>
+              </ion-col>
+              <ion-col *ngIf="numberOfDoses">
+                <ion-item>
+                  <ion-label>Dose 1 Date</ion-label>
+                  <ion-datetime displayFormat="DD-MMM-YYYY" placeholder="Select Date" min="2021" [max]="todaysDate" required ngModel (ngModelChange)="onFirstDoseDateChange($event)"></ion-datetime>
+                </ion-item>
+              </ion-col>
+              <ion-col *ngIf="numberOfDoses === number && vaccinationStatus !== partiallyVaccinated">
+                <ion-item>
+                  <ion-label>Dose 2 Date</ion-label>
+                  <ion-datetime displayFormat="DD-MMM-YYYY" placeholder="Select Date" [disabled]="maxDate ? true : false" [min]="secondDoseMinDate" [max]="todaysDate" required [ngModel]="doseTwoDate" (ngModelChange)="onSecondDoseDateChange($event)"></ion-datetime>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ng-container *ngIf="vaccinationStatus === vaccinatedWithBooster">
+              <ion-title class="ion-no-padding ion-margin-vertical ion-margin-horizontal">Booster Information</ion-title>
+              <!--Booster Type-->
+              <ion-item *ngIf="vaccinationType$ | async as vaccinationTypes else loading">
+                <ion-label>Booster Type</ion-label>
+                <ion-select interface="popover" required [(ngModel)]="boosterType">
+                  <ion-select-option [value]="vaccinationType.id" *ngFor="let vaccinationType of vaccinationTypes">
+                    {{vaccinationType.vaccine_name}}
+                  </ion-select-option>
+                </ion-select>
+              </ion-item>
+              <!--Dose Date-->
+              <ion-col class="ion-no-padding" size="12" *ngIf="boosterMaxDate && vaccinationStatus !== partiallyVaccinated">
+                <p class="form-subtitle ion-margin-horizontal">Vaccine dose date is already today's date. Please select another date to enable booster's date.</p>
+              </ion-col>
+              <ion-item>
+                <ion-label>Booster Date</ion-label>
+                <ion-datetime displayFormat="DD-MMM-YYYY" placeholder="Select Date" [disabled]="boosterMaxDate ? true : false"  [min]="boosterDoseMinDate" [max]="todaysDate" required [(ngModel)]="boosterDate"></ion-datetime>
+              </ion-item>
+            </ng-container>
+            <ng-container *ngIf="vaccinationStatus !== vaccinatedWithBooster && vaccinationStatus">
+              <ion-title class="ion-no-padding ion-margin-vertical ion-margin-horizontal">PCR Test Information</ion-title>
+              <!--PCR Test Date-->
+              <ion-item>
+                <ion-label>PCR Test Date</ion-label>
+                <ion-datetime displayFormat="DD-MMM-YYYY" placeholder="Select Date" [min]=getDate() [max]="todaysDate" required [(ngModel)]="pcrEvidenceDate"></ion-datetime>
+              </ion-item>
+              <!--PCR Result-->
+              <ion-item>
+                <ion-label>PCR Result</ion-label>
+                <ion-select interface="popover" required [(ngModel)]="pcrResult">
+                  <ion-select-option value="Negative">Negative</ion-select-option>
+                  <ion-select-option value="Positive">Positive</ion-select-option>
+                </ion-select>
+              </ion-item>
+              <!--File Uploader-->
+              <ion-item>
+                <ion-label position="stacked">Upload PCR Result Evidence (Format: JPG/PNG/PDF)<p class="form-subtitle">Maximum File Size: 2MB</p></ion-label>
+                <ion-input class="ion-margin-top" type="file" accept="application/pdf, image/jpeg, image/png" button (change)="uploadFile($event)" required></ion-input>
+              </ion-item>
+            </ng-container>
+            <p class="ion-margin-horizontal form-subtitle">By clicking the submit button, I hereby declare that the above is accurate and complete information. I understand that any misleading or falsified information can lead to action to be taken against me.</p>
+            <ion-button expand="block" *ngIf="vaccinationStatus === vaccinatedWithBooster" [disabled]="(!vaccinationType) || (!doseOneDate) || (numberOfDoses === '2' && !doseTwoDate) || (!boosterType) || (!boosterDate) " (click)="onSubmit()">Submit</ion-button>
+            <ion-button expand="block" *ngIf="vaccinationStatus === fullyVaccinated" [disabled]="(!vaccinationType) || (!doseOneDate) || (numberOfDoses === '2' && !doseTwoDate) || (!pcrResult) || (!pcrEvidenceDate) || (!pcrEvidence)" (click)="onSubmit()">Submit</ion-button>
+            <ion-button expand="block" *ngIf="vaccinationStatus === partiallyVaccinated" [disabled]="(!vaccinationType) || (!doseOneDate) || (!pcrResult) || (!pcrEvidenceDate) || (!pcrEvidence)" (click)="onSubmit()">Submit</ion-button>
+            <ion-button expand="block" *ngIf="vaccinationStatus === notVaccinated" [disabled]="(!pcrResult) || (!pcrEvidenceDate) || (!pcrEvidence)" (click)="onSubmit()">Submit</ion-button>
+          </div>
+        </div>
+        <ng-template #loading>
+          <div class="ion-padding">
+            <loading-spinner message="Loading..." size="50px"></loading-spinner>
+          </div>
+        </ng-template>
+        <ng-template #disable>
+          <ion-row class="ion-justify-content-center ion-align-items-center">
+            <ion-col>You have already submitted this form.</ion-col>
+          </ion-row>
+        </ng-template>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
