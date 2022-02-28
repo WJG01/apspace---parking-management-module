@@ -20,6 +20,7 @@ export class CovidRtkFormPage implements OnInit {
 
   // User Vaccine Information
   userVaccinationInfo$: Observable<UserVaccineInfo[]>;
+  devUrl = 'https://9t7k8i4yu5.execute-api.ap-southeast-1.amazonaws.com/dev/covid19/user';
 
   // User Profile
   role: Role;

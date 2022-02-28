@@ -25,6 +25,7 @@ export class CovidInformationFormPage implements OnInit {
   orientationStudentDetails$: Observable<OrientationStudentDetails>;
 
   // Vaccination
+  devUrl = 'https://9t7k8i4yu5.execute-api.ap-southeast-1.amazonaws.com/dev/covid19';
   vaccinationStatus$: Observable<VaccinationStatus[]>;
   vaccinationType$: Observable<VaccinationType[]>;
   userVaccinationInfo$: Observable<UserVaccineInfo[]>;

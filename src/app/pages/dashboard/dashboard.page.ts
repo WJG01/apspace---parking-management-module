@@ -107,6 +107,7 @@ export class DashboardPage implements OnInit, DoCheck {
   firstLocation: string;
 
   // User Vaccination Information
+  devUrl = 'https://9t7k8i4yu5.execute-api.ap-southeast-1.amazonaws.com/dev/covid19';
   userVaccinationInfo$: Observable<UserVaccineInfo[]>;
   userVaccinationStatus: any = {};
 
