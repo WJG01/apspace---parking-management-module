@@ -113,15 +113,15 @@ export class CovidInformationFormPage implements OnInit {
   }
 
   getUserVaccinationInfo() {
-    this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo[]>('/covid19/user');
+    this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo[]>('', {url: this.devUrl + '/user'});
   }
 
   getVaccinationStatus() {
-    this.vaccinationStatus$ = this.ws.get<VaccinationStatus[]>('/covid19/vaccine/status');
+    this.vaccinationStatus$ = this.ws.get<VaccinationStatus[]>('', {url: this.devUrl + '/vaccine/status'});
   }
 
   getVaccinationTypes() {
-    this.vaccinationType$ = this.ws.get<VaccinationType[]>('/covid19/vaccine/type');
+    this.vaccinationType$ = this.ws.get<VaccinationType[]>('', {url: this.devUrl + '/vaccine/type'});
   }
 
   // Returns date from 7 days ago
@@ -269,7 +269,7 @@ export class CovidInformationFormPage implements OnInit {
       body.append('pcr_evidence', this.pcrEvidence);
     }
     if (body) {
-      this.ws.post<any>('/covid19/user/add', { body }).subscribe(
+      this.ws.post<any>('', { url: this.devUrl + '/user/add', body }).subscribe(
         () => {
           this.showToastMessage('You have successfully submitted the form.', 'success');
           this.router.navigate(['/tabs/dashboard']);
