@@ -1,17 +1,14 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
-import { DeauthGuard } from './guards';
-
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'tabs',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
     path: 'login',
-    canActivate: [DeauthGuard],
     loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule)
   }
 ];
