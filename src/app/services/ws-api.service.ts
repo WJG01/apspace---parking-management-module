@@ -1,35 +1,38 @@
-import {
-  HttpClient, HttpErrorResponse, HttpHeaders, HttpParams
-} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Network } from '@ionic-native/network/ngx';
-import { Platform, ToastController } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
-import {
-  EMPTY, NEVER, Observable, concat, from, iif, of, throwError,
-} from 'rxjs';
-import {
-  catchError, concatMap, delay, publishLast, refCount, retryWhen, switchMap,
-  tap, timeout,
-} from 'rxjs/operators';
+import { Platform } from '@ionic/angular';
+import { Observable, switchMap, tap, timeout, catchError, throwError, from, of, retryWhen, concatMap, iif, delay, concat, EMPTY, NEVER, AsyncSubject, share } from 'rxjs';
+
+import { Storage } from '@ionic/storage-angular';
+import { Network } from '@capacitor/network';
 
 import { CasTicketService } from './cas-ticket.service';
+import { ComponentService } from './component.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WsApiService {
 
-  apiUrl = 'https://api.apiit.edu.my';
+  private apiUrl = 'https://api.apiit.edu.my';
+  private connected = true;
 
   constructor(
     public http: HttpClient,
     public plt: Platform,
-    public network: Network,
     public storage: Storage,
-    public toastCtrl: ToastController,
     private cas: CasTicketService,
-  ) { }
+    private component: ComponentService
+  ) {
+    this.networkStatus();
+
+    /**
+     * Listens to Network Change
+     */
+    Network.addListener('networkStatusChange', status => {
+      this.connected = status.connected;
+    });
+  }
 
   /**
    * GET: Request WS API with cache (mobile only) and error handling.
@@ -86,26 +89,26 @@ export class WsApiService {
       timeout(options.timeout),
       catchError(err => {
         if (400 <= err.status && err.status < 500) {
-          return throwError(err);
+          return throwError(() => new Error(err));
         }
-        this.toastCtrl.create({ message: err.message, duration: 3000, position: 'top' })
-          .then(toast => toast.present());
+        this.component.toastMessage(err.message, 'medium');
+
         return from(this.storage.get(endpoint)).pipe(
-          switchMap(v => v ? of(v as T) : throwError(err)),
+          switchMap(v => v ? of(v as T) : throwError(() => new Error(err))),
         );
       }),
       retryWhen(errors => errors.pipe(
         concatMap((err, n) => iif( // use concat map to keep errors in order (not parallel)
           () => !(400 <= err.status && err.status < 500) && n < options.attempts, // skip 4xx
           of(err).pipe(delay((2 ** (n + 1) + Math.random() * 8) * 1000)), // 2^n + random 0-8
-          throwError(err), // propagate error if all retries failed
+          throwError(() => new Error(err)), // propagate error if all retries failed
         ))
       )),
     );
 
-    if (!this.plt.is('cordova') && !this.plt.is('capacitor')) { // disable caching on browser
+    if (!this.plt.is('capacitor')) { // disable caching on browser
       return request$;
-    } else if (options.caching !== 'cache-only' && this.network.type !== 'none') {
+    } else if (options.caching !== 'cache-only' && this.connected) {
       return options.caching === 'cache-update-refresh'
         ? concat(from(this.storage.get(endpoint)), request$)
         : request$;
@@ -156,11 +159,11 @@ export class WsApiService {
       withCredentials: options.withCredentials,
     };
 
-    if (this.plt.is('cordova') && this.network.type === 'none') {
+    if (this.plt.is('capacitor') && !this.connected) {
       return this.handleOffline();
     }
 
-    console.log('network', this.network.type);
+    console.log('Network Status: ', this.connected);
 
     return (!options.auth // always get ticket if auth is true
       ? this.http.post<T>(url, options.body, opt)
@@ -170,8 +173,7 @@ export class WsApiService {
     ).pipe(
       catchError(this.handleClientError),
       timeout(options.timeout),
-      publishLast(),
-      refCount(),
+      share({ connector: () => new AsyncSubject(), resetOnError: false, resetOnComplete: false, resetOnRefCountZero: false })
     );
   }
 
@@ -215,7 +217,7 @@ export class WsApiService {
       withCredentials: options.withCredentials,
     };
 
-    if (this.plt.is('cordova') && this.network.type === 'none') {
+    if (this.plt.is('capacitor') && !this.connected) {
       return this.handleOffline();
     }
 
@@ -227,8 +229,7 @@ export class WsApiService {
     ).pipe(
       catchError(this.handleClientError),
       timeout(options.timeout),
-      publishLast(),
-      refCount(),
+      share({ connector: () => new AsyncSubject(), resetOnError: false, resetOnComplete: false, resetOnRefCountZero: false })
     );
   }
 
@@ -269,7 +270,7 @@ export class WsApiService {
       withCredentials: options.withCredentials,
     };
 
-    if (this.plt.is('cordova') && this.network.type === 'none') {
+    if (this.plt.is('capacitor') && !this.connected) {
       return this.handleOffline();
     }
 
@@ -281,15 +282,14 @@ export class WsApiService {
     ).pipe(
       catchError(this.handleClientError),
       timeout(options.timeout),
-      publishLast(),
-      refCount(),
+      share({ connector: () => new AsyncSubject(), resetOnError: false, resetOnComplete: false, resetOnRefCountZero: false })
     );
   }
 
   /** Handle client error by rethrowing 4xx or return empty observable for 304. */
   private handleClientError(err: HttpErrorResponse): Observable<never> {
     if (400 <= err.status && err.status < 500) {
-      return throwError(err);
+      return throwError(() => new Error(err.message));
     } else if (err.status === 304) {
       return EMPTY;
     } else {
@@ -300,12 +300,15 @@ export class WsApiService {
 
   /** Toast and throw error observable when offline. */
   private handleOffline(): Observable<never> {
-    this.toastCtrl.create({
-      message: 'You are now offline.',
-      duration: 3000,
-      position: 'top',
-    }).then(toast => toast.present());
-    return throwError(new Error('offline'));
+    this.component.toastMessage('You are now offline.', 'medium');
+    return throwError(() => new Error('offline'));
   }
 
+  /**
+   * Get Current Status of Network
+   */
+  private async networkStatus() {
+    const status = await Network.getStatus();
+    this.connected = status.connected;
+  }
 }

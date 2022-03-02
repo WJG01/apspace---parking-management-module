@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router,
-  RouterStateSnapshot, UrlTree
-} from '@angular/router';
-import { Storage } from '@ionic/storage';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 
-import { CasTicketService, SettingsService } from '../services';
+import { Storage } from '@ionic/storage-angular';
+
+import { CasTicketService } from '../services';
 
 /**
  * Auth Guard check if the user is authenticated and authorized.
@@ -20,21 +18,17 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
   constructor(
     private cas: CasTicketService,
-    private settings: SettingsService,
     private storage: Storage,
     private router: Router,
   ) { }
 
   async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<UrlTree | boolean> {
-    // tslint:disable-next-line:deprecation
-    await this.settings.ready(); // migrate role to storage needed for backwards compatibility
-
     // authentication
     if (!await this.cas.isAuthenticated()) {
       // does not need to redirect on first login and for logout page
       return route.url.toString() === 'tabs' || route.url.toString() === 'logout'
         ? this.router.createUrlTree(['/login'])
-        : this.router.createUrlTree(['/login'], { queryParams: { redirect: state.url }});
+        : this.router.createUrlTree(['/login'], { queryParams: { redirect: state.url } });
     }
 
     // authorization
@@ -50,5 +44,4 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<UrlTree | boolean> {
     return this.canActivate(route, state);
   }
-
 }
