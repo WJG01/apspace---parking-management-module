@@ -1,1 +1,0 @@
-directive @aws_subscribe(mutations: [String!]!) on FIELD_DEFINITION

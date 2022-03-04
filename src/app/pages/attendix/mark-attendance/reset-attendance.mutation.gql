@@ -1,4 +1,0 @@
-mutation resetAttendance($schedule: ScheduleInput!) {
-  resetAttendance(schedule: $schedule)
-  @NgModule(module: "src/app/graphql.module#GraphQLModule")
-}

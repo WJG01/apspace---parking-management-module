@@ -7,8 +7,8 @@ describe('new App', () => {
     page = new AppPage();
   });
 
-  it('should direct to login page', () => {
+  it('should be blank', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toContain('Your digital university companion');
+    expect(page.getParagraphText()).toContain('Start with Ionic UI Components');
   });
 });
