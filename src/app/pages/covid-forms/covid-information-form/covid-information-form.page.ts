@@ -3,8 +3,7 @@ import { Router } from '@angular/router';
 import { LoadingController, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { format } from 'date-fns';
-import { Observable, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 import { OrientationStudentDetails, Role, StaffProfile, StudentProfile } from 'src/app/interfaces';
 import { UserVaccineInfo, VaccinationStatus, VaccinationType } from '../../../interfaces/covid-forms';
@@ -85,15 +84,7 @@ export class CovidInformationFormPage implements OnInit {
       // tslint:disable-next-line:no-bitwise
       if (role & Role.Student) {
         this.studentRole = true;
-        this.studentProfile$ = this.ws.get<StudentProfile>('/student/profile').pipe(
-          tap(p => this.orientationStudentDetails$ = this.ws.get<OrientationStudentDetails>(
-            `/orientation/student_details?id=${p.STUDENT_NUMBER}`).pipe(
-            catchError(err => {
-              // api returns 401 when student should not access this orientation form
-              return of(err);
-            }),
-          )),
-        );
+        this.studentProfile$ = this.ws.get<StudentProfile>('/student/profile');
         this.studentProfile$.subscribe(student => this.fullName = student.NAME);
         // tslint:disable-next-line:no-bitwise
       } else if (role & (Role.Lecturer | Role.Admin)) {
