@@ -24,7 +24,6 @@ export class CovidInformationFormPage implements OnInit {
   staffProfile$: Observable<StaffProfile>;
   studentProfile$: Observable<StudentProfile>;
   orientationStudentDetails$: Observable<OrientationStudentDetails>;
-  indicator: boolean;
 
   // Vaccination
   vaccinationStatus$: Observable<VaccinationStatus[]>;
@@ -71,7 +70,6 @@ export class CovidInformationFormPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.indicator = true;
     this.todaysDate = format(new Date(), 'yyyy-MM-dd');
     this.getVaccinationStatus();
     this.getVaccinationTypes();
@@ -83,29 +81,26 @@ export class CovidInformationFormPage implements OnInit {
   }
 
   getProfile() {
-    if (this.indicator) {
-      this.storage.get('role').then((role: Role) => {
+    this.storage.get('role').then((role: Role) => {
+      // tslint:disable-next-line:no-bitwise
+      if (role & Role.Student) {
+        this.studentRole = true;
+        this.studentProfile$ = this.ws.get<StudentProfile>('/student/profile').pipe(
+          tap(p => this.orientationStudentDetails$ = this.ws.get<OrientationStudentDetails>(
+            `/orientation/student_details?id=${p.STUDENT_NUMBER}`).pipe(
+            catchError(err => {
+              // api returns 401 when student should not access this orientation form
+              return of(err);
+            }),
+          )),
+        );
+        this.studentProfile$.subscribe(student => this.fullName = student.NAME);
         // tslint:disable-next-line:no-bitwise
-        if (role & Role.Student) {
-          this.studentRole = true;
-          this.studentProfile$ = this.ws.get<StudentProfile>('/student/profile').pipe(
-            tap(p => this.orientationStudentDetails$ = this.ws.get<OrientationStudentDetails>(
-              `/orientation/student_details?id=${p.STUDENT_NUMBER}`).pipe(
-              catchError(err => {
-                // api returns 401 when student should not access this orientation form
-                return of(err);
-              }),
-            )),
-          );
-          this.studentProfile$.subscribe(student => this.fullName = student.NAME);
-          // tslint:disable-next-line:no-bitwise
-        } else if (role & (Role.Lecturer | Role.Admin)) {
-          this.staffProfile$ = this.ws.get<StaffProfile>('/staff/profile');
-          this.staffProfile$.subscribe(staff => this.fullName = staff[0].FULLNAME);
-        }
-      });
-      this.indicator = false;
-    }
+      } else if (role & (Role.Lecturer | Role.Admin)) {
+        this.staffProfile$ = this.ws.get<StaffProfile>('/staff/profile');
+        this.staffProfile$.subscribe(staff => this.fullName = staff[0].FULLNAME);
+      }
+    });
   }
 
   getUserVaccinationInfo() {
