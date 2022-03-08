@@ -97,7 +97,7 @@
       <ion-col size-xs="12" class="dash-padding" [attr.size-md]="activeDashboardSections.length > 0 ? 5 : 7"
                [class.glob-margin-auto]="activeDashboardSections.length <= 0">
 
-        <ion-card class="ion-no-margin ion-margin-vertical no-border-rad covid-info-card" button="true">
+        <ion-card class="ion-no-margin ion-margin-bottom no-border-rad covid-info-card" button="true">
                 <ng-container *ngIf="userVaccinationInfo$ | async as userVaccinationStatus else loading">
                   <ng-container *ngIf="(userVaccinationStatus | keyvalue)?.length else neutral">
                     <div [routerLink]="['/covid-forms']">
@@ -226,48 +226,6 @@
                 {{ quote.AUTHOR }}
               </h4>
             </ng-container>
-
-          <ion-card class="quick-access-buttons ion-no-margin ion-margin-top no-border-rad">
-            <ion-card-header class="ion-padding">
-              <ion-card-title color="primary"> Quick Access </ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <ion-grid>
-                <ion-row>
-                  <ion-col size="12" *ngIf="isCordova">
-                    <ion-button expand="block" [routerLink]="['/apcard-qr-code']">
-                      Scan Qr Code
-                      <ion-icon name="qr-code-outline" slot="end"></ion-icon>
-                    </ion-button>
-                  </ion-col>
-                  <ion-col size="12" *ngIf="isStudent">
-                    <ion-button expand="block" [routerLink]="['/attendix/update']">
-                      Sign Class Attendance
-                      <ion-icon name="checkmark-done-circle-outline" slot="end"></ion-icon>
-                    </ion-button>
-                  </ion-col>
-                  <ion-col size="12" *ngIf="isLecturer">
-                    <ion-button expand="block" [routerLink]="['/attendix/classes']">
-                      Mark Class Attendance
-                      <ion-icon name="checkmark-done-circle-outline" slot="end"></ion-icon>
-                    </ion-button>
-                  </ion-col>
-                  <ion-col size="12" *ngIf="!isStudent">
-                    <ion-button expand="block" [routerLink]="['/hr']">
-                      Human Resources
-                      <ion-icon name="people-circle" slot="end"></ion-icon>
-                    </ion-button>
-                  </ion-col>
-                  <ion-col size="12">
-                    <ion-button expand="block" (click)="openMoodle()">
-                      Moodle (Course Material)
-                      <ion-icon name="library" slot="end"></ion-icon>
-                    </ion-button>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-            </ion-card-content>
-          </ion-card>
 
             <ng-template #loadingQuotes>
               <p>
