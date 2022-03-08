@@ -23,15 +23,15 @@
           <div class="form-margin">
             <!--Full Name-->
             <ng-container *ngIf="studentRole else staff">
-              <ion-item *ngIf="studentProfile$ | async as studentProfile">
+              <ion-item>
                 <ion-label position="stacked">Full Name</ion-label>
-                <ion-input type="text" style="text-transform: uppercase;" onkeyup="this.value = this.value.toUpperCase();" required maxlength="120" [value]="fullName" [(ngModel)]="fullName"></ion-input>
+                <ion-input class="ion-text-uppercase" type="text" onkeyup="this.value = this.value.toUpperCase();" required maxlength="200" [value]="fullName" [(ngModel)]="fullName"></ion-input>
               </ion-item>
             </ng-container>
             <ng-template #staff>
-              <ion-item *ngIf="staffProfile$ | async as staffProfile">
+              <ion-item>
                 <ion-label position="stacked">Full Name</ion-label>
-                <ion-input type="text" style="text-transform: uppercase;" onkeyup="this.value = this.value.toUpperCase();" required maxlength="120" [value]="fullName" [(ngModel)]="fullName"></ion-input>
+                <ion-input class="ion-text-uppercase" type="text" onkeyup="this.value = this.value.toUpperCase();" required maxlength="200" [value]="fullName" [(ngModel)]="fullName"></ion-input>
               </ion-item>
             </ng-template>
             <p class="ion-no-padding ion-margin form-title">Vaccination Information</p>
