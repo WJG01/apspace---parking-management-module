@@ -1163,7 +1163,6 @@ export class DashboardPage implements OnInit, DoCheck {
     );
     // plot graph
     this.apcardChart.data.datasets[0].data = this.monthlyData.cr[now.getFullYear()];
-    console.log(this.apcardChart.data.datasets[0].data);
     this.apcardChart.data.datasets[1].data = this.monthlyData.dr[now.getFullYear()];
   }
 
