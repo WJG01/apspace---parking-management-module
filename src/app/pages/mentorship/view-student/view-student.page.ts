@@ -2,11 +2,14 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { Observable, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
-import { StudentProfile } from 'src/app/interfaces';
-import { MentorshipCourseDetail, MentorshipIntake } from 'src/app/interfaces/mentorship';
+import { StaffProfile, StudentProfile } from 'src/app/interfaces';
+import { MentorshipCourseDetail, MentorshipIntake, StudentRemark } from 'src/app/interfaces/mentorship';
 import { MentorshipService } from 'src/app/services/mentorship.service';
+import { WsApiService } from '../../../services';
+import { AddRemarksModalPage } from './add-remarks-modal/add-remarks-modal.page';
+import { EditRemarksModalPage } from './edit-remarks-modal/edit-remarks-modal.page';
 import { ShowDetailsPage } from './show-details/show-details.page';
 
 @Component({
@@ -16,12 +19,15 @@ import { ShowDetailsPage } from './show-details/show-details.page';
 })
 export class ViewStudentPage {
   tp: string;
+  staffID: string;
   selectedIntake: string;
   search: '';
 
+  staffProfile$: Observable<StaffProfile>;
   profile$: Observable<StudentProfile>;
   intake$: Observable<MentorshipIntake[]>;
   selectedIntake$: Observable<MentorshipIntake[]>;
+  studentRemarks$: Observable<StudentRemark[]>;
 
   courseDetail$: Observable<MentorshipCourseDetail[]>;
   subCourse$: Observable<{ index: string; value: any }[]>;
@@ -34,7 +40,8 @@ export class ViewStudentPage {
   constructor(
     private mentorship: MentorshipService,
     private route: ActivatedRoute,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private ws: WsApiService
   ) {}
 
   ionViewDidEnter() {
@@ -42,8 +49,29 @@ export class ViewStudentPage {
     this.selectedIntake = this.route.snapshot.params.intake;
     this.profile$ = this.mentorship.getStudentProfile(this.tp);
     this.intake$ = this.mentorship.getIntakes(this.tp);
+    this.getStaffProfile();
+    this.studentRemarks$ = this.staffProfile$.pipe(
+      switchMap(staffProfile => {
+        return this.mentorship.getStudentRemarks(this.tp).pipe(
+          map((studentRemarkArray) => {
+            return studentRemarkArray.map((studentRemarkObject: StudentRemark) => {
+              if (staffProfile[0].ID === studentRemarkObject.SAMACCOUNTNAME) {
+                studentRemarkObject.CAN_EDIT = true;
+                return studentRemarkObject;
+              } else {
+                return studentRemarkObject;
+              }
+            });
+          })
+        );
+      })
+    );
     this.onTap(this.selectedIntake);
     this.runModifierForSelect();
+  }
+
+  getStaffProfile() {
+    this.staffProfile$ = this.ws.get<StaffProfile>('/staff/profile');
   }
 
   runModifierForSelect() {
@@ -118,7 +146,29 @@ export class ViewStudentPage {
         tp: this.tp
       }
     });
+    return await modal.present();
+  }
 
+  async presentAddRemarks(studentID: string) {
+    const modal = await this.modalCtrl.create({
+      component: AddRemarksModalPage,
+      componentProps: {
+        studentID
+      }
+    });
+    return await modal.present();
+  }
+
+  async presentEditRemarks(studentID: string, remarks: string, staffID: string, remarksDate: string) {
+    const modal = await this.modalCtrl.create({
+      component: EditRemarksModalPage,
+      componentProps: {
+        studentID,
+        remarks,
+        staffID,
+        remarksDate
+      }
+    });
     return await modal.present();
   }
 }

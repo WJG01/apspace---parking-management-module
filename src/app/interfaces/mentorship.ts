@@ -79,3 +79,11 @@ export interface MentorshipSemesterSummary {
     TOTAL_CREDIT_HOURS: number;
     TOTAL_MODULES_PASSED: number;
 }
+
+export interface StudentRemark {
+  RECORDED_BY: string;
+  REMARKS: string;
+  REMARKS_DATE: string;
+  SAMACCOUNTNAME: string;
+  CAN_EDIT: boolean;
+}
