@@ -312,12 +312,113 @@
               </ng-container>
             </ng-container>
           </ng-container>
+
+          <ion-card>
+            <ion-card-header>
+              <ion-row>
+                <ion-col><ion-card-title color="primary">Remarks</ion-card-title></ion-col>
+                <ion-col class="ion-text-right">
+                  <ng-container *ngIf="profile$ | async as profile">
+                    <ion-col class="ion-text-right clickable" (click)="presentAddRemarks(profile[0].STUDENT_NUMBER)">+ Add Remarks</ion-col>
+                  </ng-container>
+                </ion-col>
+              </ion-row>
+            </ion-card-header>
+            <ion-card-content>
+              <ng-container *ngIf="studentRemarks$ | async as studentRemarks else loadingRemarks">
+                <ng-container *ngIf="(studentRemarks | keyvalue)?.length else noData">
+                  <ion-row class="remarks-container" *ngFor="let studentRemark of studentRemarks">
+                    <ion-col>
+                      <ion-row class="ion-no-margin ion-no-padding">
+                        <ion-col size="12" class="glob-text-bold ion-no-padding remarks-name">{{ studentRemark.RECORDED_BY }}</ion-col>
+                      </ion-row>
+                      <ion-row class="ion-no-margin">
+                        <ion-col size="12" class="ion-no-padding remarks-time">{{ studentRemark.REMARKS_DATE | dateWithTimezone: 'dd MMMM yyyy' }}
+                          at {{ studentRemark.REMARKS_DATE | dateWithTimezone: 'time' }}</ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="12" class="ion-no-padding remarks-comment">{{ studentRemark.REMARKS }}</ion-col>
+                      </ion-row>
+                    </ion-col>
+                      <ng-container *ngIf="studentRemark.CAN_EDIT">
+                        <ion-col size=".8" size-lg=".8" size-md=".8" size-sm="12" size-xs="12" class="ion-align-self-center remarks-icon-container">
+                          <ng-container *ngIf="profile$ | async as profile">
+                            <ion-icon name="create-outline" class="remarks-edit-icon clickable" (click)="presentEditRemarks(profile[0].STUDENT_NUMBER, studentRemark.REMARKS, studentRemark.RECORDED_BY, studentRemark.REMARKS_DATE)"></ion-icon>
+                          </ng-container>
+                        </ion-col>
+                      </ng-container>
+                  </ion-row>
+                </ng-container>
+              </ng-container>
+            </ion-card-content>
+          </ion-card>
+
           <ng-template #loadingSemester>
             <ion-card class="ion-no-padding ion-no-margin">
               <ion-card-content class="ion-no-padding">
                 <ion-skeleton-text animated style="line-height: 200px;"></ion-skeleton-text>
               </ion-card-content>
             </ion-card>
+          </ng-template>
+
+          <ng-template #loadingRemarks>
+            <ion-row class="remarks-container">
+              <ion-col>
+                <ion-row class="ion-no-margin ion-no-padding">
+                  <ion-col size="2" class="glob-text-bold ion-no-padding remarks-name">
+                    <ion-skeleton-text animated style="line-height: 15px;"></ion-skeleton-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="ion-no-margin ion-no-padding">
+                  <ion-col size="4" class="glob-text-bold ion-no-padding remarks-name">
+                    <ion-skeleton-text animated style="line-height: 15px;"></ion-skeleton-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="ion-no-margin ion-no-padding">
+                  <ion-col size="8" class="glob-text-bold ion-no-padding remarks-name">
+                    <ion-skeleton-text animated style="line-height: 15px;"></ion-skeleton-text>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+            <ion-row class="remarks-container">
+              <ion-col>
+                <ion-row class="ion-no-margin ion-no-padding">
+                  <ion-col size="2" class="glob-text-bold ion-no-padding remarks-name">
+                    <ion-skeleton-text animated style="line-height: 15px;"></ion-skeleton-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="ion-no-margin ion-no-padding">
+                  <ion-col size="4" class="glob-text-bold ion-no-padding remarks-name">
+                    <ion-skeleton-text animated style="line-height: 15px;"></ion-skeleton-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="ion-no-margin ion-no-padding">
+                  <ion-col size="8" class="glob-text-bold ion-no-padding remarks-name">
+                    <ion-skeleton-text animated style="line-height: 15px;"></ion-skeleton-text>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+            <ion-row class="remarks-container">
+              <ion-col>
+                <ion-row class="ion-no-margin ion-no-padding">
+                  <ion-col size="2" class="glob-text-bold ion-no-padding remarks-name">
+                    <ion-skeleton-text animated style="line-height: 15px;"></ion-skeleton-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="ion-no-margin ion-no-padding">
+                  <ion-col size="4" class="glob-text-bold ion-no-padding remarks-name">
+                    <ion-skeleton-text animated style="line-height: 15px;"></ion-skeleton-text>
+                  </ion-col>
+                </ion-row>
+                <ion-row class="ion-no-margin ion-no-padding">
+                  <ion-col size="8" class="glob-text-bold ion-no-padding remarks-name">
+                    <ion-skeleton-text animated style="line-height: 15px;"></ion-skeleton-text>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+            </ion-row>
           </ng-template>
 
           <ng-template #noData>
