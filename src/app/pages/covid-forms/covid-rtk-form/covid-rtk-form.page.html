@@ -8,27 +8,19 @@
 </ion-header>
 
 <ion-content>
-  <ion-refresher slot="fixed" pullMax="400" pullMin="60" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
-  </ion-refresher>
-  <ion-grid>
-    <ion-row class="ion-justify-content-center">
-      <ion-col size="6" size-lg="6" size-md="10" size-sm="12" size-xs="12" class="form-container ion-margin ion-padding">
-        <ion-row class="ion-align-items-center ion-justify-content-between">
-          <ion-col size="auto">
-            <ion-title class="ion-no-padding glob-text-bold">COVID-19 RTK Test Form</ion-title>
-          </ion-col>
-          <ion-col size="auto">
-            <p class="form-subtitle">Note: All fields are required to be filled up.</p>
-          </ion-col>
-        </ion-row>
-        <div *ngIf="userVaccinationInfo$ | async as userVaccinationStatus">
-          <div *ngIf="(userVaccinationStatus | keyvalue)?.length else disable">
-            <!--Full Name-->
-            <ion-item>
-              <ion-label position="stacked" class="ion-margin-horizontal">Full Name</ion-label>
-              <ion-input [disabled]="!userProfile ? true : false" type="text" style="text-transform: uppercase;" onkeyup="this.value = this.value.toUpperCase();" required autocapitalize="characters" maxlength="64" [value]="isStudent ? userProfile.NAME : userProfile.FULLNAME" [(ngModel)]="fullName"></ion-input>
-            </ion-item>
+  <ion-row class="ion-justify-content-center">
+    <ion-col size="6" size-lg="6" size-md="10" size-sm="12" size-xs="12" class="form-container ion-margin">
+      <ion-row class="ion-align-items-center">
+        <ion-col size="12">
+          <p class="ion-no-padding glob-text-bold ion-text-left form-title form-title-margin">COVID-19 RTK Test Form</p>
+        </ion-col>
+        <ion-col size="12">
+          <p class="form-subtitle ion-margin-horizontal">Note: All fields are required to be filled up.</p>
+        </ion-col>
+      </ion-row>
+      <div *ngIf="userVaccinationInfo$ | async as userVaccinationStatus">
+        <div *ngIf="(userVaccinationStatus | keyvalue)?.length else disable">
+          <div class="form-margin">
             <!--RTK Test Date-->
             <ion-item>
               <ion-label>RTK Test Date</ion-label>
@@ -48,15 +40,15 @@
               <ion-input class="ion-margin-top" type="file" accept="application/pdf, image/jpeg, image/png" button (change)="uploadFile($event)" required></ion-input>
             </ion-item>
             <p class="ion-margin-horizontal form-subtitle">By clicking the submit button, I hereby declare that the above is accurate and complete information. I understand that any misleading or falsified information can lead to action to be taken against me.</p>
-            <ion-button expand="block" [disabled]="!rtkResult || !rtkEvidenceDate || !rtkEvidence" (click)="onSubmit()">Submit</ion-button>
           </div>
+          <ion-button class="ion-margin" expand="block" [disabled]="!rtkResult || !rtkEvidenceDate || !rtkEvidence" (click)="onSubmit()">Submit</ion-button>
         </div>
-        <ng-template #disable>
-          <ion-row class="ion-justify-content-center ion-align-items-center">
-            <ion-col>Please submit a PCR form first.</ion-col>
-          </ion-row>
-        </ng-template>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+      </div>
+      <ng-template #disable>
+        <ion-row class="ion-justify-content-center ion-align-items-center ion-margin-horizontal ion-margin-bottom">
+          <ion-col>Please submit a PCR form first.</ion-col>
+        </ion-row>
+      </ng-template>
+    </ion-col>
+  </ion-row>
 </ion-content>

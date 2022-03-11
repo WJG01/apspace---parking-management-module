@@ -14,7 +14,7 @@ import { CasTicketService, WsApiService } from 'src/app/services';
 })
 export class SearchedFilesDisplayComponent implements OnInit {
   @Input() staffSamAccountName: any;
-  ePayslipUrl = 'https://t16rz80rg7.execute-api.ap-southeast-1.amazonaws.com/staging';
+  ePayslipUrl = 'https://api.apiit.edu.my';
 
   files$: Observable<any[]>;
   dateToFilter;
@@ -27,14 +27,14 @@ export class SearchedFilesDisplayComponent implements OnInit {
     private platform: Platform,
     private file: File,
     private fileOpener: FileOpener
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.doRefresh();
   }
 
   doRefresh() {
-    this.files$ = this.ws.get<any>(`/epayslip/find?sam_account_name=${this.staffSamAccountName}`, { url: this.ePayslipUrl }).pipe(
+    this.files$ = this.ws.get<any>(`/epayslip/find?sam_account_name=${this.staffSamAccountName}`).pipe(
       map(files => [...files.ea_form, ...files.payslips, ...files.pcb_form]),
       map(files => files.sort((a, b) => 0 - (a > b ? 1 : -1))),
       catchError(error => of(error))

@@ -3,8 +3,7 @@ import { Router } from '@angular/router';
 import { LoadingController, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { format } from 'date-fns';
-import { Observable, forkJoin, of } from 'rxjs';
-import { catchError, finalize, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 import { OrientationStudentDetails, Role, StaffProfile, StudentProfile } from 'src/app/interfaces';
 import { UserVaccineInfo, VaccinationStatus, VaccinationType } from '../../../interfaces/covid-forms';
@@ -18,10 +17,11 @@ import { WsApiService } from '../../../services';
 export class CovidInformationFormPage implements OnInit {
   loading: HTMLIonLoadingElement;
   // User Profile
-  role: Role;
+  studentRole: boolean;
   isStudent: boolean;
   userProfile: any = {};
   staffProfile$: Observable<StaffProfile>;
+  studentProfile$: Observable<StudentProfile>;
   orientationStudentDetails$: Observable<OrientationStudentDetails>;
 
   // Vaccination
@@ -44,13 +44,7 @@ export class CovidInformationFormPage implements OnInit {
   vaccinatedWithBooster = 4;
 
   // Vaccine Type
-  pfizer = 1;
-  sinovac = 2;
-  astraZeneca = 3;
-  cansino = 4;
-  sinopharm = 5;
-  other = 6;
-  john = 7;
+  other = 8;
 
   number = '2';
 
@@ -76,40 +70,29 @@ export class CovidInformationFormPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.storage.get('role').then((role: Role) => {
-      this.role = role;
-      // tslint:disable-next-line: no-bitwise
-      this.isStudent = Boolean(role & Role.Student);
-      this.doRefresh();
-    });
     this.todaysDate = format(new Date(), 'yyyy-MM-dd');
     this.getVaccinationStatus();
     this.getVaccinationTypes();
     this.getUserVaccinationInfo();
   }
 
-  doRefresh(refresher?) {
-    const forkJoinArray = [this.getProfile(refresher)];
-    forkJoin(forkJoinArray).pipe(
-      finalize(() => refresher && refresher.target.complete()),
-    ).subscribe();
+  ionViewDidEnter() {
+    this.getProfile();
   }
 
-  getProfile(refresher: boolean) {
-    const caching = refresher ? 'network-or-cache' : 'cache-only';
-    return this.isStudent ? this.ws.get<StudentProfile>('/student/profile', { caching }).pipe(
-      tap(p => {
-        this.orientationStudentDetails$ = this.ws.get<OrientationStudentDetails>(`/orientation/student_details?id=${p.STUDENT_NUMBER}`,
-        ).pipe(
-          catchError(err => {
-            return of(err);
-          }),
-        );
-      }),
-      tap(studentProfile => this.userProfile = studentProfile),
-    ) : this.staffProfile$ = this.ws.get<StaffProfile>('/staff/profile', { caching }).pipe(
-      tap(staffProfile => this.userProfile = staffProfile[0]),
-    );
+  getProfile() {
+    this.storage.get('role').then((role: Role) => {
+      // tslint:disable-next-line:no-bitwise
+      if (role & Role.Student) {
+        this.studentRole = true;
+        this.studentProfile$ = this.ws.get<StudentProfile>('/student/profile');
+        this.studentProfile$.subscribe(student => this.fullName = student.NAME);
+        // tslint:disable-next-line:no-bitwise
+      } else if (role & (Role.Lecturer | Role.Admin)) {
+        this.staffProfile$ = this.ws.get<StaffProfile>('/staff/profile');
+        this.staffProfile$.subscribe(staff => this.fullName = staff[0].FULLNAME);
+      }
+    });
   }
 
   getUserVaccinationInfo() {
@@ -135,16 +118,9 @@ export class CovidInformationFormPage implements OnInit {
 
   onVaccineTypeChange(vaccinationType: number) {
     this.vaccinationType = vaccinationType;
-    if (this.vaccinationType === this.astraZeneca || this.vaccinationType === this.pfizer || this.vaccinationType === this.sinopharm
-      || this.vaccinationType === this.sinovac) {
-      this.numberOfDoses = '2';
-    }
-    if (this.vaccinationType === this.john || this.vaccinationType === this.cansino ) {
-      this.numberOfDoses = '1';
-    }
-    if (this.vaccinationType === this.other) {
-      this.numberOfDoses = '';
-    }
+    this.vaccinationType$.subscribe( res => res.map(vaccine =>
+      vaccine.id === this.vaccinationType && (this.numberOfDoses = vaccine.number_of_dose.toString()))
+    );
   }
 
   onFirstDoseDateChange(doseDate: Date) {
@@ -219,10 +195,10 @@ export class CovidInformationFormPage implements OnInit {
   onSubmit() {
     this.presentLoading();
     const body = new FormData();
+    body.append('full_name', this.fullName);
+    body.append('vaccination_status', this.vaccinationStatus.toString());
     // Vaccinated with Booster
     if (this.vaccinationStatus === this.vaccinatedWithBooster) {
-      body.append('full_name', this.fullName);
-      body.append('vaccination_status', this.vaccinationStatus.toString());
       body.append('vaccine_type', this.vaccinationType.toString());
       body.append('dose1_date', this.doseOneDate);
       if (this.numberOfDoses === '2') {
@@ -235,14 +211,8 @@ export class CovidInformationFormPage implements OnInit {
     }
     // Fully vaccinated without Booster
     else if (this.vaccinationStatus === this.fullyVaccinated) {
-      body.append('full_name', this.fullName);
-      body.append('vaccination_status', this.vaccinationStatus.toString());
       body.append('vaccine_type', this.vaccinationType.toString());
       body.append('dose1_date', this.doseOneDate);
-      body.append('pcr_result', this.pcrResult);
-      const pcrDate = new Date(this.pcrEvidenceDate);
-      body.append('pcr_date', format(pcrDate, 'yyyy-MM-dd'));
-      body.append('pcr_evidence', this.pcrEvidence);
       if (this.numberOfDoses === '2') {
         const doseTwoDate = new Date(this.doseTwoDate);
         body.append('dose2_date', format(doseTwoDate, 'yyyy-MM-dd'));
@@ -250,8 +220,6 @@ export class CovidInformationFormPage implements OnInit {
     }
     // Partially Vaccinated - One Shot
     else if (this.vaccinationStatus === this.partiallyVaccinated) {
-      body.append('full_name', this.fullName);
-      body.append('vaccination_status', this.vaccinationStatus.toString());
       body.append('vaccine_type', this.vaccinationType.toString());
       body.append('dose1_date', this.doseOneDate);
       body.append('pcr_result', this.pcrResult);
@@ -261,8 +229,6 @@ export class CovidInformationFormPage implements OnInit {
     }
     // Not Vaccinated
     else if (this.vaccinationStatus === this.notVaccinated) {
-      body.append('full_name', this.fullName);
-      body.append('vaccination_status', this.vaccinationStatus.toString());
       body.append('pcr_result', this.pcrResult);
       const pcrDate = new Date(this.pcrEvidenceDate);
       body.append('pcr_date', format(pcrDate, 'yyyy-MM-dd'));
@@ -317,6 +283,5 @@ export class CovidInformationFormPage implements OnInit {
       })
       .then(toast => toast.present());
   }
-
 }
 

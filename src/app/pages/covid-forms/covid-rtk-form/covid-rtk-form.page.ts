@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController, ToastController } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
 import { format } from 'date-fns';
-import { Observable, forkJoin, of } from 'rxjs';
-import { catchError, finalize, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
-import { OrientationStudentDetails, Role, StaffProfile, StudentProfile } from '../../../interfaces';
 import { UserVaccineInfo } from '../../../interfaces/covid-forms';
 import { WsApiService } from '../../../services';
 
@@ -22,62 +19,24 @@ export class CovidRtkFormPage implements OnInit {
   userVaccinationInfo$: Observable<UserVaccineInfo[]>;
   devUrl = 'https://9t7k8i4yu5.execute-api.ap-southeast-1.amazonaws.com/dev/covid19/user';
 
-  // User Profile
-  role: Role;
-  isStudent: boolean;
-  userProfile: any = {};
-  staffProfile$: Observable<StaffProfile>;
-  orientationStudentDetails$: Observable<OrientationStudentDetails>;
-
   // Dates
   todaysDate: string;
 
   // Input Response
-  fullName: string;
   rtkResult: string;
   rtkEvidenceDate: string;
   rtkEvidence: File;
+
   constructor(
     private ws: WsApiService,
     private loadingCtrl: LoadingController,
     private router: Router,
-    private storage: Storage,
     private toastCtrl: ToastController,
   ) { }
 
   ngOnInit() {
-    this.storage.get('role').then((role: Role) => {
-      this.role = role;
-      // tslint:disable-next-line: no-bitwise
-      this.isStudent = Boolean(role & Role.Student);
-      this.doRefresh();
-    });
     this.todaysDate = format(new Date(), 'yyyy-MM-dd');
     this.getUserVaccinationInfo();
-  }
-
-  doRefresh(refresher?) {
-    const forkJoinArray = [this.getProfile(refresher)];
-    forkJoin(forkJoinArray).pipe(
-      finalize(() => refresher && refresher.target.complete()),
-    ).subscribe();
-  }
-
-  getProfile(refresher: boolean) {
-    const caching = refresher ? 'network-or-cache' : 'cache-only';
-    return this.isStudent ? this.ws.get<StudentProfile>('/student/profile', { caching }).pipe(
-      tap(p => {
-        this.orientationStudentDetails$ = this.ws.get<OrientationStudentDetails>(`/orientation/student_details?id=${p.STUDENT_NUMBER}`,
-        ).pipe(
-          catchError(err => {
-            return of(err);
-          }),
-        );
-      }),
-      tap(studentProfile => this.userProfile = studentProfile),
-    ) : this.staffProfile$ = this.ws.get<StaffProfile>('/staff/profile', { caching }).pipe(
-      tap(staffProfile => this.userProfile = staffProfile[0]),
-    );
   }
 
   getUserVaccinationInfo() {
