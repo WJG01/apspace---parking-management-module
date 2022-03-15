@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController, ToastController } from '@ionic/angular';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { LoadingController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { format } from 'date-fns';
 import { Observable } from 'rxjs';
 
-import { OrientationStudentDetails, Role, StaffProfile, StudentProfile } from 'src/app/interfaces';
+import { Role, StaffProfile, StudentProfile } from 'src/app/interfaces';
 import { UserVaccineInfo, VaccinationStatus, VaccinationType } from '../../../interfaces/covid-forms';
 import { WsApiService } from '../../../services';
 
@@ -18,11 +19,11 @@ export class CovidInformationFormPage implements OnInit {
   loading: HTMLIonLoadingElement;
   // User Profile
   studentRole: boolean;
+  isCordova: boolean;
   isStudent: boolean;
   userProfile: any = {};
   staffProfile$: Observable<StaffProfile>;
   studentProfile$: Observable<StudentProfile>;
-  orientationStudentDetails$: Observable<OrientationStudentDetails>;
 
   // Vaccination
   vaccinationStatus$: Observable<VaccinationStatus[]>;
@@ -66,9 +67,12 @@ export class CovidInformationFormPage implements OnInit {
     private router: Router,
     private storage: Storage,
     private toastCtrl: ToastController,
+    private iab: InAppBrowser,
+    private platform: Platform,
   ) {}
 
   ngOnInit() {
+    this.isCordova = this.platform.is('cordova');
     this.todaysDate = format(new Date(), 'yyyy-MM-dd');
     this.getVaccinationStatus();
     this.getVaccinationTypes();
@@ -245,6 +249,16 @@ export class CovidInformationFormPage implements OnInit {
         },
         () => this.dismissLoading()
       );
+    }
+  }
+
+  // QUICK ACCESS FUNCTIONS
+  openCovidURL() {
+    const url = 'https://apu.edu.my/explore-apu/covid-19-updates-advisory';
+    if (this.isCordova) {
+      this.iab.create(url, '_system');
+    } else {
+      this.iab.create(url, '_blank');
     }
   }
 

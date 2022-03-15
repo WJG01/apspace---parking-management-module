@@ -15,7 +15,15 @@
           <p class="ion-no-padding glob-text-bold ion-text-left form-title form-title-margin">COVID-19 Information Form</p>
         </ion-col>
         <ion-col size="12">
-          <p class="form-subtitle ion-margin-horizontal">Note: All fields are required to be filled up.</p>
+          <p class="form-subtitle sub-heading">Note: All fields are required to be filled up.</p>
+        </ion-col>
+        <ion-col size="12">
+          <article class="article-container">
+            <p class="article-header">Why do we collect vaccination data?</p>
+            <p class="article-link">Read our article:
+              <a (click)="openCovidURL()" class="clickable">COVID-19 Updates & Advisory</a>
+            </p>
+          </article>
         </ion-col>
       </ion-row>
       <div *ngIf="userVaccinationInfo$ | async as userVaccinationStatus">
@@ -23,15 +31,15 @@
           <div class="form-margin">
             <!--Full Name-->
             <ng-container *ngIf="studentRole else staff">
-              <ion-item *ngIf="studentProfile$ | async as studentProfile">
+              <ion-item>
                 <ion-label position="stacked">Full Name</ion-label>
-                <ion-input type="text" style="text-transform: uppercase;" onkeyup="this.value = this.value.toUpperCase();" required maxlength="120" [value]="fullName" [(ngModel)]="fullName"></ion-input>
+                <ion-input class="ion-text-uppercase" type="text" onkeyup="this.value = this.value.toUpperCase();" required maxlength="200" [value]="fullName" [(ngModel)]="fullName"></ion-input>
               </ion-item>
             </ng-container>
             <ng-template #staff>
-              <ion-item *ngIf="staffProfile$ | async as staffProfile">
+              <ion-item>
                 <ion-label position="stacked">Full Name</ion-label>
-                <ion-input type="text" style="text-transform: uppercase;" onkeyup="this.value = this.value.toUpperCase();" required maxlength="120" [value]="fullName" [(ngModel)]="fullName"></ion-input>
+                <ion-input class="ion-text-uppercase" type="text" onkeyup="this.value = this.value.toUpperCase();" required maxlength="200" [value]="fullName" [(ngModel)]="fullName"></ion-input>
               </ion-item>
             </ng-template>
             <p class="ion-no-padding ion-margin form-title">Vaccination Information</p>
