@@ -15,7 +15,15 @@
           <p class="ion-no-padding glob-text-bold ion-text-left form-title form-title-margin">COVID-19 Information Form</p>
         </ion-col>
         <ion-col size="12">
-          <p class="form-subtitle ion-margin-horizontal">Note: All fields are required to be filled up.</p>
+          <p class="form-subtitle sub-heading">Note: All fields are required to be filled up.</p>
+        </ion-col>
+        <ion-col size="12">
+          <article class="article-container">
+            <p class="article-header">Why do we collect vaccination data?</p>
+            <p class="article-link">Read our article:
+              <a (click)="openCovidURL()" class="clickable">COVID-19 Updates & Advisory</a>
+            </p>
+          </article>
         </ion-col>
       </ion-row>
       <div *ngIf="userVaccinationInfo$ | async as userVaccinationStatus">

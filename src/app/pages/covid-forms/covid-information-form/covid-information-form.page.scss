@@ -3,13 +3,40 @@
   border-radius: 15px;
 }
 
+.clickable {
+  cursor: pointer;
+}
+
 .form-subtitle {
   font-size: .8rem;
   color: var(--ion-color-danger);
 }
 
+.sub-heading {
+  margin: 0 1rem;
+}
+
 .form-title-margin {
   margin: 1rem 1rem 0 1rem;
+}
+
+.article-container {
+  margin: 0 1.5rem;
+  padding: .5rem 0 .5rem 0;
+
+  .article-header {
+    margin: 0;
+    font-weight: 900;
+  }
+
+  .article-description {
+    font-size: .8rem;
+  }
+
+  .article-link {
+    font-size: .8rem;
+    margin: 0;
+  }
 }
 
 .form-title {
