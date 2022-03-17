@@ -40,13 +40,13 @@
           </ion-button>
         </ion-col>
       </ion-row>
-  
+
       <div *ngIf="(files | filter:dateToFilter:fileToFilter).length > 0; else noFiles;">
         <ion-row>
           <ion-col size="12" size-md="6" size-xl="4" *ngFor="let payslip of (files | filter:dateToFilter:fileToFilter)">
             <ion-card>
               <img src="{{payslip | getDate | date: 'MMM' | generateMonthImg}}" />
-  
+
               <ion-card-header>
                 <ion-fab horizontal="end" vertical="top" edge>
                   <ion-fab-button (click)="downloadPayslipPdf(payslip)" class="colored-background">
@@ -68,7 +68,7 @@
   </div>
 
   <ng-template #noFiles>
-    <app-message-with-svg imageUrl="assets/img/empty.svg" messageTitle="Opps! There is no Files." wrapperSize="4"
+    <app-message-with-svg imageUrl="assets/img/empty.svg" messageTitle="Oops…there are no files here!" wrapperSize="4"
       wrapperOffset="4" wrapperMarginTop="20px">
     </app-message-with-svg>
   </ng-template>
