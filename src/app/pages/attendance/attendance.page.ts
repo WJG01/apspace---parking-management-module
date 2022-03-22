@@ -20,7 +20,7 @@ export class AttendancePage implements OnInit {
   selectedIntake: string;
   average: number;
   skeletons = new Array(5);
-  showHeader: boolean;
+  hideHeader: boolean;
 
   constructor(
     private ws: WsApiService,
@@ -31,7 +31,7 @@ export class AttendancePage implements OnInit {
   ngOnInit() {
     this.doRefresh();
 
-    this.showHeader = this.config.comingFromTabs;
+    this.hideHeader = this.config.comingFromTabs;
   }
 
   doRefresh(refresher?) {
