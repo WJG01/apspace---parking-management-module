@@ -17,6 +17,10 @@ const routes: Routes = [
         loadChildren: () => import('../attendance/attendance.module').then(m => m.AttendancePageModule)
       },
       {
+        path: 'apcard',
+        loadChildren: () => import('../apcard/apcard.module').then(m => m.ApcardPageModule)
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'

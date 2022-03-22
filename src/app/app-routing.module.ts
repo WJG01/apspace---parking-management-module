@@ -22,6 +22,10 @@ const routes: Routes = [
     path: 'attendance',
     loadChildren: () => import('./pages/attendance/attendance.module').then(m => m.AttendancePageModule)
   },
+  {
+    path: 'apcard',
+    loadChildren: () => import('./pages/apcard/apcard.module').then(m => m.ApcardPageModule)
+  },
 ];
 
 @NgModule({

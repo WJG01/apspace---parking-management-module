@@ -1,0 +1,10 @@
+.date-picker-modal {
+  --width: 350px;
+  --height: 450px;
+  --border-radius: 10px;
+
+  ion-datetime {
+    height: 450px;
+    border-radius: 10px;
+  }
+}
