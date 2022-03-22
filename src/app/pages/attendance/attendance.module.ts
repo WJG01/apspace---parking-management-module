@@ -1,0 +1,20 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { IonicModule } from '@ionic/angular';
+
+import { AttendancePageRoutingModule } from './attendance-routing.module';
+import { AttendancePage } from './attendance.page';
+import { AttendanceDetailsModalPageModule } from './attendance-details-modal/attendance-details-modal.module';
+
+@NgModule({
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    AttendancePageRoutingModule,
+    AttendanceDetailsModalPageModule
+  ],
+  declarations: [AttendancePage]
+})
+export class AttendancePageModule { }
