@@ -29,6 +29,12 @@ const routes: Routes = [
         loadChildren: () => import('../apcard/apcard.module').then(m => m.ApcardPageModule)
       },
       {
+        path: 'more',
+        canActivate: [AuthGuard],
+        data: { role: Role.Student | Role.Lecturer | Role.Admin },
+        loadChildren: () => import('../more/more.module').then(m => m.MorePageModule)
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'
