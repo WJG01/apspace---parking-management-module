@@ -1,0 +1,112 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Notifications</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" pullMax="400" pullMin="60" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="glob-container">
+    <ion-row>
+      <ion-col size-xs="12" size-md="7" class="glob-margin-auto">
+        <ion-card class="ion-no-margin ion-margin-bottom">
+          <ion-accordion-group>
+            <ion-searchbar enterkeyhint="search" placeholder="Search by Title or Categories"
+              [(ngModel)]="filteredObject.term"></ion-searchbar>
+
+            <ion-accordion value="filters">
+              <ion-item slot="header">
+                <ion-icon class="ion-padding-end" name="filter"></ion-icon>
+                <ion-label>Filters</ion-label>
+              </ion-item>
+
+              <ion-list slot="content">
+                <ion-item lines="none">
+                  <ion-label>Type</ion-label>
+                  <ion-select multiple="true" [(ngModel)]="filteredObject.categories" (ngModelChange)="doRefresh()">
+                    <ion-select-option *ngFor="let category of categories" [value]="category">
+                      {{ category }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+
+                <ion-item lines="none">
+                  <ion-label>Current Week Only</ion-label>
+                  <ion-toggle [(ngModel)]="filteredObject.currentWeek" (ngModelChange)="doRefresh()"></ion-toggle>
+                </ion-item>
+
+                <ion-item lines="none">
+                  <ion-label>Unread Only</ion-label>
+                  <ion-toggle [(ngModel)]="filteredObject.unread" (ngModelChange)="doRefresh()"></ion-toggle>
+                </ion-item>
+
+                <ion-row>
+                  <ion-col>
+                    <ion-button expand="block" color="danger" (click)="resetFilter()">
+                      Reset Filters
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-list>
+            </ion-accordion>
+          </ion-accordion-group>
+        </ion-card>
+
+        <ng-container *ngIf="categories$ | async"></ng-container>
+        <ng-container *ngIf="(messages$ | async) as messages; else loading">
+          <ng-container *ngIf="(messages | fuse:filteredObject.term:options) as filteredMessage">
+            <ng-container *ngIf="filteredMessage.length > 0; else noNotifications">
+              <ion-virtual-scroll [items]="filteredMessage" approxItemHeight="65px">
+                <ion-card class="ion-no-margin" *virtualItem="let m; let isLast = last"
+                  [ngClass]="!isLast ? 'ion-margin-bottom' : undefined"
+                  [style.border-left]="m.read ? '' : '2px solid var(--ion-color-primary)'" (click)="openDetails(m)">
+                  <ion-item lines="none" detail="true" button="true">
+                    <ion-label>
+                      <h2>{{ m.title }}</h2>
+                      <p class="small-margin">{{ m.sent_on | date: 'MMMM d, y, h:mm a' }}</p>
+                      <ion-badge
+                        [style.--background]="(!m.read && openedMessages.indexOf(m.message_id) === -1) ? getCategoryColor(m.category) : 'var(--ion-color-medium)'">
+                        {{ m.category }}
+                      </ion-badge>
+                    </ion-label>
+                  </ion-item>
+                </ion-card>
+              </ion-virtual-scroll>
+            </ng-container>
+          </ng-container>
+          <ng-template #noNotifications>
+            <!-- TODO: Use Message with SVG -->
+            <h1>No Notifications Available</h1>
+          </ng-template>
+        </ng-container>
+
+        <ng-template #loading>
+          <ion-card class="ion-no-margin" *ngFor="let _ of skeleton; let isLast = last"
+            [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+            <ion-item lines="none" detail="true" button="true">
+              <ion-label>
+                <ion-skeleton-text animated style="line-height: 20px; width: 40%;"></ion-skeleton-text>
+                <ion-skeleton-text animated style="line-height: 20px; width: 30%;"></ion-skeleton-text>
+                <ion-skeleton-text animated style="line-height: 20px; width: 20%;"></ion-skeleton-text>
+              </ion-label>
+            </ion-item>
+          </ion-card>
+        </ng-template>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>
+
+<ion-footer *ngIf="!isStudent">
+  <ion-toolbar>
+    <ion-title class="ion-text-center" size="small">
+      <a (click)="openPreference()" tappable>Update</a> Email Subscription Preferences
+    </ion-title>
+  </ion-toolbar>
+</ion-footer>

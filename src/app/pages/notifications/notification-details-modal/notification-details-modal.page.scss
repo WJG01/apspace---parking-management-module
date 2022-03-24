@@ -1,0 +1,18 @@
+.message-content {
+  border-top: 1px solid var(--ion-color-medium);
+}
+
+::ng-deep table {
+  width: auto !important;
+}
+
+ion-card-header {
+  h3 {
+    margin: 0px 0px 10px 0px;
+  }
+  p {
+    margin: 0;
+    font-weight: 500;
+    color: var(--ion-color-medium);
+  }
+}

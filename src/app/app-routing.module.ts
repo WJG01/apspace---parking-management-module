@@ -33,6 +33,12 @@ const routes: Routes = [
     data: { role: Role.Student | Role.Lecturer | Role.Admin },
     loadChildren: () => import('./pages/apcard/apcard.module').then(m => m.ApcardPageModule)
   },
+  {
+    path: 'notifications',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Lecturer | Role.Admin },
+    loadChildren: () => import('./pages/notifications/notifications.module').then(m => m.NotificationsPageModule)
+  },
 ];
 
 @NgModule({
