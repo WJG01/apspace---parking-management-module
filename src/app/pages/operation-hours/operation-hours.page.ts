@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonContent } from '@ionic/angular';
 import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { finalize, map } from 'rxjs/operators';
 
 import { QuixCustomer } from 'src/app/interfaces/quix';
 import { WsApiService } from 'src/app/services';
@@ -35,6 +35,15 @@ export class OperationHoursPage {
       headers
     }
     ).pipe(
+      map(res => {
+        // fitler out printshop data, might be returned later
+        return res.map(company => {
+          if (company.company_id === 'APU') {
+            company.company_departments = company.company_departments.filter(department => department.dept_name !== 'Printshop @APU');
+          }
+          return company;
+        });
+      }),
       finalize(() => refresher && refresher.target.complete()),
     );
   }
