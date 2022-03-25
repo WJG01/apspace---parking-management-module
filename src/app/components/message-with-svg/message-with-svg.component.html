@@ -12,5 +12,9 @@
     <p *ngIf="messageContent" class="ion-margin-top ion-text-center">
       {{ messageContent }}
     </p>
+
+    <div *ngIf="advancedMode">
+      <ng-content></ng-content>
+    </div>
   </ion-col>
 </ion-row>

@@ -9,4 +9,5 @@ export class MessageWithSvgComponent {
   @Input() messageTitle: string;
   @Input() messageContent?: string;
   @Input() imageUrl?: string;
+  @Input() advancedMode?= false;
 }

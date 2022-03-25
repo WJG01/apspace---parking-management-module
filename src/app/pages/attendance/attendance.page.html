@@ -157,21 +157,20 @@
             <ng-template #noAttendance>
               <ion-card class="ion-no-margin ion-margin-top">
                 <ion-card-content>
-                  <!-- TODO: Enable it back -->
-                  <!-- <app-message-with-svg imageUrl="assets/img/search-not-found.svg"
-                    messageTitle="Oops! No Attendance Records Found for {{selectedIntake}}."
-                    messageContent="Perhaps you can try this:" wrapperSize="4" wrapperMarginTop="30px" wrapperOffset="4"
-                    [advancedMode]="true">
+                  <message-with-svg imageUrl="assets/img/search_not_found.svg"
+                    messageTitle="No Attendance Available for {{ selectedIntake }}" [advancedMode]="true">
                     <div class="flex-container">
                       <ul class="list-txt-color">
                         <li>Make sure you selected the right intake</li>
                         <li>Make sure your lecturer marked your attendance at least once using AttendiX</li>
                       </ul>
 
-                      <p>Still having trouble? No worries! Just click <a [routerLink]="'/feedback'">here</a> and
-                        report the issue to us.</p>
+                      <p>Still having issues? No worries! Just
+                        <a tappable class="glob-text-bold" (click)="openFeedback()">REPORT</a>
+                        it to us.
+                      </p>
                     </div>
-                  </app-message-with-svg> -->
+                  </message-with-svg>
                 </ion-card-content>
               </ion-card>
             </ng-template>

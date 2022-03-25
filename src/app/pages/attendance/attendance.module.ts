@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 import { AttendancePageRoutingModule } from './attendance-routing.module';
 import { AttendancePage } from './attendance.page';
 import { AttendanceDetailsModalPageModule } from './attendance-details-modal/attendance-details-modal.module';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import { AttendanceDetailsModalPageModule } from './attendance-details-modal/att
     FormsModule,
     IonicModule,
     AttendancePageRoutingModule,
-    AttendanceDetailsModalPageModule
+    AttendanceDetailsModalPageModule,
+    ComponentsModule
   ],
   declarations: [AttendancePage]
 })
