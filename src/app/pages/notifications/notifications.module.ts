@@ -8,6 +8,7 @@ import { NotificationsPage } from './notifications.page';
 import { SharedPipesModule } from '../../shared/shared-pipes.module';
 import { NotificationDetailsModalPageModule } from './notification-details-modal/notification-details-modal.module';
 import { DingdongPreferencesModalPageModule } from './dingdong-preferences-modal/dingdong-preferences-modal.module';
+import { ComponentsModule } from '../../components/components.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { DingdongPreferencesModalPageModule } from './dingdong-preferences-modal
     NotificationsPageRoutingModule,
     SharedPipesModule,
     NotificationDetailsModalPageModule,
-    DingdongPreferencesModalPageModule
+    DingdongPreferencesModalPageModule,
+    ComponentsModule
   ],
   declarations: [NotificationsPage]
 })
