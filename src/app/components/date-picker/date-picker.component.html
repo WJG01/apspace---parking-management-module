@@ -1,0 +1,5 @@
+<ion-content forceOverscroll="false">
+  <ion-datetime #datetime size="cover" [presentation]="presentationMode" [min]="minDate" [max]="maxDate" hourCycle="12"
+    (ionChange)="dateChanged(datetime.value)" showDefaultButtons="true">
+  </ion-datetime>
+</ion-content>

@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 
 import { Storage } from '@ionic/storage-angular';
 
+import { ConfigurationsService } from './services';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -9,7 +11,10 @@ import { Storage } from '@ionic/storage-angular';
 })
 export class AppComponent {
 
-  constructor(private storage: Storage) {
+  constructor(
+    private storage: Storage,
+    private config: ConfigurationsService
+  ) {
     this.initialiseStorage();
   }
 

@@ -1,0 +1,54 @@
+<ion-header *ngIf="smallScreen">
+  <ion-toolbar>
+    <!--Logo-->
+    <ion-title mode="md" class="tab-icon ion-text-left logo-container">
+      <img class="logo-img" alt="APSpace Logo" [src]="logo" />
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button [color]="'primary'">
+        <ion-icon slot="icon-only" name="search"></ion-icon>
+      </ion-button>
+      <ion-button color="primary">
+        <ion-icon slot="icon-only" name="information-circle-sharp"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar *ngIf="shownSearchBar">
+    <ion-searchbar>
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scrollY="false">
+  <ion-tabs (ionTabsDidChange)="onChange()">
+    <!--Search Bar & Tab for Large Screen-->
+    <ion-tab-bar *ngIf="!smallScreen" slot="top">
+      <ion-row class="tab-bar-content-left">
+        <!--Logo-->
+        <ion-col>
+          <img [src]="logo" class="large-screen-logo" alt="APSpace Logo" width="110"
+            [routerLink]="['/tabs/dashboard']" />
+        </ion-col>
+        <!--Search Bar-->
+        <ion-col class="ion-no-padding">
+          <ion-searchbar placeholder="(S)earch APSpace" class="tabs-searchbar"></ion-searchbar>
+        </ion-col>
+      </ion-row>
+      <!--Tab Items-->
+      <ion-tab-button [ngClass]="{ 'active-tab': activeTab === tab.path }" *ngFor="let tab of tabItems; index as i"
+        [tab]="tab.path">
+        <ion-icon class="tab-icons" [name]="activeTab === tab.path? tab.fillIcon : tab.outlineIcon"></ion-icon>
+        <ion-label class="tab-label">{{ tab.name }}</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+
+    <!--Tab for Small Screen-->
+    <ion-tab-bar *ngIf="smallScreen">
+      <ion-tab-button [ngClass]="{ 'active-tab': activeTab === tab.path }" *ngFor="let tab of tabItems; index as i"
+        [tab]="tab.path">
+        <ion-label class="tab-label">{{ tab.name }}</ion-label>
+        <ion-icon class="tab-icon" [name]="activeTab === tab.path? tab.fillIcon : tab.outlineIcon"></ion-icon>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+</ion-content>

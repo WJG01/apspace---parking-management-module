@@ -1,0 +1,25 @@
+ion-item {
+  --highlight-color-valid: transparent;
+}
+
+ion-item {
+  ion-note {
+    font-size: 13px;
+    position: relative;
+    top: 6px;
+  }
+}
+
+.sticky {
+  position: sticky;
+  top: 5px;
+  z-index: 2;
+}
+
+@media (max-width: 768px) {
+  .sticky {
+    position: relative;
+    top: 0;
+    z-index: 0;
+  }
+}

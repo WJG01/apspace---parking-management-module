@@ -5,6 +5,7 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { HttpClientModule } from '@angular/common/http';
 
 import { IonicStorageModule } from '@ionic/storage-angular';
+import { Badge } from '@awesome-cordova-plugins/badge/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -19,7 +20,10 @@ import { AppRoutingModule } from './app-routing.module';
     HttpClientModule,
     IonicStorageModule.forRoot()
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    Badge
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

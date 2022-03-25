@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Email Subscription Preferences</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col>
+      <ng-container *ngIf="(status$ | async) as status; else loading">
+        <div class="ion-text-center ion-margin-top">
+          <ion-img class="image" src="assets/img/newsletter.svg"></ion-img>
+          <ion-text color="primary">
+            <h3 class="glob-text-bold">{{ active ? 'Unsubscribe' : 'Subscribe' }}</h3>
+            <p>
+              {{ active ? 'By unsubscribing, you will no longer receive updates from us in your personal email.' :
+              'By subscribing, you will receive updates from us in your personal email!' }}
+            </p>
+          </ion-text>
+
+          <ion-button class="ion-padding-start ion-padding-end" expand="block" fill="solid"
+            [color]="active ? 'danger' : 'success'" (click)="changePreference()">
+            {{ active ? 'Unsubscribe' : 'Subscribe' }}
+          </ion-button>
+        </div>
+      </ng-container>
+
+      <ng-template #loading>
+        <div class="loading-spinner ion-text-center">
+          <ion-spinner color="primary"></ion-spinner>
+          <p class="loading-text glob-text-bold">Loading Subscription Status...</p>
+        </div>
+      </ng-template>
+    </ion-col>
+  </ion-row>
+</ion-content>

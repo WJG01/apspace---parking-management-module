@@ -1,0 +1,25 @@
+.image {
+  width: 80%;
+  margin: auto;
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 30px;
+
+  .loading-text {
+    margin-top: 20px;
+    text-align: center;
+    color: var(--ion-color-primary);
+    font-size: 18px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .image {
+    width: 60%;
+  }
+}
