@@ -1,0 +1,16 @@
+<ion-row>
+  <ion-col size="12" size-md="6" size-sm="5" size-xs="8" class="glob-margin-auto">
+    <ion-img [src]="imageUrl"></ion-img>
+  </ion-col>
+</ion-row>
+
+<ion-row>
+  <ion-col>
+    <ion-text color="primary">
+      <h3 class="ion-text-center glob-text-bold">{{ messageTitle }}</h3>
+    </ion-text>
+    <p *ngIf="messageContent" class="ion-margin-top ion-text-center">
+      {{ messageContent }}
+    </p>
+  </ion-col>
+</ion-row>
