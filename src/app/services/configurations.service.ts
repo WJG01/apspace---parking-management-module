@@ -64,4 +64,49 @@ export class ConfigurationsService {
     const status = await Network.getStatus();
     this.connected = status.connected;
   }
+
+  // TODO: Remove this function once the new settings have been implemented
+  getMockSettings() {
+    return {
+      tripFrom: '',
+      tripTo: '',
+      intakeHistory: [],
+      viewWeek: false,
+      modulesBlacklist: [],
+      intakeGroup: null,
+      examIntake: null,
+      defaultCampus: '',
+      defaultVenue: '',
+      scan: false,
+      favoriteItems: [
+        'classroom-finder',
+        'e-forms',
+        'fees',
+        'iconsult-staff',
+        'iconsult-student',
+        'monthly-returns',
+        'moodle',
+        'my-reports-panel',
+        'news-feed',
+        'notifications',
+        'profile',
+        'results',
+        'staff-directory',
+      ],
+      theme: '',
+      accentColor: 'blue',
+      dashboardSections: [],
+      menuUI: 'cards',
+      disableShakespear: false,
+      shakeSensitivity: 40,
+      hideProfilePicture: false,
+      enableMalaysiaTimezone: false, // TODO: update variable name (it should be disableMalaysianTimezone)
+      timeFormat: '12',
+      busFirstLocation: '',
+      busSecondLocation: '',
+      userProfileName: [],
+      changedName: false,
+      tourGuideSeen: false
+    };
+  }
 }

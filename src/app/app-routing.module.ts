@@ -45,6 +45,12 @@ const routes: Routes = [
     data: { role: Role.Student | Role.Lecturer | Role.Admin },
     loadChildren: () => import('./pages/exam-schedule/exam-schedule.module').then(m => m.ExamSchedulePageModule)
   },
+  {
+    path: 'bus-shuttle-services',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Lecturer | Role.Admin },
+    loadChildren: () => import('./pages/bus-shuttle-services/bus-shuttle-services.module').then( m => m.BusShuttleServicesPageModule)
+  },
 ];
 
 @NgModule({
