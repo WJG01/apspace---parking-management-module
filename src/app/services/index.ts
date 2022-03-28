@@ -1,3 +1,4 @@
+export { ApiService } from './api.service';
 export { CasTicketService } from './cas-ticket.service';
 export { ComponentService } from './component.service';
 export { ConfigurationsService } from './configurations.service';

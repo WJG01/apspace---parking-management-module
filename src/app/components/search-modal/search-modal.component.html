@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-searchbar #searchbar [formControl]="searchControl" [placeholder]="placeholder"
+      (ionInput)="searchbar.value = searchbar.value.toUpperCase()">
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-container *ngIf="(searchItems$ | async) as items; else loading">
+    <ng-container *ngIf="items.length > 0; else noItems">
+      <ion-item *ngFor="let item of items" lines="none" button="true" (click)="select(item)">
+        {{ item }}
+      </ion-item>
+    </ng-container>
+
+    <ng-template #noItems>
+      <ng-container *ngIf="items.length < 1 && !searchControl.value; else itemNotFound">
+        <h2 class="text-message">Type to search</h2>
+      </ng-container>
+
+      <ng-template #itemNotFound>
+        <h2 class="text-message">No items found for "{{ searchControl.value }}"</h2>
+      </ng-template>
+    </ng-template>
+  </ng-container>
+
+  <ng-template #loading>
+    <div class="loading-spinner">
+      <ion-spinner color="primary"></ion-spinner>
+      <p class="loading-text glob-text-bold">Loading Results...</p>
+    </div>
+  </ng-template>
+</ion-content>
+
+<ion-footer>
+  <ion-row>
+    <ion-col>
+      <ion-button expand="block" color="danger" (click)="select(null)">
+        Cancel
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>
