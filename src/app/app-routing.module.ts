@@ -49,7 +49,13 @@ const routes: Routes = [
     path: 'bus-shuttle-services',
     canActivate: [AuthGuard],
     data: { role: Role.Student | Role.Lecturer | Role.Admin },
-    loadChildren: () => import('./pages/bus-shuttle-services/bus-shuttle-services.module').then( m => m.BusShuttleServicesPageModule)
+    loadChildren: () => import('./pages/bus-shuttle-services/bus-shuttle-services.module').then(m => m.BusShuttleServicesPageModule)
+  },
+  {
+    path: 'student-survey',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student },
+    loadChildren: () => import('./pages/student-survey/student-survey.module').then(m => m.StudentSurveyPageModule)
   },
 ];
 

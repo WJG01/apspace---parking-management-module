@@ -7,3 +7,4 @@ export { IntakeListing } from './intake-listing';
 export { NotificationBody, NotificationHistory, NotificationStatus, NotificationSubStatus } from './notification';
 export { Role } from './role';
 export { StudentProfile } from './student-profile';
+export { SurveyIntake, SurveyModule } from './student-survey';

@@ -8,3 +8,15 @@
     border-radius: 10px;
   }
 }
+
+.alert-wrapper {
+  .alert-button-group {
+    .cancel {
+      color: var(--ion-color-medium);
+    }
+
+    .success {
+      color: var(--ion-color-success);
+    }
+  }
+}

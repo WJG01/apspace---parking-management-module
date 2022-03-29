@@ -36,7 +36,8 @@ export class ComponentService {
   async alertMessage(header: string, message: string, cancelText?: string, button?: AlertButton) {
     const buttons: AlertButton[] = [{
       text: cancelText ? cancelText : 'Dismiss',
-      role: 'cancel'
+      role: 'cancel',
+      cssClass: 'cancel'
     }];
 
     if (button) {
