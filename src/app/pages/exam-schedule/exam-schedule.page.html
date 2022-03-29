@@ -87,24 +87,27 @@
                         </ion-col>
                         <ion-col size="12" class="ion-no-padding small-padding-left">
                           <ion-text color="medium">
-                            <h5 class="glob-text-bold">{{ exam.since | date: 'EEEE, dd MMM y' }} @
-                              {{ exam.since | date: 'h:mm a' }}
-                              {{ exam.endDate ? '' : ' - ' + (exam.until )}} </h5>
+                            <h5 class="glob-text-bold">{{ exam.since | dateWithTimezone: 'EEEE, dd MMM y' }} @
+                              {{ exam.since | dateWithTimezone: 'time' | slice: 0 :-8 }}
+                              {{ exam.endDate ? '' : ' - ' + (exam.until | dateWithTimezone: 'time')}} </h5>
                           </ion-text>
                         </ion-col>
 
                         <ion-col size-xs="12" *ngIf="exam.questionReleaseDate">
                           <p>
                             <span class="glob-text-bold">Question Release Date:</span>
-                            {{ exam.questionReleaseDate ? (exam.questionReleaseDate | date: 'EEEE, dd MMM y') + ' @ ' +
-                            (exam.questionReleaseDate | date: 'h:mm a') : '' }}
+                            {{
+                            exam.questionReleaseDate ? (exam.questionReleaseDate | dateWithTimezone: 'EEEE, dd MMM y')
+                            + ' @ ' +
+                            (exam.questionReleaseDate | dateWithTimezone: 'time' | slice: 0 :-8) : ''
+                            }}
                           </p>
                         </ion-col>
                         <ion-col size-xs="12" *ngIf="exam.endDate">
                           <p>
                             <span class="glob-text-bold">End Date:</span>
-                            {{ exam.endDate ? (exam.endDate | date: 'EEEE, dd MMM y') + ' @ ' + (exam.until | date:
-                            'h:mm a') : '' }}
+                            {{ exam.endDate ? (exam.endDate | dateWithTimezone: 'EEEE, dd MMM y') + ' @ ' +
+                            (exam.until | dateWithTimezone: 'time' | slice: 0 :-8) : '' }}
                           </p>
                         </ion-col>
                         <ion-col size-xs="12" *ngIf="exam.docketsDue">
