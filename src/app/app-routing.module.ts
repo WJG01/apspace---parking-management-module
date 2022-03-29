@@ -63,6 +63,12 @@ const routes: Routes = [
     data: { role: Role.Student | Role.Lecturer | Role.Admin },
     loadChildren: () => import('./pages/feedback/feedback.module').then(m => m.FeedbackPageModule)
   },
+  {
+    path: 'unauthorized',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Lecturer | Role.Admin },
+    loadChildren: () => import('./pages/unauthorized/unauthorized.module').then(m => m.UnauthorizedPageModule)
+  },
 ];
 
 @NgModule({
