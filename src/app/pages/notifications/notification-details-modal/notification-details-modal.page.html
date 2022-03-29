@@ -16,7 +16,10 @@
         <ion-card-header>
           <ion-text color="primary">
             <h3 class="glob-text-bold">{{ message.title }}</h3>
-            <p>{{ message.staff_name }} | {{ message.sent_on | date: 'MMMM d, y, h:mm a' }}</p>
+            <p>
+              {{ message.staff_name }} | {{ message.sent_on | dateWithTimezone: 'MMMM d, y' }},
+              {{ message.sent_on | dateWithTimezone: 'time' | slice: 0 :-8 }}
+            </p>
           </ion-text>
         </ion-card-header>
         <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end ion-padding-bottom">

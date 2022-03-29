@@ -69,7 +69,10 @@
                   <ion-item lines="none" detail="true" button="true">
                     <ion-label>
                       <h2>{{ m.title }}</h2>
-                      <p class="small-margin">{{ m.sent_on | date: 'MMMM d, y, h:mm a' }}</p>
+                      <p class="small-margin">
+                        {{ m.sent_on | dateWithTimezone: 'MMMM d, y' }},
+                        {{ m.sent_on | dateWithTimezone: 'time' | slice: 0 :-8 }}
+                      </p>
                       <ion-badge
                         [style.--background]="(!m.read && openedMessages.indexOf(m.message_id) === -1) ? getCategoryColor(m.category) : 'var(--ion-color-medium)'">
                         {{ m.category }}
