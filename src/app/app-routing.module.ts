@@ -57,6 +57,12 @@ const routes: Routes = [
     data: { role: Role.Student },
     loadChildren: () => import('./pages/student-survey/student-survey.module').then(m => m.StudentSurveyPageModule)
   },
+  {
+    path: 'feedback',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Lecturer | Role.Admin },
+    loadChildren: () => import('./pages/feedback/feedback.module').then(m => m.FeedbackPageModule)
+  },
 ];
 
 @NgModule({

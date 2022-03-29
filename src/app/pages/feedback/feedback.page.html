@@ -1,0 +1,94 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Feedback
+    </ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="glob-container">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-xs="12" size-md="5" push-md="7">
+          <ion-card class="ion-no-margin">
+            <ion-card-header>
+              <ion-card-title color="danger" class="glob-text-bold">Important Notice</ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="ion-padding-top">
+              <ion-text>
+                <p>
+                  This Service is used when you have any questions, concerns, or feature request <ion-text
+                    color="danger">related to APSpace</ion-text>.
+                </p>
+                <br>
+                <p>
+                  The feedback will be received by the <span class="glob-text-bold">Centre of Technology and Innovation
+                    (CTI)</span>
+                  and we will do our best to keep up with the standards so you enjoy our service.
+                </p>
+                <br>
+                <p class="glob-text-bold">
+                  Please note that your identity or contact information will BE REVEALED to the person receiving this
+                  Feedback.
+                </p>
+                <br>
+                <ion-text color="danger">
+                  <p>
+                    If you have any feedback which is not related to the APSpace (ex: feedback related to buses,
+                    network,
+                    classrooms...), you can use our
+                    <a tappable class="glob-text-bold" (click)="openOnlineFeedbackSystem()">Online Feedback
+                      System</a>
+                    to send your feedback to the person in charge.
+                  </p>
+                </ion-text>
+              </ion-text>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size-xs="12" size-md="7" pull-md="5">
+          <ion-card class="ion-no-margin">
+            <ion-item-divider lines="none" color="light" mode="md">
+              <ion-label class="glob-text-bold">
+                Your Feedback
+              </ion-label>
+            </ion-item-divider>
+
+            <form [formGroup]="feedbackForm">
+              <ion-item lines="none">
+                <ion-label position="stacked">Message:</ion-label>
+                <ion-textarea autoGrow formControlName="message" placeholder="Describe your Feedback"></ion-textarea>
+              </ion-item>
+
+              <ion-item lines="none">
+                <ion-label position="stacked">Contact Number: <small>(Optional)</small></ion-label>
+                <ion-input placeholder="ex. 0123456789" type="tel" formControlName="contactNo">
+                </ion-input>
+              </ion-item>
+              <div class="ion-padding-start ion-padding-end">
+                <ion-text color="danger">
+                  <small *ngIf="(contact.dirty || contact.touched) && contact.errors?.pattern?.requiredPattern">Phone
+                    number is invalid. Please check the
+                    number and enter a correct phone number (Exactly 10 or 11 digits)
+                  </small>
+                </ion-text>
+              </div>
+            </form>
+
+            <ion-card-content>
+              <ion-button expand="block" (click)="submit()">
+                Submit
+                <ion-icon name="send" slot="end"></ion-icon>
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>
