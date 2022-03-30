@@ -9,7 +9,7 @@ import { Network } from '@capacitor/network';
 export class ConfigurationsService {
 
   private readonly version = '3.1.2'; // APSpace App Version
-  connected = true; // Has to be true initially
+  private connected = true; // Has to be true initially
 
   constructor(private router: Router) {
     this.networkStatus();
@@ -114,5 +114,10 @@ export class ConfigurationsService {
   /** APSpace version number (ex: 4.0.0) */
   get appVersion(): string {
     return this.version;
+  }
+
+  /** Get the Internet connection status */
+  get connectionStatus(): boolean {
+    return this.connected;
   }
 }

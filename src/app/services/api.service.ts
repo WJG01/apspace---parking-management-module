@@ -21,7 +21,7 @@ export class ApiService {
   ) { }
 
   getIntakes(refresh?: boolean): Observable<IntakeListing[]> {
-    if (this.config.connected) {
+    if (this.config.connectionStatus) {
       const options = refresh ? { headers: { 'x-refresh': '' } } : {};
       return this.http.get<IntakeListing[]>(this.intakeAPI, options).pipe(
         tap(intakeList => refresh && this.storage.set('intakeList-cache', intakeList)),

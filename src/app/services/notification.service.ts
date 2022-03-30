@@ -39,7 +39,7 @@ export class NotificationService {
    * GET: send token and service ticket on Log in and response is the history of notifications
    */
   getMessages(): Observable<NotificationHistory> {
-    if (this.config.connected) {
+    if (this.config.connectionStatus) {
       let token = '';
       if (this.plt.is('capacitor')) {
         return from(FCM.getToken()).pipe(
@@ -86,7 +86,7 @@ export class NotificationService {
    * Get the list of categories
    */
   getCategories() {
-    if (this.config.connected) {
+    if (this.config.connectionStatus) {
       const url = `${this.apiUrl}/client/categories`;
 
       return this.http.get(url, { headers: this.headers }).pipe(
@@ -113,7 +113,7 @@ export class NotificationService {
    * @param messageID id of the notification message
    */
   sendRead(messageID: number): Observable<any> {
-    if (this.config.connected) {
+    if (this.config.connectionStatus) {
       return this.cas.getST(this.serviceUrl).pipe(
         switchMap(st => {
           const body = {
@@ -143,7 +143,7 @@ export class NotificationService {
   }
 
   getSubscription(): Observable<NotificationStatus> {
-    if (this.config.connected) {
+    if (this.config.connectionStatus) {
       return this.cas.getST(this.serviceUrl).pipe(
         switchMap(st => {
           const url = `${this.apiUrl}/client/preferences/personal_email_subscription?ticket=${st}`;
@@ -165,7 +165,7 @@ export class NotificationService {
   }
 
   subscribe(): Observable<NotificationSubStatus> {
-    if (this.config.connected) {
+    if (this.config.connectionStatus) {
       return this.cas.getST(this.serviceUrl).pipe(
         switchMap(st => {
           const url = `${this.apiUrl}/client/preferences/personal_email_subscription?ticket=${st}`;
@@ -187,7 +187,7 @@ export class NotificationService {
   }
 
   unsubscribe(): Observable<NotificationSubStatus> {
-    if (this.config.connected) {
+    if (this.config.connectionStatus) {
       return this.cas.getST(this.serviceUrl).pipe(
         switchMap(st => {
           const url = `${this.apiUrl}/client/preferences/personal_email_subscription?ticket=${st}`;

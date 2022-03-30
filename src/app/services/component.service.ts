@@ -53,7 +53,7 @@ export class ComponentService {
   }
 
   async openLink(url: string) {
-    if (!this.config.connected) {
+    if (!this.config.connectionStatus) {
       return this.toastMessage('External links cannot be opened in offline mode. Please ensure you have a network connection and try again.', 'danger');
     }
     await Browser.open({ url });
