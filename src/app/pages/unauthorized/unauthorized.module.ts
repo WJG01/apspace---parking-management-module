@@ -5,13 +5,15 @@ import { IonicModule } from '@ionic/angular';
 
 import { UnauthorizedPageRoutingModule } from './unauthorized-routing.module';
 import { UnauthorizedPage } from './unauthorized.page';
+import { ComponentsModule } from '../../components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    UnauthorizedPageRoutingModule
+    UnauthorizedPageRoutingModule,
+    ComponentsModule
   ],
   declarations: [UnauthorizedPage]
 })
