@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, EMPTY, forkJoin, from, Observable, of, switchMap, switchMapTo, tap, throwError } from 'rxjs';
+import { catchError, EMPTY, forkJoin, from, mergeMap, Observable, of, switchMap, tap, throwError } from 'rxjs';
 
 import { Storage } from '@ionic/storage-angular';
 import { Role } from '../interfaces';
@@ -157,7 +157,7 @@ export class CasTicketService {
           from(this.storage.set('role', role)),
           from(this.storage.set('canAccessResults', canAccessResults)),
           from(this.storage.set('canAccessPayslipFileSearch', canAccessPayslipFileSearch))
-        ]).pipe(switchMapTo(of(role)));
+        ]).pipe(mergeMap(() => of(role)));
       }),
     );
   }
