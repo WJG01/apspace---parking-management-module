@@ -280,7 +280,7 @@ export class WsApiService {
   /** Handle client error by rethrowing 4xx or return empty observable for 304. */
   private handleClientError(err: HttpErrorResponse): Observable<never> {
     if (400 <= err.status && err.status < 500) {
-      return throwError(() => new Error(err.message));
+      return throwError(() => err);
     } else if (err.status === 304) {
       return EMPTY;
     } else {
