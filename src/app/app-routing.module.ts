@@ -69,6 +69,12 @@ const routes: Routes = [
     data: { role: Role.Student | Role.Lecturer | Role.Admin },
     loadChildren: () => import('./pages/unauthorized/unauthorized.module').then(m => m.UnauthorizedPageModule)
   },
+  {
+    path: 'anonymous-feedback',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Lecturer | Role.Admin },
+    loadChildren: () => import('./pages/anonymous-feedback/anonymous-feedback.module').then(m => m.AnonymousFeedbackPageModule)
+  },
   { // this path must always be at the end of the routes array
     path: '**',
     canActivate: [AuthGuard],

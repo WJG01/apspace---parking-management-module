@@ -1,0 +1,85 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ feedback.issue_id }} Details</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col>
+      <ng-container *ngIf="(details$ | async) as details; else loading">
+        <ion-card class="ion-no-margin ion-margin-bottom">
+          <ion-card-header>
+            <ion-text color="primary">
+              <h3 class="glob-text-bold">{{ details.subject }}</h3>
+              <p>
+                Created:
+                {{ feedback.datetime | dateWithTimezone: 'MMMM d, y' }}
+                {{ feedback.datetime | dateWithTimezone: 'time' | slice: 0 :-8 }}
+              </p>
+              <ion-badge
+                [color]="details.status === 'Canceled' ? 'danger' : details.status === 'Done' ? 'success' : 'primary'">
+                {{ details.status }}</ion-badge>
+            </ion-text>
+          </ion-card-header>
+          <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end ion-padding-bottom">
+            <div class="ion-padding-top content">
+              <p [innerHTML]="details.message"></p>
+            </div>
+          </ion-card-content>
+          <ion-card-content>
+            <ion-text color="primary">
+              <h3 class="glob-text-bold">Comments ({{ details.comments.length }})</h3>
+            </ion-text>
+          </ion-card-content>
+
+          <ng-container *ngIf="details.comments.length > 0; else noComments">
+            <ion-item *ngFor="let c of details.comments; let isLast = last" [lines]="isLast ? 'none' : undefined">
+              <ion-avatar slot="start">
+                <ion-img src="assets/img/no_avatar.png"></ion-img>
+              </ion-avatar>
+
+              <ion-label class="ion-text-wrap">
+                <h3>{{ c.username === 'Anonymous Feedback' ? 'Anonymous User' : c.username }}</h3>
+                <p [innerHTML]="c.comment_c"></p>
+              </ion-label>
+            </ion-item>
+          </ng-container>
+
+          <ng-template #noComments>
+            <h4 class="ion-text-center no-comment">No Comments Available</h4>
+          </ng-template>
+        </ion-card>
+
+        <ion-card class="ion-no-margin">
+          <form [formGroup]="commentForm" (ngSubmit)="addComment()">
+            <ion-item lines="none">
+              <ion-label class="glob-text-bold" position="stacked" color="success">Add Comment</ion-label>
+              <ion-textarea maxLength="1000" autosize="true" rows="2" placeholder="Enter your comment here.."
+                formControlName="comment">
+              </ion-textarea>
+            </ion-item>
+
+            <ion-card-content>
+              <ion-button expand="block" fill="solid" color="primary" type="submit">
+                Add Comment
+              </ion-button>
+            </ion-card-content>
+          </form>
+        </ion-card>
+      </ng-container>
+
+      <ng-template #loading>
+        <div class="loading-spinner">
+          <ion-spinner color="primary"></ion-spinner>
+          <p class="loading-text glob-text-bold">Loading Details...</p>
+        </div>
+      </ng-template>
+    </ion-col>
+  </ion-row>
+</ion-content>

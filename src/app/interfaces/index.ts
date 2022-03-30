@@ -1,3 +1,4 @@
+export { AnonymousFeedbackSummary, AnonymousFeedback, FeedbackCategory, AnonymousFeedbackComment } from './anonymous-feedback';
 export { Apcard } from './apcard';
 export { Attendance, AttendanceDetails, AttendanceLegend, MappedAttendance } from './attendance';
 export { BusTrip, BusTrips, APULocation, APULocations } from './bus-shuttle-services';

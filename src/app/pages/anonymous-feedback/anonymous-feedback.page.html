@@ -1,0 +1,97 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Feedback</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" pullMax="400" pullMin="60" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="glob-container">
+    <ion-row>
+      <ion-col size-xs="12" size-md="8" class="glob-margin-auto">
+        <ion-card class="ion-no-margin ion-margin-bottom">
+          <ion-item color="warning" lines="none">
+            <ion-label class="ion-text-wrap">
+              <p>
+                Welcome to our new Feedback System. We are still under <span
+                  class="glob-text-bold glob-primary-text">BETA</span> so if you encounter any issue please report to
+                us via <a class="glob-text-bold underline-text" tappable (click)="openLink('/feedback')">APSpace
+                  Feedback</a>. If you would like to use our legacy
+                feedback system, head over to <a class="glob-text-bold underline-text" tappable
+                  (click)="openLink('https://erp.apiit.edu.my')">APiX / ERP (Legacy) </a>
+              </p>
+            </ion-label>
+          </ion-item>
+        </ion-card>
+
+        <ng-container *ngIf="(feedbacks$ | async) as feedbacks; else loading">
+          <ng-container *ngIf="feedbacks.length > 0; else noFeedback">
+            <ion-card class="ion-no-margin" *ngFor="let f of feedbacks; let isLast = last"
+              [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+              <ion-card-header>
+                <ion-badge color="warning">
+                  {{ f.category_id }}
+                </ion-badge>
+
+                <ion-badge class="small-margin-left" *ngIf="f.is_anon">
+                  Anonymous
+                </ion-badge>
+
+                <ion-card-subtitle>
+                  {{ f.datetime | dateWithTimezone: 'MMMM d, y' }}
+                  {{ f.datetime | dateWithTimezone: 'time' | slice: 0 :-8 }}
+                </ion-card-subtitle>
+
+                <ion-card-title>
+                  {{ f.issue_id }}
+                </ion-card-title>
+
+                <ion-button class="ion-margin-top" size="small" fill="outline" (click)="feedbackDetails(f)">
+                  Details
+                  <ion-icon slot="end" [name]="f.is_anon ? 'chevron-forward-sharp' : 'link'"></ion-icon>
+                </ion-button>
+              </ion-card-header>
+            </ion-card>
+          </ng-container>
+
+          <ng-template #noFeedback>
+            <ion-card class="ion-no-margin">
+              <div class="ion-margin-top">
+                <message-with-svg imageUrl="assets/img/search_not_found.svg" messageTitle="No Feedback Available">
+                </message-with-svg>
+              </div>
+            </ion-card>
+          </ng-template>
+        </ng-container>
+
+        <ng-template #loading>
+          <ion-card class="ion-no-margin" *ngFor="let l of skeleton; let isLast = last"
+            [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+            <ion-card-header>
+              <ion-skeleton-text animated style="width: 30%; line-height: 20px;"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 40%; line-height: 20px;"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 10%; line-height: 20px;"></ion-skeleton-text>
+
+              <ion-button class="ion-margin-top" size="small" fill="outline" [disabled]="true">
+                Details
+                <ion-icon slot="end" name="chevron-forward-sharp"></ion-icon>
+              </ion-button>
+            </ion-card-header>
+          </ion-card>
+        </ng-template>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="primary" (click)="createFeedback()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
