@@ -1,0 +1,113 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Staff Info</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="glob-container">
+    <ion-breadcrumbs [maxItems]="2">
+      <ion-breadcrumb>
+        Staffs
+        <ion-icon slot="separator" name="chevron-forward"></ion-icon>
+      </ion-breadcrumb>
+      <ion-breadcrumb>
+        All
+        <ion-icon slot="separator" name="chevron-forward"></ion-icon>
+      </ion-breadcrumb>
+      <ion-breadcrumb>
+        {{ id | uppercase }}
+      </ion-breadcrumb>
+    </ion-breadcrumbs>
+
+    <ng-container *ngIf="(staffs$ | async) as staffs; else loading">
+      <ng-container *ngIf="(staffs | byId:id) as staff; else notFound">
+        <ion-row>
+          <ion-col size-xs="12" size-lg="4">
+            <ion-card class="ion-no-margin">
+              <ion-card-header>
+                <ion-avatar class="profile-image">
+                  <img id="bg" [src]="'https://d37plr7tnxt7lb.cloudfront.net/' + staff.RefNo + '.jpg'"
+                    onerror="this.src='assets/img/no_img.png'">
+                </ion-avatar>
+                <hr class="ion-margin-top ion-margin-button hr-custom" />
+              </ion-card-header>
+              <ion-card-content>
+                <h2>Name:</h2>
+                <h2 class="glob-text-bold">{{ staff.FULLNAME }}</h2>
+                <br>
+                <h2>Job Title:</h2>
+                <h2 class="glob-text-bold" [innerHTML]="staff.TITLE"></h2>
+                <br>
+                <h2>Email:</h2>
+                <h2><a class="glob-text-bold" href="mailto:{{staff.EMAIL}}">
+                    <ion-text color="primary">
+                      {{ staff.EMAIL }}
+                    </ion-text>
+                  </a></h2>
+                <br>
+                <div *ngIf="staff.LOCATION">
+                  <h2>Office Location:</h2>
+                  <h2 class="glob-text-bold">{{ staff.LOCATION }}</h2>
+                  <br>
+                </div>
+                <h2>Contact Number:</h2>
+                <h2><a class="glob-text-bold" href="tel:+60389961000">
+                    <ion-text color="primary">
+                      +6 03-8996 1000 (Ext. {{ staff.EXTENSION }})
+                    </ion-text>
+                  </a></h2>
+                <br>
+                <div *ngIf="staff.DEPARTMENT || staff.DEPARTMENT2 || staff.DEPARTMENT3">
+                  <h2>Functional Area(s):</h2>
+                  <h2 class="glob-text-bold" *ngIf="staff.DEPARTMENT" [innerHTML]="staff.DEPARTMENT"></h2>
+                  <h2 class="glob-text-bold" *ngIf="staff.DEPARTMENT2" [innerHTML]="staff.DEPARTMENT2"></h2>
+                  <h2 class="glob-text-bold" *ngIf="staff.DEPARTMENT3" [innerHTML]="staff.DEPARTMENT3"></h2>
+                  <br>
+                </div>
+                <ion-row>
+                  <ion-col *ngIf="isStudent">
+                    <ion-button expand="block" color="primary" (click)="openIConsult()">
+                      Book Consultation
+                    </ion-button>
+                  </ion-col>
+                  <ion-col>
+                    <ion-button class="chat-in-teams" expand="block" (click)="chatInTeams()">Chat In Teams
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+
+          <ion-col size-xs="12" size-lg="8">
+            <ion-card class="ion-no-margin">
+              <ion-card-header>
+                <ion-text>
+                  <h2>
+                    <ion-text color="primary">
+                      Timetable
+                    </ion-text>
+                  </h2>
+                </ion-text>
+              </ion-card-header>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ng-container>
+
+      <ng-template #notFound>
+        <h1>Not Found</h1>
+      </ng-template>
+    </ng-container>
+
+    <ng-template #loading>
+      Loading...
+    </ng-template>
+  </div>
+
+
+</ion-content>
