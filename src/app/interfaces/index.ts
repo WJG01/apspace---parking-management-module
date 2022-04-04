@@ -7,5 +7,6 @@ export { ExamSchedule } from './exam-schedule';
 export { IntakeListing } from './intake-listing';
 export { NotificationBody, NotificationHistory, NotificationStatus, NotificationSubStatus } from './notification';
 export { Role } from './role';
+export { StaffDirectory } from './staff';
 export { StudentProfile } from './student-profile';
 export { SurveyIntake, SurveyModule } from './student-survey';

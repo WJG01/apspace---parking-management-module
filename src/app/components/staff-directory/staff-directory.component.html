@@ -1,0 +1,92 @@
+<div class="glob-container">
+  <ion-breadcrumbs *ngIf="!payslip">
+    <ion-breadcrumb>
+      Staffs
+      <ion-icon slot="separator" name="chevron-forward"></ion-icon>
+    </ion-breadcrumb>
+    <ion-breadcrumb>
+      {{ filterObject.department === 'all' ? 'All' : filterObject.department }}
+    </ion-breadcrumb>
+  </ion-breadcrumbs>
+
+  <ion-row>
+    <ion-col size-xs="12" size-md="8" class="glob-margin-auto">
+      <ion-card class="ion-no-margin ion-margin-bottom">
+        <ion-searchbar enterkeyhint="search" placeholder="Search by Staff Name, Job Title, Extension Number..."
+          [(ngModel)]="filterObject.term">
+        </ion-searchbar>
+
+        <ion-item lines="none">
+          <ion-label position="stacked">Functional Area</ion-label>
+          <ion-select interface="popover" [(ngModel)]="filterObject.department" (ngModelChange)="doRefresh()"
+            [disabled]="!(departments.length > 0)">
+            <ion-select-option value="all">
+              All
+            </ion-select-option>
+            <ion-select-option *ngFor="let d of departments" [value]="d" [innerHTML]="d"></ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-card>
+
+      <ng-container *ngIf="(staffs$ | async) as staffs; else loading">
+        <ng-container *ngIf="(staffs | fuse:filterObject.term:options) as filteredStaffs">
+          <ng-container *ngIf="filteredStaffs.length > 0; else noStaff">
+            <ion-card class="ion-no-margin">
+              <ion-virtual-scroll [items]="filteredStaffs" approxItemHeight="68px" [trackBy]="trackById">
+                <ion-item *virtualItem="let s; let isLast = last" [lines]="isLast ? 'none' : 'inset'" detail="true"
+                  button="true" (click)="outputStaffId(s.ID)">
+                  <ion-avatar slot="start">
+                    <ion-img #image [src]="s.IMAGEURL" (ionError)="image.src = 'assets/img/no_avatar.png'"></ion-img>
+                  </ion-avatar>
+
+                  <ion-label>
+                    <h2>{{ s.FULLNAME }}</h2>
+                    <p>{{ s.EMAIL }}</p>
+                  </ion-label>
+                </ion-item>
+              </ion-virtual-scroll>
+            </ion-card>
+          </ng-container>
+
+          <ng-template #noStaff>
+            <ion-card class="ion-no-margin ion-margin-top">
+              <ion-card-content>
+                <message-with-svg imageUrl="assets/img/search_not_found.svg"
+                  messageTitle="No Staff Found" [advancedMode]="true">
+                  <div class="flex-container">
+                    <ul class="list-txt-color">
+                      <li>Make sure the keyword is matched with one of the items</li>
+                      <li>Make sure you have typed a valid item code.</li>
+                      <li>Make sure there is no special characters included.</li>
+                    </ul>
+
+                    <p>Still having issues? No worries! Just
+                      <a tappable class="glob-text-bold" (click)="openFeedback()">REPORT</a>
+                      it to us.
+                    </p>
+                  </div>
+                </message-with-svg>
+              </ion-card-content>
+            </ion-card>
+          </ng-template>
+        </ng-container>
+      </ng-container>
+
+      <ng-template #loading>
+        <ion-item *ngFor="let _ of skeleton; let isLast = last" [lines]="isLast ? 'none' : undefined">
+          <ion-avatar slot="start">
+            <ion-skeleton-text animated style="line-height: 25px; width: 100%;"></ion-skeleton-text>
+          </ion-avatar>
+          <ion-label>
+            <h2>
+              <ion-skeleton-text animated style="line-height: 20px; width: 60%;"></ion-skeleton-text>
+            </h2>
+            <p>
+              <ion-skeleton-text animated style="line-height: 15px; width: 40%;"></ion-skeleton-text>
+            </p>
+          </ion-label>
+        </ion-item>
+      </ng-template>
+    </ion-col>
+  </ion-row>
+</div>

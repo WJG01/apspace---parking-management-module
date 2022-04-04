@@ -75,6 +75,17 @@ const routes: Routes = [
     data: { role: Role.Student | Role.Lecturer | Role.Admin },
     loadChildren: () => import('./pages/anonymous-feedback/anonymous-feedback.module').then(m => m.AnonymousFeedbackPageModule)
   },
+  {
+    path: 'staffs',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Lecturer | Role.Admin },
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./pages/staff-directory/staff-directory.module').then(m => m.StaffDirectoryPageModule)
+      }
+    ]
+  },
   { // this path must always be at the end of the routes array
     path: '**',
     canActivate: [AuthGuard],
