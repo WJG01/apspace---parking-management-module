@@ -98,14 +98,70 @@
       </ng-container>
 
       <ng-template #notFound>
-        <h1>Not Found</h1>
+        <ion-card class="ion-no-margin">
+          <div class="ion-margin-top">
+            <message-with-svg messageTitle="No Staff Found!"
+              messageContent="The Staff ID provided does not match with any of our staff"
+              imageUrl="assets/img/search_not_found.svg">
+            </message-with-svg>
+          </div>
+        </ion-card>
       </ng-template>
     </ng-container>
 
     <ng-template #loading>
-      Loading...
+      <ion-row>
+        <ion-col size-xs="12" size-lg="4">
+          <ion-card>
+            <ion-card-header>
+              <ion-avatar class="profile-image" style="--border-radius: 0;">
+                <ion-skeleton-text animated style="line-height: 240px;width: 200px;margin: auto;"></ion-skeleton-text>
+              </ion-avatar>
+              <hr class="ion-margin-top ion-margin-button hr-custom" />
+            </ion-card-header>
+            <ion-card-content style="padding-top: 0px">
+              <h2>
+                <ion-skeleton-text animated style="line-height: 25px; width: 40%;"></ion-skeleton-text>
+              </h2>
+              <h2>
+                <ion-skeleton-text animated style="line-height: 20px; width: 70%;"></ion-skeleton-text>
+              </h2>
+              <br>
+              <h2>
+                <ion-skeleton-text animated style="line-height: 25px; width: 60%;"></ion-skeleton-text>
+              </h2>
+              <h2>
+                <ion-skeleton-text animated style="line-height: 20px; width: 40%;"></ion-skeleton-text>
+              </h2>
+              <br>
+              <h2>
+                <ion-skeleton-text animated style="line-height: 25px; width: 70%;"></ion-skeleton-text>
+              </h2>
+              <h2>
+                <ion-skeleton-text animated style="line-height: 20px; width: 40%;"></ion-skeleton-text>
+              </h2>
+              <br>
+              <h2>
+                <ion-skeleton-text animated style="line-height: 25px; width: 20%;"></ion-skeleton-text>
+              </h2>
+              <h2>
+                <ion-skeleton-text animated style="line-height: 25px; width: 40%;"></ion-skeleton-text>
+              </h2>
+              <br>
+              <ion-grid>
+                <ion-row>
+                  <ion-col>
+                    <ion-skeleton-text animated style="line-height: 40px; width: 90%;"></ion-skeleton-text>
+                  </ion-col>
+                  <ion-col>
+                    <ion-skeleton-text animated style="line-height: 40px; width: 90%;"></ion-skeleton-text>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
     </ng-template>
   </div>
-
-
 </ion-content>
