@@ -6,13 +6,15 @@ import { IonicModule } from '@ionic/angular';
 import { StaffDirectoryInfoPageRoutingModule } from './staff-directory-info-routing.module';
 import { StaffDirectoryInfoPage } from './staff-directory-info.page';
 import { ByIdPipe } from './by-id/by-id.pipe';
+import { ComponentsModule } from '../../../components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    StaffDirectoryInfoPageRoutingModule
+    StaffDirectoryInfoPageRoutingModule,
+    ComponentsModule
   ],
   declarations: [StaffDirectoryInfoPage, ByIdPipe]
 })

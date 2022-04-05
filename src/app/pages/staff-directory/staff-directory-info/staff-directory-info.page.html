@@ -85,15 +85,13 @@
 
           <ion-col size-xs="12" size-lg="8">
             <ion-card class="ion-no-margin">
-              <ion-card-header>
-                <ion-text>
-                  <h2>
-                    <ion-text color="primary">
-                      Timetable
-                    </ion-text>
-                  </h2>
-                </ion-text>
-              </ion-card-header>
+              <ion-item-divider lines="none" color="primary" mode="md">
+                <ion-label class="glob-text-bold">
+                  Timetable
+                </ion-label>
+              </ion-item-divider>
+
+              <lecturer-timetable [id]="staff.ID" [code]="staff.CODE"></lecturer-timetable>
             </ion-card>
           </ion-col>
         </ion-row>

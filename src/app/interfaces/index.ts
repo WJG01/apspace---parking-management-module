@@ -5,6 +5,7 @@ export { BusTrip, BusTrips, APULocation, APULocations } from './bus-shuttle-serv
 export { Course } from './course';
 export { ExamSchedule } from './exam-schedule';
 export { IntakeListing } from './intake-listing';
+export { FormattedDaysLecturerTimetable, FormattedLecturerTimetable, LecturerTimetable, MappedLecturerTimetable } from './lecturer-timetable';
 export { NotificationBody, NotificationHistory, NotificationStatus, NotificationSubStatus } from './notification';
 export { Role } from './role';
 export { StaffDirectory } from './staff';
