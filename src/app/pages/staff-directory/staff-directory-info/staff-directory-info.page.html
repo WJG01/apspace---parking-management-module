@@ -30,8 +30,7 @@
             <ion-card class="ion-no-margin">
               <ion-card-header>
                 <ion-avatar class="profile-image">
-                  <img [src]="'https://d37plr7tnxt7lb.cloudfront.net/' + staff.RefNo + '.jpg'"
-                    onerror="this.src='assets/img/no_img.png'">
+                  <ion-img #image [src]="staff.IMAGEURL" (ionError)="image.src = 'assets/img/no_avatar.png'"></ion-img>
                 </ion-avatar>
                 <hr class="ion-margin-top ion-margin-button hr-custom" />
               </ion-card-header>

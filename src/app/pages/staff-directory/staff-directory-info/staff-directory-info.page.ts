@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, share } from 'rxjs';
+import { map, Observable, share } from 'rxjs';
 
 import { Storage } from '@ionic/storage-angular';
 
@@ -28,6 +28,13 @@ export class StaffDirectoryInfoPage implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id');
 
     this.staffs$ = this.ws.get<StaffDirectory[]>('/staff/listing', { caching: 'cache-only' }).pipe(
+      map(staffs => {
+        for (let staff of staffs) {
+          staff.IMAGEURL = `https://d37plr7tnxt7lb.cloudfront.net/${staff.RefNo}.jpg`;
+        }
+
+        return staffs;
+      }),
       share()
     );
 
