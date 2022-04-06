@@ -1,0 +1,13 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Staff Directory</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- TODO: Add Refresher and Notifier in Component -->
+  <staff-directory (staffID)="openStaffInfo($event)"></staff-directory>
+</ion-content>

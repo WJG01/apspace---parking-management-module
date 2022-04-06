@@ -1,0 +1,20 @@
+.profile-image {
+  margin-bottom: 15px !important;
+  margin: auto;
+  width: 50%;
+  height: 100%;
+}
+
+ion-img {
+  border-radius: 11px;
+}
+
+.hr-custom {
+  border-bottom: 3px solid var(--ion-color-secondary);
+  width: 100%;
+}
+
+.chat-in-teams {
+  --background: #464775;
+  --background-hover: #5f60a3;
+}

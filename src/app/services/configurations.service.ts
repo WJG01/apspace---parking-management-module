@@ -47,7 +47,7 @@ export class ConfigurationsService {
     const numDay = now.getDate();
 
     const startWeek = new Date(now); // Current Day
-    startWeek.setDate(numDay - dayOfWeek);
+    startWeek.setDate(numDay - dayOfWeek + 1); // +1 is to ensure the week starts on a Monday
     startWeek.setHours(0, 0, 0, 0);
 
 

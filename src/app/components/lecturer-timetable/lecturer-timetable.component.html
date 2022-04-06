@@ -1,0 +1,77 @@
+<ng-container *ngIf="(timetables$ | async) as timetables; else loading">
+  <ng-container *ngIf="timetables.length > 0; else empty">
+    <ion-accordion-group [value]="formatDate(currentWeek)">
+      <ion-accordion *ngFor="let t of timetables; let isLast = last" [value]="formatDate(t.week)">
+        <ion-item slot="header" [lines]="isLast ? 'none' : 'inset'">
+          <ion-label>Week:
+            <span class="glob-text-bold">{{ t.week | date: 'MMMM d, y' }}</span>
+          </ion-label>
+        </ion-item>
+
+        <ion-list slot="content" class="ion-no-padding">
+          <div class="ion-text-end">
+            <ion-button size="small" class="ion-margin" (click)="printSelectedWeek(t.week)">
+              <ion-icon name="print"></ion-icon>
+              Print
+            </ion-button>
+          </div>
+
+          <ng-container *ngFor="let s of (t.timetables | formatByDay)">
+            <ion-item-divider lines="none" color="light" mode="md">
+              <ion-label class="glob-text-bold">
+                {{ s.day }}
+              </ion-label>
+            </ion-item-divider>
+
+            <ion-card-content class="ion-no-padding" *ngFor="let tt of s.schedule">
+              <ion-card lines="full" class="table-item" style="box-shadow: none;">
+                <ion-label class="glob-white-space-normal">
+                  <ion-grid class="ion-no-padding">
+                    <ion-row class="ion-no-padding">
+                      <ion-col size="12">
+                        <ion-text color="danger">
+                          <h3 class="ion-text-uppercase">
+                            {{ tt.module }}
+                          </h3>
+                        </ion-text>
+                        <ion-text color="medium">
+                          <h3 class="glob-text-bold">
+                            {{ tt.start | date: 'h:mm a' }} - {{ tt.end | date: 'h:mm a' }}
+                          </h3>
+                        </ion-text>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                  <p>{{ tt.location }}</p>
+                  <p>
+                    Intakes:
+                    <span *ngFor="let intake of tt.intakes; last as last">
+                      <a tappable (click)="openStudentTimetable(intake)">{{ intake }}</a>
+                      <span *ngIf="!last"> , </span>
+                    </span>
+                  </p>
+                </ion-label>
+              </ion-card>
+            </ion-card-content>
+          </ng-container>
+        </ion-list>
+      </ion-accordion>
+    </ion-accordion-group>
+  </ng-container>
+
+  <ng-template #empty>
+    <ion-text color="danger" class="ion-text-center">
+      <h3>No Timetable Available</h3>
+    </ion-text>
+  </ng-template>
+</ng-container>
+
+<ng-template #loading>
+  <ion-accordion *ngFor="let t of skeleton; let isLast = last">
+    <ion-item slot="header" [lines]="isLast ? 'none' : 'inset'">
+      <ion-label>
+        <ion-skeleton-text animated style="line-height: 20px; width: 60%;"></ion-skeleton-text>
+      </ion-label>
+    </ion-item>
+  </ion-accordion>
+</ng-template>
