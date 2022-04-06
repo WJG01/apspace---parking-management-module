@@ -7,6 +7,7 @@ import { ApcardPageRoutingModule } from './apcard-routing.module';
 import { ApcardPage } from './apcard.page';
 import { TimeRefresherPipe } from './time-refresher/time-refresher.pipe';
 import { PrintTransactionsModalPageModule } from './print-transactions-modal/print-transactions-modal.module';
+import { ComponentsModule } from '../../components/components.module';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { PrintTransactionsModalPageModule } from './print-transactions-modal/pri
     FormsModule,
     IonicModule,
     ApcardPageRoutingModule,
-    PrintTransactionsModalPageModule
+    PrintTransactionsModalPageModule,
+    ComponentsModule
   ],
   declarations: [ApcardPage, TimeRefresherPipe]
 })

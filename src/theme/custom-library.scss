@@ -2,6 +2,11 @@
   margin: auto !important;
 }
 
+.glob-primary-text {
+  color: var(--ion-color-primary);
+  --color: var(--ion-color-primary);
+}
+
 .glob-success-text {
   color: var(--ion-color-success);
   --color: var(--ion-color-success);
@@ -14,6 +19,10 @@
 
 .glob-text-bold {
   font-weight: 900 !important;
+}
+
+.glob-white-space-normal {
+  white-space: normal !important;
 }
 
 .glob-calendar {

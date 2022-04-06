@@ -4,10 +4,10 @@ import { Platform } from '@ionic/angular';
 import { Observable, switchMap, tap, timeout, catchError, throwError, from, of, retryWhen, concatMap, iif, delay, concat, EMPTY, NEVER, AsyncSubject, share } from 'rxjs';
 
 import { Storage } from '@ionic/storage-angular';
-import { Network } from '@capacitor/network';
 
 import { CasTicketService } from './cas-ticket.service';
 import { ComponentService } from './component.service';
+import { ConfigurationsService } from './configurations.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,24 +15,15 @@ import { ComponentService } from './component.service';
 export class WsApiService {
 
   private apiUrl = 'https://api.apiit.edu.my';
-  private connected = true;
 
   constructor(
     public http: HttpClient,
     public plt: Platform,
     public storage: Storage,
     private cas: CasTicketService,
-    private component: ComponentService
-  ) {
-    this.networkStatus();
-
-    /**
-     * Listens to Network Change
-     */
-    Network.addListener('networkStatusChange', status => {
-      this.connected = status.connected;
-    });
-  }
+    private component: ComponentService,
+    private config: ConfigurationsService
+  ) { }
 
   /**
    * GET: Request WS API with cache (mobile only) and error handling.
@@ -108,7 +99,7 @@ export class WsApiService {
 
     if (!this.plt.is('capacitor')) { // disable caching on browser
       return request$;
-    } else if (options.caching !== 'cache-only' && this.connected) {
+    } else if (options.caching !== 'cache-only' && this.config.connectionStatus) {
       return options.caching === 'cache-update-refresh'
         ? concat(from(this.storage.get(endpoint)), request$)
         : request$;
@@ -159,11 +150,11 @@ export class WsApiService {
       withCredentials: options.withCredentials,
     };
 
-    if (this.plt.is('capacitor') && !this.connected) {
+    if (this.plt.is('capacitor') && !this.config.connectionStatus) {
       return this.handleOffline();
     }
 
-    console.log('Network Status: ', this.connected);
+    console.log('Network Status: ', this.config.connectionStatus);
 
     return (!options.auth // always get ticket if auth is true
       ? this.http.post<T>(url, options.body, opt)
@@ -217,7 +208,7 @@ export class WsApiService {
       withCredentials: options.withCredentials,
     };
 
-    if (this.plt.is('capacitor') && !this.connected) {
+    if (this.plt.is('capacitor') && !this.config.connectionStatus) {
       return this.handleOffline();
     }
 
@@ -270,7 +261,7 @@ export class WsApiService {
       withCredentials: options.withCredentials,
     };
 
-    if (this.plt.is('capacitor') && !this.connected) {
+    if (this.plt.is('capacitor') && !this.config.connectionStatus) {
       return this.handleOffline();
     }
 
@@ -289,7 +280,7 @@ export class WsApiService {
   /** Handle client error by rethrowing 4xx or return empty observable for 304. */
   private handleClientError(err: HttpErrorResponse): Observable<never> {
     if (400 <= err.status && err.status < 500) {
-      return throwError(() => new Error(err.message));
+      return throwError(() => err);
     } else if (err.status === 304) {
       return EMPTY;
     } else {
@@ -302,13 +293,5 @@ export class WsApiService {
   private handleOffline(): Observable<never> {
     this.component.toastMessage('You are now offline.', 'medium');
     return throwError(() => new Error('offline'));
-  }
-
-  /**
-   * Get Current Status of Network
-   */
-  private async networkStatus() {
-    const status = await Network.getStatus();
-    this.connected = status.connected;
   }
 }

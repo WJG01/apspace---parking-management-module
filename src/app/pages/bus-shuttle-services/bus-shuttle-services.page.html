@@ -1,0 +1,234 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Bus Shuttle Services
+    </ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="glob-container">
+    <ion-row>
+      <ion-col size-xs="12" size-md="8" class="glob-margin-auto">
+        <ion-card class="ion-no-margin ion-margin-top ion-margin-bottom">
+          <ion-accordion-group>
+            <ion-accordion value="filters">
+              <ion-item slot="header">
+                <ion-icon class="ion-padding-end" name="filter"></ion-icon>
+                <ion-label>Filters</ion-label>
+              </ion-item>
+
+              <ion-list slot="content">
+                <ion-item lines="none">
+                  <ion-label position="stacked">From</ion-label>
+                  <ion-select [(ngModel)]="filterObject.fromLocation" (ngModelChange)="doRefresh()" interface="popover">
+                    <ion-select-option value="">
+                      Any
+                    </ion-select-option>
+                    <ion-select-option *ngFor="let location of locations" [value]="location.location_name">
+                      {{ location.location_nice_name }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+
+                <ion-item lines="none">
+                  <ion-label position="stacked">To</ion-label>
+                  <ion-select [(ngModel)]="filterObject.toLocation" (ngModelChange)="doRefresh()" interface="popover">
+                    <ion-select-option value="">
+                      Any
+                    </ion-select-option>
+                    <ion-select-option *ngFor="let location of locations" [value]="location.location_name">
+                      {{ location.location_nice_name }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+
+                <ion-item lines="none">
+                  <ion-label position="stacked">Day</ion-label>
+                  <ion-select [(ngModel)]="filterObject.tripDay" (ngModelChange)="doRefresh()" interface="popover">
+                    <ion-select-option value="sat">Saturday</ion-select-option>
+                    <ion-select-option value="sun">Sunday</ion-select-option>
+                    <ion-select-option value="mon-fri">Monday - Friday</ion-select-option>
+                  </ion-select>
+                </ion-item>
+
+                <ion-row>
+                  <ion-col>
+                    <ion-button expand="block">
+                      Swap Locations
+                    </ion-button>
+                  </ion-col>
+                  <ion-col>
+                    <ion-button expand="block" color="danger">
+                      Reset
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-list>
+            </ion-accordion>
+          </ion-accordion-group>
+
+          <ion-item lines="none">
+            <ion-label>Show All</ion-label>
+            <ion-toggle [(ngModel)]="detailedView" (ngModelChange)="doRefresh()"></ion-toggle>
+          </ion-item>
+        </ion-card>
+
+        <ng-container *ngIf="(trip$ | async) as filteredTrip; else loading">
+          <ion-item color="light" lines="none" class="ion-margin-bottom">
+            <ion-thumbnail>
+              <ion-icon size="large" color="warning" name="warning" class="ion-margin-top"></ion-icon>
+            </ion-thumbnail>
+            <ion-label class="ion-text-wrap">
+              <p>
+                Effective from: <span class="glob-text-bold">{{ latestUpdate }}</span>
+              </p>
+              <p>
+                All times in this page are displayed in Malaysian Timezone
+              </p>
+            </ion-label>
+          </ion-item>
+
+          <ng-container *ngIf="(filteredTrip | keyvalue) as trips">
+            <ng-container *ngIf="trips.length > 0; else empty">
+              <ion-card class="ion-no-margin" *ngFor="let trip of trips; let isLast = last"
+                [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+                <ion-card-header color="light">
+                  <ion-card-subtitle class="glob-text-bold">
+                    {{ getLocationDisplayNameAndType(trip.key).split('&&')[0] | uppercase }}
+                    <small *ngIf="trip.key === 'mosque'">
+                      (Friday Only)
+                    </small>
+                  </ion-card-subtitle>
+
+                </ion-card-header>
+                <ion-progress-bar value="1" [style.--progress-background]="getLocationColor(trip.key)">
+                </ion-progress-bar>
+
+                <ion-card-content class="ion-no-padding ion-padding-bottom ion-padding-start ion-padding-end">
+                  <ion-grid *ngFor="let destination of trip.value | keyvalue">
+                    <ion-col>
+                      <ion-row>
+                        <ion-item class="ion-no-padding">
+                          <ion-label>
+                            <p>trip to</p>
+                            <h3 class="glob-text-bold primary-color">
+                              {{ destination.key | uppercase }}
+                              <small *ngIf="destination.key === 'mosque'">(Friday Only)</small>
+                            </h3>
+                          </ion-label>
+                        </ion-item>
+                      </ion-row>
+                      <ion-row>
+                        <ng-container *ngIf="detailedView; else simpleView">
+                          <ng-container *ngFor="let tripData of destination.value">
+                            <ion-col [class.passed]="tripData.trip_time | checkPassedTime"
+                              [class.primary-color]="!(tripData.trip_time | checkPassedTime)"
+                              class="ion-text-center glob-text-bold trips" size-xl="3" size-lg="4" size-md="3"
+                              size-xs="6">
+                              {{ tripData.trip_time.slice(0, -8) }}
+                            </ion-col>
+                          </ng-container>
+                        </ng-container>
+                        <ng-template #simpleView>
+                          <ion-col *ngIf="destination.value.slice(0, 4); let tripData">
+                            <ion-row class="ion-align-items-center">
+                              <ion-col class="trip-section ion-text-center" size-md="3" size-sm="6">
+                                <h3 class="simple-view-trip-first">{{tripData[0].trip_time.slice(0, -8)}}</h3>
+                                <h3 class="simple-view-trip-duration-first">{{tripData[0].trip_time.slice(0, -8) |
+                                  minutesLeft}}</h3>
+                              </ion-col>
+                              <ion-col *ngIf="tripData[1]" class="trip-section ion-text-center" size-md="3" size-xs="6">
+                                <h3 class="simple-view-trip" *ngIf="tripData[1]">{{tripData[1].trip_time.slice(0,
+                                  -8)}}</h3>
+                                <h3 class="simple-view-trip-duration">{{tripData[1].trip_time.slice(0, -8) |
+                                  minutesLeft}}</h3>
+                              </ion-col>
+                              <ion-col *ngIf="tripData[2]" class="trip-section ion-text-center" size-md="3" size-xs="6">
+                                <h3 class="simple-view-trip">{{tripData[2].trip_time.slice(0, -8)}}</h3>
+                                <h3 class="simple-view-trip-duration">{{tripData[2].trip_time.slice(0, -8) |
+                                  minutesLeft}}</h3>
+                              </ion-col>
+                              <ion-col *ngIf="tripData[3]" class="trip-section ion-text-center" size-md="3" size-xs="6">
+                                <h3 class="simple-view-trip">{{tripData[3].trip_time.slice(0, -8)}}</h3>
+                                <h3 class="simple-view-trip-duration">{{tripData[3].trip_time.slice(0, -8) |
+                                  minutesLeft}}</h3>
+                              </ion-col>
+                            </ion-row>
+                          </ion-col>
+                        </ng-template>
+                      </ion-row>
+                    </ion-col>
+                  </ion-grid>
+                </ion-card-content>
+              </ion-card>
+            </ng-container>
+
+            <ng-template #empty>
+              <message-with-svg messageTitle="No {{ !detailedView ? 'Upcoming': '' }} Trips Available!"
+                messageContent="{{ !detailedView ? 'Bus trips has completed for today. Toggle Show All to view all trips.': 'No trips schedule available for today!' }}"
+                imageUrl="assets/img/empty.svg" wrapperOffset="4" wrapperSize="4" wrapperMarginTop="50px">
+              </message-with-svg>
+            </ng-template>
+          </ng-container>
+        </ng-container>
+
+        <ng-template #loading>
+          <ion-item color="light" lines="none" class="ion-margin-bottom">
+            <ion-thumbnail>
+              <ion-icon size="large" color="warning" name="warning" class="ion-margin-top"></ion-icon>
+            </ion-thumbnail>
+            <ion-label class="ion-text-wrap">
+              <p>
+                <ion-skeleton-text animated style="line-height: 20px; width: 30%;"></ion-skeleton-text>
+              </p>
+              <p>
+                <ion-skeleton-text animated style="line-height: 20px; width: 40%;"></ion-skeleton-text>
+              </p>
+            </ion-label>
+          </ion-item>
+
+          <ion-card *ngFor="let _ of skeletonConfig.tripsSkeleton; let isLast = last" class="ion-no-margin"
+            [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+            <ion-card-header color="light">
+              <ion-card-subtitle class="glob-text-bold">
+                <ion-skeleton-text animated style="line-height: 20px; width: 30%;"></ion-skeleton-text>
+              </ion-card-subtitle>
+
+            </ion-card-header>
+            <ion-progress-bar value="1" color="medium">
+            </ion-progress-bar>
+
+            <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end"
+              *ngFor="let _ of skeletonConfig.tripsSkeleton">
+              <ion-row>
+                <ion-col class="ion-no-padding">
+                  <ion-item class="ion-no-padding">
+                    <ion-label class="ion-text-wrap bundle-item">
+                      <ion-skeleton-text animated style="line-height: 20px; width: 30%;"></ion-skeleton-text>
+                      <ion-skeleton-text animated style="line-height: 20px; width: 20%;"></ion-skeleton-text>
+                    </ion-label>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+
+              <ion-row>
+                <ion-col *ngFor="let _ of skeletonConfig.timeSkeleton" class="glob-text-bold" size-xl="3" size-lg="4"
+                  size-md="3" size-xs="6">
+                  <ion-skeleton-text animated style="line-height: 20px; width: 30%;"></ion-skeleton-text>
+                </ion-col>
+              </ion-row>
+            </ion-card-content>
+          </ion-card>
+        </ng-template>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>

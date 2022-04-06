@@ -153,11 +153,10 @@
 
     <ng-template #noTransactions>
       <ion-card class="ion-no-margin">
-        <!-- TODO: Enable it back -->
-        <!-- <app-message-with-svg messageTitle="No Data Available!"
-            messageContent="Either your APCard is not activated or you have not made any transactions yet."
-            imageUrl="assets/img/card_not_activated.svg" wrapperOffset="4" wrapperSize="4" wrapperMarginTop="50px">
-          </app-message-with-svg> -->
+        <message-with-svg messageTitle="No Transactions Available!"
+          messageContent="APCard is not activated or there was no transaction made."
+          imageUrl="assets/img/person_with_card.svg">
+        </message-with-svg>
       </ion-card>
     </ng-template>
   </div>

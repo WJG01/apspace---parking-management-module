@@ -18,6 +18,17 @@ ion-note {
   font-size: 15px;
 }
 
+// No Attendance UI Stylings
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.list-txt-color {
+  color: var(--ion-color-tertiary);
+}
+
 @media (min-width: 768px) {
   // large screens => table settings
   .h-mobile-d-desktop {

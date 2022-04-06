@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { finalize, map, Observable, tap } from 'rxjs';
 
@@ -25,7 +26,8 @@ export class AttendancePage implements OnInit {
   constructor(
     private ws: WsApiService,
     private modalCtrl: ModalController,
-    private config: ConfigurationsService
+    private config: ConfigurationsService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -98,6 +100,10 @@ export class AttendancePage implements OnInit {
     } else {
       this.average = -1;
     }
+  }
+
+  openFeedback() {
+    this.router.navigateByUrl('/feedback');
   }
 
   async attendanceDetails(module: Attendance, intakeCode: string) {
