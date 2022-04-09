@@ -19,6 +19,8 @@ export class DatePickerComponent {
   dateChanged(selectDate: string) {
     if (this.presentationMode === 'month-year') {
       this.modalCtrl.dismiss({ month: format(new Date(selectDate), 'MMMM yyyy') });
+    } else if (this.presentationMode === 'date') {
+      this.modalCtrl.dismiss({ date: format(new Date(selectDate), 'yyyy-MM-dd') });
     }
   }
 

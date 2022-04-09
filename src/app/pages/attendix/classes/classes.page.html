@@ -1,0 +1,203 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      AttendiX
+    </ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/lecturer-timetable"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="glob-container">
+    <ion-breadcrumbs>
+      <ion-breadcrumb>
+        AttendiX
+        <ion-icon slot="separator" name="chevron-forward"></ion-icon>
+      </ion-breadcrumb>
+      <ion-breadcrumb>
+        Home
+      </ion-breadcrumb>
+    </ion-breadcrumbs>
+
+    <ng-container *ngIf="(classcodes$ | async) as classcodes; else loadingClasscodes">
+      <ion-row>
+        <ion-col size="12" size-md="8">
+          <ion-card class="ion-no-margin">
+            <ion-item-divider color="success" mode="md">
+              <ion-label class="glob-text-bold">
+                Mark New Attendance
+              </ion-label>
+            </ion-item-divider>
+
+            <ion-grid class="ion-no-padding">
+              <ion-row>
+                <ion-col size="12">
+                  <ion-item button="true" detail="true" lines="full" (click)="chooseClasscode()">
+                    <ion-label>
+                      <h3>Class Code</h3>
+                      <p>{{ markAttendanceObject.classcode ? markAttendanceObject.classcode : 'Select a Class Code' }}
+                      </p>
+                    </ion-label>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="12">
+                  <ion-item button="true" detail="true" lines="full" (click)="openPicker()">
+                    <ion-label>
+                      <h3>Date</h3>
+                      <p>
+                        {{
+                          markAttendanceObject.date ? (markAttendanceObject.date | date: 'dd MMMM y') : 'Select a Date'
+                        }}
+                      </p>
+                    </ion-label>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+
+              <ion-row>
+                <ion-col size="12" size-md="6">
+                  <ion-item lines="full">
+                    <ion-label position="stacked">Start Time <ion-text color="tertiary">(Malaysian Time)</ion-text>
+                    </ion-label>
+                    <ion-select placeholder="Start Time" interface="popover" [disabled]="!markAttendanceObject.date"
+                      [(ngModel)]="markAttendanceObject.startTime">
+                      <ion-select-option *ngFor="let t of startTimes" [value]="t">
+                        {{ t }}
+                      </ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+
+                <ion-col size="12" size-md="6">
+                  <ion-item lines="full">
+                    <ion-label position="stacked">Duration</ion-label>
+                    <ion-select placeholder="Class Duration" interface="popover" mode="md"
+                      [disabled]="!markAttendanceObject.date || !markAttendanceObject.startTime"
+                      [(ngModel)]="markAttendanceObject.duration"
+                      (click)="calculateEndTime(markAttendanceObject.duration)">
+                      <ion-select-option *ngFor="let d of durations" [value]="d.value">
+                        {{ d.title }}
+                      </ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+
+              <ion-row>
+                <ion-col size="12" size-md="6">
+                  <ion-item lines="full">
+                    <ion-label position="stacked">Class Type
+                    </ion-label>
+                    <ion-select placeholder="Start Type" interface="popover"
+                      [(ngModel)]="markAttendanceObject.classType">
+                      <ion-select-option *ngFor="let t of classTypes" [value]="t">
+                        {{ t }}
+                      </ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+
+                <ion-col size="12" size-md="6">
+                  <ion-item lines="full">
+                    <ion-label position="stacked">Mark All Students</ion-label>
+                    <ion-select interface="popover" [(ngModel)]="markAttendanceObject.defaultAttendance">
+                      <ion-select-option value="N">
+                        Absent
+                      </ion-select-option>
+
+                      <ion-select-option value="Y">
+                        Present
+                      </ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+            <div class="ion-padding-start ion-padding-end">
+              <ion-text>
+                <small class="glob-text-bold">
+                  Note: Not familiar with AttendiX? Checkout the <a tappable>Tutorials</a>.
+                </small>
+              </ion-text>
+            </div>
+
+            <div class="ion-padding ion-text-right">
+              <ion-button (click)="mark()">
+                Mark Attendance
+                <ion-icon name="checkmark" slot="end"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="12" size-md="4">
+          <ion-card class="ion-no-margin">
+            <ion-item-divider color="light" mode="md">
+              <ion-label color="primary" class="glob-text-bold">
+                Reports
+              </ion-label>
+
+              <ion-button fill="clear" size="small" slot="end" color="primary"
+                (click)="openUrl('https://report.apu.edu.my/jasperserver-pro/flow.html?_flowId=searchFlow&mode=library')">
+                See All
+              </ion-button>
+            </ion-item-divider>
+
+            <ion-item button="true" detail="true" *ngFor="let item of reportLinks; let isLast = last"
+              [lines]="isLast ? 'none' : 'inset'" (click)="openUrl(item.url)">
+              <ion-label>{{ item.name }}</ion-label>
+            </ion-item>
+            <ion-item color="light" lines="none" button="true">
+              <ion-icon color="danger" slot="end" name="checkmark-done"></ion-icon>
+              <ion-label color="danger">
+                Check Attendance Integrity
+              </ion-label>
+            </ion-item>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-card class="ion-no-margin">
+            <ion-item-divider color="primary" mode="md">
+              <ion-label class="glob-text-bold">
+                Attendance History
+              </ion-label>
+            </ion-item-divider>
+
+            <ion-row class="ion-justify-content-end">
+              <ion-col size="12" size-md="4">
+                <ion-searchbar enterkeyhint="search" placeholder="Search by Class Code"></ion-searchbar>
+              </ion-col>
+
+              <ion-col size="12" size-md="4">
+                <ion-item lines="none">
+                  <ion-label position="stacked">Duration</ion-label>
+                  <ion-select interface="popover" [value]="7">
+                    <ion-select-option [value]="7">
+                      Last 7 days
+                    </ion-select-option>
+                    <ion-select-option [value]="30">
+                      Last 30 days
+                    </ion-select-option>
+                    <ion-select-option [value]="98">
+                      Last 98 days
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ng-container>
+
+    <ng-template #loadingClasscodes>
+      <h1>Loading...</h1>
+    </ng-template>
+  </div>
+</ion-content>
