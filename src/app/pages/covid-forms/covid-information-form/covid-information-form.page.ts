@@ -185,10 +185,11 @@ export class CovidInformationFormPage implements OnInit {
 
   uploadFile($event): void {
     this.pcrEvidence = $event.target.files[0];
-    if (!this.pcrEvidence) {
-      this.showToastMessage('Error: File cannot be empty!', 'danger');
-      return;
-    }
+    // Commented since pcr not compulsory now
+    // if (!this.pcrEvidence) {
+    //   this.showToastMessage('Error: File cannot be empty!', 'danger');
+    //   return;
+    // }
     if (this.pcrEvidence.size > 2000000) {
       this.showToastMessage('Error: Maximum File size is 2 MB. Please upload another file', 'danger');
       this.pcrEvidence = null;
@@ -225,18 +226,14 @@ export class CovidInformationFormPage implements OnInit {
     else if (this.vaccinationStatus === this.partiallyVaccinated) {
       body.append('vaccine_type', this.vaccinationType.toString());
       body.append('dose1_date', this.doseOneDate);
+    }
+    if (this.pcrEvidence) {
       body.append('pcr_result', this.pcrResult);
       const pcrDate = new Date(this.pcrEvidenceDate);
       body.append('pcr_date', format(pcrDate, 'yyyy-MM-dd'));
       body.append('pcr_evidence', this.pcrEvidence);
     }
-    // Not Vaccinated
-    else if (this.vaccinationStatus === this.notVaccinated) {
-      body.append('pcr_result', this.pcrResult);
-      const pcrDate = new Date(this.pcrEvidenceDate);
-      body.append('pcr_date', format(pcrDate, 'yyyy-MM-dd'));
-      body.append('pcr_evidence', this.pcrEvidence);
-    }
+    // Not Vaccinated got nothing exceptional for now
     if (body) {
       this.ws.post<any>('/covid19/user/add', { body }).subscribe(
         () => {
