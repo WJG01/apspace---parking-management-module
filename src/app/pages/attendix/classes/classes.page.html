@@ -76,7 +76,7 @@
                     <ion-select placeholder="Class Duration" interface="popover" mode="md"
                       [disabled]="!markAttendanceObject.date || !markAttendanceObject.startTime"
                       [(ngModel)]="markAttendanceObject.duration"
-                      (click)="calculateEndTime(markAttendanceObject.duration)">
+                      (ngModelChange)="calculateEndTime(markAttendanceObject.duration)">
                       <ion-select-option *ngFor="let d of durations" [value]="d.value">
                         {{ d.title }}
                       </ion-select-option>
