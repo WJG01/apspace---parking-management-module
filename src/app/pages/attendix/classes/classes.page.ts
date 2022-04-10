@@ -308,6 +308,31 @@ export class ClassesPage implements OnInit {
 
   /** Mark attendance with validation. Double confirm */
   mark() {
+    if (!this.markAttendanceObject.classcode) {
+      this.component.toastMessage('Please select a Classcode', 'warning');
+      return;
+    }
+
+    if (!this.markAttendanceObject.date) {
+      this.component.toastMessage('Please select a Date', 'warning');
+      return;
+    }
+
+    if (!this.markAttendanceObject.startTime) {
+      this.component.toastMessage('Please select the class Start Time', 'warning');
+      return;
+    }
+
+    if (!this.markAttendanceObject.duration) {
+      this.component.toastMessage('Please select duration of the class', 'warning');
+      return;
+    }
+
+    if (!this.markAttendanceObject.classType) {
+      this.component.toastMessage('Please select the Class Type', 'warning');
+      return;
+    }
+
     this.classcodes$.subscribe(classcodes => {
       const startTimeMins = parseTime(this.markAttendanceObject.startTime);
       const endTimeMins = parseTime(this.markAttendanceObject.endTime);
