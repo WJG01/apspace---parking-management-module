@@ -15,10 +15,6 @@ import { CasTicketService } from './services';
 export function createApollo(httpLink: HttpLink, cas: CasTicketService) {
   const url = 'https://attendix.apu.edu.my/graphql';
   const region = 'ap-southeast-1';
-  const auth = {
-    type: AUTH_TYPE.API_KEY,
-    apiKey: 'da2-dv5bqitepbd2pmbmwt7keykfg4'
-  };
 
   const rfl = ApolloLink.from([
     setContext(async (_request, previousContext: Record<string, any>) => {
