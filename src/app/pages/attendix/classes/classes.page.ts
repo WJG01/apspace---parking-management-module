@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertButton, ModalController } from '@ionic/angular';
+import { ActionSheetController, AlertButton, ModalController } from '@ionic/angular';
 import { firstValueFrom, map, Observable, shareReplay } from 'rxjs';
 
 import { subDays } from 'date-fns';
@@ -58,9 +58,10 @@ export class ClassesPage implements OnInit {
       classType: '',
       defaultAttendance: 'N' // default is absent
     };
-
-  term = ''; // classcode search term
-  timeFrame = 7; // show the attendance history for the last 7 days by default
+  attendanceHistoryObject = {
+    term: '', // classcode search term
+    timeFrame: 7 // show the attendance history for the last 7 days by default
+  }
   skeletons = new Array(2);
   startTimes: string[];
   skeleton = new Array(7);
@@ -72,7 +73,8 @@ export class ClassesPage implements OnInit {
     private ws: WsApiService,
     private modalCtrl: ModalController,
     private datePipe: DatePipe,
-    private resetAttendance: ResetAttendanceGQL
+    private resetAttendance: ResetAttendanceGQL,
+    private actionSheetCtrl: ActionSheetController
   ) { }
 
   ngOnInit() {
@@ -366,6 +368,7 @@ export class ClassesPage implements OnInit {
     const schedule: ScheduleInput = { classcode, date, startTime, endTime, classType };
     const btn: AlertButton = {
       text: 'Delete',
+      cssClass: 'danger',
       handler: () => {
         this.resetAttendance.mutate({ schedule }).subscribe({
           next: () => {
@@ -380,7 +383,7 @@ export class ClassesPage implements OnInit {
       }
     }
 
-    this.component.alertMessage('Delete Attendance Record!', `Are you sure that you want to <span class="danger-text text-bold">Permanently Delete</span> the selected attendance record?<br><br> <span class="text-bold">Class Code:</span> ${classcode}<br> <span class="text-bold">Class Date:</span> ${this.datePipe.transform(date, 'EEE, dd MMM yyy')}<br> <span class="text-bold">Class Time:</span> ${startTime} - ${endTime}<br> <span class="text-bold">Class Type:</span> ${classType}`, 'Cancel', btn);
+    this.component.alertMessage('Delete Attendance Record!', `Are you sure that you want to <span class="glob-danger-text glob-text-bold">Permanently Delete</span> the selected attendance record?<br><br> <span class="glob-text-bold">Class Code:</span> ${classcode}<br> <span class="glob-text-bold">Class Date:</span> ${this.datePipe.transform(date, 'EEE, dd MMM yyy')}<br> <span class="glob-text-bold">Class Time:</span> ${startTime} - ${endTime}<br> <span class="glob-text-bold">Class Type:</span> ${classType}`, 'Cancel', btn);
   }
 
   /* one last step modal that will open automatically when user uses quick attendnace button */
@@ -439,6 +442,37 @@ export class ClassesPage implements OnInit {
         this.getClasscodes();
       }
     });
+  }
+
+  async openQuickAction(klass: FlatClasscode) {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Quick Access Menu',
+      buttons: [
+        {
+          text: 'View',
+          handler: () => {
+            this.view(klass.CLASS_CODE, klass.DATE, klass.TIME_FROM, klass.TIME_TO, klass.TYPE);
+          }
+        },
+        {
+          text: 'Edit',
+          handler: () => {
+            this.edit(klass.CLASS_CODE, klass.DATE, klass.TIME_FROM, klass.TIME_TO, klass.TYPE);
+          }
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            this.reset(klass.CLASS_CODE, klass.DATE, klass.TIME_FROM, klass.TIME_TO, klass.TYPE);
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        }
+      ]
+    });
+    await actionSheet.present();
   }
 
   openUrl(url: string) {

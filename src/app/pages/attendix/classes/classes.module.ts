@@ -6,6 +6,7 @@ import { IonicModule } from '@ionic/angular';
 import { ClassesPageRoutingModule } from './classes-routing.module';
 import { ClassesPage } from './classes.page';
 import { ComponentsModule } from '../../../components/components.module';
+import { ClasscodesFilterPipe } from './classcodes-filter/classcodes-filter.pipe';
 
 @NgModule({
   imports: [
@@ -15,7 +16,7 @@ import { ComponentsModule } from '../../../components/components.module';
     ClassesPageRoutingModule,
     ComponentsModule
   ],
-  declarations: [ClassesPage],
+  declarations: [ClassesPage, ClasscodesFilterPipe],
   providers: [DatePipe]
 })
 export class ClassesPageModule { }

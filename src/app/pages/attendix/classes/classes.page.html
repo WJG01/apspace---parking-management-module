@@ -48,7 +48,7 @@
                       <h3>Date</h3>
                       <p>
                         {{
-                          markAttendanceObject.date ? (markAttendanceObject.date | date: 'dd MMMM y') : 'Select a Date'
+                        markAttendanceObject.date ? (markAttendanceObject.date | date: 'dd MMMM y') : 'Select a Date'
                         }}
                       </p>
                     </ion-label>
@@ -163,21 +163,23 @@
       <ion-row>
         <ion-col>
           <ion-card class="ion-no-margin">
-            <ion-item-divider color="primary" mode="md">
+            <ion-item-divider color="light" mode="md">
               <ion-label class="glob-text-bold">
                 Attendance History
               </ion-label>
             </ion-item-divider>
 
-            <ion-row class="ion-justify-content-end">
+            <ion-row>
               <ion-col size="12" size-md="4">
-                <ion-searchbar enterkeyhint="search" placeholder="Search by Class Code"></ion-searchbar>
+                <ion-searchbar enterkeyhint="search" placeholder="Search by Class Code"
+                  [(ngModel)]="attendanceHistoryObject.term">
+                </ion-searchbar>
               </ion-col>
 
               <ion-col size="12" size-md="4">
                 <ion-item lines="none">
                   <ion-label position="stacked">Duration</ion-label>
-                  <ion-select interface="popover" [value]="7">
+                  <ion-select interface="popover" [(ngModel)]="attendanceHistoryObject.timeFrame">
                     <ion-select-option [value]="7">
                       Last 7 days
                     </ion-select-option>
@@ -191,6 +193,53 @@
                 </ion-item>
               </ion-col>
             </ion-row>
+
+            <ng-container
+              *ngIf="(classcodes | classcodesFilter:attendanceHistoryObject.term:attendanceHistoryObject.timeFrame) as filteredClassCode">
+              <ng-container *ngIf="filteredClassCode.length > 0; else noFilteredClassCode">
+                <ion-item *ngFor="let class of filteredClassCode; let isLast = last" [lines]="isLast ? 'none' : 'full'"
+                  detail="true" button="true" (click)="openQuickAction(class)">
+                  <ion-label>
+                    <ion-text color="primary">
+                      <h2 class="glob-text-bold">
+                        {{ class.CLASS_CODE }} ({{ class.TYPE }})
+                      </h2>
+                    </ion-text>
+
+                    <ion-text color="medium">
+                      <h3>
+                        {{ class.DATE | date : 'EEE, dd MMM yyy' }} | {{ class.TIME_FROM }} - {{ class.TIME_TO }}
+                      </h3>
+                    </ion-text>
+
+                    <p class="glob-text-bold">
+                      <ion-text color="success">{{ class.TOTAL.PRESENT }}</ion-text>
+                      |
+                      <ion-text color="danger">{{ class.TOTAL.ABSENT }}</ion-text>
+                      |
+                      <ion-text color="primary">{{ class.TOTAL.ABSENT_REASON }}</ion-text>
+                      |
+                      <ion-text color="warning">{{class.TOTAL.LATE}}</ion-text>
+                      |
+                      {{ class.TOTAL.ABSENT + class.TOTAL.ABSENT_REASON + class.TOTAL.LATE + class.TOTAL.PRESENT }}
+                    </p>
+                  </ion-label>
+                </ion-item>
+              </ng-container>
+
+              <ng-template #noFilteredClassCode>
+                <ion-text color="danger">
+                  <h2 class="ion-text-center ion-padding">No Attendance Records found for the
+                    <span class="glob-text-bold"> last {{ attendanceHistoryObject.timeFrame }} days</span>
+                    <ng-container *ngIf="attendanceHistoryObject.term"> with a class code that contains
+                      <span class="glob-text-bold">
+                        "{{ attendanceHistoryObject.term }}"
+                      </span>
+                    </ng-container>
+                  </h2>
+                </ion-text>
+              </ng-template>
+            </ng-container>
           </ion-card>
         </ion-col>
       </ion-row>
