@@ -62,9 +62,8 @@ export class ClassesPage implements OnInit {
     term: '', // classcode search term
     timeFrame: 7 // show the attendance history for the last 7 days by default
   }
-  skeletons = new Array(2);
+  skeleton = new Array(3);
   startTimes: string[];
-  skeleton = new Array(7);
 
   constructor(
     private component: ComponentService,

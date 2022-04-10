@@ -246,7 +246,130 @@
     </ng-container>
 
     <ng-template #loadingClasscodes>
-      <h1>Loading...</h1>
+      <ion-row>
+        <ion-col size="12" size-md="8">
+          <ion-card class="ion-no-margin">
+            <ion-item-divider color="success" mode="md">
+              <ion-label class="glob-text-bold">
+                Mark New Attendance
+              </ion-label>
+            </ion-item-divider>
+
+            <ion-grid>
+              <ion-row>
+                <ion-col size="12">
+                  <ion-skeleton-text animated style="width: 100%; line-height: 40px;"></ion-skeleton-text>
+                </ion-col>
+                <ion-col size="12">
+                  <ion-skeleton-text animated style="width: 100%; line-height: 40px;"></ion-skeleton-text>
+                </ion-col>
+              </ion-row>
+
+              <ion-row>
+                <ion-col size="12" size-md="6">
+                  <ion-skeleton-text animated style="width: 100%; line-height: 40px;"></ion-skeleton-text>
+                </ion-col>
+
+                <ion-col size="12" size-md="6">
+                  <ion-skeleton-text animated style="width: 100%; line-height: 40px;"></ion-skeleton-text>
+                </ion-col>
+              </ion-row>
+
+              <ion-row>
+                <ion-col size="12" size-md="6">
+                  <ion-skeleton-text animated style="width: 100%; line-height: 40px;"></ion-skeleton-text>
+                </ion-col>
+
+                <ion-col size="12" size-md="6">
+                  <ion-skeleton-text animated style="width: 100%; line-height: 40px;"></ion-skeleton-text>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+            <div class="ion-padding-start ion-padding-end">
+              <ion-text>
+                <small class="glob-text-bold">
+                  Note: Not familiar with AttendiX? Checkout the <a tappable>Tutorials</a>.
+                </small>
+              </ion-text>
+            </div>
+
+            <div class="ion-padding ion-text-right">
+              <ion-button [disabled]="true">
+                Mark Attendance
+                <ion-icon name="checkmark" slot="end"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="12" size-md="4">
+          <ion-card class="ion-no-margin">
+            <ion-item-divider color="light" mode="md">
+              <ion-label color="primary" class="glob-text-bold">
+                Reports
+              </ion-label>
+
+              <ion-button fill="clear" size="small" slot="end" color="primary"
+                (click)="openUrl('https://report.apu.edu.my/jasperserver-pro/flow.html?_flowId=searchFlow&mode=library')">
+                See All
+              </ion-button>
+            </ion-item-divider>
+
+            <ion-item button="true" detail="true" *ngFor="let item of reportLinks; let isLast = last"
+              [lines]="isLast ? 'none' : 'inset'" (click)="openUrl(item.url)">
+              <ion-label>{{ item.name }}</ion-label>
+            </ion-item>
+            <ion-item color="light" lines="none" button="true" [disabled]="true">
+              <ion-icon color="danger" slot="end" name="checkmark-done"></ion-icon>
+              <ion-label color="danger">
+                Check Attendance Integrity
+              </ion-label>
+            </ion-item>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <ion-card class="ion-no-margin">
+            <ion-item-divider color="light" mode="md">
+              <ion-label class="glob-text-bold">
+                Attendance History
+              </ion-label>
+            </ion-item-divider>
+
+            <ion-row>
+              <ion-col size="12" size-md="4">
+                <ion-searchbar enterkeyhint="search" placeholder="Search by Class Code"
+                  [(ngModel)]="attendanceHistoryObject.term" [disabled]="true">
+                </ion-searchbar>
+              </ion-col>
+
+              <ion-col size="12" size-md="4">
+                <ion-item lines="none">
+                  <ion-label position="stacked">Duration</ion-label>
+                  <ion-select interface="popover" [value]="7" [disabled]="true">
+                    <ion-select-option [value]="7">
+                      Last 7 days
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+
+            <ion-item *ngFor="let class of skeleton; let isLast = last" [lines]="isLast ? 'none' : 'full'">
+              <ion-label>
+                <ion-skeleton-text animated style="width: 50%; line-height: 20px;"></ion-skeleton-text>
+
+                <ion-skeleton-text animated style="width: 40%; line-height: 20px;"></ion-skeleton-text>
+
+                <ion-skeleton-text animated style="width: 30%; line-height: 20px;"></ion-skeleton-text>
+              </ion-label>
+            </ion-item>
+          </ion-card>
+        </ion-col>
+      </ion-row>
     </ng-template>
   </div>
 </ion-content>
