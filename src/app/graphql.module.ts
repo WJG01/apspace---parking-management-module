@@ -21,7 +21,7 @@ export function createApollo(httpLink: HttpLink, cas: CasTicketService) {
       return ({
         headers: {
           ...previousContext.headers,
-          tickets: await firstValueFrom(cas.getST('https://api.apiit.edu.my/attendix'))
+          ticket: await firstValueFrom(cas.getST('https://api.apiit.edu.my/attendix'))
         }
       });
     }),
