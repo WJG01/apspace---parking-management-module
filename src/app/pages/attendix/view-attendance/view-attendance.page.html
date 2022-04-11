@@ -1,0 +1,141 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      View Attendance
+    </ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/attendix/classes"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="glob-container">
+    <ion-breadcrumbs [maxItems]="2">
+      <ion-breadcrumb>
+        AttendiX
+        <ion-icon slot="separator" name="chevron-forward"></ion-icon>
+      </ion-breadcrumb>
+      <ion-breadcrumb>
+        Home
+        <ion-icon slot="separator" name="chevron-forward"></ion-icon>
+      </ion-breadcrumb>
+      <ion-breadcrumb>
+        View Attendance
+      </ion-breadcrumb>
+    </ion-breadcrumbs>
+
+    <ion-row>
+      <!-- just subscribe for the live updates -->
+      <ng-template [ngIf]="(newStatus$ | async)"></ng-template>
+      <ion-col size-xl="5.5" size="12">
+        <ion-card class="ion-no-margin">
+          <ion-item-divider color="light" mode="md">
+            <ion-label class="glob-text-bold">
+              Class Details
+            </ion-label>
+          </ion-item-divider>
+
+          <ion-item lines="none">
+            <ion-icon slot="start" color="primary" name="library-outline"></ion-icon>
+            <ion-label>{{ schedule!.classcode }}</ion-label>
+          </ion-item>
+
+          <ion-item lines="none">
+            <ion-icon slot="start" color="primary" name="calendar-outline"></ion-icon>
+            <ion-label>{{ schedule!.classType }} on {{ schedule!.date | date : 'EEEE, MMMM d, y' }}</ion-label>
+          </ion-item>
+
+          <ion-item lines="none">
+            <ion-icon slot="start" color="primary" name="time-outline"></ion-icon>
+            <ion-label>{{ schedule!.startTime }} - {{ schedule!.endTime }}</ion-label>
+          </ion-item>
+
+          <ion-item lines="none">
+            <ion-icon slot="start" color="primary" name="people-outline"></ion-icon>
+            <ion-label>{{ totalStudents }} Students</ion-label>
+          </ion-item>
+
+          <ion-item lines="none">
+            <ion-icon slot="start" color="primary" name="chatbox-ellipses-outline"></ion-icon>
+            <ion-label>{{ lectureUpdate || 'No Remarks' }}</ion-label>
+          </ion-item>
+
+          <ion-item lines="none" *ngIf="(attendanceSummary$ | async) as attendanceSummary">
+            <ion-icon slot="start" color="primary" name="reader-outline"></ion-icon>
+            <ion-label class="glob-text-bold">
+              <ion-text [style.color]="'Y' | attendanceStatus: true">{{ attendanceSummary.present }}</ion-text>
+              |
+              <ion-text [style.color]="'N' | attendanceStatus: true">{{ attendanceSummary.absent }}</ion-text>
+              |
+              <ion-text [style.color]="'R' | attendanceStatus: true">{{ attendanceSummary.absentReason }}</ion-text>
+              |
+              <ion-text [style.color]="'L' | attendanceStatus: true">{{ attendanceSummary.late }}</ion-text>
+            </ion-label>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size-xl="6.5" size="12">
+        <ion-card class="ion-no-margin">
+          <ion-item-divider color="light" mode="md">
+            <ion-label class="glob-text-bold">
+              Students List ({{ totalStudents }})
+            </ion-label>
+          </ion-item-divider>
+
+          <ion-searchbar mode="md" style="padding: 8px 8px 0 8px;" enterkeyhint="search"
+            placeholder="Search by Student ID or Name" [(ngModel)]="filterObject.term"></ion-searchbar>
+          <ion-item lines="none" style="padding: 0 8px 8px 8px;" mode="md">
+            <ion-label position="floating">Status</ion-label>
+            <ion-select interface="popover" [(ngModel)]="filterObject.type">
+              <ion-select-option value="">
+                All
+              </ion-select-option>
+              <ion-select-option *ngFor="let s of status" [value]="s">
+                {{ s | attendanceStatus: false }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ng-container *ngIf="(students$ | async) as students">
+            <ng-container
+              *ngIf="(students | attendance:filterObject.type | search:filterObject.term) as filteredStudents">
+              <ng-container *ngIf="filteredStudents.length > 0; else noFilteredStudents">
+                <ion-virtual-scroll [items]="filteredStudents" approxItemHeight="48px" [trackBy]="trackById">
+                  <ion-item *virtualItem="let student; let i = index" lines="none"
+                    [style.--background]="student.attendance | attendanceStatus: true">
+                    <ion-label>
+                      <h3>{{ i + 1 }}. {{ student.name }}</h3>
+                      <p>{{ student.id }}</p>
+                    </ion-label>
+                    <ion-label class="ion-text-wrap" *ngIf="student.absentReason">
+                      <small>
+                        {{ student.absentReason }}
+                      </small>
+                    </ion-label>
+                    <ion-button size="small" class="glob-text-bold attendance-btn" color="white" slot="end">
+                      {{ student.attendance | attendanceStatus: false }}
+                    </ion-button>
+                  </ion-item>
+                </ion-virtual-scroll>
+              </ng-container>
+
+              <ng-template #noFilteredStudents>
+                <ion-text color="danger">
+                  <h3 class="ion-text-center">
+                    No students found
+                    {{ filterObject.term ? 'with the keyword "' + filterObject.term + '"' : undefined }}
+                    <span *ngIf="filterObject.type">with the status of
+                      {{ filterObject.type | attendanceStatus:false }}
+                    </span>
+                  </h3>
+                </ion-text>
+              </ng-template>
+            </ng-container>
+          </ng-container>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>

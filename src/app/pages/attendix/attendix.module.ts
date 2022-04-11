@@ -13,6 +13,12 @@ const routes: Routes = [
     data: { role: Role.Lecturer | Role.Admin },
     loadChildren: () => import('./classes/classes.module').then(m => m.ClassesPageModule)
   },
+  {
+    path: 'view-attendance',
+    canActivate: [AuthGuard],
+    data: { role: Role.Lecturer | Role.Admin },
+    loadChildren: () => import('./view-attendance/view-attendance.module').then(m => m.ViewAttendancePageModule)
+  }
 ]
 
 
