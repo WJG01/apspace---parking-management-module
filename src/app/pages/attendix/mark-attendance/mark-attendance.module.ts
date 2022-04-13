@@ -22,7 +22,7 @@ import { AttendanceStatusPipe } from '../../../shared/attendance-status/attendan
     SharedPipesModule
   ],
   declarations: [MarkAttendancePage, AttendancePipe, SearchPipe],
-  exports: [AttendancePipe],
+  exports: [AttendancePipe, SearchPipe],
   providers: [DatePipe, AttendanceStatusPipe]
 })
 export class MarkAttendancePageModule { }

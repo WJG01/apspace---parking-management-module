@@ -3,13 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { catchError, pluck, tap, switchMap, startWith, scan, shareReplay, filter, map, Subject, Observable } from 'rxjs';
 
 import { AttendanceGQL, AttendanceQuery, InitAttendanceGQL, InitAttendanceMutation, NewStatusGQL, NewStatusSubscription, ScheduleInput, Status } from '../../../../generated/graphql';
-
-interface AttendanceSummary {
-  present: number,
-  absent: number;
-  absentReason: number;
-  late: number;
-};
+import { AttendanceStatusPipe } from '../../../shared/attendance-status/attendance-status.pipe';
+import { AttendanceSummary } from '../../../interfaces';
 
 type Attendance = 'Y' | 'L' | 'N' | 'R' | '';
 
@@ -21,8 +16,6 @@ type Attendance = 'Y' | 'L' | 'N' | 'R' | '';
 export class ViewAttendancePage implements OnInit {
 
   schedule: ScheduleInput;
-  auto: boolean;
-  thisClass = false;
   lectureUpdate: string;
   statusUpdate = new Subject<{ id: string; attendance: string; absentReason: string | null; }>();
   newStatus$: Observable<Pick<NewStatusSubscription, 'newStatus'>[]>;
@@ -42,7 +35,8 @@ export class ViewAttendancePage implements OnInit {
     private route: ActivatedRoute,
     private initAttendance: InitAttendanceGQL,
     private attendance: AttendanceGQL,
-    private newStatus: NewStatusGQL
+    private newStatus: NewStatusGQL,
+    private attendanceStatusPipe: AttendanceStatusPipe
   ) { }
 
   ngOnInit() {
@@ -58,11 +52,11 @@ export class ViewAttendancePage implements OnInit {
 
     const init = () => {
       const attendance = this.route.snapshot.paramMap.get('defaultAttendance') || 'N';
-      this.auto = this.thisClass;
+
       return this.initAttendance.mutate({ schedule, attendance });
     };
-    const list = () => (this.auto = false, this.attendance.fetch({ schedule }));
-    const attendance$ = this.thisClass ? init().pipe(catchError(list)) : list().pipe(catchError(init));
+    const list = () => this.attendance.fetch({ schedule });
+    const attendance$ = list().pipe(catchError(init));
 
     // get attendance state from query and use manual mode if attendance initialized
     const attendancesState$ = attendance$.pipe(
@@ -106,15 +100,29 @@ export class ViewAttendancePage implements OnInit {
       shareReplay(1)
     );
 
+    // Get the attendance summary and color based on status
     this.attendanceSummary$ = this.students$.pipe(
       map(students => {
         return {
-          present: students.filter(student => student.attendance === 'Y').length,
-          absent: students.filter(student => student.attendance === 'N').length,
-          absentReason: students.filter(student => student.attendance === 'R').length,
-          late: students.filter(student => student.attendance === 'L').length,
-        }
-      })
+          present: {
+            color: this.attendanceStatusPipe.transform('Y', true),
+            data: students.filter(student => student.attendance === 'Y').length
+          },
+          absent: {
+            color: this.attendanceStatusPipe.transform('N', true),
+            data: students.filter(student => student.attendance === 'N').length
+          },
+          absentReason: {
+            color: this.attendanceStatusPipe.transform('R', true),
+            data: students.filter(student => student.attendance === 'R').length
+          },
+          late: {
+            color: this.attendanceStatusPipe.transform('L', true),
+            data: students.filter(student => student.attendance === 'L').length
+          }
+        };
+      }),
+      shareReplay(1) // keep track while switching mode
     );
   }
 

@@ -5,9 +5,9 @@ import { IonicModule } from '@ionic/angular';
 
 import { ViewAttendancePageRoutingModule } from './view-attendance-routing.module';
 import { ViewAttendancePage } from './view-attendance.page';
-import { SearchPipe } from './search/search.pipe';
-import { AttendancePipe } from './attendance/attendance.pipe';
 import { SharedPipesModule } from '../../../shared/shared-pipes.module';
+import { AttendanceStatusPipe } from '../../../shared/attendance-status/attendance-status.pipe';
+import { MarkAttendancePageModule } from '../mark-attendance/mark-attendance.module';
 
 @NgModule({
   imports: [
@@ -15,8 +15,10 @@ import { SharedPipesModule } from '../../../shared/shared-pipes.module';
     FormsModule,
     IonicModule,
     ViewAttendancePageRoutingModule,
-    SharedPipesModule
+    SharedPipesModule,
+    MarkAttendancePageModule
   ],
-  declarations: [ViewAttendancePage, SearchPipe, AttendancePipe]
+  declarations: [ViewAttendancePage],
+  providers: [AttendanceStatusPipe]
 })
 export class ViewAttendancePageModule { }

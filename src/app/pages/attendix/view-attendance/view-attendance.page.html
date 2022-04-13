@@ -61,16 +61,16 @@
             <ion-label>{{ lectureUpdate || 'No Remarks' }}</ion-label>
           </ion-item>
 
-          <ion-item lines="none" *ngIf="(attendanceSummary$ | async) as attendanceSummary">
+          <ion-item lines="none" *ngIf="(attendanceSummary$ | async) as s">
             <ion-icon slot="start" color="primary" name="reader-outline"></ion-icon>
             <ion-label class="glob-text-bold">
-              <ion-text [style.color]="'Y' | attendanceStatus: true">{{ attendanceSummary.present }}</ion-text>
+              <ion-text [style.color]="s.present.color">{{ s.present.data }}</ion-text>
               |
-              <ion-text [style.color]="'N' | attendanceStatus: true">{{ attendanceSummary.absent }}</ion-text>
+              <ion-text [style.color]="s.absent.color">{{ s.absent.data }}</ion-text>
               |
-              <ion-text [style.color]="'R' | attendanceStatus: true">{{ attendanceSummary.absentReason }}</ion-text>
+              <ion-text [style.color]="s.absentReason.color">{{ s.absentReason.data }}</ion-text>
               |
-              <ion-text [style.color]="'L' | attendanceStatus: true">{{ attendanceSummary.late }}</ion-text>
+              <ion-text [style.color]="s.late.color">{{ s.late.data }}</ion-text>
             </ion-label>
           </ion-item>
         </ion-card>
