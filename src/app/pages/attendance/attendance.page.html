@@ -65,7 +65,8 @@
             </ng-template>
 
             <ion-card-content class="ion-no-padding ion-padding-bottom ion-text-center">
-              <ion-button class="ion-no-margin" size="small" [disabled]="average == -1 || average >= 0 ? false : true">
+              <ion-button class="ion-no-margin" size="small" (click)="signAttendance()"
+                [disabled]="average == -1 || average >= 0 ? false : true">
                 Sign Class Attendance
               </ion-button>
             </ion-card-content>

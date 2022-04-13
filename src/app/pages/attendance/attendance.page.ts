@@ -106,6 +106,10 @@ export class AttendancePage implements OnInit {
     this.router.navigateByUrl('/feedback');
   }
 
+  signAttendance() {
+    this.router.navigateByUrl('/attendix/update');
+  }
+
   async attendanceDetails(module: Attendance, intakeCode: string) {
     const modal = await this.modalCtrl.create({
       component: AttendanceDetailsModalPage,
