@@ -18,6 +18,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { role: Role.Lecturer | Role.Admin },
     loadChildren: () => import('./view-attendance/view-attendance.module').then(m => m.ViewAttendancePageModule)
+  },
+  {
+    path: 'mark-attendance',
+    canActivate: [AuthGuard],
+    data: { role: Role.Lecturer | Role.Admin },
+    loadChildren: () => import('./mark-attendance/mark-attendance.module').then(m => m.MarkAttendancePageModule)
   }
 ]
 

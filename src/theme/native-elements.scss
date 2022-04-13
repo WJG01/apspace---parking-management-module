@@ -24,3 +24,20 @@
     }
   }
 }
+
+.mark-all .action-sheet-button {
+  &.Y {
+    background: #28a745;
+    color: #fff;
+  }
+
+  &.L {
+    background: #ffc409;
+    color: #fff;
+  }
+
+  &.N {
+    background: #dc3545;
+    color: #fff;
+  }
+}

@@ -1,0 +1,331 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Mark Attendance
+    </ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBackToast()">
+        <ion-icon size="large" slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="selectedSegment">
+      <ion-segment-button value="qr" [disabled]="!thisClass || hideQr">
+        QR Code
+      </ion-segment-button>
+      <ion-segment-button value="manual">
+        Manual
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="glob-container">
+    <ion-breadcrumbs [maxItems]="2" class="small-margin-top">
+      <ion-breadcrumb>
+        AttendiX
+        <ion-icon slot="separator" name="chevron-forward"></ion-icon>
+      </ion-breadcrumb>
+      <ion-breadcrumb>
+        Home
+        <ion-icon slot="separator" name="chevron-forward"></ion-icon>
+      </ion-breadcrumb>
+      <ion-breadcrumb>
+        {{ thisClass ? 'New' : 'Edit' }} Attendance
+      </ion-breadcrumb>
+    </ion-breadcrumbs>
+
+    <ng-template [ngIf]="lastMarked$ | async"></ng-template>
+    <ng-container [ngSwitch]="selectedSegment">
+      <!-- QR Code Mode -->
+      <ng-container *ngSwitchCase="'qr'">
+        <ion-row *ngIf="(otp$ | async) as otp">
+          <ion-col class="ion-text-center" size="12" size-md="12" size-lg="6">
+            <ion-card class="ion-no-margin dead">
+              <qrcode [qrdata]="otp" [width]="500" [errorCorrectionLevel]="'H'" [colorDark]="'#ffffff'"
+                [colorLight]="'#191919'" [elementType]="'svg'" [margin]="2"
+                [ngClass]="otp === '---' ? 'qrcode' : undefined"></qrcode>
+
+              <div class="dead-text" *ngIf="otp === '---'">
+                <h3>Class Time Over</h3>
+                <p>Please switch to Manual mode</p>
+              </div>
+            </ion-card>
+          </ion-col>
+
+          <ion-col size="12" size-md="12" size-lg="6">
+            <ion-card class="ion-no-margin">
+              <ion-card-content class="ion-no-padding">
+                <div class="ion-text-center">
+                  <div *ngFor="let c of (otp.split(''))" class="otp">
+                    {{ c }}
+                  </div>
+                  <ion-text color="danger" *ngIf="otp !== '---'">
+                    <p>OTP expires in ({{ (countdown$ | async) || 0 }}s)</p>
+                  </ion-text>
+                </div>
+
+                <div class="small-margin-top ion-text-center">
+                  <ion-row class="ion-align-items-center">
+                    <ion-col class="details-section ion-text-center">
+                      <ion-text color="primary">
+                        <h3 class="glob-text-bold">Classcode</h3>
+                      </ion-text>
+                      <h3 class="glob-fw-600">{{ schedule!.classcode }}</h3>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row class="ion-align-items-center">
+                    <ion-col class="details-section ion-text-center" size-md="6" size-sm="12">
+                      <ion-text color="primary">
+                        <h3 class="glob-text-bold">Class Type & Date</h3>
+                      </ion-text>
+                      <h3 class="glob-fw-600">{{ schedule!.date | date : 'EEEE, MMMM d, y' }}
+                      </h3>
+                    </ion-col>
+
+                    <ion-col class="details-section ion-text-center" size-md="6" size-sm="12">
+                      <ion-text color="primary">
+                        <h3 class="glob-text-bold">Class Time</h3>
+                      </ion-text>
+                      <h3 class="glob-fw-600">{{ schedule!.startTime }} - {{ schedule!.endTime }}</h3>
+                    </ion-col>
+                  </ion-row>
+
+                  <ion-row class="ion-align-items-center">
+                    <ion-col class="details-section ion-text-center" size-md="6" size-sm="12">
+                      <ion-text color="primary">
+                        <h3 class="glob-text-bold">Class Type & Date</h3>
+                      </ion-text>
+                      <h3 class="glob-fw-600">{{ schedule!.classType }}</h3>
+                    </ion-col>
+
+                    <ion-col class="details-section ion-text-center" size-md="6" size-sm="12">
+                      <ion-text color="primary">
+                        <h3 class="glob-text-bold">Summary</h3>
+                      </ion-text>
+                      <p class="glob-text-bold" *ngIf="(attendanceSummary$ | async) as summary">
+                        <ion-text [style.color]="summary.present.color">{{ summary.present.data }}</ion-text>
+                        |
+                        <ion-text [style.color]="summary.absent.color">{{ summary.absent.data }}</ion-text>
+                        |
+                        <ion-text [style.color]="summary.absentReason.color">{{ summary.absentReason.data }}</ion-text>
+                        |
+                        <ion-text [style.color]="summary.late.color">{{ summary.late.data }}</ion-text>
+                      </p>
+                    </ion-col>
+                  </ion-row>
+
+                  <div class="small-margin-top">
+                    <ion-button size="small" fill="outline" color="danger" (click)="markAllAbsent()">Reset All to Absent
+                    </ion-button>
+                  </div>
+
+                  <ion-card-content>
+                    <div class="small-margin-top">
+                      <ion-item lines="none" class="ion-no-padding">
+                        <ion-textarea placeholder="Add your notes here" rows="1" class="form-input"></ion-textarea>
+                      </ion-item>
+                    </div>
+                  </ion-card-content>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <ion-card class="ion-no-margin">
+              <ion-card-content>
+                <ion-text color="primary">
+                  <h2 class="glob-text-bold">
+                    Last 10 Students Signed Attendance
+                  </h2>
+                </ion-text>
+
+                <ng-container *ngIf="(lastMarked$ | async) as students; else noStudents">
+                  <ion-chip *ngFor="let student of students">
+                    <ion-label>{{ student['name'] }}</ion-label>
+                  </ion-chip>
+                </ng-container>
+                <ng-template #noStudents>
+                  <ion-text color="danger">
+                    <p class="glob-fw-600">No students scanned the QR code yet</p>
+                  </ion-text>
+                </ng-template>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ng-container>
+
+      <!-- Manual Mode -->
+      <ng-container *ngSwitchCase="'manual'">
+
+        <ion-row>
+          <ion-col>
+            <ion-card class="ion-no-margin ion-margin-bottom">
+              <ion-item-divider color="light" mode="md">
+                <ion-label class="glob-text-bold">
+                  Class Details
+                </ion-label>
+              </ion-item-divider>
+
+              <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end">
+                <ion-row class="ion-align-items-center small-margin-top">
+                  <ion-col class="details-section ion-text-center">
+                    <ion-text color="primary">
+                      <h3 class="glob-text-bold">{{ schedule!.classcode }}</h3>
+                    </ion-text>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row class="ion-align-items-center small-margin-top">
+                  <ion-col class="details-section ion-text-center" size-md="6" size-sm="12">
+                    <ion-text color="primary">
+                      <h3 class="glob-text-bold">Class Type & Date</h3>
+                    </ion-text>
+                    <h3 class="glob-fw-600">{{ schedule!.classType }} on {{ schedule!.date | date : 'EEEE, MMMM d, y' }}
+                    </h3>
+                  </ion-col>
+
+                  <ion-col class="details-section ion-text-center" size-md="6" size-sm="12">
+                    <ion-text color="primary">
+                      <h3 class="glob-text-bold">Class Time</h3>
+                    </ion-text>
+                    <h3 class="glob-fw-600">{{ schedule!.startTime }} - {{ schedule!.endTime }}</h3>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row class="ion-align-items-center small-margin-top">
+                  <ion-col class="details-section ion-text-center" size-md="6" size-sm="12">
+                    <ion-text color="primary">
+                      <h3 class="glob-text-bold">Total Students</h3>
+                    </ion-text>
+                    <h3 class="glob-fw-600">{{ totalStudents }} Students</h3>
+                  </ion-col>
+
+                  <ion-col class="details-section ion-text-center" size-md="6" size-sm="12">
+                    <ion-text color="primary">
+                      <h3 class="glob-text-bold">Summary</h3>
+                    </ion-text>
+                    <p class="glob-fw-600" *ngIf="(attendanceSummary$ | async) as summary">
+                      <ion-text [style.color]="summary.present.color">{{ summary.present.data }}</ion-text>
+                      |
+                      <ion-text [style.color]="summary.absent.color">{{ summary.absent.data }}</ion-text>
+                      |
+                      <ion-text [style.color]="summary.absentReason.color">{{ summary.absentReason.data }}</ion-text>
+                      |
+                      <ion-text [style.color]="summary.late.color">{{ summary.late.data }}</ion-text>
+                    </p>
+                  </ion-col>
+                </ion-row>
+              </ion-card-content>
+
+              <ion-card-content>
+                <div class="ion-text-right">
+                  <ion-button (click)="markAll()">
+                    Mark All As
+                  </ion-button>
+
+                  <ion-button color="danger" fill="outline" (click)="reset()">
+                    <ion-icon name="trash" slot="icon-only"></ion-icon>
+                  </ion-button>
+                </div>
+              </ion-card-content>
+            </ion-card>
+
+            <ion-card class="ion-no-margin">
+              <ion-item-divider color="light" mode="md">
+                <ion-label class="glob-text-bold">
+                  Students List ({{ totalStudents || 0 }})
+                </ion-label>
+              </ion-item-divider>
+
+              <ion-searchbar mode="md" style="padding: 8px 8px 0 8px;" enterkeyhint="search"
+                placeholder="Search by Student ID or Name" [(ngModel)]="filterObject.term"></ion-searchbar>
+              <ion-item lines="none" style="padding: 0 8px 8px 8px;" mode="md">
+                <ion-label position="floating">Status</ion-label>
+                <ion-select interface="popover" [(ngModel)]="filterObject.type">
+                  <ion-select-option value="">
+                    All
+                  </ion-select-option>
+                  <ion-select-option *ngFor="let s of status" [value]="s">
+                    {{ s | attendanceStatus: false }}
+                  </ion-select-option>
+                </ion-select>
+              </ion-item>
+
+              <div class="table">
+                <ion-card-content class="table-container">
+                  <ng-container *ngIf="(students$ | async) as students">
+                    <ng-container
+                      *ngIf="(students | attendance:filterObject.type | search:filterObject.term) as filteredStudents">
+                      <ng-container *ngIf="filteredStudents.length > 0; else noFilteredStudents">
+                        <ion-virtual-scroll [items]="filteredStudents" approxItemHeight="48px" [trackBy]="trackById">
+                          <ion-row class="table-row glob-text-bold ion-no-margin"
+                            *virtualItem="let student; let i = index;"
+                            [style.background]="student.attendance | attendanceStatus: true">
+                            <ion-col class="glob-margin-auto" size="1" size-sm="auto">
+                              <p class="larger-font-size">
+                                <ion-text>{{ i + 1 }}.</ion-text>
+                              </p>
+                            </ion-col>
+                            <ion-col class="glob-margin-auto ion-padding-start" size="4" size-sm="auto">
+                              <p class="larger-font-size">
+                                <ion-text class="text-bold">{{ student.id }}</ion-text>
+                              </p>
+                            </ion-col>
+                            <ion-col class="glob-margin-auto ion-padding-start" size="7">
+                              <p class="larger-font-size">
+                                <ion-text class="text-bold">{{ student.name }}</ion-text>
+                              </p>
+                            </ion-col>
+                            <ion-col size="3" size-sm="" class="glob-margin-auto ion-no-padding"
+                              *ngIf="student.attendance === 'N' || student.attendance === 'R'">
+                              <ion-input [value]="student.absentReason" placeholder="Absent with reason"
+                                (change)="mark(student.id, 'R')"></ion-input>
+                            </ion-col>
+                            <ion-col size="9" size-sm="" class="glob-margin-auto ion-text-right">
+                              <ion-buttons class="ion-float-right">
+                                <ion-button size="small" [disabled]="student.attendance === 'Y'"
+                                  [ngClass]="'Y' | attendanceStatus:true" (click)="mark(student.id, 'Y')">Present
+                                </ion-button>
+                                <ion-button size="small" [disabled]="student.attendance === 'L'"
+                                  [ngClass]="'L' | attendanceStatus:true" (click)="mark(student.id, 'L')">Late
+                                </ion-button>
+                                <ion-button size="small" [disabled]="student.attendance === 'N'"
+                                  [ngClass]="'N' | attendanceStatus:true" (click)="mark(student.id, 'N')">Absent
+                                </ion-button>
+                              </ion-buttons>
+                            </ion-col>
+                          </ion-row>
+                        </ion-virtual-scroll>
+                      </ng-container>
+
+                      <ng-template #noFilteredStudents>
+                        <ion-text color="danger">
+                          <h3 class="ion-text-center">
+                            No students found
+                            {{ filterObject.term ? 'with the keyword "' + filterObject.term + '"' : undefined }}
+                            <span *ngIf="filterObject.type">with the status of
+                              {{ filterObject.type | attendanceStatus:false }}
+                            </span>
+                          </h3>
+                        </ion-text>
+                      </ng-template>
+                    </ng-container>
+                  </ng-container>
+                </ion-card-content>
+              </div>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ng-container>
+    </ng-container>
+  </div>
+</ion-content>

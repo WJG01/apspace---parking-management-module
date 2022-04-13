@@ -1,7 +1,7 @@
 export { AnonymousFeedbackSummary, AnonymousFeedback, FeedbackCategory, AnonymousFeedbackComment } from './anonymous-feedback';
 export { Apcard } from './apcard';
 export { Attendance, AttendanceDetails, AttendanceLegend, MappedAttendance } from './attendance';
-export { AttendixClass, Classcode, Classcodev1, FlatClasscode } from './attendix';
+export { AttendixClass, AttendanceSummary, Classcode, Classcodev1, FlatClasscode } from './attendix';
 export { BusTrip, BusTrips, APULocation, APULocations } from './bus-shuttle-services';
 export { Course } from './course';
 export { ExamSchedule } from './exam-schedule';

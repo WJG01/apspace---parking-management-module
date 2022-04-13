@@ -43,3 +43,15 @@ export interface FlatClasscode {
     ABSENT_REASON: number;
   };
 }
+
+export interface AttendanceSummary {
+  present: AttendanceData,
+  absent: AttendanceData;
+  absentReason: AttendanceData;
+  late: AttendanceData;
+};
+
+interface AttendanceData {
+  color: string;
+  data: number;
+}
