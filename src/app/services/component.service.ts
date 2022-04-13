@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AlertButton, AlertController, ToastController } from '@ionic/angular';
 
 import { Browser } from '@capacitor/browser';
+import { Haptics, NotificationType } from '@capacitor/haptics';
 
 import { ConfigurationsService } from './configurations.service';
 
@@ -57,5 +58,13 @@ export class ComponentService {
       return this.toastMessage('External links cannot be opened in offline mode. Please ensure you have a network connection and try again.', 'danger');
     }
     await Browser.open({ url });
+  }
+
+  successHaptic() {
+    Haptics.notification({ type: NotificationType.Success });
+  }
+
+  errorHaptic() {
+    Haptics.notification({ type: NotificationType.Error });
   }
 }

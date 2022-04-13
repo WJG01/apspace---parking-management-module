@@ -24,8 +24,14 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { role: Role.Lecturer | Role.Admin },
     loadChildren: () => import('./mark-attendance/mark-attendance.module').then(m => m.MarkAttendancePageModule)
+  },
+  {
+    path: 'update',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student },
+    loadChildren: () => import('./student/student.module').then(m => m.StudentPageModule)
   }
-]
+];
 
 
 @NgModule({
