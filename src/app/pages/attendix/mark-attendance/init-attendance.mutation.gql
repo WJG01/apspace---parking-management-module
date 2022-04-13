@@ -1,0 +1,12 @@
+mutation initAttendance($schedule: ScheduleInput! $attendance: String!) {
+  attendance: initAttendance(schedule: $schedule attendance: $attendance)
+  @NgModule(module: "src/app/graphql.module#GraphQLModule") {
+    secret
+    students {
+      id
+      name
+      attendance
+      absentReason
+    }
+  }
+}
