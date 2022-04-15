@@ -127,7 +127,9 @@
                   <ion-card-content>
                     <div class="small-margin-top">
                       <ion-item lines="none" class="ion-no-padding">
-                        <ion-textarea placeholder="Add your notes here" rows="1" class="form-input"></ion-textarea>
+                        <ion-textarea #textarea [ngModel]="lectureUpdate" (ionChange)="save(textarea.value)"
+                          (ionBlur)="save(textarea.value)" debounce="5000" placeholder="Add your notes here" rows="1"
+                          class="form-input"></ion-textarea>
                       </ion-item>
                     </div>
                   </ion-card-content>
@@ -222,6 +224,19 @@
                       |
                       <ion-text [style.color]="summary.late.color">{{ summary.late.data }}</ion-text>
                     </p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row class="ion-align-items-center">
+                  <ion-col class="details-section">
+                    <ion-text color="primary">
+                      <h3 class="glob-text-bold">Remarks</h3>
+                    </ion-text>
+                    <ion-item lines="none" class="ion-no-padding">
+                      <ion-textarea #textarea [ngModel]="lectureUpdate" (ionChange)="save(textarea.value)"
+                        (ionBlur)="save(textarea.value)" debounce="5000" placeholder="Add your notes here" rows="1"
+                        class="form-input"></ion-textarea>
+                    </ion-item>
                   </ion-col>
                 </ion-row>
               </ion-card-content>
