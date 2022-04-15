@@ -108,7 +108,7 @@ export class StudentPage implements OnInit {
   }
 
   /** Send OTP. */
-  sendOtp(otp: string): Promise<SubscriptionResult<UpdateAttendanceMutation>> {
+  async sendOtp(otp: string): Promise<SubscriptionResult<UpdateAttendanceMutation>> {
     console.assert(otp.length === this.digits.length);
     this.sending = true;
     return firstValueFrom(this.updateAttendance.mutate({ otp }).pipe(
