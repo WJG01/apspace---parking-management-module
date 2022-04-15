@@ -51,6 +51,16 @@ export interface AttendanceSummary {
   late: AttendanceData;
 };
 
+export interface AttendanceIntegrityClasses {
+  classCode: string;
+  date: string;
+  timeFrom: string;
+  timeTo: string;
+  total: number;
+  type: string;
+  checked: boolean;
+}
+
 interface AttendanceData {
   color: string;
   data: number;

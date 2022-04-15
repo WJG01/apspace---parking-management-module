@@ -8,11 +8,12 @@ import { subDays } from 'date-fns';
 
 import { DatePickerComponent } from '../../../components/date-picker/date-picker.component';
 import { SearchModalComponent } from '../../../components/search-modal/search-modal.component';
-import { Classcodev1, FlatClasscode } from '../../../interfaces';
+import { AttendanceIntegrityClasses, Classcodev1, FlatClasscode } from '../../../interfaces';
 import { ComponentService, WsApiService } from '../../../services';
 import { ResetAttendanceGQL, ScheduleInput } from '../../../../generated/graphql';
 import { Durations, Timings } from '../../../constants';
 import { formatTime, isoDate, parseTime } from '../date';
+import { AttendanceIntegrityModalPage } from './attendance-integrity-modal/attendance-integrity-modal.page';
 
 @Component({
   selector: 'app-classes',
@@ -429,43 +430,41 @@ export class ClassesPage implements OnInit {
     });
   }
 
-  async checkIntegrity() {
-    const classCodes = (await firstValueFrom(this.classcodes$));
-    const possibleExtraClasses = [];
-    classCodes.forEach(klass => {
+  async checkIntegrity(classes: FlatClasscode[]) {
+    const possibleExtraClasses: AttendanceIntegrityClasses[] = [];
+
+    for (const klass of classes) {
       if (klass.TOTAL) {
         if (klass.TOTAL.ABSENT === klass.TOTAL.ABSENT + klass.TOTAL.PRESENT + klass.TOTAL.LATE + klass.TOTAL.ABSENT_REASON) {
-          possibleExtraClasses.push(
-            {
-              classCode: klass.CLASS_CODE,
-              date: klass.DATE,
-              timeFrom: klass.TIME_FROM,
-              timeTo: klass.TIME_TO,
-              total: klass.TOTAL.ABSENT,
-              type: klass.TYPE,
-              checked: false
-            }
-          );
+          possibleExtraClasses.push({
+            classCode: klass.CLASS_CODE,
+            date: klass.DATE,
+            timeFrom: klass.TIME_FROM,
+            timeTo: klass.TIME_TO,
+            total: klass.TOTAL.ABSENT,
+            type: klass.TYPE,
+            checked: false
+          });
         }
       }
-    });
+    };
+
     const modal = await this.modalCtrl.create({
-      component: SearchModalComponent,
+      component: AttendanceIntegrityModalPage,
       componentProps: {
-        possibleClasses: possibleExtraClasses.sort(
-          (a, b) =>
-            new Date(+b.date.split('-')[0], +b.date.split('-')[1], +b.date.split('-')[2]).getTime()
-            - new Date(+a.date.split('-')[0], +a.date.split('-')[1], +a.date.split('-')[2]).getTime()
-        )
+        possibleClasses: possibleExtraClasses
       },
-      backdropDismiss: false
+      backdropDismiss: false,
+      breakpoints: [0, 1],
+      initialBreakpoint: 1
     });
     await modal.present();
-    await modal.onDidDismiss().then(data => {
-      if (data.data && data.data.refresh) {
-        this.getClasscodes();
-      }
-    });
+
+    const { data } = await modal.onWillDismiss();
+
+    if (data?.completed) {
+      this.getClasscodes();
+    }
   }
 
   async openQuickAction(klass: FlatClasscode) {

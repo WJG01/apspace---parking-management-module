@@ -151,7 +151,7 @@
               [lines]="isLast ? 'none' : 'inset'" (click)="openUrl(item.url)">
               <ion-label>{{ item.name }}</ion-label>
             </ion-item>
-            <ion-item color="light" lines="none" button="true">
+            <ion-item color="light" lines="none" button="true" (click)="checkIntegrity(classcodes)">
               <ion-icon color="danger" slot="end" name="checkmark-done"></ion-icon>
               <ion-label color="danger">
                 Check Attendance Integrity
