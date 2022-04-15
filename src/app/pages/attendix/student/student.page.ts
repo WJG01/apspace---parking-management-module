@@ -125,7 +125,7 @@ export class StudentPage implements OnInit {
         return EMPTY;
       }),
       finalize(() => this.sending = false),
-    ));
+    )).catch(err => err);
   }
 
   /** Clear otp value. */
