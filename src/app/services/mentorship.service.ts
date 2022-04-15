@@ -9,7 +9,7 @@ import {
   MentorshipResult,
   MentorshipSemesterSummary,
   MentorshipStudentList,
-  MentorshipSubcourse
+  MentorshipSubcourse, StudentRemark
 } from '../interfaces/mentorship';
 import { WsApiService } from './ws-api.service';
 @Injectable({
@@ -17,14 +17,16 @@ import { WsApiService } from './ws-api.service';
 })
 export class MentorshipService {
 
-  // devApi = 'https://gmywrxsd75.execute-api.ap-southeast-1.amazonaws.com/dev/mentor';
-
   constructor(
     private ws: WsApiService
   ) { }
 
   getStudents(): Observable<MentorshipStudentList[]> {
     return this.ws.get<MentorshipStudentList[]>('/mentor/student_list');
+  }
+
+  getStudentRemarks(tp: string): Observable<StudentRemark[]> {
+    return this.ws.get<StudentRemark[]>(`/mentor/get_remarks?id=${tp}`);
   }
 
   getStudentProfile(tp: string): Observable<StudentProfile> {

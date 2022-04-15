@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add Remarks</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+      <!-- Textarea in an item with a floating label -->
+      <ion-item>
+        <ion-label position="stacked">Remarks</ion-label>
+        <ion-textarea type="text" [(ngModel)]="remarks" rows="15" cols="20" required placeholder="Enter your remarks here"></ion-textarea>
+      </ion-item>
+      <ion-button type="submit" class="add-remarks-button"  [disabled]="!remarks" expand="block" (click)="onSubmit()">Add Remarks</ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
