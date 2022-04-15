@@ -198,9 +198,8 @@
             <ng-container
               *ngIf="(classcodes | classcodesFilter:attendanceHistoryObject.term:attendanceHistoryObject.timeFrame) as filteredClassCode">
               <ng-container *ngIf="filteredClassCode.length > 0; else noFilteredClassCode">
-                <ion-item *ngFor="let class of filteredClassCode; let isLast = last" [lines]="isLast ? 'none' : 'full'"
-                  detail="true" button="true" (click)="openQuickAction(class)">
-                  <ion-label>
+                <ion-item *ngFor="let class of filteredClassCode; let isLast = last" [lines]="isLast ? 'none' : 'full'">
+                  <ion-label class="ion-text-wrap">
                     <ion-text color="primary">
                       <h2 class="glob-text-bold">
                         {{ class.CLASS_CODE }} ({{ class.TYPE }})
@@ -208,7 +207,7 @@
                     </ion-text>
 
                     <ion-text color="medium">
-                      <h3>
+                      <h3 class="glob-fw-600">
                         {{ class.DATE | date : 'EEE, dd MMM yyy' }} | {{ class.TIME_FROM }} - {{ class.TIME_TO }}
                       </h3>
                     </ion-text>
@@ -225,6 +224,21 @@
                       {{ class.TOTAL.ABSENT + class.TOTAL.ABSENT_REASON + class.TOTAL.LATE + class.TOTAL.PRESENT }}
                     </p>
                   </ion-label>
+
+                  <ion-button color="medium"
+                    (click)="view(class.CLASS_CODE, class.DATE, class.TIME_FROM, class.TIME_TO, class.TYPE)">
+                    <ion-icon name="eye-outline" slot="icon-only"></ion-icon>
+                  </ion-button>
+
+                  <ion-button color="medium"
+                    (click)="edit(class.CLASS_CODE, class.DATE, class.TIME_FROM, class.TIME_TO, class.TYPE)">
+                    <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+                  </ion-button>
+
+                  <ion-button color="danger"
+                    (click)="reset(class.CLASS_CODE, class.DATE, class.TIME_FROM, class.TIME_TO, class.TYPE)">
+                    <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+                  </ion-button>
                 </ion-item>
               </ng-container>
 

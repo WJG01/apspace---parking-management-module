@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActionSheetController, AlertButton, ModalController } from '@ionic/angular';
+import { AlertButton, ModalController } from '@ionic/angular';
 import { firstValueFrom, map, Observable, shareReplay } from 'rxjs';
 
 import { subDays } from 'date-fns';
@@ -73,8 +73,7 @@ export class ClassesPage implements OnInit {
     private ws: WsApiService,
     private modalCtrl: ModalController,
     private datePipe: DatePipe,
-    private resetAttendance: ResetAttendanceGQL,
-    private actionSheetCtrl: ActionSheetController
+    private resetAttendance: ResetAttendanceGQL
   ) { }
 
   ngOnInit() {
@@ -465,37 +464,6 @@ export class ClassesPage implements OnInit {
     if (data?.completed) {
       this.getClasscodes();
     }
-  }
-
-  async openQuickAction(klass: FlatClasscode) {
-    const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Quick Access Menu',
-      buttons: [
-        {
-          text: 'View',
-          handler: () => {
-            this.view(klass.CLASS_CODE, klass.DATE, klass.TIME_FROM, klass.TIME_TO, klass.TYPE);
-          }
-        },
-        {
-          text: 'Edit',
-          handler: () => {
-            this.edit(klass.CLASS_CODE, klass.DATE, klass.TIME_FROM, klass.TIME_TO, klass.TYPE);
-          }
-        },
-        {
-          text: 'Delete',
-          handler: () => {
-            this.reset(klass.CLASS_CODE, klass.DATE, klass.TIME_FROM, klass.TIME_TO, klass.TYPE);
-          }
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel'
-        }
-      ]
-    });
-    await actionSheet.present();
   }
 
   openUrl(url: string) {
