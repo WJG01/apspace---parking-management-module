@@ -27,7 +27,7 @@ export class AddIntakePage implements OnInit {
   intakes = [];
 
   venues = [
-    'APITT@EXAM HALL',
+    'EXAM HALL@APIIT',
     'APU@EXAM HALL',
     'Microsoft Teams(Online)',
     'Moodle'
