@@ -11,8 +11,8 @@
 }
 
 .glob-primary-text {
-  color: var(--ion-color-primary);
-  --color: var(--ion-color-primary);
+  color: var(--ion-color-primary) !important;
+  --color: var(--ion-color-primary) !important;
 }
 
 .glob-success-text {
@@ -35,6 +35,10 @@
 
 .glob-white-space-normal {
   white-space: normal !important;
+}
+
+.glob-text-underline {
+  text-decoration: underline;
 }
 
 .glob-calendar {

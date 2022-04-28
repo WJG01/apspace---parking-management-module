@@ -96,6 +96,12 @@ const routes: Routes = [
     data: { role: Role.Student | Role.Lecturer | Role.Admin },
     loadChildren: () => import('./pages/attendix/attendix.module').then(m => m.AttendixModule)
   },
+  {
+    path: 'results',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/results/results.module').then(m => m.ResultsPageModule)
+  },
   { // this path must always be at the end of the routes array
     path: '**',
     canActivate: [AuthGuard],
