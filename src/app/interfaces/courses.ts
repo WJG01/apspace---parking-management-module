@@ -8,4 +8,5 @@ export interface Course {
   PROGRAM_CODE: string;
   PROVIDER_CODE: string;
   INTAKE_NUMBER: string;
+  SEMESTER_WORDING: boolean;
 }
