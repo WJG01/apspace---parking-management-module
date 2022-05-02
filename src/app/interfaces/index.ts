@@ -17,5 +17,5 @@ export { Role } from './role';
 export { StaffDirectory } from './staff';
 export { StudentProfile } from './student-profile';
 export { SurveyIntake, SurveyModule } from './student-survey';
-export { StudentPhoto, StudentSearch } from './student';
+export { BeAPUStudentDetails, StudentPhoto, StudentSearch } from './student';
 export { Subcourse } from './subcourses';

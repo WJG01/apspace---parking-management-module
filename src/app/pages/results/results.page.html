@@ -28,7 +28,327 @@
     <div class="glob-container">
       <!-- Lecturers View -->
       <ng-container *ngIf="staffRole; else studentView">
+        <ion-grid>
+          <ion-row>
+            <ion-col size-xs="12" size-md="4" push-md="8">
+              <ion-card color="primary">
+                <ion-card-header>
+                  <ion-card-title>
+                    Student Search
+                  </ion-card-title>
+                  <ion-card-subtitle>
+                    <p class="ion-no-margin">Enter student ID/Name to check his results</p>
+                  </ion-card-subtitle>
+                </ion-card-header>
+                <ion-card-content class="ion-no-padding ion-padding-bottom">
+                  <ion-searchbar (keyup.enter)="searchKeyword.length > 2 ? searchForStudents() : ''"
+                    [(ngModel)]="searchKeyword"></ion-searchbar>
+                  <div class="ion-text-center ion-padding-end ion-padding-start">
+                    <ion-button color="light" fill="outline" [disabled]="searchKeyword.length < 2"
+                      (click)="searchKeyword.length > 2 ? searchForStudents() : ''">
+                      Search
+                      <ion-icon name="search" slot="end"></ion-icon>
+                    </ion-button>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+              <ng-container *ngIf="studentSelected">
+                <ion-card *ngIf="studentProfile$ | async as studentProfile; else loadingProfile">
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="12" *ngIf="studentDetails$ | async as studentDetails; else loadingDetails">
+                        <ion-avatar class="glob-margin-auto">
+                          <img [src]="'data:image/jpg;base64,' +
+                          studentDetails[0].base64_photo" alt="img" alt="">
+                        </ion-avatar>
+                      </ion-col>
+                      <ng-template #loadingDetails>
+                        <ion-avatar>
+                          <ion-skeleton-text style="width: 100%; line-height: 100%;"></ion-skeleton-text>
+                        </ion-avatar>
+                      </ng-template>
+                      <ion-col size="12" class="ion-text-center">
+                        <ion-card-header class="ion-no-padding">
+                          <ion-card-title color="primary" class="glob-text-bold">
+                            {{studentProfile.NAME}}
+                            <ion-badge color="danger" *ngIf="!studentProfile.BLOCK">
+                              {{studentProfile.BLOCK ? '' : 'Blocked'}}
+                            </ion-badge>
+                          </ion-card-title>
+                          <ion-card-subtitle color="tertiary">{{studentProfile.STUDENT_NUMBER}} |
+                            {{studentProfile.INTAKE}}
+                          </ion-card-subtitle>
+                        </ion-card-header>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
 
+                  <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end ion-padding-bottom">
+                    <ion-grid class="ion-no-padding">
+                      <ion-row>
+                        <ion-col class="ion-no-padding ion-text-center" size="12">
+                          <p>Program Leader</p>
+                          <h4 class="glob-text-bold">{{studentProfile.PL_NAME || 'N/A'}}</h4>
+                          <p>Mentor</p>
+                          <h4 class="glob-text-bold">{{studentProfile.MENTOR_NAME || 'N/A'}}</h4>
+                        </ion-col>
+                      </ion-row>
+                      <ion-row class="ion-margin-top">
+                        <ion-col size="12" class="ion-text-center ion-no-padding">
+                          <ng-container *ngIf="studentCourses$ | async as courses; else loadingCources">
+                            <ion-button *ngFor="let course of courses" color="success"
+                              [fill]="selectedIntake === course.INTAKE_CODE ? 'solid' : 'outline'"
+                              (click)="getStudentResultsForStaff(studentProfile, course.INTAKE_CODE)">
+                              {{course.INTAKE_CODE}}
+                            </ion-button>
+                          </ng-container>
+                          <ng-template #loadingCources>
+                            <ion-button *ngFor="let _ of skeletons">
+                              <ion-skeleton-text animated style="width: 70px; height: 25px;"></ion-skeleton-text>
+                            </ion-button>
+                          </ng-template>
+                        </ion-col>
+                        <ion-col size="10" offset="1" *ngIf="studentSelected && intakeSelected">
+                          <ion-button class="ion-margin-top" expand="block" color="primary"
+                            (click)="generateInterimPDF()">
+                            Interim Transcript
+                            <ion-icon name="print" slot="end"></ion-icon>
+                          </ion-button>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </ion-card-content>
+                </ion-card>
+                <ng-template #loadingProfile>
+                  <ion-card>
+                    <ion-card-header>
+                      <ion-card-title>
+                        <ion-skeleton-text animated style="width: 60%; line-height: 20px;"></ion-skeleton-text>
+                      </ion-card-title>
+                      <ion-card-subtitle>
+                        <ion-skeleton-text animated style="width: 30%; line-height: 17px;"></ion-skeleton-text>
+                      </ion-card-subtitle>
+                    </ion-card-header>
+                    <ion-card-content>
+                      <ion-grid>
+                        <ion-row>
+                          <ion-col size="12" size-md="6">
+                            <p>
+                              <ion-skeleton-text animated style="width: 45%; line-height: 15px;"></ion-skeleton-text>
+                            </p>
+                            <p>
+                              <ion-skeleton-text animated style="width: 60%; line-height: 15px;"></ion-skeleton-text>
+                            </p>
+
+                            <p>
+                              <ion-skeleton-text animated style="width: 35%; line-height: 15px;"></ion-skeleton-text>
+                            </p>
+                            <p>
+                              <ion-skeleton-text animated style="width: 70%; line-height: 15px;"></ion-skeleton-text>
+                            </p>
+
+                            <p>
+                              <ion-skeleton-text animated style="width: 60%; line-height: 15px;"></ion-skeleton-text>
+                            </p>
+                            <p>
+                              <ion-skeleton-text animated style="width: 50%; line-height: 15px;"></ion-skeleton-text>
+                            </p>
+
+                          </ion-col>
+                          <ion-col size="12" size-md="6">
+                            <p>
+                              <ion-skeleton-text animated style="width: 45%; line-height: 15px;"></ion-skeleton-text>
+                            </p>
+                            <p>
+                              <ion-skeleton-text animated style="width: 60%; line-height: 15px;"></ion-skeleton-text>
+                            </p>
+
+                            <p>
+                              <ion-skeleton-text animated style="width: 35%; line-height: 15px;"></ion-skeleton-text>
+                            </p>
+                            <p>
+                              <ion-skeleton-text animated style="width: 70%; line-height: 15px;"></ion-skeleton-text>
+                            </p>
+                          </ion-col>
+                        </ion-row>
+                      </ion-grid>
+                    </ion-card-content>
+                  </ion-card>
+                </ng-template>
+              </ng-container>
+            </ion-col>
+
+            <ion-col size-xs="12" size-md="8" pull-md="4">
+              <ng-container *ngIf="!showResults">
+                <ion-card>
+                  <ion-card-content>
+                    <div>
+                      <message-with-svg imageUrl="assets/img/search.svg" messageTitle="" wrapperSize="6"
+                        wrapperMarginTop="10px" wrapperOffset="3">
+                      </message-with-svg>
+                    </div>
+                    <div class="ion-margin-bottom ion-text-center">
+                      <ion-text>
+                        <h5>
+                          Enter student ID/Name in the search box first to see his/her details
+                        </h5>
+                      </ion-text>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+              </ng-container>
+              <ng-container *ngIf="showResults">
+                <ng-container *ngIf="!studentSelected">
+                  <ng-container *ngIf="studentsList$ | async as students; else loadingList">
+                    <ng-container *ngIf="students.length > 0; else noResults">
+                      <ion-card>
+                        <ion-card-header color="success">
+                          <ion-card-title>Search Result</ion-card-title>
+                        </ion-card-header>
+                        <ion-card-content class="ion-no-padding">
+                          <ion-list class="ion-no-padding">
+                            <ion-item *ngFor="let student of students" tappable="true" detail="true" lines="full"
+                              (click)="getStudentData(student)">
+                              <ion-label>
+                                <h4 class="glob-text-bold">{{student.NAME}}</h4>
+                                <p>{{student.STUDENT_NUMBER}}</p>
+                              </ion-label>
+                            </ion-item>
+                          </ion-list>
+                        </ion-card-content>
+                      </ion-card>
+                    </ng-container>
+                    <ng-template #noResults>
+                      <ion-card>
+                        <ion-card-header color="danger">
+                          <ion-card-title>
+                            No Results for {{searchResults}}!
+                          </ion-card-title>
+                        </ion-card-header>
+                        <ion-card-content>
+                          <message-with-svg imageUrl='/assets/img/no-results.svg'
+                            messageContent='We could not find any records that match the student you are trying to looking for'
+                            wrapperMarginTop="20px" wrapperOffset="3" wrapperSize="6">
+                          </message-with-svg>
+                        </ion-card-content>
+                      </ion-card>
+                      <ion-text color="danger">
+                      </ion-text>
+                    </ng-template>
+                  </ng-container>
+                  <ng-template #loadingList>
+                    <ion-item *ngFor="let _ of skeletons">
+                      <ion-label>
+                        <h4 class="text-bold">
+                          <ion-skeleton-text animated style="line-height: 25px; width: 70%;"></ion-skeleton-text>
+                        </h4>
+                        <p>
+                          <ion-skeleton-text animated style="line-height: 15px; width: 45%;"></ion-skeleton-text>
+                        </p>
+                      </ion-label>
+                    </ion-item>
+                  </ng-template>
+                </ng-container>
+                <ng-container *ngIf="studentSelected">
+                  <ng-container *ngIf="intakeSelected">
+                    <ng-container *ngIf="results$ | async as results; else loadingResults">
+                      <ng-container *ngIf="results.length > 0; else noResultsYet">
+                        <ng-container *ngFor="let semesterResult of results">
+                          <ion-card>
+                            <ion-card-header color="secondary">
+                              <ion-card-title>Semester {{ semesterResult.semester }}</ion-card-title>
+                              <ion-card-subtitle>
+                                <ion-grid class="ion-no-padding ion-no-margin">
+                                  <ion-row class="ion-no-padding ion-no-margin">
+                                    <ion-col class="ion-no-padding ion-no-margin">
+                                      <p class="ion-no-margin"><small class="ion-no-margin">Modules Passed:</small>
+                                        {{ semesterResult.summary[0]?.TOTAL_MODULES_PASSED || 'N/A' }}</p>
+                                    </ion-col>
+                                    <ion-col class="ion-no-padding ion-no-margin">
+                                      <p class="ion-no-margin"><small class="ion-no-margin">GPA:</small>
+                                        {{ semesterResult.summary[0]?.GPA || 'N/A' }}</p>
+                                    </ion-col>
+                                  </ion-row>
+                                </ion-grid>
+                              </ion-card-subtitle>
+                            </ion-card-header>
+                            <ion-card-content class="ion-no-padding">
+                              <ion-list class="ion-no-padding">
+                                <ion-item lines="full" *ngFor="let result of semesterResult.value; trackBy: trackByFn"
+                                  [color]="result.GRADE.toLowerCase() === 'Pending Survey'.toLowerCase() ? 'warning' : ''">
+                                  <ion-label class="ion-no-margin glob-white-space-normal">
+                                    <ion-grid>
+                                      <ion-row>
+                                        <ion-col size="12">
+                                          <ion-text>
+                                            <h3 class="glob-text-bold">
+                                              <ion-text color="secondary">{{ result.MODULE_DESCRIPTION }}</ion-text>
+                                            </h3>
+                                          </ion-text>
+                                        </ion-col>
+                                      </ion-row>
+                                      <ion-row>
+                                        <ion-col size="6" size-md="6">
+                                          <p>
+                                            Result:
+                                            <ion-text class="glob-text-bold"
+                                              [color]="result.SUBJECT_PASS_FAIL === 'Pass' ? 'success' : result.SUBJECT_PASS_FAIL === 'Fail' ? 'danger' : ''">
+                                              {{ result.GRADE || "N/A" }}
+                                            </ion-text>
+                                          </p>
+                                        </ion-col>
+                                        <ion-col size="6" size-md="6">
+                                          <p>
+                                            Grade:
+                                            <ion-text class="glob-text-bold"
+                                              [color]="result.SUBJECT_PASS_FAIL === 'Pass' ? 'success' : result.SUBJECT_PASS_FAIL === 'Fail' ? 'danger' : ''">
+                                              {{ result.GRADE_POINT || "N/A" }}
+                                            </ion-text>
+                                          </p>
+                                        </ion-col>
+                                        <ion-col size="12">
+                                          <p>
+                                            <small>Internal Release Date:</small>
+                                            <ion-text class="glob-text-bold">
+                                              {{ result.INTERNAL_RESULT_RELEASE_DATE || 'N/A' }}
+                                            </ion-text>
+                                          </p>
+                                        </ion-col>
+                                        <ion-col size="12" *ngIf="result.RECOMMENDATION">
+                                          <ion-text color="danger">
+                                            <small class="glob-text-bold">Recommendations:
+                                              {{ result.RECOMMENDATION }}</small>
+                                          </ion-text>
+                                        </ion-col>
+                                      </ion-row>
+                                    </ion-grid>
+                                  </ion-label>
+                                </ion-item>
+                              </ion-list>
+                            </ion-card-content>
+                          </ion-card>
+                        </ng-container>
+                        <ng-container *ngTemplateOutlet="legends"></ng-container>
+                      </ng-container>
+                      <ng-template #noResultsYet>
+                        <ng-container *ngTemplateOutlet="noResultsSection"></ng-container>
+                      </ng-template>
+                    </ng-container>
+                    <ng-template #loadingResults>
+                      <ion-grid>
+                        <ion-row>
+                          <ion-col size="12">
+                            <ion-skeleton-text animated style="width: 100%; line-height: 600px"></ion-skeleton-text>
+                          </ion-col>
+                        </ion-row>
+                      </ion-grid>
+                    </ng-template>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </ng-container>
 
       <ng-template #studentView>

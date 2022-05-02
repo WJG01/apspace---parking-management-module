@@ -7,7 +7,7 @@ import { catchError, finalize, forkJoin, map, Observable, switchMap, tap } from 
 import { Storage } from '@ionic/storage-angular';
 import { ChartData, ChartOptions } from 'chart.js';
 
-import { ClassificationLegend, Course, CourseDetails, DeterminationLegend, InterimLegend, MPULegend, Role, StudentProfile, StudentSearch, Subcourse, StudentPhoto } from '../../interfaces';
+import { ClassificationLegend, Course, CourseDetails, DeterminationLegend, InterimLegend, MPULegend, Role, StudentProfile, StudentSearch, Subcourse, StudentPhoto, BeAPUStudentDetails } from '../../interfaces';
 import { CasTicketService, ComponentService, WsApiService } from '../../services';
 
 @Component({
@@ -73,6 +73,7 @@ export class ResultsPage implements OnInit {
 
   studentsList$: Observable<any>;
   studentProfile$: Observable<StudentProfile>;
+  studentDetails$: Observable<BeAPUStudentDetails[]>;
   studentCourses$: Observable<Course[]>;
   studentsResults$: Observable<{ semester: string; value: Subcourse[]; }[]>;
 
@@ -363,7 +364,7 @@ export class ResultsPage implements OnInit {
     this.studentsList$ = this.cas.getST(`${this.prodUrl}/search?id=${this.searchKeyword}`).pipe(
       switchMap((st) => {
         return this.ws.get<StudentSearch[]>(`/students/search?id=${this.searchKeyword}&ticket=${st}`,
-          { url: this.prodUrl, auth: false, attempts: 1 }
+          { auth: false, attempts: 1 }
         );
       })
     ).pipe(
@@ -393,6 +394,12 @@ export class ResultsPage implements OnInit {
         );
       })
     );
+
+    this.studentDetails$ = this.ws.post<BeAPUStudentDetails[]>('/student/image', {
+      body: {
+        id: [student.STUDENT_NUMBER]
+      }
+    });
   }
 
   getStudentCourses(student: StudentSearch) {
