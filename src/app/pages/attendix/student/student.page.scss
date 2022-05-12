@@ -1,0 +1,46 @@
+.otp-wrapper {
+  display: flex;
+  justify-content: center;
+
+  .otp {
+    font-size: 8vw;
+    margin: 20px 4px;
+    max-width: 12vw;
+    padding: 12px;
+    padding-bottom: 4px;
+    background: var(--ion-item-background);
+    caret-color: transparent;
+    border: none;
+    border-bottom: 8px solid var(--ion-color-primary);
+    text-align: center;
+
+    &:focus {
+      border-bottom-color: var(--ion-color-medium);
+      background: var(--ion-color-step-350);
+    }
+  }
+}
+
+.scan-box {
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
+  content: '';
+  display: block;
+  left: 50%;
+  height: 300px;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+}
+
+/* Hide HTML5 Up and Down arrows. */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}

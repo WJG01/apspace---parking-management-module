@@ -2,9 +2,17 @@
   margin: auto !important;
 }
 
+.glob-small-margin-bottom {
+  margin-bottom: 5px !important;
+}
+
+.glob-small-margin-top {
+  margin-top: 5px !important;
+}
+
 .glob-primary-text {
-  color: var(--ion-color-primary);
-  --color: var(--ion-color-primary);
+  color: var(--ion-color-primary) !important;
+  --color: var(--ion-color-primary) !important;
 }
 
 .glob-success-text {
@@ -21,8 +29,16 @@
   font-weight: 900 !important;
 }
 
+.glob-fw-600 {
+  font-weight: 600 !important;
+}
+
 .glob-white-space-normal {
   white-space: normal !important;
+}
+
+.glob-text-underline {
+  text-decoration: underline;
 }
 
 .glob-calendar {
