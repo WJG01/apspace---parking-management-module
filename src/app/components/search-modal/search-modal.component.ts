@@ -21,8 +21,6 @@ export class SearchModalComponent implements OnInit {
   @Input() notFound = 'Type to search';
   /** Default pre-search term, pre-search if defaultItems unspecified. */
   @Input() defaultTerm = '';
-  /** Auto focus input element. Mainly used for testing. */
-  @Input() autofocus = true;
   /** Determine if the search component is opened under modal page or popover */
   @Input() isModal = true;
 
@@ -65,10 +63,9 @@ export class SearchModalComponent implements OnInit {
     this.searchItems$ = concat(of(defaultItems), searchResult$);
   }
 
-  ngAfterViewInit() {
-    if (this.autofocus) {
-      setTimeout(() => this.searchbar.setFocus(), 400);
-    }
+  // Fix issue where searchbar are not focused properly
+  ionViewDidEnter() {
+    this.searchbar.setFocus();
   }
 
   select(item: string) {
