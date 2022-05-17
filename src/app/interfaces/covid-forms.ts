@@ -24,4 +24,5 @@ export interface UserVaccineInfo {
   vaccination_status_id: number;
   vaccine_type: string;
   vaccination_type_id: number;
+  ispcr: boolean;
 }
