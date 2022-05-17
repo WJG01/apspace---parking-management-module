@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 
 import { ConfigurationsService } from './services';
+import { VersionService } from './services/version.service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,8 @@ export class AppComponent {
 
   constructor(
     private storage: Storage,
-    private config: ConfigurationsService
+    private config: ConfigurationsService,
+    private versionService: VersionService
   ) {
     this.initialiseStorage();
   }

@@ -1,0 +1,318 @@
+<ion-header *ngIf="!hideHeader">
+  <ion-toolbar mode="md">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      Timetable
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event.target)">
+    <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
+  </ion-refresher>
+
+
+  <!-- do not add filter pipe here as it affects loading -->
+  <div class="glob-container">
+    <!--Buttons-->
+    <ion-card class="no-border-rad">
+      <ion-row class="ion-justify-content-end">
+        <ion-col size="auto">
+          <ion-button *ngIf="intakeSelectable" fill="outline" (click)="presentIntakeSearch()" color="primary">
+            {{ intake || 'Intake' }}
+            <ion-icon *ngIf="!intake" name="search-outline" slot="end"></ion-icon>
+            <ion-icon *ngIf="intake" name="chevron-down-outline" slot="end"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col size="auto">
+          <ion-button fill="outline" (click)="chooseWeek()" [disabled]="availableWeek!.length === 0" color="primary">
+            {{selectedWeek | dateWithTimezone : 'dd MMM yyy'}}
+            <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col size="auto" *ngIf="intake && availableGrouping.length > 0">
+          <ion-button fill="outline" color="primary" (click)="chooseGrouping()"
+                      [disabled]="availableGrouping.length <= 2">
+            <!-- ALL, T1 -->
+            {{ selectedGrouping || 'Grouping' }}
+            <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
+          </ion-button>
+        </ion-col>
+        <ion-col size="auto">
+          <ion-button class="no-ripple" fill="outline" (click)="rotateView()" [color]="viewWeek ? 'primary' : 'medium'">
+            <ion-label>Weekly</ion-label>
+            <ion-toggle [checked]="viewWeek" disabled="true"></ion-toggle>
+          </ion-button>
+        </ion-col>
+        <ion-col size="auto" *ngIf="!room">
+          <ion-button color="primary" fill="outline" (click)="sendToPrint()" [disabled]="availableWeek!.length === 0">
+            <ion-icon slot="icon-only" name="print"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+    <ng-container *ngIf="(timetable$ | async) as timetables; else loading">
+      <ng-template let-timetables
+                   [ngIf]="!viewWeek ? (timetables | classes:intake:room:selectedGrouping | theday:selectedDate | gen:freeTime) : (timetables | classes:intake:room:selectedGrouping | theweek:selectedWeek | gen:freeTime)"
+                   [ngIfElse]="loading">
+        <ng-container *ngIf="timetables!.length; else empty">
+          <ion-card class="no-border-rad">
+
+            <ng-template [ngIf]="!viewWeek && availableWeek!.length > 0">
+              <ion-segment [ngModel]="selectedDate | dateWithTimezone:'E' | uppercase" color="primary"
+                           (ngModelChange)="selectedDate = availableDate[availableDays.indexOf($event)]" scrollable>
+                <ion-segment-button *ngFor="let day of availableDays" [value]="day">
+                  {{ day }}
+                </ion-segment-button>
+              </ion-segment>
+            </ng-template>
+          </ion-card>
+          <ion-card-content class="ion-no-padding">
+            <ng-container *ngFor="let timetable of timetables; let i=index; trackBy: trackByIndex">
+              <ng-container *ngIf="viewWeek;">
+                <!-- Either first index or (other index where date is not equal to the date in the previous index) -->
+                <ion-card class="no-border-rad">
+                  <ion-item-divider
+                    *ngIf="i===0 || (i !== 0 && (timetable.DATESTAMP_ISO !== timetables[i-1].DATESTAMP_ISO))"
+                    lines="none" color="primary">
+                    <ion-label class="glob-text-bold">
+                      {{ timetable.DATESTAMP_ISO | dateWithTimezone: "EEE, d MMM " }}
+                    </ion-label>
+                  </ion-item-divider>
+                </ion-card>
+              </ng-container>
+
+              <ion-card lines="full" class="table-item no-border-rad"
+                        [style.borderLeft]="'0.7rem solid ' + (timetable.MODID | strToColor)"
+                        [class.freeTime]='timetable.MODID === "FREE"'>
+                <ion-label class="glob-white-space-normal">
+                  <ion-grid class="ion-no-padding">
+                    <ion-row class="ion-no-padding">
+                      <ion-col size="12">
+                        <ion-text [color]="timetable.COLOR ? 'danger' : ''">
+                          <h3 class="ion-text-uppercase"> {{timetable.MODULE_NAME}}</h3>
+                        </ion-text>
+                        <ion-text color="medium">
+                          <h3 class="glob-text-bold"> {{timetable.MODID}} </h3>
+                        </ion-text>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row class="ion-no-padding">
+                      <ion-col size-xs="12" size-sm="6" size-md="3">
+                        <p>
+                          <ion-icon class="glob-text-bold" name="time-outline"></ion-icon>
+                          {{ timetable.TIME_FROM_ISO | timeParser: timeFormatChangeFlag: true }} - {{
+                          timetable.TIME_TO_ISO | timeParser: timeFormatChangeFlag: true }}
+                        </p>
+                      </ion-col>
+                      <ion-col size-xs="12" size-sm="6" size-md="4">
+                        <p>
+                          <ion-icon class="glob-text-bold" name="location-outline"></ion-icon>
+                          {{ timetable.ROOM }} | {{ timetable.LOCATION }}
+                        </p>
+                      </ion-col>
+                      <ion-col size-xs="12" size-sm="12" size-md="5" *ngIf="timetable.NAME">
+                        <p>
+                          <a [routerLink]="['/staffs', timetable.SAMACCOUNTNAME]">
+                            <ion-icon class="glob-text-bold" name="person-circle-outline"></ion-icon>
+                            {{ timetable.NAME }}
+                          </a>
+                        </p>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-label>
+              </ion-card>
+            </ng-container>
+            <!-- only for classroom finder -->
+            <p class="ion-padding" *ngIf="freeTime">
+              <span class="danger-text">Note:</span> If the day selected is not appearing, it means that there
+              are no classes in the room for the whole day
+            </p>
+          </ion-card-content>
+
+        </ng-container>
+      </ng-template>
+
+      <ng-template #empty>
+        <ng-container *ngIf="intake; else noIntakeSelected">
+          <ion-card class="ion-no-padding no-border-rad time-table-padding">
+            <ion-card-content class="ion-no-padding ion-padding-bottom">
+              <ng-template [ngIf]="!viewWeek && availableWeek!.length > 0">
+                <ion-segment [ngModel]="selectedDate | dateWithTimezone:'E' | uppercase" color="primary"
+                             (ngModelChange)="selectedDate = availableDate[availableDays.indexOf($event)]" scrollable>
+                  <ion-segment-button *ngFor="let day of availableDays" [value]="day">
+                    {{ day }}
+                  </ion-segment-button>
+                </ion-segment>
+              </ng-template>
+              <ng-container *ngIf="selectedDate; else weekly;">
+                <app-message-with-svg imageUrl="assets/img/happy.svg"
+                                      messageTitle="Hooray! No classes for {{intake}} {{selectedGrouping ? '('+ selectedGrouping +')' : '' }} on {{selectedDate | date: 'EEEE, dd MM yyy'}}."
+                                      messageContent="If you think there is an issue, you can try this:" wrapperSize="6"
+                                      wrapperMarginTop="10px" wrapperOffset="3" [advancedMode]="true">
+                  <div class="flex-container">
+                    <ul class="list-txt-color">
+                      <li>Make sure you selected the right intake</li>
+                      <li>Make sure you selected the right intake grouping</li>
+                      <li>Make sure you selected the right week</li>
+                    </ul>
+
+                    <p>Still having trouble? No worries! Just click <a [routerLink]="'/feedback'">here</a> and
+                      report the issue to us.</p>
+                  </div>
+                </app-message-with-svg>
+              </ng-container>
+              <ng-template #weekly>
+                <app-message-with-svg imageUrl="assets/img/happy.svg"
+                                      messageTitle="Hooray! No classes for {{intake}} {{selectedGrouping ? '('+ selectedGrouping +')' : '' }} on the week that starts on {{selectedWeek | date: 'EEEE, dd MM yyy'}}."
+                                      messageContent="If you think there is an issue, you can try this:" wrapperSize="6"
+                                      wrapperMarginTop="10px" wrapperOffset="3" [advancedMode]="true">
+                  <div class="flex-container">
+                    <ul class="list-txt-color">
+                      <li>Make sure you selected the right intake</li>
+                      <li>Make sure you selected the right intake grouping</li>
+                      <li>Make sure you selected the right week</li>
+                    </ul>
+                    <p>Still having trouble? No worries! Just click <a [routerLink]="'/feedback'">here</a> and
+                      report the issue to us.</p>
+                  </div>
+                </app-message-with-svg>
+              </ng-template>
+            </ion-card-content>
+          </ion-card>
+        </ng-container>
+        <ng-template #noIntakeSelected>
+          <ng-container *ngIf="room; else emptyIntake">
+            <app-message-with-svg imageUrl="assets/img/search-not-found.svg"
+                                  messageTitle="Opps! The room ({{room}}) selected does not exist or its timetable is not available."
+                                  messageContent="Perhaps you can try this:" wrapperSize="6" wrapperMarginTop="10px" wrapperOffset="3"
+                                  [advancedMode]="true">
+              <div class="flex-container">
+                <ul class="list-txt-color">
+                  <li>Make sure the room selected exist</li>
+                </ul>
+
+                <p>Still having trouble? No worries! Just click <a [routerLink]="'/feedback'">here</a> and
+                  report the issue to us.</p>
+              </div>
+            </app-message-with-svg>
+          </ng-container>
+          <ng-template #emptyIntake>
+            <app-message-with-svg imageUrl="assets/img/search-not-found.svg"
+                                  messageTitle="Opps! It looks like that you forgot to select an intake."
+                                  messageContent="Please select an intake from the intake button on the top right of the page"
+                                  wrapperSize="6" wrapperMarginTop="10px" wrapperOffset="3" [advancedMode]="true">
+            </app-message-with-svg>
+          </ng-template>
+        </ng-template>
+      </ng-template>
+
+      <!-- trivial message but must be displayed -->
+      <ion-grid class="ion-no-padding">
+        <ion-row>
+          <ion-col size="12" size-sm="12" size-lg="6" class="ion-no-padding">
+            <ion-card class="card-special time-table-padding-bottom no-border-rad">
+              <ion-card-header>
+                <ion-card-title color="primary">Legend</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <p *ngFor="let legend of legends">
+                  <b>{{ legend.name }}</b> - {{ legend.desc }}
+                </p>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+          <ion-col size="12" size-sm="12" size-lg="6" class="ion-no-padding">
+            <ion-card class="card-special no-border-rad">
+              <ion-card-header>
+                <ion-card-title color="primary">Mid Year Semester</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                While there will be no classes during the mid-semester break for your
+                intake, your intake time table will continue to appear during the
+                break.
+              </ion-card-content>
+            </ion-card>
+            <ion-card class="card-special no-border-rad time-table-padding">
+              <ion-card-header>
+                <ion-card-title color="primary">Important Notice</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <p>
+                  <ion-text color="danger">
+                    - All times in timetable page are displayed in <span class="glob-text-bold">{{enableMalaysiaTimezone
+                    ? "Local Timezone" : "Malaysia Time Zone (GMT+8)"}}</span> (You can change that from the settings)
+                  </ion-text>
+                </p>
+                <p>
+                  - Students are advised to consult your lecturers to check whether there
+                  will be lectures during the buffer/revision week.
+                </p>
+                <p>
+                  - The timetable published on the buffer/revision week will be the
+                  same as the last week of the semester.
+                </p>
+                <p>
+                  - If your lecturer decides not to use the buffer/revision week, then
+                  you will not be required to come for lectures during the
+                  buffer/revision week.
+                </p>
+              </ion-card-content>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ng-container>
+  </div>
+
+  <ng-template #loading>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12">
+          <ion-card class="ion-no-padding no-border-rad time-table-padding">
+            <ion-card-content class="ion-no-padding">
+              <ion-item lines="full" *ngFor="let _ of skeletons">
+                <ion-skeleton-text animated style="width: 100%; height: 40px"></ion-skeleton-text>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12" size-md="6">
+          <ion-card class="ion-no-padding">
+            <ion-card-content class="ion-no-padding">
+              <ion-item lines="full" *ngFor="let _ of skeletons">
+                <ion-skeleton-text animated style="width: 100%; height: 40px"></ion-skeleton-text>
+              </ion-item>
+              <ion-item lines="full" *ngFor="let _ of skeletons">
+                <ion-skeleton-text animated style="width: 100%; height: 40px"></ion-skeleton-text>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col size="12" size-md="6">
+          <ion-card class="ion-no-padding no-border-rad time-table-padding">
+            <ion-card-content class="ion-no-padding">
+              <ion-item lines="full" *ngFor="let _ of skeletons">
+                <ion-skeleton-text animated style="width: 100%; height: 40px"></ion-skeleton-text>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+          <ion-card class="ion-no-padding">
+            <ion-card-content class="ion-no-padding">
+              <ion-item lines="full" *ngFor="let _ of skeletons">
+                <ion-skeleton-text animated style="width: 100%; height: 40px"></ion-skeleton-text>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ng-template>
+
+</ion-content>

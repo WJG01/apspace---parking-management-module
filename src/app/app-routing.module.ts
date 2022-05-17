@@ -108,6 +108,10 @@ const routes: Routes = [
     data: { role: Role.Student | Role.Lecturer | Role.Admin },
     loadChildren: () => import('./pages/not-found/not-found.module').then(m => m.NotFoundPageModule)
   }
+  {
+    path: 'student-timetable',
+    loadChildren: () => import('./pages/student-timetable/student-timetable.module').then( m => m.StudentTimetablePageModule)
+  },
 ];
 
 @NgModule({

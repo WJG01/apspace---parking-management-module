@@ -31,6 +31,7 @@ export class WsApiService {
    * Caching strategies inspired by https://serviceworke.rs/caching-strategies.html
    *
    * @param endpoint - <apiUrl><endpoint> for service, used for caching
+   * @param options - { attempts, auth, caching, headers, params, timeout, url, withCredentials }
    * @param options.attempts - number of retries (default: 4)
    * @param options.auth - authentication required (default: true)
    * @param options.caching - caching strategies (default: true)
