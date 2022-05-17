@@ -90,7 +90,19 @@ export class StudentSurveyPage implements OnInit {
         tap(() => this.onIntakeCodeChanged())
       );
     }
-    this.COURSE_CODE$ = this.getIntakes(); // get all of the intakes
+    this.COURSE_CODE$ = this.getIntakes().pipe(
+      tap(intakes => {
+        if (intakes.length > 0) {
+          const findIntake = intakes.find(intake => intake.INTAKE_CODE === this.currentIntake);
+          // Check if student active intake is available
+          if (findIntake) {
+            this.selectedIntake = findIntake;
+          } else {
+            this.selectedIntake = intakes[0];
+          }
+        }
+      })
+    ); // get all of the intakes
     this.COURSE_MODULES$ = this.getModules(this.intakeCode).pipe( // get all of the modules
       tap(() => {
         this.getModuleByClassCode(this.classCode); // get the details of the selected module
