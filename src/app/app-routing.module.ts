@@ -282,6 +282,10 @@ const routes: Routes = [
     path: 'covid-rtk-form',
     loadChildren: () => import('./pages/covid-forms/covid-rtk-form/covid-rtk-form.module').then( m => m.CovidRtkFormPageModule)
   },
+  {
+    path: 'covid-pcr-form',
+    loadChildren: () => import('./pages/covid-forms/covid-pcr-form/covid-pcr-form.module').then( m => m.CovidPcrFormPageModule)
+  },
   // {
   //   path: 'covid-vaccination-status-form',
   //   loadChildren: () => import('./pages/covid-forms/covid-vaccination-status-form/covid-vaccination-status-form.module')
@@ -292,6 +296,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: () => import('./pages/not-found/not-found.module').then(m => m.NotFoundPageModule)
   }
+
 ];
 
 @NgModule({

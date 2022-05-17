@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+
+import { UserVaccineInfo } from '../../interfaces/covid-forms';
+import { WsApiService } from '../../services';
 
 @Component({
   selector: 'app-covid-forms',
@@ -7,8 +11,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CovidFormsPage implements OnInit {
 
-  constructor() { }
+  // User Vaccination Information
+  userVaccinationInfo$: Observable<UserVaccineInfo[]>;
+
+  constructor(
+    private ws: WsApiService
+  ) { }
 
   ngOnInit() {
+    this.getUserVaccinationInfo();
+  }
+
+  getUserVaccinationInfo() {
+    this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo[]>('/covid19/user');
   }
 }

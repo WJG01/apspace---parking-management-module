@@ -8,11 +8,12 @@ import { UserVaccineInfo } from '../../../interfaces/covid-forms';
 import { WsApiService } from '../../../services';
 
 @Component({
-  selector: 'app-covid-rtk-form',
-  templateUrl: './covid-rtk-form.page.html',
-  styleUrls: ['./covid-rtk-form.page.scss'],
+  selector: 'app-covid-pcr-form',
+  templateUrl: './covid-pcr-form.page.html',
+  styleUrls: ['./covid-pcr-form.page.scss'],
 })
-export class CovidRtkFormPage implements OnInit {
+
+export class CovidPcrFormPage implements OnInit {
   loading: HTMLIonLoadingElement;
 
   // User Vaccine Information
@@ -22,10 +23,9 @@ export class CovidRtkFormPage implements OnInit {
   todaysDate: string;
 
   // Input Response
-  rtkResult: string;
-  rtkEvidenceDate: string;
-  rtkEvidence: File;
-
+  pcrResult: string;
+  pcrEvidenceDate: string;
+  pcrEvidence: File;
   constructor(
     private ws: WsApiService,
     private loadingCtrl: LoadingController,
@@ -44,7 +44,7 @@ export class CovidRtkFormPage implements OnInit {
 
   // Returns date from 7 days ago
   getDate() {
-    const days = 6;
+    const days = 2;
     const todaysDate = new Date();
     const last = new Date(todaysDate.getTime() - (days * 24 * 60 * 60 * 1000));
     const lastDay = format(last, 'yyyy-MM-dd');
@@ -52,26 +52,26 @@ export class CovidRtkFormPage implements OnInit {
   }
 
   uploadFile($event): void {
-    this.rtkEvidence = $event.target.files[0];
-    if (!this.rtkEvidence) {
+    this.pcrEvidence = $event.target.files[0];
+    if (!this.pcrEvidence) {
       this.showToastMessage('Error: File cannot be empty!', 'danger');
       return;
     }
-    if (this.rtkEvidence.size > 2000000) {
+    if (this.pcrEvidence.size > 2000000) {
       this.showToastMessage('Error: Maximum File size is 2 MB. Please upload another file', 'danger');
-      this.rtkEvidence = null;
+      this.pcrEvidence = null;
     }
   }
 
   onSubmit() {
     this.presentLoading();
     const body = new FormData();
-    body.append('rtk_result', this.rtkResult);
-    const rtkDate = new Date(this.rtkEvidenceDate);
-    body.append('rtk_date', format(rtkDate, 'yyyy-MM-dd'));
-    body.append('rtk_evidence', this.rtkEvidence);
+    body.append('pcr_result', this.pcrResult);
+    const pcrDate = new Date(this.pcrEvidenceDate);
+    body.append('pcr_date', format(pcrDate, 'yyyy-MM-dd'));
+    body.append('pcr_evidence', this.pcrEvidence);
     if (body) {
-      this.ws.post<any>('/covid19/user/add/rtk_result', { body }).subscribe(
+      this.ws.post<any>('/covid19/user/add/pcr_result', { body }).subscribe(
         () => {
           this.showToastMessage('You have successfully submitted the form.', 'success');
           this.router.navigate(['/tabs/dashboard']);
