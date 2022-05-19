@@ -1,0 +1,94 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Classroom Finder</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="glob-container">
+    <ion-row>
+      <ion-col>
+        <ion-card class="ion-no-margin ion-margin-bottom">
+          <ion-accordion-group>
+            <ion-accordion value="filters">
+              <ion-item slot="header">
+                <ion-icon class="ion-padding-end" name="filter"></ion-icon>
+                <ion-label>Filters</ion-label>
+              </ion-item>
+
+              <ion-list slot="content">
+                <ion-item>
+                  <ion-label position="stacked">
+                    Location
+                  </ion-label>
+
+                  <ion-select [(ngModel)]="filterObject.location" interface="popover">
+                    <ion-select-option *ngFor="let l of locations" [value]="l">
+                      {{ l }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="stacked">
+                    Day
+                  </ion-label>
+
+                  <ion-select [(ngModel)]="filterObject.day" interface="popover">
+                    <ion-select-option *ngFor="let d of days" [value]="d.value">
+                      {{ d.displayName }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+
+                <ion-item (click)="openPicker('start')" detail="true" button="true">
+                  <ion-label>
+                    <h3>Start</h3>
+                    <p>{{ filterObject.from }}</p>
+                  </ion-label>
+                </ion-item>
+
+                <ion-item (click)="openPicker('to')" detail="true" button="true">
+                  <ion-label>
+                    <h3>Start</h3>
+                    <p>{{ filterObject.to }}</p>
+                  </ion-label>
+                </ion-item>
+
+                <ion-item lines="none">
+                  <ion-label position="stacked">
+                    Room Types
+                  </ion-label>
+
+                  <ion-select [(ngModel)]="filterObject.types" interface="popover" multiple="true">
+                    <ion-select-option *ngFor="let t of types" [value]="t.key">
+                      {{ t.name }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-list>
+            </ion-accordion>
+          </ion-accordion-group>
+        </ion-card>
+
+        <ion-card class="ion-no-margin">
+          <ion-item>
+            <ion-icon name="albums-outline" slot="start" color="primary"></ion-icon>
+            <ion-label class="glob-text-bold" color="primary">
+              {{ skeleton.length }} Available Rooms
+            </ion-label>
+          </ion-item>
+
+          <ion-card-content>
+            <ion-chip *ngFor="let _ of skeleton">
+              A-04-03
+            </ion-chip>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>
