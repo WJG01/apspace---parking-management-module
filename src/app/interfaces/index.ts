@@ -13,6 +13,7 @@ export { InterimLegend } from './interim-legend';
 export { FormattedDaysLecturerTimetable, FormattedLecturerTimetable, LecturerTimetable, MappedLecturerTimetable } from './lecturer-timetable';
 export { MPULegend } from './mpu-legend';
 export { NotificationBody, NotificationHistory, NotificationStatus, NotificationSubStatus } from './notification';
+export { QuixCustomer } from './quix';
 export { Role } from './role';
 export { StudentTimetable } from './student-timetable';
 export { Settings, SettingsOld } from './settings';

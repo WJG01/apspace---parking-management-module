@@ -1,0 +1,199 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Operation Hours</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="selectedSegment">
+      <ion-segment-button *ngFor="let company of companies" [value]="company">
+        {{ company }}
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" pullMax="400" pullMin="60" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="glob-container">
+    <ion-row class="ion-margin-top">
+      <ion-col size-xs="12" size-md="7" class="glob-margin-auto">
+        <ng-container *ngIf="(quixCompanies$ | async) as quixCompanies; else loading">
+          <ng-container *ngIf="quixCompanies.length > 0; else noData">
+            <ion-card
+              *ngFor="let department of (quixCompanies | filterByCompany:selectedSegment)[0].company_departments; let isLast = last"
+              class="ion-no-margin" [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+              <ion-item-divider mode="md" color="light">
+                <ion-label>
+                  <h3 class="glob-text-bold">
+                    {{ department.dept_name | titlecase }}
+                  </h3>
+
+                  <p *ngIf="department.dept_email">
+                    <a href="mailto:{{ department.dept_email }}">
+                      {{ department.dept_email }}
+                    </a>
+                  </p>
+                </ion-label>
+              </ion-item-divider>
+
+              <ion-card-content class="ion-no-padding ion-padding-start ion-padding-top ion-padding-end">
+                <ng-container *ngIf="department.shifts; else noOperations">
+                  <ng-container *ngIf="((department.shifts['Mon-Thu'].length === department.shifts['Fri'].length)
+                  && department.shifts['Mon-Thu'].length > 0
+                  && (department.shifts['Mon-Thu'][0].start_time === department.shifts['Fri'][0].start_time)
+                  && (department.shifts['Mon-Thu'][0].end_time === department.shifts['Fri'][0].end_time)
+                  && (department.shifts['Mon-Thu'][1]
+                  ? (department.shifts['Mon-Thu'][1].start_time === department.shifts['Fri'][1].start_time)
+                  && (department.shifts['Mon-Thu'][1].end_time === department.shifts['Fri'][1].end_time)
+                  : true)); else showSeperate">
+                    <ion-row class="ion-align-items-center">
+                      <ion-col class="details-section ion-text-center" size="12">
+                        <ion-text color="primary">
+                          <h3 class="glob-text-bold">Monday - Friday</h3>
+                        </ion-text>
+
+                        <h3 class="glob-fw-600 glob-small-margin-top" *ngFor="let slot of department.shifts['Mon-Thu']">
+                          {{ slot.start_time | time | slice: 0 :-8 }} - {{ slot.end_time | time | slice: 0 :-8 }}
+                        </h3>
+                      </ion-col>
+                    </ion-row>
+                  </ng-container>
+
+                  <ng-template #showSeperate>
+                    <ion-row class="ion-align-items-center">
+                      <ion-col class="details-section ion-text-center" size="12"
+                        [attr.size-md]="department.shifts['Fri'].length > 0 ? 6 : 12"
+                        *ngIf="department.shifts['Mon-Thu'].length > 0">
+                        <ion-text color="primary">
+                          <h3 class="glob-text-bold">
+                            Monday - Thursday
+                          </h3>
+                        </ion-text>
+
+                        <h3 class="glob-fw-600 glob-small-margin-top" *ngFor="let slot of department.shifts['Mon-Thu']">
+                          {{ slot.start_time | time | slice: 0 :-8 }} - {{ slot.end_time | time | slice: 0 :-8 }}
+                        </h3>
+                      </ion-col>
+
+                      <ion-col class="details-section ion-text-center" size="12" size-md="6"
+                        *ngIf="department.shifts['Fri'].length > 0">
+                        <ion-text color="primary">
+                          <h3 class="glob-text-bold">
+                            Friday
+                          </h3>
+                        </ion-text>
+
+                        <h3 class="glob-fw-600 glob-small-margin-top" *ngFor="let slot of department.shifts['Fri']">
+                          {{ slot.start_time | time | slice: 0 :-8 }} - {{ slot.end_time | time | slice: 0 :-8 }}
+                        </h3>
+                      </ion-col>
+                    </ion-row>
+
+                    <ion-row class="ion-align-items-center" *ngIf="department.shifts['Sat'].length > 0">
+                      <ion-col class="details-section ion-text-center" size="12">
+                        <ion-text color="primary">
+                          <h3 class="glob-text-bold">
+                            Saturday
+                          </h3>
+                        </ion-text>
+
+                        <h3 class="glob-fw-600 glob-small-margin-top" *ngFor="let slot of department.shifts['Sat']">
+                          {{ slot.start_time | time | slice: 0 :-8 }} - {{ slot.end_time | time | slice: 0 :-8 }}
+                        </h3>
+                      </ion-col>
+                    </ion-row>
+                  </ng-template>
+                </ng-container>
+
+                <ng-template #noOperations>
+                  <h2 class="text-message">No Operation Hours</h2>
+                </ng-template>
+
+                <ion-row class="ion-align-items-center" *ngIf="department.dept_phone.length > 0">
+                  <ion-col class="details-section ion-text-center" size="12">
+                    <ion-text>
+                      <h3 class="glob-text-bold">
+                        Phone Number<span *ngIf="department.dept_phone.length > 1">s</span>
+                      </h3>
+                    </ion-text>
+
+                    <ion-row class="glob-small-margin-top">
+                      <ion-col *ngFor="let contact of department.dept_phone" class="ion-no-padding">
+                        <ion-text color="primary">
+                          <a class="glob-text-bold" href="tel:{{contact}}">
+                            {{ contact }}
+                          </a>
+                        </ion-text>
+                      </ion-col>
+                    </ion-row>
+                  </ion-col>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+          </ng-container>
+
+          <ng-template #noData>
+            <message-with-svg messageTitle="Operation Hours Empty"
+              messageContent="There are no operation hours added by the system admin yet."
+              imageUrl="assets/img/search_not_found.svg">
+            </message-with-svg>
+          </ng-template>
+        </ng-container>
+
+        <ng-template #loading>
+          <ion-card *ngFor="let _ of skeleton; let isLast = last" class="ion-no-margin"
+            [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+            <ion-item-divider mode="md" color="light">
+              <ion-skeleton-text animated style="width: 50%; height: 20px"></ion-skeleton-text>
+            </ion-item-divider>
+
+            <ion-card-content class="ion-no-padding ion-padding-start ion-padding-top ion-padding-end">
+              <ion-row class="ion-align-items-center">
+                <ion-col class="ion-no-padding">
+                  <ion-item class="ion-no-padding" lines="none">
+                    <ion-label>
+                      <ion-skeleton-text animated class="glob-margin-auto" style="line-height: 20px; width: 30%;">
+                      </ion-skeleton-text>
+                      <ion-skeleton-text animated class="glob-margin-auto glob-small-margin-top"
+                        style="line-height: 20px; width: 20%;"></ion-skeleton-text>
+                    </ion-label>
+                  </ion-item>
+                </ion-col>
+
+                <ion-col class="ion-no-padding">
+                  <ion-item class="ion-no-padding" lines="none">
+                    <ion-label>
+                      <ion-skeleton-text animated class="glob-margin-auto" style="line-height: 20px; width: 30%;">
+                      </ion-skeleton-text>
+                      <ion-skeleton-text animated class="glob-margin-auto glob-small-margin-top"
+                        style="line-height: 20px; width: 20%;"></ion-skeleton-text>
+                    </ion-label>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+
+              <ion-row class="ion-align-items-center">
+                <ion-col class="ion-no-padding">
+                  <ion-item class="ion-no-padding" lines="none">
+                    <ion-label>
+                      <ion-skeleton-text animated class="glob-margin-auto" style="line-height: 20px; width: 30%;">
+                      </ion-skeleton-text>
+                      <ion-skeleton-text animated class="glob-margin-auto glob-small-margin-top"
+                        style="line-height: 20px; width: 20%;"></ion-skeleton-text>
+                    </ion-label>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-card-content>
+          </ion-card>
+        </ng-template>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>
