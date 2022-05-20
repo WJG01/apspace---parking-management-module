@@ -351,7 +351,9 @@ export class ResultsPage implements OnInit {
         backgroundColor: randomColor,
         borderColor: randomBorderColor,
         borderWidth: 2,
-        data: listCount
+        data: listCount,
+        hoverBackgroundColor: randomBorderColor,
+        hoverBorderColor: ''
       }],
       labels: listItems
     }
