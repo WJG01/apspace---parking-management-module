@@ -310,7 +310,13 @@ export class ResultsPage implements OnInit {
     const grades = studentResults.map(r => r.grade);
     const count = studentResults.map(r => r.count);
     if (grades.length > 0) {
-      this.showBarChart(grades, count);
+      // Grades sometimes does not sort properly
+      const sortedGrades = grades.sort((a, b) => {
+        const order = { '+': -1, '-': 1, undefined: 0 };
+
+        return a[0].localeCompare(b[0]) || order[a[1]] - order[b[1]];
+      });
+      this.showBarChart(sortedGrades, count);
       this.noSummary = false;
     }
   }
