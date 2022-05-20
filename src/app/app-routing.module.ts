@@ -120,6 +120,12 @@ const routes: Routes = [
     data: { role: Role.Student | Role.Admin | Role.Lecturer },
     loadChildren: () => import('./pages/classroom-finder/classroom-finder.module').then(m => m.ClassroomFinderPageModule)
   },
+  {
+    path: 'fees',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student },
+    loadChildren: () => import('./pages/fees/fees.module').then(m => m.FeesPageModule)
+  },
   { // this path must always be at the end of the routes array
     path: '**',
     canActivate: [AuthGuard],

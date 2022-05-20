@@ -4,6 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { DatePickerComponent } from './date-picker/date-picker.component';
+import { FeesCardComponent } from './fees-card/fees-card.component';
 import { LecturerTimetableComponent } from './lecturer-timetable/lecturer-timetable.component';
 import { MessageWithSvgComponent } from './message-with-svg/message-with-svg.component';
 import { NotFoundCardComponent } from './not-found-card/not-found-card.component';
@@ -15,6 +16,7 @@ import { FormatByDayPipe } from './lecturer-timetable/format-by-day/format-by-da
 @NgModule({
   declarations: [
     DatePickerComponent,
+    FeesCardComponent,
     LecturerTimetableComponent,
     MessageWithSvgComponent,
     NotFoundCardComponent,
@@ -31,6 +33,7 @@ import { FormatByDayPipe } from './lecturer-timetable/format-by-day/format-by-da
   ],
   exports: [
     DatePickerComponent,
+    FeesCardComponent,
     LecturerTimetableComponent,
     MessageWithSvgComponent,
     NotFoundCardComponent,

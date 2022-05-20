@@ -1,0 +1,356 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Fees</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="glob-container">
+    <ion-row>
+      <ion-col size-xs="12" size-md="6" push-md="6">
+        <ion-card class="ion-no-margin">
+          <ion-card-header>
+            <ion-card-title class="ion-text-center">Total Summary</ion-card-title>
+          </ion-card-header>
+
+          <ng-container *ngIf="(totalSummary$ | async) as totalSummary; else loadingTotalSummary">
+            <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end">
+              <canvas baseChart [type]="'pie'" [options]="summaryChart.options" [data]="summaryChart.data"></canvas>
+
+              <div class="seperator"></div>
+
+              <ion-row class="ion-align-items-center glob-small-margin-top">
+                <ion-col class="fees-section ion-text-center" size="6">
+                  <ion-text color="medium">
+                    <h3 class="glob-text-bold">Fine</h3>
+                  </ion-text>
+                  <ion-text [color]="totalSummary[0]?.FINE > 0 ? 'danger' : 'success'">
+                    <h3 class="glob-fw-600">
+                      {{ totalSummary[0].FINE ? (totalSummary[0].FINE | currency:'MYR':'RM') : 'N/A' }}
+                    </h3>
+                  </ion-text>
+                </ion-col>
+
+                <ion-col class="fees-section ion-text-center" size="6">
+                  <ion-text color="medium">
+                    <h3 class="glob-text-bold">Overdue</h3>
+                  </ion-text>
+                  <ion-text [color]="totalSummary[0]?.TOTAL_OVERDUE > 0 ? 'danger' : 'success'">
+                    <h3 class="glob-fw-600">
+                      {{
+                      totalSummary[0].TOTAL_OVERDUE ?
+                      (totalSummary[0]?.TOTAL_OVERDUE | currency:'MYR':'RM') :
+                      'N/A'
+                      }}
+                    </h3>
+                  </ion-text>
+                </ion-col>
+              </ion-row>
+
+              <ion-row class="ion-align-items-center">
+                <ion-col class="fees-section ion-text-center" size="6">
+                  <ion-text color="medium">
+                    <h3 class="glob-text-bold">Paid</h3>
+                  </ion-text>
+                  <ion-text color="success">
+                    <h3 class="glob-fw-600">
+                      {{
+                      totalSummary[0].TOTAL_PAID ?
+                      ((totalSummary[0].TOTAL_PAID || 0) | currency:'MYR':'RM') :
+                      'N/A'
+                      }}
+                    </h3>
+                  </ion-text>
+                </ion-col>
+
+                <ion-col class="fees-section ion-text-center" size="6">
+                  <ion-text color="medium">
+                    <h3 class="glob-text-bold">Outstanding</h3>
+                  </ion-text>
+                  <ion-text color="warning">
+                    <h3 class="glob-fw-600">
+                      {{ totalSummary[0].TOTAL_OUTSTANDING ?
+                      ((totalSummary[0].TOTAL_OUTSTANDING || 0) | currency:'MYR':'RM') :
+                      'N/A'
+                      }}
+                    </h3>
+                  </ion-text>
+                </ion-col>
+              </ion-row>
+
+              <ion-row class="ion-align-items-center">
+                <ion-col class="fees-section ion-text-center" size="12">
+                  <ion-text color="medium">
+                    <h3 class="glob-text-bold">Payable</h3>
+                  </ion-text>
+                  <ion-text color="success">
+                    <h3 class="glob-fw-600">
+                      {{
+                      totalSummary[0].TOTAL_PAYABLE ?
+                      (totalSummary[0].TOTAL_PAYABLE | currency:'MYR':'RM') :
+                      'N/A'
+                      }}
+                    </h3>
+                  </ion-text>
+                </ion-col>
+              </ion-row>
+            </ion-card-content>
+
+            <ion-progress-bar value="1"
+              [color]="(totalSummary[0].TOTAL_PAYABLE === totalSummary[0].TOTAL_PAID) ? 'success' : (totalSummary[0].TOTAL_OUTSTANDING > 0) ? 'warning' : (totalSummary[0].FINE > 0) ? 'danger' : (totalSummary[0].TOTAL_OVERDUE > 0) ? 'danger' : 'primary'">
+            </ion-progress-bar>
+          </ng-container>
+
+          <ng-template #loadingTotalSummary>
+            <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end">
+              <div class="loading-spinner">
+                <ion-spinner color="primary"></ion-spinner>
+                <p class="loading-text glob-text-bold">Loading Chart...</p>
+              </div>
+
+              <div class="seperator"></div>
+
+              <ion-row class="ion-align-items-center glob-small-margin-top">
+                <ion-col class="fees-section ion-text-center" size="6">
+                  <ion-text color="medium">
+                    <h3 class="glob-text-bold">Fine</h3>
+                  </ion-text>
+                  <ion-skeleton-text animated class="glob-margin-auto" style="width: 70%; line-height: 20px;">
+                  </ion-skeleton-text>
+                </ion-col>
+
+                <ion-col class="fees-section ion-text-center" size="6">
+                  <ion-text color="medium">
+                    <h3 class="glob-text-bold">Overdue</h3>
+                  </ion-text>
+                  <ion-skeleton-text animated class="glob-margin-auto" style="width: 70%; line-height: 20px;">
+                  </ion-skeleton-text>
+                </ion-col>
+              </ion-row>
+
+              <ion-row class="ion-align-items-center">
+                <ion-col class="fees-section ion-text-center" size="6">
+                  <ion-text color="medium">
+                    <h3 class="glob-text-bold">Paid</h3>
+                  </ion-text>
+                  <ion-skeleton-text animated class="glob-margin-auto" style="width: 70%; line-height: 20px;">
+                  </ion-skeleton-text>
+                </ion-col>
+
+                <ion-col class="fees-section ion-text-center" size="6">
+                  <ion-text color="medium">
+                    <h3 class="glob-text-bold">Outstanding</h3>
+                  </ion-text>
+                  <ion-skeleton-text animated class="glob-margin-auto" style="width: 70%; line-height: 20px;">
+                  </ion-skeleton-text>
+                </ion-col>
+              </ion-row>
+
+              <ion-row class="ion-align-items-center">
+                <ion-col class="fees-section ion-text-center" size="12">
+                  <ion-text color="medium">
+                    <h3 class="glob-text-bold">Payable</h3>
+                  </ion-text>
+                  <ion-skeleton-text animated class="glob-margin-auto" style="width: 40%; line-height: 20px;">
+                  </ion-skeleton-text>
+                </ion-col>
+              </ion-row>
+            </ion-card-content>
+
+            <ion-progress-bar value="1" color="medium">
+            </ion-progress-bar>
+          </ng-template>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size-xs="12" size-md="6" pull-md="6">
+        <ion-card class="ion-no-margin">
+          <ion-segment [(ngModel)]="selectedSegment">
+            <ion-segment-button value="summary">
+              Summary
+            </ion-segment-button>
+
+            <ion-segment-button value="bank-draft" *ngIf="showSegment">
+              SU Fees
+            </ion-segment-button>
+
+            <ion-segment-button value="details">
+              Details
+            </ion-segment-button>
+          </ion-segment>
+
+          <!-- Only Visible when Detail Segment is Active -->
+          <ion-searchbar *ngIf="selectedSegment === 'details'"
+            placeholder="Search by Payment Title, Due date, Amount Paid.." [(ngModel)]="term">
+          </ion-searchbar>
+        </ion-card>
+        <!-- Initialise Bankdraft -->
+        <ng-container *ngIf="bankDraft$ | async"></ng-container>
+
+        <ng-container [ngSwitch]="selectedSegment">
+          <!-- Summary Segment -->
+          <div class="ion-margin-top" *ngSwitchCase="'summary'">
+            <ng-container *ngIf="(summary$ | async) as summary; else loading">
+              <ng-container *ngIf="!summary[0].MESSAGE; else noSummary">
+                <ion-card class="ion-no-margin" *ngFor="let s of summary; let isLast = last"
+                  [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+                  <fees-card [isBankdraft]="false" [title]="s.INVOICE_DESCRIPTION" [dueDate]="s.PAYMENT_DUE_DATE"
+                    [payableAmount]="s.PAYABLE_AMOUNT" [totalCollected]="s.TOTAL_COLLECTED"
+                    [outstanding]="s.OUTSTANDING" [fine]="s.FINE">
+                  </fees-card>
+                </ion-card>
+              </ng-container>
+
+              <ng-template #noSummary>
+                <ion-card class="ion-no-margin">
+                  <ion-card-content>
+                    <message-with-svg imageUrl="assets/img/search_not_found.svg"
+                      messageTitle="Opps! No summary available."
+                      messageContent="In the case if you are looking for something else:" [advancedMode]="true">
+                      <div class="flex-container">
+                        <ul class="list-txt-color">
+                          <li>Click on the Details button at the top of this window</li>
+                        </ul>
+
+                        <p>Still having issues? No worries! Just
+                          <a tappable class="glob-text-bold" (click)="openFeedback()">REPORT</a>
+                          it to us.
+                        </p>
+                      </div>
+                    </message-with-svg>
+                  </ion-card-content>
+                </ion-card>
+              </ng-template>
+            </ng-container>
+          </div>
+
+          <!-- Bank Draft Segment -->
+          <div class="ion-margin-top" *ngSwitchCase="'bank-draft'">
+            <ng-container *ngIf="bankDraft">
+              <ion-card class="ion-no-margin" *ngFor="let b of bankDraft; let isLast = last"
+                [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+                <fees-card [isBankdraft]="true" [title]="b.COURSE_CODE || 'Course Code'" [bankdraft]="b"></fees-card>
+              </ion-card>
+            </ng-container>
+          </div>
+
+          <!-- Details Segment -->
+          <div class="ion-margin-top" *ngSwitchCase="'details'">
+            <ng-container *ngIf="(details$ | async) as details; else loading">
+              <ng-container *ngIf="(details | fuse:term:options) as filteredFees">
+                <ng-container *ngIf="filteredFees.length > 0; else noDetails">
+                  <ion-card class="ion-no-margin" *ngFor="let d of filteredFees; let isLast = last"
+                    [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+                    <fees-card [isBankdraft]="false" [title]="d.ITEM_DESCRIPTION" [dueDate]="d.DUE_DATE"
+                      [payableAmount]="d.AMOUNT_PAYABLE" [totalCollected]="d.TOTAL_COLLECTED"
+                      [outstanding]="d.OUTSTANDING" [fine]="d.FINE">
+                    </fees-card>
+                  </ion-card>
+                </ng-container>
+              </ng-container>
+
+              <ng-template #noDetails>
+                <ion-card class="ion-no-margin">
+                  <ion-card-content>
+                    <message-with-svg imageUrl="assets/img/search_not_found.svg" messageTitle="Opps! No Fees available."
+                      messageContent="Perhaps you can try this:" [advancedMode]="true">
+                      <div class="flex-container">
+                        <ul class="list-txt-color">
+                          <li>Make sure the keyword is matched with one of the items</li>
+                          <li>Make sure you have typed a valid item code.</li>
+                          <li>Make sure there is no special characters included.</li>
+                        </ul>
+
+                        <p>Still having issues? No worries! Just
+                          <a tappable class="glob-text-bold" (click)="openFeedback()">REPORT</a>
+                          it to us.
+                        </p>
+                      </div>
+                    </message-with-svg>
+                  </ion-card-content>
+                </ion-card>
+              </ng-template>
+            </ng-container>
+          </div>
+
+          <ng-template #loading>
+            <ion-card class="ion-no-margin" *ngFor="let _ of skeleton; let isLast = last"
+              [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+              <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end">
+                <ion-row>
+                  <ion-col>
+                    <ion-skeleton-text animated style="line-height: 20px; width: 30%;"></ion-skeleton-text>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row class="ion-align-items-center">
+                  <ion-col class="ion-no-padding">
+                    <ion-item class="ion-no-padding" lines="none">
+                      <ion-label>
+                        <ion-skeleton-text animated class="glob-margin-auto" style="line-height: 20px; width: 30%;">
+                        </ion-skeleton-text>
+                        <ion-skeleton-text animated class="glob-margin-auto glob-small-margin-top"
+                          style="line-height: 20px; width: 20%;"></ion-skeleton-text>
+                      </ion-label>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row class="ion-align-items-center">
+                  <ion-col class="ion-no-padding">
+                    <ion-item class="ion-no-padding" lines="none">
+                      <ion-label>
+                        <ion-skeleton-text animated class="glob-margin-auto" style="line-height: 20px; width: 30%;">
+                        </ion-skeleton-text>
+                        <ion-skeleton-text animated class="glob-margin-auto glob-small-margin-top"
+                          style="line-height: 20px; width: 20%;"></ion-skeleton-text>
+                      </ion-label>
+                    </ion-item>
+                  </ion-col>
+
+                  <ion-col class="ion-no-padding">
+                    <ion-item class="ion-no-padding" lines="none">
+                      <ion-label>
+                        <ion-skeleton-text animated class="glob-margin-auto" style="line-height: 20px; width: 30%;">
+                        </ion-skeleton-text>
+                        <ion-skeleton-text animated class="glob-margin-auto glob-small-margin-top"
+                          style="line-height: 20px; width: 20%;"></ion-skeleton-text>
+                      </ion-label>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row class="ion-align-items-center">
+                  <ion-col class="ion-no-padding">
+                    <ion-item class="ion-no-padding" lines="none">
+                      <ion-label>
+                        <ion-skeleton-text animated class="glob-margin-auto" style="line-height: 20px; width: 30%;">
+                        </ion-skeleton-text>
+                        <ion-skeleton-text animated class="glob-margin-auto glob-small-margin-top"
+                          style="line-height: 20px; width: 20%;"></ion-skeleton-text>
+                      </ion-label>
+                    </ion-item>
+                  </ion-col>
+
+                  <ion-col class="ion-no-padding">
+                    <ion-item class="ion-no-padding" lines="none">
+                      <ion-label>
+                        <ion-skeleton-text animated class="glob-margin-auto" style="line-height: 20px; width: 30%;">
+                        </ion-skeleton-text>
+                        <ion-skeleton-text animated class="glob-margin-auto glob-small-margin-top"
+                          style="line-height: 20px; width: 20%;"></ion-skeleton-text>
+                      </ion-label>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+          </ng-template>
+        </ng-container>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>

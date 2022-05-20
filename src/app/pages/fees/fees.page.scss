@@ -1,0 +1,41 @@
+.seperator {
+  padding-top: 10px;
+  border-bottom: 1px solid;
+}
+
+.fees-section {
+  margin-bottom: 20px;
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+
+  .loading-text {
+    margin-top: 20px;
+    text-align: center;
+    width: 250px;
+    color: var(--ion-color-primary);
+    font-size: 18px;
+  }
+}
+
+// No UI Stylings
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.list-txt-color {
+  color: var(--ion-color-tertiary);
+}
+
+.fees-section:not(:last-child) {
+  @media (min-width: 768px) {
+    border-right: solid 1.5px;
+  }
+}

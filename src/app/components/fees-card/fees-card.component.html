@@ -1,0 +1,151 @@
+<ion-card-content class="ion-no-padding ion-padding-start ion-padding-end">
+  <ion-row>
+    <ion-item class="ion-no-padding">
+      <ion-label class="ion-text-wrap">
+        <ion-text color="primary">
+          <p class="glob-fw-600">
+            {{ title }}
+          </p>
+        </ion-text>
+      </ion-label>
+    </ion-item>
+  </ion-row>
+
+  <ion-row *ngIf="!isBankdraft; else showBankdraft">
+    <ion-col>
+      <ion-row class="ion-align-items-center">
+        <ion-col class="fees-section ion-text-center" size="12">
+          <ion-text color="medium">
+            <h3 class="glob-text-bold">Due Date</h3>
+          </ion-text>
+          <ion-text color="primary">
+            <h3 class="glob-fw-600">
+              {{ dueDate | dateWithTimezone: 'EEEE, d MMM y' }}
+            </h3>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="ion-align-items-center">
+        <ion-col class="fees-section ion-text-center" size="6">
+          <ion-text color="medium">
+            <h3 class="glob-text-bold">Amount Payable</h3>
+          </ion-text>
+          <ion-text color="success">
+            <h3 class="glob-fw-600">
+              {{ payableAmount > 0 ? (payableAmount | currency:'MYR':'RM') : 'N/A' }}
+            </h3>
+          </ion-text>
+        </ion-col>
+
+        <ion-col class="fees-section ion-text-center" size="6">
+          <ion-text color="medium">
+            <h3 class="glob-text-bold">Total Collected</h3>
+          </ion-text>
+          <ion-text [color]="totalCollected && totalCollected > 0 ? 'success' : 'danger'">
+            <h3 class="glob-fw-600">
+              {{ totalCollected > 0 ? (totalCollected | currency:'MYR':'RM') : 'N/A' }}
+            </h3>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="ion-align-items-center">
+        <ion-col class="fees-section ion-text-center" size="6">
+          <ion-text color="medium">
+            <h3 class="glob-text-bold">Outstanding</h3>
+          </ion-text>
+          <ion-text [color]="outstanding && outstanding > 0 ? 'danger' : 'success'">
+            <h3 class="glob-fw-600">
+              {{ outstanding > 0 ? (outstanding | currency:'MYR':'RM') : 'N/A' }}
+            </h3>
+          </ion-text>
+        </ion-col>
+
+        <ion-col class="fees-section ion-text-center" size="6">
+          <ion-text color="medium">
+            <h3 class="glob-text-bold">
+              Fine
+            </h3>
+          </ion-text>
+          <ion-text [color]="fine && fine > 0 ? 'warning' : 'success'">
+            <h3 class="glob-fw-600">
+              {{ fine > 0 ? (fine | currency:'MYR':'RM') : 'N/A' }}
+            </h3>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+
+  <ng-template #showBankdraft>
+    <ion-row>
+      <ion-col>
+        <ion-row class="ion-align-items-center">
+          <ion-col class="fees-section ion-text-center" size="12">
+            <ion-text color="medium">
+              <h3 class="glob-text-bold">Due Date</h3>
+            </ion-text>
+            <ion-text color="primary">
+              <h3 class="glob-fw-600">
+                {{ bankdraft.BANKDRAFT_DUE_DATE | dateWithTimezone: 'EEEE, d MMM y' }}
+              </h3>
+            </ion-text>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="ion-align-items-center">
+          <ion-col class="fees-section ion-text-center" size="6">
+            <ion-text color="medium">
+              <h3 class="glob-text-bold">Date Collected</h3>
+            </ion-text>
+            <ion-text color="success">
+              <h3 class="glob-fw-600">
+                {{ bankdraft.DATE_COLLECTED | dateWithTimezone: 'EEEE, d MMM y' }}
+              </h3>
+            </ion-text>
+          </ion-col>
+
+          <ion-col class="fees-section ion-text-center" size="6">
+            <ion-text color="medium">
+              <h3 class="glob-text-bold">Registration Date</h3>
+            </ion-text>
+            <ion-text>
+              <h3 class="glob-fw-600">
+                {{ bankdraft.REGISTRATION_DATE | dateWithTimezone: 'EEEE, d MMM y' }}
+              </h3>
+            </ion-text>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="ion-align-items-center">
+          <ion-col class="fees-section ion-text-center" size="6">
+            <ion-text color="medium">
+              <h3 class="glob-text-bold">
+                Amount Payable
+              </h3>
+            </ion-text>
+            <ion-text color="success">
+              <h3 class="glob-fw-600">
+                {{ bankdraft.BANKDRAFT_AMOUNT | currency:'GBP' }}
+              </h3>
+            </ion-text>
+          </ion-col>
+
+          <ion-col class="fees-section ion-text-center" size="6">
+            <ion-text color="medium">
+              <h3 class="glob-text-bold">
+                Amount Collected
+              </h3>
+            </ion-text>
+            <ion-text [color]="bankdraft.AMOUNT_COLLECTED && bankdraft.AMOUNT_COLLECTED > 0 ? 'success' : 'success'">
+              <h3 class="glob-fw-600">
+                {{ bankdraft.AMOUNT_COLLECTED | currency:'GBP' }}
+              </h3>
+            </ion-text>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ng-template>
+</ion-card-content>
