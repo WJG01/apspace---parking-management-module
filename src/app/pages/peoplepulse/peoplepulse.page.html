@@ -1,0 +1,8 @@
+<app-pp-home-navbar [photo$]="photo$" [staffProfile$]="staffProfile$"> </app-pp-home-navbar>
+<ion-content>
+  <app-pp-mobile-searchbar></app-pp-mobile-searchbar>
+  <app-pp-plus-button></app-pp-plus-button>
+  <ion-content class="ion-padding">
+    <app-pp-post *ngFor="let post of posts" [post]="post"></app-pp-post>
+  </ion-content>
+</ion-content>

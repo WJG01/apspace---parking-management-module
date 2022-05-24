@@ -286,6 +286,10 @@ const routes: Routes = [
     path: 'covid-pcr-form',
     loadChildren: () => import('./pages/covid-forms/covid-pcr-form/covid-pcr-form.module').then( m => m.CovidPcrFormPageModule)
   },
+  {
+    path: 'peoplepulse',
+    loadChildren: () => import('./pages/peoplepulse/peoplepulse.module').then( m => m.PeoplepulsePageModule )
+  },
   // {
   //   path: 'covid-vaccination-status-form',
   //   loadChildren: () => import('./pages/covid-forms/covid-vaccination-status-form/covid-vaccination-status-form.module')

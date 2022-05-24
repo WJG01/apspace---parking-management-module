@@ -1,0 +1,42 @@
+<ion-content class="ion-padding">
+  <h1>Edit Post</h1>
+
+  <!-- staff -->
+  <ion-item>
+    <ion-label>Tagged user: {{ this.post.tagged.name }}</ion-label>
+  </ion-item>
+
+  <!-- category -->
+  <ion-item button detail *ngIf="category === null; else catPicked" (click)="toggleCategories()">
+    <ion-label>Select Category</ion-label>
+  </ion-item>
+
+  <ng-template #catPicked>
+    <ion-item button (click)="clearCategory()">
+      <ion-label>{{ category.category_name }}</ion-label>
+    </ion-item>
+  </ng-template>
+
+  <ion-list *ngIf="isCatsOpen">
+    <ion-item button *ngFor="let cat of categories" (click)="selectCategory(cat)">
+      <ion-label>{{ cat.category_name }}</ion-label>
+    </ion-item>
+  </ion-list>
+  <!-- category -->
+
+  <ion-textarea
+    [disabled]="category === null"
+    placeholder="Say something about them..."
+    [(ngModel)]="content"
+    maxLength="2000"
+    minLength="2"
+    rows="6"
+    style="background: white"
+  >
+  </ion-textarea>
+
+  <div class="ion-float-right" style="margin-top: 1rem">
+    <ion-button style="margin-right: 1rem" (click)="onCancelClick()">Cancel</ion-button>
+    <ion-button (click)="onUpdateClick()">Update</ion-button>
+  </div>
+</ion-content>

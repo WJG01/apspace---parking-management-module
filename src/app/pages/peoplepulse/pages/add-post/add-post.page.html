@@ -1,0 +1,75 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/peoplepulse"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Add Post</ion-title>
+    <ion-buttons slot="primary" (click)="post()">
+      <ion-button [disabled]="content.trim().length === 0" color="primary">Post</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="add-content">
+    <!-- staff -->
+    <ion-item button detail (click)="toggleStaff()" *ngIf="staff === null; else staffPicked">
+      <ion-label>Select Employee</ion-label>
+    </ion-item>
+
+    <ion-list [class.ion-hide]="!isStaffOpen" *ngIf="staffs$ | async as staffs">
+      <ion-item button *ngFor="let staff of staffs" (click)="selectStaff(staff)">
+        <ion-label>{{ staff.FULLNAME }}</ion-label>
+      </ion-item>
+    </ion-list>
+
+    <ng-template #staffPicked>
+      <ion-item button (click)="clearStaff()">
+        <ion-label>{{ staff.FULLNAME }}</ion-label>
+      </ion-item>
+    </ng-template>
+    <!-- staff -->
+
+    <!-- category -->
+    <ion-item
+      button
+      detail
+      *ngIf="category === null; else catPicked"
+      [disabled]="staff === null"
+      (click)="toggleCategories()"
+    >
+      <ion-label>Select Category</ion-label>
+    </ion-item>
+
+    <ng-template #catPicked>
+      <ion-item (click)="clearCategory()">
+        <ion-label>{{ category.category_name }}</ion-label>
+      </ion-item>
+    </ng-template>
+
+    <ion-list *ngIf="isCatsOpen">
+      <ion-item button *ngFor="let cat of categories" (click)="selectCategory(cat)">
+        <ion-label>{{ cat.category_name }}</ion-label>
+      </ion-item>
+    </ion-list>
+    <!-- category -->
+
+    <ion-textarea
+      [disabled]="category === null"
+      placeholder="Say something about them..."
+      [(ngModel)]="content"
+      maxLength="2000"
+      minLength="2"
+      rows="12"
+      auto-grow="true"
+      style="background: white"
+    >
+    </ion-textarea>
+
+    <!-- send email -->
+    <div id="emailto">
+      <ion-checkbox style="margin-right: 1rem"></ion-checkbox>
+      <ion-label>Send email to tagged employee</ion-label>
+    </div>
+  </div>
+</ion-content>

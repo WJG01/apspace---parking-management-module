@@ -1,0 +1,61 @@
+<div class="popover-content">
+  <h3>Set Filters</h3>
+  <p>Sort by</p>
+  <div style="display: flex">
+    <ion-segment
+      [value]="options.sortBy"
+      mode="ios"
+      (ionChange)="onSortByChange($event)"
+      style="margin-right: 1rem"
+    >
+      <ion-segment-button value="Name">
+        <ion-label>Name</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Date">
+        <ion-label>Date</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+    <ion-segment
+      [value]="options.isSortedAsc ? 'Asc' : 'Dsc'"
+      mode="ios"
+      (ionChange)="onIsSortedAscChange($event)"
+    >
+      <ion-segment-button value="Asc">
+        <ion-label>Ascending</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="Dsc">
+        <ion-label>Descending</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <p>Filter by category</p>
+  <div>
+    <ion-chip *ngFor="let i of selectedCats" [color]="lookup[i.name]" (click)="addCategory(i.name)">
+      {{ i.name }}
+      <ion-icon name="close-circle"></ion-icon>
+    </ion-chip>
+  </div>
+  <div>
+    <ion-chip
+      *ngFor="let i of notSelectedCats"
+      [color]="lookup[i.name]"
+      (click)="delCategory(i.name)"
+    >
+      {{ i.name }}
+    </ion-chip>
+  </div>
+
+  <p>Filter by functional area</p>
+  <ion-list>
+    <ion-item>
+      <ion-label>All functional areas</ion-label>
+      <ion-checkbox slot="end" (click)="toggleCheck()" [(ngModel)]="allChecked"></ion-checkbox>
+    </ion-item>
+    <ion-item *ngFor="let i of options.funcAreas">
+      <ion-label>{{ i.name }}</ion-label>
+      <ion-checkbox slot="end" [(ngModel)]="i.selected" (ionChange)="onFuncAreasChange()">
+      </ion-checkbox>
+    </ion-item>
+  </ion-list>
+</div>
