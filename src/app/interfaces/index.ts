@@ -14,8 +14,11 @@ export { FormattedDaysLecturerTimetable, FormattedLecturerTimetable, LecturerTim
 export { MPULegend } from './mpu-legend';
 export { NotificationBody, NotificationHistory, NotificationStatus, NotificationSubStatus } from './notification';
 export { Role } from './role';
+export { StudentTimetable } from './student-timetable';
+export { Settings, SettingsOld } from './settings';
+export { StaffProfile } from './staff-profile'
+export { StudentProfile } from './student-profile'
 export { StaffDirectory } from './staff';
-export { StudentProfile } from './student-profile';
 export { SurveyIntake, SurveyModule } from './student-survey';
 export { BeAPUStudentDetails, StudentPhoto, StudentSearch } from './student';
 export { Subcourse } from './subcourses';

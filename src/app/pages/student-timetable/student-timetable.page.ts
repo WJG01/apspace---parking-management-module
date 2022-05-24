@@ -3,6 +3,7 @@ import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActionSheetController, IonRefresher, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
+import { Browser } from '@capacitor/browser';
 import { formatISO } from 'date-fns';
 import { Observable, Subscription, combineLatest } from 'rxjs';
 import { finalize, map, tap } from 'rxjs/operators';
@@ -395,13 +396,12 @@ export class StudentTimetablePage implements OnInit {
     }
   }
 
-  sendToPrint() {
+  async sendToPrint() {
     const week = formatISO(this.selectedWeek, { representation: 'date' }); // week in apspace starts with sunday, API starts with monday
     // For student timetable:
     // printUrl?Week=2019-11-18&Intake=APTDF1805DSM(VFX)&print_request=print_tt
     // For lecturer timetable:
     // printUrl?LectID=ARW&Submit=Submit&Week=2019-11-18&print_request=print
-    // TODO convert this to capacitor browser
-    Browser.create(`${this.printUrl}?Week=${week}&Intake=${this.intake}&Intake_Group=${this.selectedGrouping}&print_request=print_tt`, '_system', 'location=true');
+    await Browser.open({url: `${this.printUrl}?Week=${week}&Intake=${this.intake}&Intake_Group=${this.selectedGrouping}&print_request=print_tt`, windowName: '_system'});
   }
 }

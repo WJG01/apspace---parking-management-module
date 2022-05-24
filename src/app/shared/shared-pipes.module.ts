@@ -5,13 +5,15 @@ import { AttendanceStatusPipe } from './attendance-status/attendance-status.pipe
 import { DateWithTimezonePipe } from './date-with-timezone/date-with-timezone.pipe';
 import { FusePipe } from './fuse/fuse.pipe';
 import { SafePipe } from './safe/safe.pipe';
+import { DateWithTimezonePipe } from './date-with-timezone/date-with-timezone.pipe';
 
 @NgModule({
     declarations: [
       AttendanceStatusPipe,
       DateWithTimezonePipe,
       FusePipe,
-      SafePipe
+      SafePipe,
+      DateWithTimezonePipe
     ],
     imports: [CommonModule],
     exports: [

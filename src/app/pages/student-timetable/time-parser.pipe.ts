@@ -11,11 +11,11 @@ export class TimeParserPipe extends DateWithTimezonePipe implements PipeTransfor
   transform(time: string, _: any, withDate = false): string {
     if (!withDate) {
       const timeObject = parse(time, 'h:mm aa', new Date());
-      return super.transform(timeObject, 'time');
+      return <string> super.transform(timeObject, 'time');
     } else {
       // tslint:disable-next-line: quotemark
       const timeObject = parse(time, "yyyy-MM-dd'T'HH:mm:ssXXX", new Date());
-      return super.transform(timeObject, 'time');
+      return <string> super.transform(timeObject, 'time');
     }
   }
 }

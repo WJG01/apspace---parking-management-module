@@ -17,6 +17,12 @@ const routes: Routes = [
         loadChildren: () => import('../dashboard/dashboard.module').then(m => m.DashboardPageModule)
       },
       {
+        path: 'student-timetable',
+        canActivate: [AuthGuard],
+        data: { role: Role.Student },
+        loadChildren: () => import('../student-timetable/student-timetable.module').then(m => m.StudentTimetablePageModule)
+      },
+      {
         path: 'attendance',
         canActivate: [AuthGuard],
         data: { role: Role.Student },
