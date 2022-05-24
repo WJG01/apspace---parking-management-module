@@ -281,7 +281,7 @@ export class SettingsService {
 
 
 
-    const options = this.configuration.connected ? { headers: { 'x-refresh': '' } } : {};
+    const options = this.configuration.connectionStatus ? { headers: { 'x-refresh': '' } } : {};
     from(this.storage.get('role')).pipe(
       // tslint:disable-next-line:no-bitwise
       switchMap(role => role & Role.Student

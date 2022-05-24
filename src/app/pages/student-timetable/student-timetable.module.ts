@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
+import { SharedPipesModule } from '../../shared/shared-pipes.module';
 
 import { StudentTimetablePageRoutingModule } from './student-timetable-routing.module';
 
@@ -13,15 +14,15 @@ import { StrToColorPipe } from './str-to-color.pipe';
 import { ThedayPipe } from './theday.pipe';
 import { TheWeekPipe } from './theweek.pipe';
 import { TimeParserPipe } from './time-parser.pipe';
-import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-with-timezone.pipe';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    StudentTimetablePageRoutingModule
+    StudentTimetablePageRoutingModule,
+    SharedPipesModule
   ],
-  declarations: [StudentTimetablePage, ClassesPipe, GenPipe, StrToColorPipe, ThedayPipe, TheWeekPipe, TimeParserPipe, DateWithTimezonePipe]
+  declarations: [StudentTimetablePage, ClassesPipe, GenPipe, StrToColorPipe, ThedayPipe, TheWeekPipe, TimeParserPipe]
 })
 export class StudentTimetablePageModule {}

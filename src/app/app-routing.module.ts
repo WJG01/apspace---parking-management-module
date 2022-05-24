@@ -22,6 +22,12 @@ const routes: Routes = [
     loadChildren: () => import('./pages/tabs/tabs.module').then(m => m.TabsPageModule)
   },
   {
+    path: 'student-timetable',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student },
+    loadChildren: () => import('./pages/student-timetable/student-timetable.module').then( m => m.StudentTimetablePageModule)
+  },
+  {
     path: 'attendance',
     canActivate: [AuthGuard],
     data: { role: Role.Student },
@@ -107,11 +113,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { role: Role.Student | Role.Lecturer | Role.Admin },
     loadChildren: () => import('./pages/not-found/not-found.module').then(m => m.NotFoundPageModule)
-  }
-  {
-    path: 'student-timetable',
-    loadChildren: () => import('./pages/student-timetable/student-timetable.module').then( m => m.StudentTimetablePageModule)
   },
+
 ];
 
 @NgModule({
