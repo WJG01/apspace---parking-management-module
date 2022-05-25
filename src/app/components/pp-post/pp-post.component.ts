@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
-import { PeoplepulseService } from '../../services';
-import { PpDeleteModalComponent } from '../pp-delete-modal/pp-delete-modal.component';
-import { PpEditModalComponent } from '../pp-edit-modal/pp-edit-modal.component';
+import { StaffDirectory } from 'src/app/interfaces';
+import { PeoplepulseService, WsApiService } from 'src/app/services';
+import { PpDeleteModalComponent } from './pp-delete-modal/pp-delete-modal.component';
+import { PpEditModalComponent } from './pp-edit-modal/pp-edit-modal.component';
 
 @Component({
   selector: 'app-pp-post',
@@ -24,7 +25,11 @@ export class PpPostComponent implements OnInit {
   };
   formattedDate = '';
 
-  constructor(private modalController: ModalController, private pp: PeoplepulseService) {}
+  constructor(
+    private modalController: ModalController,
+    private pp: PeoplepulseService,
+    private ws: WsApiService,
+  ) {}
 
   ngOnInit() {
     this.color = this.lookup[this.post.category];
@@ -42,9 +47,9 @@ export class PpPostComponent implements OnInit {
     await modal.present();
     const { data } = await modal.onDidDismiss();
     if (data.toDelete) {
-      this.pp.getPosts().subscribe((p) => {
-        p.posts = p.posts.filter((post) => post.post_id !== this.post.id);
-        this.pp.deletePost(p).subscribe(() => window.location.reload());
+      this.ws.get<StaffDirectory[]>('/staff/profile').subscribe((staff) => {
+        // p.posts = p.posts.filter((post) => post.post_id !== this.post.id);
+        this.pp.deletePost(staff[0].ID, this.post.id).subscribe(() => window.location.reload());
       });
     }
   }

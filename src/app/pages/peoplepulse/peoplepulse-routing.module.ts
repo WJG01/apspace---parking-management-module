@@ -10,7 +10,7 @@ const routes: Routes = [
   },
   {
     path: 'add-post',
-    loadChildren: () => import('./pages/add-post/add-post.module').then((m) => m.AddPostPageModule),
+    loadChildren: () => import('./add-post/add-post.module').then((m) => m.AddPostPageModule),
   },
   {
     path: 'staffs',
@@ -18,14 +18,14 @@ const routes: Routes = [
       {
         path: '',
         loadChildren: () =>
-          import('./pages/staff-directory/staff-directory.module').then(
+          import('./staff-directory/staff-directory.module').then(
             (m) => m.StaffDirectoryPageModule
           ),
       },
       {
         path: '',
         loadChildren: () =>
-          import('./pages/staff-directory-info/staff-directory-info.module').then(
+          import('./staff-directory-info/staff-directory-info.module').then(
             (m) => m.StaffDirectoryInfoPageModule
           ),
       },
@@ -33,7 +33,7 @@ const routes: Routes = [
   },
   {
     path: 'profile',
-    loadChildren: () => import('./pages/profile/profile.module').then((m) => m.ProfilePageModule),
+    loadChildren: () => import('./profile/profile.module').then((m) => m.ProfilePageModule),
   },
 ];
 

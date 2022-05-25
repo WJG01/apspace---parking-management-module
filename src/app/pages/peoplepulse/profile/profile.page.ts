@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Storage } from '@ionic/storage';
+import { Observable } from 'rxjs';
 
-import { PpMeta, StaffDirectory } from 'src/app/interfaces';
-import { WsApiService } from 'src/app/services';
-import { PeoplepulseService } from '../../services';
+import { PpMeta, Role, StaffDirectory } from 'src/app/interfaces';
+import { StaffProfile } from 'src/app/interfaces';
+import { PeoplepulseService, WsApiService } from 'src/app/services';
 
 @Component({
   selector: 'app-profile',
@@ -10,6 +12,9 @@ import { PeoplepulseService } from '../../services';
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage implements OnInit {
+  staffProfile$: Observable<StaffProfile[]>;
+  indecitor = false;
+  skeltons = [80, 30, 100, 45, 60, 76];
   // for demo purpose until can test with a staff acc...
   staffProfile = [
     {
@@ -28,9 +33,14 @@ export class ProfilePage implements OnInit {
   posts: any[] = [];
   staffs: any;
 
-  constructor(private ws: WsApiService, private pp: PeoplepulseService) {}
+  constructor(
+    private ws: WsApiService,
+    private pp: PeoplepulseService,
+    private storage: Storage,
+  ) {}
 
   ngOnInit() {
+    this.indecitor = true;
     this.ws.get<StaffDirectory[]>('/staff/listing', { caching: 'cache-only' }).subscribe(
       (staffs) => {
         this.staffs = staffs.reduce(
@@ -47,12 +57,29 @@ export class ProfilePage implements OnInit {
         );
       },
       (err) => console.log(err),
-      () => this.getPosts()
+      // () => this.getPosts()
     );
   }
 
-  getPosts() {
-    this.pp.getPosts().subscribe(
+  ionViewDidEnter() {
+    this.getProfile();
+  }
+
+  getProfile() {
+    if (this.indecitor) {
+      this.storage.get('role').then((role: Role) => {
+        // tslint:disable-next-line:no-bitwise
+        if (role & (Role.Lecturer | Role.Admin)) {
+          this.staffProfile$ = this.ws.get<StaffProfile[]>('/staff/profile');
+          this.staffProfile$.subscribe((staff) => this.getPosts(staff[0].ID));
+        }
+      });
+      this.indecitor = false;
+    }
+  }
+
+  getPosts(staffId) {
+    this.pp.getPosts(staffId).subscribe(
       ({ meta, posts }) => {
         this.meta = meta;
         this.posts = posts

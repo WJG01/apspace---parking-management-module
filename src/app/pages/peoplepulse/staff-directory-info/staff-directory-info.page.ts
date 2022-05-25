@@ -5,8 +5,7 @@ import { Observable } from 'rxjs';
 import { share } from 'rxjs/operators';
 
 import { PpMeta, Role, StaffDirectory } from 'src/app/interfaces';
-import { AppLauncherService, WsApiService } from 'src/app/services';
-import { PeoplepulseService } from '../../services';
+import { AppLauncherService, PeoplepulseService, WsApiService } from 'src/app/services';
 
 /**
  * Display staff information. Can also be used as model.
@@ -88,16 +87,18 @@ export class StaffDirectoryInfoPage implements OnInit {
   }
 
   getPosts() {
-    this.pp.getPosts().subscribe(({ meta, posts }) => {
-      this.meta = meta;
-      this.posts = posts.map((p) => ({
-        id: p.post_id,
-        content: p.post_content,
-        category: p.post_category,
-        datetime: p.datetime,
-        poster: this.staffs[p.user_id],
-        tagged: this.staffs[p.tags[0].tag_id],
-      }));
+    this.ws.get<StaffDirectory[]>('/staff/profile').subscribe((staff) => {
+      this.pp.getPosts(staff[0].ID).subscribe(({ meta, posts }) => {
+        this.meta = meta;
+        this.posts = posts.map((p) => ({
+          id: p.post_id,
+          content: p.post_content,
+          category: p.post_category,
+          datetime: p.datetime,
+          poster: this.staffs[p.user_id],
+          tagged: this.staffs[p.tags[0].tag_id],
+        }));
+      });
     });
   }
 

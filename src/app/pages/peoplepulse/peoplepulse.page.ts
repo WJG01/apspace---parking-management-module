@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { PopoverController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
 // import { share } from 'rxjs/operators';
 
-import { WsApiService } from 'src/app/services';
 import {
   PpFilterOptionsSelectable,
   PpMeta,
@@ -11,8 +11,13 @@ import {
   StaffDirectory,
   StaffProfile,
   StudentPhoto,
-} from '../../interfaces';
-import { FilterOptionsService, PeoplepulseService } from './services';
+} from 'src/app/interfaces';
+import {
+  PeoplepulseService,
+  PpFilterOptionsService,
+  WsApiService
+} from 'src/app/services';
+import { PpFilterModalComponent } from './pp-filter-modal/pp-filter-modal.component';
 
 @Component({
   selector: 'app-peoplepulse',
@@ -28,6 +33,7 @@ export class PeoplepulsePage implements OnInit {
   posts: any[] = [];
   backupPosts: any[] = [];
   staffs: any;
+  isFilterOpen = false;
 
   // throw
   studentRole = false;
@@ -38,11 +44,13 @@ export class PeoplepulsePage implements OnInit {
     private ws: WsApiService,
     private pp: PeoplepulseService,
     private storage: Storage,
-    private filterOptions: FilterOptionsService
+    private filterOptions: PpFilterOptionsService,
+    public popoverController: PopoverController,
   ) {}
 
   ngOnInit() {
     this.indecitor = true;
+    this.getProfile();
     this.ws.get<StaffDirectory[]>('/staff/listing', { caching: 'cache-only' }).subscribe(
       (staffs) => {
         this.staffs = staffs.reduce(
@@ -59,17 +67,17 @@ export class PeoplepulsePage implements OnInit {
         );
       },
       (err) => console.log(err),
-      () => this.getPosts()
+      // () => this.getPosts()
     );
   }
 
-  ionViewDidEnter() {
-    this.getProfile();
-  }
+  // ionViewDidEnter() {
+  // }
 
   getProfile() {
     if (this.indecitor) {
       this.storage.get('role').then((role: Role) => {
+        // TODO: remove this when get staff account
         // tslint:disable-next-line:no-bitwise
         if (role & Role.Student) {
           this.studentRole = true;
@@ -77,14 +85,15 @@ export class PeoplepulsePage implements OnInit {
           // tslint:disable-next-line:no-bitwise
         } else if (role & (Role.Lecturer | Role.Admin)) {
           this.staffProfile$ = this.ws.get<StaffProfile[]>('/staff/profile');
+          this.staffProfile$.subscribe((staff) => this.getPosts(staff[0].ID));
         }
       });
       this.indecitor = false;
     }
   }
 
-  getPosts() {
-    this.pp.getPosts().subscribe(
+  getPosts(staffId) {
+    this.pp.getPosts(staffId).subscribe(
       ({ meta, posts }) => {
         this.meta = meta;
         this.posts = posts.map((p) => ({
@@ -113,6 +122,19 @@ export class PeoplepulsePage implements OnInit {
         });
       }
     );
+  }
+
+  toggleFilter() {
+    this.isFilterOpen = !this.isFilterOpen;
+  }
+
+  async presentFilterModal() {
+    const popover = await this.popoverController.create({
+      component: PpFilterModalComponent,
+      cssClass: 'filter-modal',
+      translucent: true,
+    });
+    await popover.present();
   }
 
   // here don't forget to sort the backup posts

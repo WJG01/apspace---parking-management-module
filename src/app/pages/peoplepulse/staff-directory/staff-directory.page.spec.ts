@@ -1,8 +1,8 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 
-import { WsApiService } from '../../services';
-import { FusePipe } from '../../shared/fuse/fuse.pipe';
+import { WsApiService } from 'src/app/services';
+import { FusePipe } from 'src/app/shared/fuse/fuse.pipe';
 import { StaffDirectoryPage } from './staff-directory.page';
 
 describe('StaffDirectoryPage', () => {

@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
-import { PpCategory } from 'src/app/interfaces';
-import { PeoplepulseService } from '../../services';
+import { PpCategory, StaffDirectory } from 'src/app/interfaces';
+import { PeoplepulseService, WsApiService } from 'src/app/services';
 
 @Component({
   selector: 'app-pp-edit-modal',
@@ -15,34 +15,37 @@ export class PpEditModalComponent implements OnInit {
   category: PpCategory = null;
   content = '';
   isCatsOpen = false;
+  profile: StaffDirectory;
 
-  constructor(private pp: PeoplepulseService, private modalController: ModalController) {}
+  constructor(
+    private ws: WsApiService,
+    private pp: PeoplepulseService,
+    private modalController: ModalController,
+  ) {}
 
   ngOnInit() {
-    this.pp.getPostCategories().subscribe((cats) => (this.categories = cats));
-    this.content = this.post.content;
-    this.category = {
-      user_id: 1,
-      category_name: this.post.category,
-      direct_supervisor: true,
-      status: true,
-    };
+    this.ws.get<StaffDirectory[]>('/staff/profile').subscribe(
+      (staff) => this.profile = staff[0],
+      (err) => console.log(err),
+      () => {
+        this.pp.getPostCategories(this.profile.ID, this.post.tagged.id)
+          .subscribe((cats) => (this.categories = cats));
+        this.content = this.post.content;
+        this.category = {
+          user_id: 1,
+          category_name: this.post.category,
+          direct_supervisor: true,
+          status: true,
+        };
+      }
+    );
   }
 
   updatePost() {
     if (this.content === this.post.content && this.category.category_name === this.post.category) {
       return;
     }
-    this.pp.getPosts().subscribe((p) => {
-      p.posts = p.posts.map((post) => {
-        if (post.post_id === this.post.id) {
-          post.post_content = this.content;
-          post.post_category = this.category.category_name;
-        }
-        return post;
-      });
-      this.pp.editPost(p).subscribe();
-    });
+    this.pp.editPost(this.profile.ID, this.post.tagged.id, this.post.id, this.category.category_name, this.content).subscribe();
     this.post.content = this.content;
     this.post.category = this.category.category_name;
   }

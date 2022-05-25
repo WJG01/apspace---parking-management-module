@@ -288,6 +288,8 @@ const routes: Routes = [
   },
   {
     path: 'peoplepulse',
+    canActivate: [AuthGuard],
+    data: { role: Role.Lecturer | Role.Admin },
     loadChildren: () => import('./pages/peoplepulse/peoplepulse.module').then( m => m.PeoplepulsePageModule )
   },
   // {

@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 
-// import { PeoplepulseService } from 'src/app/services/peoplepulse.service';
 import { PpFilterOptions, PpFilterOptionsSelectable } from 'src/app/interfaces';
-import { FilterOptionsService } from '../../services/filter-options.service';
+import { PpFilterOptionsService } from 'src/app/services';
 
 @Component({
-  selector: 'app-pp-filter',
-  templateUrl: './pp-filter.component.html',
-  styleUrls: ['./pp-filter.component.scss'],
+  selector: 'app-pp-filter-modal',
+  templateUrl: './pp-filter-modal.component.html',
+  styleUrls: ['./pp-filter-modal.component.scss'],
 })
-export class PpFilterComponent implements OnInit {
+export class PpFilterModalComponent implements OnInit {
   options: PpFilterOptions;
   allChecked = true;
   funcAreas: PpFilterOptionsSelectable[] = [];
@@ -26,7 +25,7 @@ export class PpFilterComponent implements OnInit {
 
   constructor(
     // private peoplepulseService: PeoplepulseService,
-    public filterOptions: FilterOptionsService
+    public filterOptions: PpFilterOptionsService
   ) {}
 
   ngOnInit() {

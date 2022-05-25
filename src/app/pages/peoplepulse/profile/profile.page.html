@@ -11,8 +11,7 @@
   <div class="glob-container">
     <!-- STAFF PROFILE -->
     <!-- <ng-template #userIsStaff> -->
-    <ng-container>
-      <!-- *ngIf="staffProfile$ | async as staffProfile; else loadingProfile"> -->
+    <ng-container *ngIf="staffProfile$ | async as staffProfile; else loadingProfile">
       <ion-grid class="ion-margin-top ion-no-padding">
         <ion-row class="ion-justify-content-center">
           <ion-col size="12" size-lg="8">
@@ -75,7 +74,21 @@
       </ion-grid>
     </ng-container>
     <!-- </ng-template> -->
+
+    <ng-template #loadingProfile>
+      <ion-grid class="ion-margin-top ion-no-padding">
+        <ion-row>
+          <ion-col class="ion-margin-top" size-xs="12" size-md="6" offset-md="3" size-lg="4" offset-lg="4">
+            <ion-item lines="none" *ngFor="let s of skeltons">
+              <ion-skeleton-text animated [style.width]="s + '%'" style="line-height: 30px; margin:auto;">
+              </ion-skeleton-text>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ng-template>
   </div>
+
   <h1 class="ion-text-center">Your Posts</h1>
   <div *ngIf="posts.length > 0; else noPosts">
     <app-pp-post *ngFor="let post of posts" [post]="post" editable="true"> </app-pp-post>
