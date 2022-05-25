@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { map, tap } from 'rxjs';
+import { finalize, map, Observable, tap } from 'rxjs';
 
+import { StudentTimetable } from '../../interfaces';
 import { DatePickerComponent } from '../../components/date-picker/date-picker.component';
 import { ClassroomTypes, Days } from '../../constants';
-import { WsApiService } from '../../services';
+import { StudentTimetableService } from '../../services';
 
 @Component({
   selector: 'app-classroom-finder',
@@ -13,21 +14,22 @@ import { WsApiService } from '../../services';
 })
 export class ClassroomFinderPage implements OnInit {
 
+  timetables$: Observable<StudentTimetable[]>;
   days = Days;
   types = ClassroomTypes;
-  locations: string[] = [];
+  locations = ['APU CAMPUS', 'APIIT CAMPUS'];
   filterObject = {
-    location: '',
+    location: 'APU CAMPUS',
     day: '',
     from: '',
     to: '',
     types: ClassroomTypes.map(t => t.key)
   }
-  skeleton = new Array(60);
+  skeleton = new Array(8);
 
   constructor(
-    private ws: WsApiService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private tt: StudentTimetableService
   ) { }
 
   ngOnInit() {
@@ -37,26 +39,22 @@ export class ClassroomFinderPage implements OnInit {
     this.filterObject.from = `${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`;
     this.filterObject.to = `${('0' + (date.getHours() + 1)).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`;
 
-    this.doRefresh();
+    // this.doRefresh();
   }
 
-  doRefresh() {
-    // TODO: Get Timetable Data from Student Timetable Service
-    const headers = { 'x-refresh': '' }
-    this.ws.get('', { url: 'https://s3-ap-southeast-1.amazonaws.com/open-ws/weektimetable', headers, caching: 'network-or-cache' })
-      .pipe(
-        tap((tt: any) => {
-          this.locations = [];
+  doRefresh(refresher?) {
+    const refresh = refresher ? true : false;
+    const excludeRooms = ['ONL', 'Online'];
 
-          tt.map(item => {
-            if (this.locations.indexOf(item.LOCATION) === -1 && item.LOCATION !== 'ONL') {
-              this.locations.push(item.LOCATION);
-            }
-          });
-        }),
-        tap(() => this.filterObject.location = this.locations[0])
-      )
-      .subscribe(res => console.log(res));
+    this.timetables$ = this.tt.get(refresh).pipe(
+      tap(res => console.log(res)),
+      map(data => data.filter(res => excludeRooms.every(room => !res.ROOM.includes(room)))), // Exclude Online and ONL room data
+      finalize(() => {
+        if (refresher) {
+          refresher.target.complete();
+        }
+      })
+    );
   }
 
   async openPicker(type: string) {
@@ -101,4 +99,7 @@ export class ClassroomFinderPage implements OnInit {
     }
   }
 
+  trackByName(value: number) {
+    return value;
+  }
 }

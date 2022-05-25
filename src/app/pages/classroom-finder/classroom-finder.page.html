@@ -74,20 +74,43 @@
           </ion-accordion-group>
         </ion-card>
 
-        <ion-card class="ion-no-margin">
-          <ion-item>
-            <ion-icon name="albums-outline" slot="start" color="primary"></ion-icon>
-            <ion-label class="glob-text-bold" color="primary">
-              {{ skeleton.length }} Available Rooms
-            </ion-label>
-          </ion-item>
+        <ng-container *ngIf="(timetables$ | async) as timetables; else loadTimetable">
+          <ion-card class="ion-no-margin"
+            *ngIf="(timetables | byLocation:filterObject.location | byRooms:filterObject.types | byTime:filterObject.day:filterObject.from:filterObject.to) as rooms">
+            <ion-item>
+              <ion-icon name="albums-outline" slot="start" color="primary"></ion-icon>
+              <ion-label class="glob-text-bold" color="primary">
+                {{ rooms.length }} Available Rooms
+              </ion-label>
+            </ion-item>
 
-          <ion-card-content>
-            <ion-chip *ngFor="let _ of skeleton">
-              A-04-03
-            </ion-chip>
-          </ion-card-content>
-        </ion-card>
+            <ion-card-content>
+              <ion-chip *ngFor="let room of rooms; trackBy: trackByName"
+                [routerLink]="['/student-timetable', { room: room }]">
+                {{ room }}
+              </ion-chip>
+            </ion-card-content>
+          </ion-card>
+        </ng-container>
+
+        <ng-template #loadTimetable>
+          <ion-card class="ion-no-margin">
+            <ion-item>
+              <ion-icon name="albums-outline" slot="start" color="primary"></ion-icon>
+              <ion-label class="glob-text-bold" color="primary">
+                Loading Available Rooms
+              </ion-label>
+            </ion-item>
+
+            <ion-card-content>
+              <ion-row>
+                <ion-col *ngFor="let _ of skeleton">
+                  <ion-skeleton-text animated style="height: 30px; width: 100%;"></ion-skeleton-text>
+                </ion-col>
+              </ion-row>
+            </ion-card-content>
+          </ion-card>
+        </ng-template>
       </ion-col>
     </ion-row>
   </div>
