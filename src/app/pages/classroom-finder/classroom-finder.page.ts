@@ -39,7 +39,7 @@ export class ClassroomFinderPage implements OnInit {
     this.filterObject.from = `${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`;
     this.filterObject.to = `${('0' + (date.getHours() + 1)).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}`;
 
-    // this.doRefresh();
+    this.doRefresh();
   }
 
   doRefresh(refresher?) {
