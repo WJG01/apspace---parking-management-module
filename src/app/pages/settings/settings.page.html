@@ -1,0 +1,286 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Settings</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="glob-container">
+    <ion-breadcrumbs>
+      <ion-breadcrumb>
+        Settings
+        <ion-icon slot="separator" name="chevron-forward"></ion-icon>
+      </ion-breadcrumb>
+      <ion-breadcrumb>
+        Main Menu
+      </ion-breadcrumb>
+    </ion-breadcrumbs>
+
+    <ion-row>
+      <ion-col size="12" size-md="6">
+        <ion-card class="ion-no-margin glob-small-margin-bottom">
+          <ion-item-divider class="ion-padding-start ion-padding-end glob-text-bold" color="light" mode="md">
+            <ion-label>
+              Themes
+            </ion-label>
+            <ion-icon name="color-palette-outline" color="primary" slot="end"></ion-icon>
+          </ion-item-divider>
+
+          <ion-radio-group value="">
+            <ion-list-header>
+              <ion-label>
+                <h3>Appearance</h3>
+                <p>Choose your preferred Theme Mode.</p>
+              </ion-label>
+            </ion-list-header>
+
+            <ion-item lines="none" *ngFor="let t of themes">
+              <ion-label>
+                {{ t.title }}
+              </ion-label>
+              <ion-radio slot="end" [value]="t.value"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+
+          <ion-item lines="none" mode="md">
+            <ion-label position="stacked">
+              Accent Color
+            </ion-label>
+            <ion-select interface="popover" value="#2a83ff">
+              <ion-select-option *ngFor="let a of accentColors" [value]="a.value">
+                {{ a.name | titlecase }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-card>
+
+        <ion-card class="ion-no-margin glob-small-margin-bottom">
+          <ion-item-divider class="ion-padding-start ion-padding-end glob-text-bold" color="light" mode="md">
+            <ion-label>
+              Dashboard
+            </ion-label>
+            <ion-icon name="grid-outline" color="primary" slot="end"></ion-icon>
+          </ion-item-divider>
+
+          <ion-item lines="inset">
+            <ion-label class="ion-text-wrap">
+              <h3>Active Sections</h3>
+              <p>
+                Notice Board, News, Upcoming Trips, Contacts, APCard Chart, Financial Chart, CGPA Chart
+              </p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item lines="none" button="true" detail="true"
+            (click)="manageSettings('dashboard sections', data)">
+            <ion-icon name="cog" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <h3>Manage Dashboard Sections</h3>
+              <p>Select the kinds of modules you would like to hide.</p>
+            </ion-label>
+          </ion-item>
+        </ion-card>
+
+        <ion-card class="ion-no-margin glob-small-margin-bottom">
+          <ion-item-divider class="ion-padding-start ion-padding-end glob-text-bold" color="light" mode="md">
+            <ion-label>
+              Others
+            </ion-label>
+            <ion-icon name="apps-outline" color="primary" slot="end"></ion-icon>
+          </ion-item-divider>
+
+          <ion-radio-group value="cards">
+            <ion-list-header>
+              <ion-label>
+                <h3>Menu UI</h3>
+                <p>Choose your preferred More Page View.</p>
+              </ion-label>
+            </ion-list-header>
+
+            <ion-item lines="none" *ngFor="let m of menuView">
+              <ion-label>
+                {{ m | titlecase }}
+              </ion-label>
+              <ion-radio slot="end" [value]="m"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+
+          <ion-item *ngIf="!isStudent">
+            <ion-label>
+              Modify Dashboard Name
+            </ion-label>
+            <ion-select multiple="true" placeholder="Click to select your name">
+              <ion-select-option *ngFor="let _ of skeleton">
+                Name
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item lines="inset">
+            <ion-label>Hide Profile Picture</ion-label>
+            <ion-toggle></ion-toggle>
+          </ion-item>
+
+          <ion-item lines="inset">
+            <ion-label>
+              Use Local Timezone
+            </ion-label>
+            <ion-toggle></ion-toggle>
+          </ion-item>
+
+          <ion-radio-group value="12">
+            <ion-list-header>
+              <ion-label>
+                <h3>Time Format</h3>
+                <p>Choose your preferred Time Format.</p>
+              </ion-label>
+            </ion-list-header>
+
+            <ion-item lines="none" *ngFor="let t of timeFormats">
+              <ion-label>
+                {{ t }} Hours
+              </ion-label>
+              <ion-radio slot="end" [value]="t"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+
+          <ion-item lines="none">
+            <ion-label>
+              Disable Shake Feedback
+              <p>This feature available only on mobile app</p>
+            </ion-label>
+            <ion-toggle color="primary"></ion-toggle>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-md="6">
+        <ion-card class="ion-no-margin glob-small-margin-bottom">
+          <ion-item-divider class="ion-padding-start ion-padding-end glob-text-bold" color="light" mode="md">
+            <ion-label>
+              Bus Shuttle Service
+            </ion-label>
+            <ion-icon name="bus-outline" color="primary" slot="end"></ion-icon>
+          </ion-item-divider>
+
+          <ion-item lines="none" mode="md">
+            <ion-label position="stacked">
+              First Location
+            </ion-label>
+            <ion-select interface="popover" value="APIIT @ TPM">
+              <ion-select-option *ngFor="let l of location" [value]="l">
+                {{ l }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item lines="none" mode="md">
+            <ion-label position="stacked">
+              Second Location
+            </ion-label>
+            <ion-select interface="popover" value="APU">
+              <ion-select-option *ngFor="let l of location" [value]="l">
+                {{ l }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-card>
+
+        <ion-card class="ion-no-margin glob-small-margin-bottom" *ngIf="isStudent">
+          <ion-item-divider class="ion-padding-start ion-padding-end glob-text-bold" color="light" mode="md">
+            <ion-label>
+              Student Timetable
+            </ion-label>
+            <ion-icon name="calendar-outline" color="primary" slot="end"></ion-icon>
+          </ion-item-divider>
+
+          <ion-item lines="inset">
+            <ion-label class="ion-text-wrap">
+              <h3>Hidden Modules</h3>
+              <p>BM019-3-3-ENTRE-T-3, BM019-3-3-ENTRE-T-2, ABUS002-3-3-ENTPM-T-1, BM035-3-1-FEP-T-1,
+                BM019-3-3-ENTRE-L-2, BM035-3-1-FEP-L-1, BM035-3-1-FEP-T-3, ABUS002-3-3-ENTPM-L-1
+              </p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item lines="none" button="true" detail="true" (click)="manageSettings('hidden modules', data)">
+            <ion-icon name="cog" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <h3>Manage Hidden Modules</h3>
+              <p>Select the kinds of modules you would like to hide.</p>
+            </ion-label>
+          </ion-item>
+        </ion-card>
+
+        <ion-card class="ion-no-margin glob-small-margin-bottom" *ngIf="!isStudent">
+          <ion-item-divider class="ion-padding-start ion-padding-end glob-text-bold" color="light" mode="md">
+            <ion-label>
+              iConsult Default Location
+            </ion-label>
+            <ion-icon name="location-outline" color="primary" slot="end"></ion-icon>
+          </ion-item-divider>
+
+          <ion-item lines="inset" mode="md">
+            <ion-label position="stacked">
+              Campus
+            </ion-label>
+            <ion-select interface="popover" value="New Campus">
+              <ion-select-option *ngFor="let c of campusLocation" [value]="c">
+                {{ c }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item lines="none" mode="md">
+            <ion-label position="stacked">
+              Venue
+            </ion-label>
+            <ion-select interface="popover" value="Amazon Chime">
+              <ion-select-option *ngFor="let v of venueLocation" [value]="v">
+                {{ v }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-card>
+
+        <ion-card class="ion-no-margin glob-small-margin-bottom">
+          <ion-item-divider class="ion-padding-start ion-padding-end glob-text-bold" color="light" mode="md">
+            <ion-label>
+              Security & Privacy
+            </ion-label>
+            <ion-icon name="key-outline" color="primary" slot="end"></ion-icon>
+          </ion-item-divider>
+
+          <ion-item detail="true" button="true" lines="inset">
+            <ion-label>
+              Change APKey Password
+            </ion-label>
+          </ion-item>
+
+          <ng-container *ngIf="!isStudent">
+            <ion-item button="true" detail="true" lines="inset">
+              <ion-label>
+                Change Webspace Password
+              </ion-label>
+            </ion-item>
+
+            <ion-item button="true" detail="true" lines="inset">
+              <ion-label>
+                Reset Webspace ID Password
+              </ion-label>
+            </ion-item>
+          </ng-container>
+
+          <ion-item lines="inset" detail="true" button="true">
+            <ion-label>
+              Set Security Questions
+            </ion-label>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>
