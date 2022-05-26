@@ -136,7 +136,16 @@ const routes: Routes = [
     path: 'settings',
     canActivate: [AuthGuard],
     data: { role: Role.Student | Role.Admin | Role.Lecturer },
-    loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsPageModule)
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsPageModule)
+      },
+      {
+        path: 'set-security-questions',
+        loadChildren: () => import('./pages/settings/set-security-questions/set-security-questions.module').then(m => m.SetSecurityQuestionsPageModule)
+      }
+    ]
   },
   { // this path must always be at the end of the routes array
     path: '**',
