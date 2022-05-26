@@ -144,6 +144,10 @@ const routes: Routes = [
       {
         path: 'set-security-questions',
         loadChildren: () => import('./pages/settings/set-security-questions/set-security-questions.module').then(m => m.SetSecurityQuestionsPageModule)
+      },
+      {
+        path: 'change-password',
+        loadChildren: () => import('./pages/settings/change-password/change-password.module').then(m => m.ChangePasswordPageModule)
       }
     ]
   },
