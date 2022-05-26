@@ -1,0 +1,51 @@
+responsive-container-sm {
+  padding: 1rem 0 !important;
+}
+
+.heading-title {
+  font-size: 1.4rem;
+  font-weight: 900;
+}
+
+.heading-container {
+  color: var(--ion-color-medium);
+}
+
+.heading-sub-title {
+  font-size: 1.1rem;
+}
+
+.card-label {
+  font-size: 1rem;
+}
+
+.item-thumbnail {
+  width: 2rem;
+  height: auto;
+}
+
+.fav-icon {
+  font-size: 1.5rem;
+}
+
+.edit-mode-card {
+  background: var(--ion-color-danger) !important;
+}
+
+.menu-container {
+  background: transparent none !important;
+  --background: transparent none !important;
+
+  .menu-card:hover {
+    background: var(--ion-color-light);
+    transition: .3s ease-in-out;
+  }
+}
+
+.col-padding > :nth-child(4n+1) {
+  padding-left: 0;
+}
+
+.col-padding > :nth-child(4n+4) {
+  padding-right: 0;
+}
