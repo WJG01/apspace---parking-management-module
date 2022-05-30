@@ -152,6 +152,10 @@ const routes: Routes = [
       {
         path: 'change-webspace-password',
         loadChildren: () => import('./pages/settings/change-webspace-password/change-webspace-password.module').then(m => m.ChangeWebspacePasswordPageModule)
+      },
+      {
+        path: 'reset-webspace-password',
+        loadChildren: () => import('./pages/settings/reset-webspace-password/reset-webspace-password.module').then(m => m.ResetWebspacePasswordPageModule)
       }
     ]
   },
