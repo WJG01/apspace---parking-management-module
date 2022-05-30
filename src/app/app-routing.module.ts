@@ -148,6 +148,10 @@ const routes: Routes = [
       {
         path: 'change-password',
         loadChildren: () => import('./pages/settings/change-password/change-password.module').then(m => m.ChangePasswordPageModule)
+      },
+      {
+        path: 'change-webspace-password',
+        loadChildren: () => import('./pages/settings/change-webspace-password/change-webspace-password.module').then(m => m.ChangeWebspacePasswordPageModule)
       }
     ]
   },
