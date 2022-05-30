@@ -53,11 +53,13 @@ export class ChangeWebspacePasswordPage implements OnInit {
         this.webspacePassword.changePassword(changePassword).subscribe({
           next: () => {
             loading.dismiss();
+            this.component.successHaptic();
             this.component.toastMessage('Your Webspace password has been changed.', 'success');
             this.router.navigate(['/settings']);
           },
           error: (err) => {
             loading.dismiss();
+            this.component.errorHaptic();
             this.component.toastMessage(err.error.msg.replace('Error: ', '') + ' Please try again or contact us via the feedback page', 'danger');
           },
           complete: () => {
