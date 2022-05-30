@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertButton, LoadingController } from '@ionic/angular';
-import { catchError, throwError, switchMap, timeout } from 'rxjs';
+import { catchError, throwError, switchMap, timeout, tap } from 'rxjs';
 
-import { CasTicketService, ComponentService } from '../../services';
+import { CasTicketService, ComponentService, SettingsService } from '../../services';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +21,8 @@ export class LoginPage implements OnInit {
     private component: ComponentService,
     private route: ActivatedRoute,
     private router: Router,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private settings: SettingsService
   ) { }
 
   ngOnInit() {
@@ -66,6 +67,7 @@ export class LoginPage implements OnInit {
       switchMap(st => this.cas.validate(st).pipe(
         catchError(() => (this.component.toastMessage('You are not authorized to use APSpace', 'danger'), throwError(() => new Error('unauthorized'))))
       )),
+      tap(() => this.settings.initialSync()),
       timeout(15000)
     ).subscribe({
       next: async () => {
