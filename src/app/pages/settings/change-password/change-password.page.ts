@@ -8,6 +8,7 @@ import { Storage } from '@ionic/storage-angular';
 
 import { Role } from '../../../interfaces';
 import { CasTicketService, ComponentService, WsApiService } from '../../../services';
+import { PasswordValidator } from '../../../validators/password.validator';
 
 @Component({
   selector: 'app-change-password',
@@ -49,7 +50,7 @@ export class ChangePasswordPage implements OnInit {
       current_password: ['', [Validators.required]],
       new_password: ['', [Validators.required]],
       confirm_password: ['', Validators.required]
-    });
+    }, { validators: PasswordValidator });
 
     this.changePasswordForm.valueChanges.subscribe(val => {
       const newPassword = val.new_password;
