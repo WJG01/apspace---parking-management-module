@@ -42,6 +42,30 @@
         </h2>
       </ng-template>
     </ng-container>
+
+    <ng-container *ngSwitchCase="'dashboard name'">
+      <ng-container *ngIf="(profileName$ | async) as profileName; else loadProfile">
+        <ion-item *ngFor="let name of allSettings; let isLast = last" [lines]="isLast ? 'none' : undefined">
+          <ion-icon name="person-circle-outline" slot="start" color="primary"></ion-icon>
+          <ion-label>
+            <h3 class="glob-fw-600">
+              {{ name.value }}
+            </h3>
+          </ion-label>
+          <ion-toggle [(ngModel)]="name.selected"></ion-toggle>
+        </ion-item>
+      </ng-container>
+
+      <ng-template #loadProfile>
+        <ion-item *ngFor="let name of skeleton; let isLast = last" [lines]="isLast ? 'none' : undefined">
+          <ion-icon name="person-circle-outline" slot="start" color="primary"></ion-icon>
+          <ion-label>
+            <ion-skeleton-text animated style="width: 40%; height: 15px"></ion-skeleton-text>
+          </ion-label>
+          <ion-toggle disabled="true"></ion-toggle>
+        </ion-item>
+      </ng-template>
+    </ng-container>
   </ng-container>
 </ion-content>
 

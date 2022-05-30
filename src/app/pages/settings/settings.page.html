@@ -119,16 +119,23 @@
             </ion-item>
           </ion-radio-group>
 
-          <ion-item *ngIf="!isStudent">
-            <ion-label>
-              Modify Dashboard Name
-            </ion-label>
-            <ion-select multiple="true" placeholder="Click to select your name">
-              <ion-select-option *ngFor="let _ of skeleton">
-                Name
-              </ion-select-option>
-            </ion-select>
-          </ion-item>
+          <ng-container *ngIf="!isStudent">
+            <ion-item *ngIf="(studentDashboardName$ | async) as studentDashboardName" detail="true" button="true"
+              (click)="manageSettings('dashboard name', studentDashboardName)">
+              <ion-label class="ion-text-wrap">
+                <h3>Modify Dashboard Name</h3>
+                <p *ngIf="studentDashboardName.length > 0; else defaultName">
+                  <span *ngFor="let s of studentDashboardName; let isLast = last">
+                    {{ s }}<span *ngIf="!isLast">, </span>
+                  </span>
+                </p>
+
+                <ng-template #defaultName>
+                  <p>Default Name</p>
+                </ng-template>
+              </ion-label>
+            </ion-item>
+          </ng-container>
 
           <ion-item lines="inset">
             <ion-label>Hide Profile Picture</ion-label>
@@ -291,7 +298,8 @@
             <ion-label position="stacked">
               Campus
             </ion-label>
-            <ion-select interface="popover" value="New Campus">
+            <ion-select interface="popover" placeholder="Select a Campus" [(ngModel)]="defaultCampus"
+              (ngModelChange)="updateDefaultLocation('campus')">
               <ion-select-option *ngFor="let c of campusLocation" [value]="c">
                 {{ c }}
               </ion-select-option>
@@ -299,14 +307,32 @@
           </ion-item>
 
           <ion-item lines="none" mode="md">
-            <ion-label position="stacked">
-              Venue
-            </ion-label>
-            <ion-select interface="popover" value="Amazon Chime">
-              <ion-select-option *ngFor="let v of venueLocation" [value]="v">
-                {{ v }}
-              </ion-select-option>
-            </ion-select>
+            <ng-container *ngIf="defaultCampus; else noCampusSelected">
+              <ng-container *ngIf="(venues$ | async) as venues; else loadVenues">
+                <ion-label position="stacked">
+                  Venue
+                </ion-label>
+                <ion-select interface="popover" placeholder="Select a Venue" [(ngModel)]="defaultVenue"
+                  (ngModelChange)="updateDefaultLocation('venue')">
+                  <ion-select-option *ngFor="let v of venues" [value]="v.id">
+                    {{ v.room_code }}
+                  </ion-select-option>
+                </ion-select>
+              </ng-container>
+
+              <ng-template #loadVenues>
+                <ion-label>
+                  <ion-skeleton-text animated style="width: 40%; height: 15px"></ion-skeleton-text>
+                  <ion-skeleton-text animated style="width: 30%; height: 15px"></ion-skeleton-text>
+                </ion-label>
+              </ng-template>
+            </ng-container>
+
+            <ng-template #noCampusSelected>
+              <ion-label color="danger" class="glob-text-bold">
+                No Campus Selected
+              </ion-label>
+            </ng-template>
           </ion-item>
         </ion-card>
 
@@ -325,20 +351,20 @@
           </ion-item>
 
           <ng-container *ngIf="!isStudent">
-            <ion-item button="true" detail="true" lines="inset">
+            <ion-item button="true" detail="true" lines="inset" (click)="openPage('settings/change-webspace-password')">
               <ion-label>
                 Change Webspace Password
               </ion-label>
             </ion-item>
 
-            <ion-item button="true" detail="true" lines="inset">
+            <ion-item button="true" detail="true" lines="inset" (click)="openPage('settings/reset-webspace-password')">
               <ion-label>
                 Reset Webspace ID Password
               </ion-label>
             </ion-item>
           </ng-container>
 
-          <ion-item lines="inset" detail="true" button="true" (click)="openPage('settings/set-security-questions')">
+          <ion-item lines="none" detail="true" button="true" (click)="openPage('settings/set-security-questions')">
             <ion-label>
               Set Security Questions
             </ion-label>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavController, Platform } from '@ionic/angular';
-import { firstValueFrom, Observable, pluck } from 'rxjs';
+import { firstValueFrom, Observable, pluck, tap } from 'rxjs';
 
 import { Storage } from '@ionic/storage-angular';
 
@@ -13,10 +13,9 @@ import {
   StaffDashboardName,
   StudentDashboardName,
   Themes,
-  TimeFormats,
-  VenueLocation
+  TimeFormats
 } from '../../constants';
-import { APULocation, Role, StudentProfile } from '../../interfaces';
+import { APULocation, Role, StudentProfile, Venue } from '../../interfaces';
 import { ApiService, SettingsService, StudentTimetableService, WsApiService } from '../../services';
 import { ManageSettingsModalPage } from './manage-settings-modal/manage-settings-modal.page';
 
@@ -29,12 +28,12 @@ export class SettingsPage implements OnInit {
 
   accentColors = AccentColors;
   campusLocation = CampusLocation;
-  venueLocation = VenueLocation;
   menuView = MenuOptions;
   timeFormats = TimeFormats;
   themes = Themes;
   // API Observable Variables
   locations$: Observable<APULocation[]>;
+  venues$: Observable<Venue[]>;
   // Settings Variables
   theme$ = this.settings.get$('theme');
   accent$ = this.settings.get$('accentColor');
@@ -49,7 +48,10 @@ export class SettingsPage implements OnInit {
     firstLocation: this.settings.get$('busFirstLocation'),
     secondLocation: this.settings.get$('busSecondLocation'),
   };
+  studentDashboardName$ = this.settings.get$('userProfileName');
   modulesBlacklist$ = this.settings.get$('modulesBlacklist');
+  defaultCampus = '';
+  defaultVenue = '';
   // Return Dashboard Section Name from ID
   studentDashboard: { [id: string]: string } = StudentDashboardName;
   staffDashboard: { [id: string]: string } = StaffDashboardName;
@@ -73,7 +75,13 @@ export class SettingsPage implements OnInit {
     this.storage.get('role').then((role: Role) => {
       this.isStudent = Boolean(role & Role.Student);
     });
+    // Get Bus Locations
     this.locations$ = this.api.getLocations(true);
+    // For Staff
+    this.getDefaultLocation();
+    if (this.defaultCampus) {
+      this.getVenues();
+    }
   }
 
   themeChanged(theme: string) {
@@ -114,6 +122,26 @@ export class SettingsPage implements OnInit {
       return;
     }
     this.settings.set('busSecondLocation', location);
+  }
+
+  updateDefaultLocation(locationType: 'venue' | 'campus') { // for staff only (set iconsult default location)
+    if (locationType === 'venue') {
+      this.settings.set('defaultVenue', this.defaultVenue);
+      return;
+    }
+    this.getVenues(); // get the venues for the new selected campus
+    this.defaultVenue = ''; // set default venue to '' because campus has been changed
+    this.settings.set('defaultVenue', this.defaultVenue);
+    this.settings.set('defaultCampus', this.defaultCampus);
+  }
+
+  async getDefaultLocation() { // for staff only (get iconsult default location)
+    this.defaultCampus = await firstValueFrom(this.settings.get$('defaultCampus'));
+    this.defaultVenue = await firstValueFrom(this.settings.get$('defaultVenue'));
+  }
+
+  getVenues() {
+    this.venues$ = this.ws.get<Venue[]>(`/iconsult/locations?venue=${this.defaultCampus}`);
   }
 
   async timetableModuleBlacklistsAdd() {

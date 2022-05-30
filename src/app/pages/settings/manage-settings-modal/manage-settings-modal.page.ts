@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { Observable, map, tap } from 'rxjs';
 
+import { StaffProfile } from '../../../interfaces';
 import { StaffDashboardSection, StudentDashboardSection } from '../../../constants';
-import { SettingsService } from '../../../services';
+import { SettingsService, WsApiService } from '../../../services';
 
 @Component({
   selector: 'app-manage-settings-modal',
@@ -15,13 +17,16 @@ export class ManageSettingsModalPage implements OnInit {
   @Input() settingsData: string[];
   @Input() isStudent?: boolean;
   allSettings = [];
+  profileName$: Observable<string[]>;
+  skeleton = new Array(4);
 
   constructor(
     private modalCtrl: ModalController,
-    private settings: SettingsService
+    private settings: SettingsService,
+    private ws: WsApiService
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     if (this.type === 'dashboard sections') {
       const staff = StaffDashboardSection.map(s => ({ ...s, selected: this.settingsData.includes(s.value) }));
       const student = StudentDashboardSection.map(s => ({ ...s, selected: this.settingsData.includes(s.value) }));
@@ -32,6 +37,18 @@ export class ManageSettingsModalPage implements OnInit {
     if (this.type === 'hidden modules') {
       this.allSettings = this.settingsData;
     }
+
+    if (this.type === 'dashboard name') {
+      this.profileName$ = this.getProfileName().pipe(
+        tap(name => this.allSettings = name.map(n => ({ value: n, selected: this.settingsData.includes(n) })))
+      );
+    }
+  }
+
+  getProfileName(): Observable<string[]> {
+    return this.ws.get<StaffProfile[]>('/staff/profile').pipe(
+      map(res => res[0].FULLNAME.split(' ')),
+    );
   }
 
   timetableModuleBlacklistsRemove(value: string) {
@@ -50,10 +67,17 @@ export class ManageSettingsModalPage implements OnInit {
       const sectionID = this.allSettings.filter(s => s.selected).map(s => s.value);
 
       this.settings.set('dashboardSections', sectionID);
-      this.modalCtrl.dismiss();
+      this.dismiss();
     }
 
     if (this.type === 'hidden modules') {
+      this.dismiss();
+    }
+
+    if (this.type === 'dashboard name') {
+      const name = this.allSettings.filter(s => s.selected).map(s => s.value);
+
+      this.settings.set('userProfileName', name);
       this.dismiss();
     }
   }

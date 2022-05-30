@@ -8,9 +8,6 @@ export const AccentColors = [
 
 export const CampusLocation = ['New Campus', 'TPM', 'Online'];
 
-// TODO: Remove Once Connected to API
-export const VenueLocation = ['Amazon Chime', 'Microsoft Teams', 'WhatsApp', 'Skype', 'Telegram', 'Google Meeting', 'Others'];
-
 export const MenuOptions = ['cards', 'list'];
 
 export const ShakespearSensitivityOptions = [

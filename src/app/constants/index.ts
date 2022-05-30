@@ -12,6 +12,5 @@ export {
   StudentDashboardName,
   StaffDashboardName,
   TimeFormats,
-  Themes,
-  VenueLocation
+  Themes
 } from './settings-options';
