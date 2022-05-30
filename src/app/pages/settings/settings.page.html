@@ -51,7 +51,7 @@
             </ion-label>
             <ion-select interface="popover" [ngModel]="accent$ | async" (ngModelChange)="accentChanged($event)">
               <ion-select-option *ngFor="let a of accentColors" [value]="a.name">
-                {{ a.name | titlecase }}
+                {{ a.title | titlecase }}
               </ion-select-option>
             </ion-select>
           </ion-item>
