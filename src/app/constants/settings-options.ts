@@ -13,6 +13,14 @@ export const VenueLocation = ['Amazon Chime', 'Microsoft Teams', 'WhatsApp', 'Sk
 
 export const MenuOptions = ['cards', 'list'];
 
+export const ShakespearSensitivityOptions = [
+  { index: 0, value: 40 },
+  { index: 1, value: 50 },
+  { index: 2, value: 60 },
+  { index: 3, value: 70 },
+  { index: 4, value: 80 }
+];
+
 export const StudentDashboardSection = [
   { name: 'Notice Board', value: 'noticeBoard' },
   { name: 'News', value: 'news' },
@@ -37,5 +45,6 @@ export const Themes = [
   { title: 'Dark', value: 'dark' }
 ];
 
-// TODO: Remove Once Connected to TransiX v2 API
-export const LocationTestData = ['APIIT @ TPM', 'APU', 'Endah Promenade', 'Fortune Park', 'LRT - Bukit Jalil', 'Mosque'];
+// Return Dashboard Section Name from ID
+export const StudentDashboardName = StudentDashboardSection.reduce((acc, menu) => ({ ...acc, [menu.value]: menu.name }), {});
+export const StaffDashboardName = StaffDashboardSection.reduce((acc, menu) => ({ ...acc, [menu.value]: menu.name }), {});

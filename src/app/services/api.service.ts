@@ -4,7 +4,7 @@ import { AsyncSubject, from, map, Observable, share, tap } from 'rxjs';
 
 import { Storage } from '@ionic/storage-angular';
 
-import { IntakeListing, LecturerTimetable, MappedLecturerTimetable } from '../interfaces';
+import { APULocation, APULocations, IntakeListing, LecturerTimetable, MappedLecturerTimetable } from '../interfaces';
 import { ConfigurationsService } from './configurations.service';
 import { WsApiService } from './ws-api.service';
 
@@ -66,5 +66,13 @@ export class ApiService {
         }
       }).reverse() // Sort Array by Latest Weeks
       ));
+  }
+
+  getLocations(refresher: boolean): Observable<APULocation[]> {
+    const caching = refresher ? 'network-or-cache' : 'cache-only';
+
+    return this.ws.get<APULocations>(`/transix/locations`, { auth: false, caching }).pipe(
+      map((res: APULocations) => res.locations)
+    );
   }
 }

@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { StaffDashboardSection, StudentDashboardSection } from 'src/app/constants';
+
+import { StaffDashboardSection, StudentDashboardSection } from '../../../constants';
+import { SettingsService } from '../../../services';
 
 @Component({
   selector: 'app-manage-settings-modal',
@@ -13,10 +15,10 @@ export class ManageSettingsModalPage implements OnInit {
   @Input() settingsData: string[];
   @Input() isStudent?: boolean;
   allSettings = [];
-  skeleton = new Array(4);
 
   constructor(
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private settings: SettingsService
   ) { }
 
   ngOnInit() {
@@ -26,15 +28,34 @@ export class ManageSettingsModalPage implements OnInit {
 
       this.allSettings = this.isStudent ? student : staff;
     }
+
+    if (this.type === 'hidden modules') {
+      this.allSettings = this.settingsData;
+    }
+  }
+
+  timetableModuleBlacklistsRemove(value: string) {
+    this.allSettings = [];
+    const modulesBlacklist = this.settings.get('modulesBlacklist');
+    const selectedModule = modulesBlacklist.indexOf(value);
+    const newModulesBlacklist = modulesBlacklist.slice(0, selectedModule)
+      .concat(modulesBlacklist.slice(selectedModule + 1, modulesBlacklist.length));
+    this.allSettings = newModulesBlacklist;
+
+    this.settings.set('modulesBlacklist', newModulesBlacklist);
   }
 
   saveChanges() {
     if (this.type === 'dashboard sections') {
       const sectionID = this.allSettings.filter(s => s.selected).map(s => s.value);
 
-      console.log('Sections to Save: ', sectionID);
+      this.settings.set('dashboardSections', sectionID);
+      this.modalCtrl.dismiss();
     }
 
+    if (this.type === 'hidden modules') {
+      this.dismiss();
+    }
   }
 
   dismiss() {

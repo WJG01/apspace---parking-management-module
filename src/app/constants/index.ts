@@ -6,10 +6,12 @@ export {
   AccentColors,
   CampusLocation,
   MenuOptions,
+  ShakespearSensitivityOptions,
   StudentDashboardSection,
   StaffDashboardSection,
+  StudentDashboardName,
+  StaffDashboardName,
   TimeFormats,
   Themes,
-  LocationTestData,
   VenueLocation
 } from './settings-options';

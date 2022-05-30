@@ -29,9 +29,9 @@
             <ion-icon name="color-palette-outline" color="primary" slot="end"></ion-icon>
           </ion-item-divider>
 
-          <ion-radio-group value="">
+          <ion-radio-group [ngModel]="theme$ | async" (ngModelChange)="themeChanged($event)">
             <ion-list-header>
-              <ion-label>
+              <ion-label class="glob-small-margin-top glob-small-margin-bottom">
                 <h3>Appearance</h3>
                 <p>Choose your preferred Theme Mode.</p>
               </ion-label>
@@ -49,8 +49,8 @@
             <ion-label position="stacked">
               Accent Color
             </ion-label>
-            <ion-select interface="popover" value="#2a83ff">
-              <ion-select-option *ngFor="let a of accentColors" [value]="a.value">
+            <ion-select interface="popover" [ngModel]="accent$ | async" (ngModelChange)="accentChanged($event)">
+              <ion-select-option *ngFor="let a of accentColors" [value]="a.name">
                 {{ a.name | titlecase }}
               </ion-select-option>
             </ion-select>
@@ -65,23 +65,34 @@
             <ion-icon name="grid-outline" color="primary" slot="end"></ion-icon>
           </ion-item-divider>
 
-          <ion-item lines="inset">
-            <ion-label class="ion-text-wrap">
-              <h3>Active Sections</h3>
-              <p>
-                Notice Board, News, Upcoming Trips, Contacts, APCard Chart, Financial Chart, CGPA Chart
-              </p>
-            </ion-label>
-          </ion-item>
+          <ng-container *ngIf="(dashboardSections$ | async) as dashboardSections">
+            <ion-item lines="inset">
+              <ion-label class="ion-text-wrap" *ngIf="dashboardSections.length > 0; else noSections">
+                <h3>Active Sections</h3>
+                <p>
+                  <span *ngFor="let s of dashboardSections; let isLast = last">
+                    {{ isStudent ? studentDashboard[s] : staffDashboard[s] }}
+                    <span *ngIf="!isLast">, </span>
+                  </span>
+                </p>
+              </ion-label>
 
-          <ion-item lines="none" button="true" detail="true"
-            (click)="manageSettings('dashboard sections', data)">
-            <ion-icon name="cog" slot="start"></ion-icon>
-            <ion-label class="ion-text-wrap">
-              <h3>Manage Dashboard Sections</h3>
-              <p>Select the kinds of modules you would like to hide.</p>
-            </ion-label>
-          </ion-item>
+              <ng-template #noSections>
+                <ion-label color="danger" class="glob-text-bold">
+                  No Sections Active
+                </ion-label>
+              </ng-template>
+            </ion-item>
+
+            <ion-item lines="none" button="true" detail="true"
+              (click)="manageSettings('dashboard sections', dashboardSections)">
+              <ion-icon name="cog" slot="start"></ion-icon>
+              <ion-label class="ion-text-wrap">
+                <h3>Manage Dashboard Sections</h3>
+                <p>Select the kinds of Dashboard Sections you would like to show.</p>
+              </ion-label>
+            </ion-item>
+          </ng-container>
         </ion-card>
 
         <ion-card class="ion-no-margin glob-small-margin-bottom">
@@ -92,15 +103,15 @@
             <ion-icon name="apps-outline" color="primary" slot="end"></ion-icon>
           </ion-item-divider>
 
-          <ion-radio-group value="cards">
+          <ion-radio-group [ngModel]="menuUI$ | async" (ngModelChange)="menuChanged($event)">
             <ion-list-header>
-              <ion-label>
+              <ion-label class="glob-small-margin-top glob-small-margin-bottom">
                 <h3>Menu UI</h3>
                 <p>Choose your preferred More Page View.</p>
               </ion-label>
             </ion-list-header>
 
-            <ion-item lines="none" *ngFor="let m of menuView">
+            <ion-item *ngFor="let m of menuView">
               <ion-label>
                 {{ m | titlecase }}
               </ion-label>
@@ -121,25 +132,27 @@
 
           <ion-item lines="inset">
             <ion-label>Hide Profile Picture</ion-label>
-            <ion-toggle></ion-toggle>
+            <ion-toggle [ngModel]="hideProfilePicture$ | async" (ngModelChange)="hideProfilePictureChanged($event)">
+            </ion-toggle>
           </ion-item>
 
           <ion-item lines="inset">
             <ion-label>
               Use Local Timezone
             </ion-label>
-            <ion-toggle></ion-toggle>
+            <ion-toggle [ngModel]="enableMalaysiaTimezone$ | async" (ngModelChange)="timezoneChanged($event)">
+            </ion-toggle>
           </ion-item>
 
-          <ion-radio-group value="12">
+          <ion-radio-group [ngModel]="timeFormat$ | async" (ngModelChange)="timeFormatChanged($event)">
             <ion-list-header>
-              <ion-label>
+              <ion-label class="glob-small-margin-top glob-small-margin-bottom">
                 <h3>Time Format</h3>
                 <p>Choose your preferred Time Format.</p>
               </ion-label>
             </ion-list-header>
 
-            <ion-item lines="none" *ngFor="let t of timeFormats">
+            <ion-item lines="inset" *ngFor="let t of timeFormats">
               <ion-label>
                 {{ t }} Hours
               </ion-label>
@@ -147,12 +160,32 @@
             </ion-item>
           </ion-radio-group>
 
-          <ion-item lines="none">
+          <ion-item lines="inset">
             <ion-label>
               Disable Shake Feedback
-              <p>This feature available only on mobile app</p>
+              <p *ngIf="!isCapacitor">This feature available only on mobile app</p>
             </ion-label>
-            <ion-toggle color="primary"></ion-toggle>
+            <ion-toggle [disabled]="!isCapacitor" [ngModel]="disableShakespear$ | async"
+              (ngModelChange)="shakespearChanged($event)"></ion-toggle>
+          </ion-item>
+
+          <ion-item lines="none">
+            <ion-label>
+              Shake Sensitivity
+              <p *ngIf="!(disableShakespear$ | async) && isCapacitor">
+                <small class="glob-danger-text glob-fw-600">Shake Feedback is Disabled</small>
+              </p>
+
+              <p *ngIf="!isCapacitor">
+                <small class="glob-fw-600">This feature available only on mobile app</small>
+              </p>
+              <ion-range [disabled]="!isCapacitor" value="1400" color="primary" min="0" max="4" step="1" ticks="true"
+                snaps="true" pin="true" [ngModel]="shakeSensitivity$ | async"
+                (ngModelChange)="shakespearSensitivityChanged($event)">
+                <ion-icon slot="start" size="small" color="primary" name="trending-down"></ion-icon>
+                <ion-icon slot="end" color="primary" name="trending-up"></ion-icon>
+              </ion-range>
+            </ion-label>
           </ion-item>
         </ion-card>
       </ion-col>
@@ -166,27 +199,40 @@
             <ion-icon name="bus-outline" color="primary" slot="end"></ion-icon>
           </ion-item-divider>
 
-          <ion-item lines="none" mode="md">
-            <ion-label position="stacked">
-              First Location
-            </ion-label>
-            <ion-select interface="popover" value="APIIT @ TPM">
-              <ion-select-option *ngFor="let l of location" [value]="l">
-                {{ l }}
-              </ion-select-option>
-            </ion-select>
-          </ion-item>
+          <ng-container *ngIf="(locations$ | async) as locations; else loadLocations">
+            <ion-item lines="none" mode="md">
+              <ion-label position="stacked">
+                First Location
+              </ion-label>
+              <ion-select interface="popover" [ngModel]="busShuttleServiceSettings$.firstLocation | async"
+                (ngModelChange)="busShuttleServicesChanged($event, 'first')">
+                <ion-select-option *ngFor="let l of locations" [value]="l.location_name">
+                  {{ l.location_nice_name }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
 
-          <ion-item lines="none" mode="md">
-            <ion-label position="stacked">
-              Second Location
-            </ion-label>
-            <ion-select interface="popover" value="APU">
-              <ion-select-option *ngFor="let l of location" [value]="l">
-                {{ l }}
-              </ion-select-option>
-            </ion-select>
-          </ion-item>
+            <ion-item lines="none" mode="md">
+              <ion-label position="stacked">
+                Second Location
+              </ion-label>
+              <ion-select interface="popover" [ngModel]="busShuttleServiceSettings$.secondLocation | async"
+                (ngModelChange)="busShuttleServicesChanged($event, 'second')">
+                <ion-select-option *ngFor="let l of locations" [value]="l.location_name">
+                  {{ l.location_nice_name }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ng-container>
+
+          <ng-template #loadLocations>
+            <ion-item *ngFor="let _ of skeleton; let last = last" [lines]="last ? 'none' : null">
+              <ion-label>
+                <ion-skeleton-text animated style="width: 40%; height: 15px"></ion-skeleton-text>
+                <ion-skeleton-text animated style="width: 30%; height: 15px"></ion-skeleton-text>
+              </ion-label>
+            </ion-item>
+          </ng-template>
         </ion-card>
 
         <ion-card class="ion-no-margin glob-small-margin-bottom" *ngIf="isStudent">
@@ -197,22 +243,40 @@
             <ion-icon name="calendar-outline" color="primary" slot="end"></ion-icon>
           </ion-item-divider>
 
-          <ion-item lines="inset">
-            <ion-label class="ion-text-wrap">
-              <h3>Hidden Modules</h3>
-              <p>BM019-3-3-ENTRE-T-3, BM019-3-3-ENTRE-T-2, ABUS002-3-3-ENTPM-T-1, BM035-3-1-FEP-T-1,
-                BM019-3-3-ENTRE-L-2, BM035-3-1-FEP-L-1, BM035-3-1-FEP-T-3, ABUS002-3-3-ENTPM-L-1
-              </p>
-            </ion-label>
-          </ion-item>
+          <ng-container *ngIf="(modulesBlacklist$ | async) as modulesBlacklist">
+            <ion-item lines="inset">
+              <ion-label *ngIf="modulesBlacklist.length > 0; else noModules">
+                <h3>Hidden Modules</h3>
+                <p>
+                  <span *ngFor="let m of modulesBlacklist; let isLast = last">
+                    {{ m }}
+                    <span *ngIf="!isLast">, </span>
+                  </span>
+                </p>
+              </ion-label>
 
-          <ion-item lines="none" button="true" detail="true" (click)="manageSettings('hidden modules', data)">
-            <ion-icon name="cog" slot="start"></ion-icon>
-            <ion-label class="ion-text-wrap">
-              <h3>Manage Hidden Modules</h3>
-              <p>Select the kinds of modules you would like to hide.</p>
-            </ion-label>
-          </ion-item>
+              <ng-template #noModules>
+                <ion-label color="danger" class="glob-text-bold">
+                  No Modules Blacklisted
+                </ion-label>
+              </ng-template>
+            </ion-item>
+
+            <ion-item lines="inset" button="true" detail="true" (click)="timetableModuleBlacklistsAdd()">
+              <ion-icon name="add" slot="start"></ion-icon>
+              <ion-label>
+                Add Hidden Modules
+              </ion-label>
+            </ion-item>
+            <ion-item lines="none" button="true" detail="true"
+              (click)="manageSettings('hidden modules', modulesBlacklist)">
+              <ion-icon name="cog" slot="start"></ion-icon>
+              <ion-label class="ion-text-wrap">
+                <h3>Manage Hidden Modules</h3>
+                <p>Select the kinds of modules you would like to hide.</p>
+              </ion-label>
+            </ion-item>
+          </ng-container>
         </ion-card>
 
         <ion-card class="ion-no-margin glob-small-margin-bottom" *ngIf="!isStudent">
@@ -254,7 +318,7 @@
             <ion-icon name="key-outline" color="primary" slot="end"></ion-icon>
           </ion-item-divider>
 
-          <ion-item detail="true" button="true" lines="inset">
+          <ion-item detail="true" button="true" lines="inset" (click)="openPage('settings/change-password')">
             <ion-label>
               Change APKey Password
             </ion-label>
@@ -274,7 +338,7 @@
             </ion-item>
           </ng-container>
 
-          <ion-item lines="inset" detail="true" button="true">
+          <ion-item lines="inset" detail="true" button="true" (click)="openPage('settings/set-security-questions')">
             <ion-label>
               Set Security Questions
             </ion-label>

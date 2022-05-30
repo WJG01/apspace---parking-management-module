@@ -21,8 +21,8 @@
 }
 
 .glob-danger-text {
-  color: var(--ion-color-danger);
-  --color: var(--ion-color-danger);
+  color: var(--ion-color-danger) !important;
+  --color: var(--ion-color-danger) !important;
 }
 
 .glob-text-bold {
