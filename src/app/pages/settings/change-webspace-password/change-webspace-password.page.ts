@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { Router } from '@angular/router';
 import { AlertButton, LoadingController } from '@ionic/angular';
 
+import { PasswordValidator } from '../../../validators/password.validator';
 import { ComponentService, WebspacePasswordService } from '../../../services';
 
 @Component({
@@ -27,7 +28,7 @@ export class ChangeWebspacePasswordPage implements OnInit {
       current_password: ['', [Validators.required]],
       new_password: ['', [Validators.required]],
       confirm_password: ['', Validators.required]
-    });
+    }, { validators: PasswordValidator });
   }
 
   async changePassword() {
