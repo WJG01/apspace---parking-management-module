@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavController, Platform } from '@ionic/angular';
-import { firstValueFrom, Observable, pluck, tap } from 'rxjs';
+import { firstValueFrom, Observable, pluck } from 'rxjs';
 
 import { Storage } from '@ionic/storage-angular';
 
