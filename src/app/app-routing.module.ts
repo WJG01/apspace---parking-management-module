@@ -25,7 +25,7 @@ const routes: Routes = [
     path: 'student-timetable',
     canActivate: [AuthGuard],
     data: { role: Role.Student },
-    loadChildren: () => import('./pages/student-timetable/student-timetable.module').then( m => m.StudentTimetablePageModule)
+    loadChildren: () => import('./pages/student-timetable/student-timetable.module').then(m => m.StudentTimetablePageModule)
   },
   {
     path: 'attendance',
@@ -108,13 +108,63 @@ const routes: Routes = [
     data: { role: Role.Student | Role.Admin | Role.Lecturer },
     loadChildren: () => import('./pages/results/results.module').then(m => m.ResultsPageModule)
   },
+  {
+    path: 'operation-hours',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/operation-hours/operation-hours.module').then(m => m.OperationHoursPageModule)
+  },
+  {
+    path: 'classroom-finder',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/classroom-finder/classroom-finder.module').then(m => m.ClassroomFinderPageModule)
+  },
+  {
+    path: 'fees',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student },
+    loadChildren: () => import('./pages/fees/fees.module').then(m => m.FeesPageModule)
+  },
+  {
+    path: 'about',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/about/about.module').then(m => m.AboutPageModule)
+  },
+  {
+    path: 'settings',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsPageModule)
+      },
+      {
+        path: 'set-security-questions',
+        loadChildren: () => import('./pages/settings/set-security-questions/set-security-questions.module').then(m => m.SetSecurityQuestionsPageModule)
+      },
+      {
+        path: 'change-password',
+        loadChildren: () => import('./pages/settings/change-password/change-password.module').then(m => m.ChangePasswordPageModule)
+      },
+      {
+        path: 'change-webspace-password',
+        loadChildren: () => import('./pages/settings/change-webspace-password/change-webspace-password.module').then(m => m.ChangeWebspacePasswordPageModule)
+      },
+      {
+        path: 'reset-webspace-password',
+        loadChildren: () => import('./pages/settings/reset-webspace-password/reset-webspace-password.module').then(m => m.ResetWebspacePasswordPageModule)
+      }
+    ]
+  },
   { // this path must always be at the end of the routes array
     path: '**',
     canActivate: [AuthGuard],
     data: { role: Role.Student | Role.Lecturer | Role.Admin },
     loadChildren: () => import('./pages/not-found/not-found.module').then(m => m.NotFoundPageModule)
-  },
-
+  }
 ];
 
 @NgModule({

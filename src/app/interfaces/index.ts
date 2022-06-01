@@ -8,11 +8,20 @@ export { CourseDetails } from './course-details';
 export { Course } from './course';
 export { DeterminationLegend } from './determination-legend';
 export { ExamSchedule } from './exam-schedule';
+export {
+  FeesBankDraft,
+  FeesDetails,
+  FeesSummary,
+  FeesTotalSummary
+} from './fees';
+export { Venue } from './iconsult';
 export { IntakeListing } from './intake-listing';
 export { InterimLegend } from './interim-legend';
 export { FormattedDaysLecturerTimetable, FormattedLecturerTimetable, LecturerTimetable, MappedLecturerTimetable } from './lecturer-timetable';
 export { MPULegend } from './mpu-legend';
 export { NotificationBody, NotificationHistory, NotificationStatus, NotificationSubStatus } from './notification';
+export { QuixCustomer } from './quix';
+export { SecurityQuestionsAndAnswers } from './security-questions-and-answers';
 export { Role } from './role';
 export { StudentTimetable } from './student-timetable';
 export { Settings, SettingsOld } from './settings';

@@ -1,0 +1,17 @@
+.text-message {
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--ion-color-danger);
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.details-section {
+  margin-bottom: 20px;
+}
+
+.details-section:not(:last-child) {
+  @media (min-width: 768px) {
+    border-right: solid 1.5px;
+  }
+}

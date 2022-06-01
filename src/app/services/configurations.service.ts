@@ -120,4 +120,15 @@ export class ConfigurationsService {
   get connectionStatus(): boolean {
     return this.connected;
   }
+
+  /** Get Current Year. Usually used for Footer */
+  get currentYear(): number {
+    return new Date().getFullYear();
+  }
+
+  /** Footer Text for Login and About page */
+  get copyrightText(): string {
+    return `&copy; ${this.currentYear} Asia Pacific University of Technology & Innovation (APU). All
+    rights reserved.`;
+  }
 }

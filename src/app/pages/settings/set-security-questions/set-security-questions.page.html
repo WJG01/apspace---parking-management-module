@@ -1,0 +1,144 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Security Questions</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="glob-container">
+    <ion-breadcrumbs [maxItems]="2">
+      <ion-breadcrumb>
+        Settings
+        <ion-icon slot="separator" name="chevron-forward"></ion-icon>
+      </ion-breadcrumb>
+      <ion-breadcrumb>
+        Main Menu
+        <ion-icon slot="separator" name="chevron-forward"></ion-icon>
+      </ion-breadcrumb>
+      <ion-breadcrumb>
+        Set Security Questions
+      </ion-breadcrumb>
+    </ion-breadcrumbs>
+
+    <ion-row>
+      <ion-col size-xs="12" size-md="8" class="glob-margin-auto">
+        <ion-card class="ion-no-margin">
+          <ng-container *ngIf="(securityQuestions$ | async) as qa; else loading">
+            <form [formGroup]="securityQuestionForm">
+              <div class="ion-margin-bottom">
+                <ion-item lines="none">
+                  <ion-label position="stacked">
+                    First Question <ion-text color="danger"> * </ion-text>
+                  </ion-label>
+
+                  <ion-input placeholder="Enter your First Question" formControlName="attributeQuestion1"></ion-input>
+                </ion-item>
+                <div class="error-message" *ngIf="(q1.dirty || q1.touched) && q1.errors?.required">
+                  <ion-text color="danger">
+                    <small>
+                      Please enter your 1st Question.
+                    </small>
+                  </ion-text>
+                </div>
+              </div>
+
+              <div class="ion-margin-bottom">
+                <ion-item lines="none">
+                  <ion-label position="stacked">
+                    First Answer <ion-text color="danger"> * </ion-text>
+                  </ion-label>
+
+                  <ion-input placeholder="Enter your First Answer" formControlName="attributeAnswer1"></ion-input>
+                </ion-item>
+                <div class="error-message" *ngIf="(a1.dirty || a1.touched) && a1.errors?.required">
+                  <ion-text color="danger">
+                    <small>
+                      Please enter your 1st Answer.
+                    </small>
+                  </ion-text>
+                </div>
+              </div>
+
+              <div class="ion-margin-bottom">
+                <ion-item lines="none">
+                  <ion-label position="stacked">
+                    Second Question <ion-text color="danger"> * </ion-text>
+                  </ion-label>
+
+                  <ion-input placeholder="Enter your Second Question" formControlName="attributeQuestion2"></ion-input>
+                </ion-item>
+                <div class="error-message" *ngIf="(q2.dirty || q2.touched) && q2.errors?.required">
+                  <ion-text color="danger">
+                    <small>
+                      Please enter your 2nd Question.
+                    </small>
+                  </ion-text>
+                </div>
+              </div>
+
+              <div class="ion-margin-bottom">
+                <ion-item lines="none">
+                  <ion-label position="stacked">
+                    Second Answer <ion-text color="danger"> * </ion-text>
+                  </ion-label>
+
+                  <ion-input placeholder="Enter your Second Answer" formControlName="attributeAnswer2"></ion-input>
+                </ion-item>
+                <div class="error-message" *ngIf="(a2.dirty || a2.touched) && a2.errors?.required">
+                  <ion-text color="danger">
+                    <small>
+                      Please enter your 2nd Answer.
+                    </small>
+                  </ion-text>
+                </div>
+              </div>
+
+              <ion-item lines="none">
+                <ion-label position="stacked">
+                  Secondary Email <ion-text color="danger"> * </ion-text>
+                </ion-label>
+
+                <ion-input placeholder="Enter your Secondary Email" formControlName="secondaryEmail"></ion-input>
+              </ion-item>
+              <div class="error-message"
+                *ngIf="(email.dirty || email.touched) && (email.errors?.required || email.errors?.email)">
+                <ion-text color="danger" *ngIf="(email.dirty || email.touched) && email.errors?.required">
+                  <small>Please enter your Secondary Email Address.</small>
+                </ion-text>
+                <ion-text color="danger" *ngIf="(email.dirty || email.touched) && email.errors?.email">
+                  <small>Please enter a valid Email Address.</small>
+                </ion-text>
+              </div>
+
+              <ion-card-content>
+                <ion-button expand="block" (click)="submit()">
+                  Update
+                  <ion-icon name="send" slot="end"></ion-icon>
+                </ion-button>
+              </ion-card-content>
+            </form>
+          </ng-container>
+
+          <ng-template #loading>
+            <ion-item *ngFor="let _ of skeleton; let last = last" lines="none">
+              <ion-label>
+                <ion-skeleton-text animated style="width: 40%; height: 15px"></ion-skeleton-text>
+                <ion-skeleton-text animated style="width: 30%; height: 15px"></ion-skeleton-text>
+              </ion-label>
+            </ion-item>
+
+            <ion-card-content>
+              <ion-button expand="block" [disabled]="true">
+                Update
+                <ion-icon name="send" slot="end"></ion-icon>
+              </ion-button>
+            </ion-card-content>
+          </ng-template>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>
