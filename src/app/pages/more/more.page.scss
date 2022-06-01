@@ -36,8 +36,25 @@ responsive-container-sm {
   background: transparent none !important;
   --background: transparent none !important;
 
+  .item-title {
+    font-weight: 900;
+  }
+
+  .menu-card {
+    display: flex;
+    min-height: 80px;
+    align-content: center;
+    text-overflow: ellipsis;
+    cursor: pointer;
+
+    .icon-container {
+      width: 36px;
+      height: 36px;
+    }
+  }
+
   .menu-card:hover {
-    background: var(--ion-color-light);
+    background: var(--ion-color-light) !important;
     transition: .3s ease-in-out;
   }
 }

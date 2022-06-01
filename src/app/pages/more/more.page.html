@@ -1,4 +1,4 @@
-<ion-content>
+<ion-content *ngIf="fav$ | async as fav" >
   <div class="glob-container responsive-container-sm">
     <ion-card>
       <ion-card-title *ngIf="editMode" class="ion-padding edit-mode-card">Edit Mode</ion-card-title>
@@ -16,61 +16,109 @@
         </ion-col>
       </ng-template>
     </ion-row>
-    <!--CARD FAV ITEMS-->
-    <ion-row class="ion-margin col-padding">
-      <!--    <ion-col *ngFor="let item of filteredMenu" size="3" size-lg="3" size-md="4" size-sm="6" size-xs="12">-->
-      <!--      <ion-card class="ion-padding ion-no-margin">-->
-      <!--        <ion-row class="ion-align-items-center">-->
-      <!--          <ion-col size="auto">-->
-      <!--            <ion-img class="item-thumbnail" [src]="item.img"></ion-img>-->
-      <!--          </ion-col>-->
-      <!--          <ion-col class="card-label ion-margin-end">-->
-      <!--            {{item.title}}-->
-      <!--          </ion-col>-->
-      <!--          <ion-icon class="fav-icon" name="star-outline"></ion-icon>-->
-      <!--        </ion-row>-->
-      <!--      </ion-card>-->
-      <!--    </ion-col>-->
-      <ion-col size="3">
-        <ion-card class="ion-padding ion-no-margin menu-card">
-          <p class="card-title">Bus Services</p>
-        </ion-card>
-      </ion-col>
-      <ion-col size="3">
-        <ion-card class="ion-padding ion-no-margin menu-card">
-          Bus Services
-        </ion-card>
-      </ion-col>
-      <ion-col size="3">
-        <ion-card class="ion-padding ion-no-margin menu-card">
-          Bus Services
-        </ion-card>
-      </ion-col>
-      <ion-col size="3">
-        <ion-card class="ion-padding ion-no-margin menu-card">
-          Bus Services
-        </ion-card>
-      </ion-col>
-    </ion-row>
 
-    <!--CARD MENU ITEMS-->
-    <ion-list class="menu-container ion-margin-top">
-      <ion-accordion-group>
-        <div *ngFor="let group of filteredMenu | byGroup | keyvalue:noop">
-          <ion-accordion [value]=group.key>
-            <ion-item slot="header" class="menu-container" (click)="showMore(group.key)">
+    <!--CARD FAV ITEMS-->
+    <div *ngIf="fav as filteredFavMenu;">
+      <ion-row class="ion-margin col-padding" *ngIf="filteredFavMenu.length > 0;">
+        <ion-col *ngFor="let item of filteredFavMenu; let last=last;" size="3" size-lg="3" size-md="4" size-sm="6" size-xs="12">
+          <ion-card class="ion-padding ion-no-margin">
+            <ion-row class="ion-align-items-center">
+              <ion-col size="auto">
+                <ion-img class="item-thumbnail" [src]="item.img"></ion-img>
+              </ion-col>
+              <ion-col class="card-label ion-margin-end">
+                {{item.title}}
+              </ion-col>
+              <ion-icon class="fav-icon" name="star-outline"></ion-icon>
+            </ion-row>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </div>
+    <div *ngIf="(view$ | async) === 'list'; else menuCardsUI" class="ion-margin-horizontal">
+      <ion-list class="menu-container ion-margin-top">
+        <ion-accordion-group>
+          <ion-row>
+            <ion-col *ngFor="let group of filteredMenu | byGroup | keyvalue:noop" size="6" size-xl="6" size-lg="6" size-md="6" size-sm="12" size-xs="12">
+              <ion-accordion [value]="group.key">
+                <ion-item slot="header">
+                  <ion-img class="item-thumbnail ion-margin-end" [src]="keyIcon[group.key]"></ion-img>
+                  <ion-label class="item-title">{{group.key}}</ion-label>
+                </ion-item>
+                <ion-list slot="content">
+                  <ion-row>
+                    <ion-col size="6"></ion-col>
+                  </ion-row>
+                  <ion-item button *ngFor="let item of group.value" (click)="openPage(item.url)">
+                    <ion-img class="item-thumbnail ion-margin-end" [src]="item.img"></ion-img>
+                    <ion-label>
+                      {{item.title}}
+                    </ion-label>
+                    <ion-icon *ngIf="!editMode" class="fav-icon" name="chevron-forward-outline" slot="end"></ion-icon>
+                    <ion-icon *ngIf="editMode" class="fav-icon" name="star" slot="end"></ion-icon>
+                  </ion-item>
+                </ion-list>
+              </ion-accordion>
+            </ion-col>
+          </ion-row>
+        </ion-accordion-group>
+      </ion-list>
+    </div>
+
+    <ng-template #menuCardsUI>
+      <!--CARD FAV ITEMS-->
+      <ion-row class="ion-margin col-padding">
+        <!--    <ion-col *ngFor="let item of filteredMenu" size="3" size-lg="3" size-md="4" size-sm="6" size-xs="12">-->
+        <!--      <ion-card class="ion-padding ion-no-margin">-->
+        <!--        <ion-row class="ion-align-items-center">-->
+        <!--          <ion-col size="auto">-->
+        <!--            <ion-img class="item-thumbnail" [src]="item.img"></ion-img>-->
+        <!--          </ion-col>-->
+        <!--          <ion-col class="card-label ion-margin-end">-->
+        <!--            {{item.title}}-->
+        <!--          </ion-col>-->
+        <!--          <ion-icon class="fav-icon" name="star-outline"></ion-icon>-->
+        <!--        </ion-row>-->
+        <!--      </ion-card>-->
+        <!--    </ion-col>-->
+        <ion-col size="3">
+          <ion-card class="ion-padding ion-no-margin menu-card">
+            <p class="card-title">Bus Services</p>
+          </ion-card>
+        </ion-col>
+        <ion-col size="3">
+          <ion-card class="ion-padding ion-no-margin menu-card">
+            Bus Services
+          </ion-card>
+        </ion-col>
+        <ion-col size="3">
+          <ion-card class="ion-padding ion-no-margin menu-card">
+            Bus Services
+          </ion-card>
+        </ion-col>
+        <ion-col size="3">
+          <ion-card class="ion-padding ion-no-margin menu-card">
+            Bus Services
+          </ion-card>
+        </ion-col>
+      </ion-row>
+      <!--CARD MENU ITEMS-->
+      <ion-list class="menu-container ion-margin-top">
+        <ion-accordion-group *ngFor="let group of filteredMenu | byGroup | keyvalue:noop">
+          <ion-accordion [value]="group.key">
+            <ion-item slot="header" class="menu-container">
               <ion-img class="item-thumbnail ion-margin-end" [src]="keyIcon[group.key]"></ion-img>
               <ion-label>{{group.key}}</ion-label>
             </ion-item>
             <ion-list slot="content" class="menu-container">
-              <ion-row class="ion-margin">
+              <ion-row class="ion-align-items-stretch ion-margin">
                 <ion-col *ngFor="let item of group.value" size="3" size-lg="3" size-md="4" size-sm="6" size-xs="12">
-                  <ion-card tappable="true" class="ion-padding ion-no-margin menu-card" *ngIf="item.title !== 'Logout'" (click)="openPage(item.url)">
+                  <ion-card class="ion-padding ion-no-margin menu-card" *ngIf="item.title !== 'Logout'" (click)="openPage(item.url)">
                     <ion-row class="ion-align-items-center">
                       <ion-col size="auto">
                         <ion-img class="item-thumbnail" [src]="item.img"></ion-img>
                       </ion-col>
-                      <ion-col class="card-label ion-margin-end">
+                      <ion-col class="card-label">
                         {{item.title}}
                       </ion-col>
                       <ion-icon *ngIf="editMode" class="fav-icon" name="star"></ion-icon>
@@ -80,8 +128,8 @@
               </ion-row>
             </ion-list>
           </ion-accordion>
-        </div>
-      </ion-accordion-group>
-    </ion-list>
+        </ion-accordion-group>
+      </ion-list>
+    </ng-template>
   </div>
 </ion-content>
