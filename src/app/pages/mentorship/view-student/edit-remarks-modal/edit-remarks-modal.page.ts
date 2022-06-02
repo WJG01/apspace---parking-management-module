@@ -44,7 +44,7 @@ export class EditRemarksModalPage implements OnInit {
     };
     const headers = { 'Content-Type': 'application/json' };
     if (body) {
-      this.ws.put<any>(`?id=${this.tp}`, { body, headers }).subscribe(
+      this.ws.put<any>(`/mentor/update_remarks?id=${this.tp}`, { body, headers }).subscribe(
         () => {
           this.showToastMessage('You have successfully edited the remarks.', 'success');
         },
