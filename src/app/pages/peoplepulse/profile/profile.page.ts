@@ -16,22 +16,11 @@ export class ProfilePage implements OnInit {
   indecitor = false;
   skeltons = [80, 30, 100, 45, 60, 76];
   // for demo purpose until can test with a staff acc...
-  staffProfile = [
-    {
-      ID: 'mustafa',
-      FULLNAME: 'MUSTAFA OTHMAN',
-      TITLE: 'Manager, Software Development',
-      PHOTO: 'https://d37plr7tnxt7lb.cloudfront.net/436.jpg',
-      CURRENT_JOB_TYPE: '',
-      NATIONALITY: '',
-      DEPARTMENT: 'Centre of Technology and Innovation',
-      DEPARTMENT2: '',
-      DEPARTMENT3: '',
-    },
-  ];
   meta: PpMeta;
   posts: any[] = [];
   staffs: any;
+  // current staff
+  staff: StaffProfile;
 
   constructor(
     private ws: WsApiService,
@@ -71,7 +60,10 @@ export class ProfilePage implements OnInit {
         // tslint:disable-next-line:no-bitwise
         if (role & (Role.Lecturer | Role.Admin)) {
           this.staffProfile$ = this.ws.get<StaffProfile[]>('/staff/profile');
-          this.staffProfile$.subscribe((staff) => this.getPosts(staff[0].ID));
+          this.staffProfile$.subscribe((staff) => {
+            this.staff = staff[0];
+            this.getPosts(staff[0].ID);
+          });
         }
       });
       this.indecitor = false;
@@ -83,18 +75,16 @@ export class ProfilePage implements OnInit {
       ({ meta, posts }) => {
         this.meta = meta;
         this.posts = posts
-          .filter((p) => p.user_id === 'mustafa')
+          .filter((p) => p.user_id === this.staff.ID)
           .map((p) => ({
             id: p.post_id,
             content: p.post_content,
             category: p.post_category,
             datetime: p.datetime,
-            poster: this.staffs.mustafa,
-            tagged: this.staffs[p.tags[0].tag_id],
+            poster: this.staffs[this.staff.ID],
+            tagged: this.staffs[p.tags[0].staff_id],
           }));
       }
-      // (err) => console.log(err),
-      // (_) => sortNFilter()
     );
   }
 }

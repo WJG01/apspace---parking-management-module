@@ -32,22 +32,22 @@ export class PpEditModalComponent implements OnInit {
           .subscribe((cats) => (this.categories = cats));
         this.content = this.post.content;
         this.category = {
-          user_id: 1,
-          category_name: this.post.category,
-          direct_supervisor: true,
-          status: true,
+          id: this.categories.filter((c) => c.category === this.post.category)[0].id,
+          category: this.post.category,
+          direct_supervisor: this.categories.filter((c) => c.category === this.post.category)[0].direct_supervisor,
+          status: this.categories.filter((c) => c.category === this.post.category)[0].status,
         };
       }
     );
   }
 
   updatePost() {
-    if (this.content === this.post.content && this.category.category_name === this.post.category) {
+    if (this.content === this.post.content && this.category.category === this.post.category) {
       return;
     }
-    this.pp.editPost(this.profile.ID, this.post.tagged.id, this.post.id, this.category.category_name, this.content).subscribe();
+    this.pp.editPost(this.profile.ID, this.post.tagged.id, this.post.id, this.category.id, this.content).subscribe();
     this.post.content = this.content;
-    this.post.category = this.category.category_name;
+    this.post.category = this.category.category;
   }
 
   onCancelClick() {

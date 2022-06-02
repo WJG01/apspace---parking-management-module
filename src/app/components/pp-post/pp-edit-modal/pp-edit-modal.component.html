@@ -13,27 +13,28 @@
 
   <ng-template #catPicked>
     <ion-item button (click)="clearCategory()">
-      <ion-label>{{ category.category_name }}</ion-label>
+      <ion-label>{{ category.category }}</ion-label>
     </ion-item>
   </ng-template>
 
   <ion-list *ngIf="isCatsOpen">
     <ion-item button *ngFor="let cat of categories" (click)="selectCategory(cat)">
-      <ion-label>{{ cat.category_name }}</ion-label>
+      <ion-label>{{ cat.category }}</ion-label>
     </ion-item>
   </ion-list>
   <!-- category -->
 
-  <ion-textarea
-    [disabled]="category === null"
-    placeholder="Say something about them..."
-    [(ngModel)]="content"
-    maxLength="2000"
-    minLength="2"
-    rows="6"
-    style="background: white"
-  >
-  </ion-textarea>
+  <ion-item>
+    <ion-textarea
+      [disabled]="category === null"
+      placeholder="Say something about them..."
+      [(ngModel)]="content"
+      maxLength="2000"
+      minLength="2"
+      rows="6"
+    >
+    </ion-textarea>
+  </ion-item>
 
   <div class="ion-float-right" style="margin-top: 1rem">
     <ion-button style="margin-right: 1rem" (click)="onCancelClick()">Cancel</ion-button>

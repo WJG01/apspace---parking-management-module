@@ -102,7 +102,7 @@ export class PeoplepulsePage implements OnInit {
           category: p.post_category,
           datetime: p.datetime,
           poster: this.staffs[p.user_id],
-          tagged: this.staffs[p.tags[0].tag_id],
+          tagged: this.staffs[p.tags[0].staff_id],
         }));
       },
       (err) => console.log(err),

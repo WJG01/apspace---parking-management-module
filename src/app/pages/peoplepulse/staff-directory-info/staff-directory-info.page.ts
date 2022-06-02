@@ -88,7 +88,7 @@ export class StaffDirectoryInfoPage implements OnInit {
 
   getPosts() {
     this.ws.get<StaffDirectory[]>('/staff/profile').subscribe((staff) => {
-      this.pp.getPosts(staff[0].ID).subscribe(({ meta, posts }) => {
+      this.pp.getUserPosts(staff[0].ID).subscribe(({ meta, posts }) => {
         this.meta = meta;
         this.posts = posts.map((p) => ({
           id: p.post_id,
@@ -96,7 +96,7 @@ export class StaffDirectoryInfoPage implements OnInit {
           category: p.post_category,
           datetime: p.datetime,
           poster: this.staffs[p.user_id],
-          tagged: this.staffs[p.tags[0].tag_id],
+          tagged: this.staffs[p.tags[0].staff_id],
         }));
       });
     });

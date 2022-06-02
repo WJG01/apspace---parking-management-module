@@ -40,7 +40,7 @@ export class AddPostPage implements OnInit {
 
   post() {
     this.pp
-      .postPost(this.profile.ID, this.staff.ID, this.category.category_name, this.content)
+      .postPost(this.profile.ID, this.staff.ID, this.category.id, this.content)
       .subscribe(() => this.location.back());
     // console.log(this.location)
     // this.location.back();

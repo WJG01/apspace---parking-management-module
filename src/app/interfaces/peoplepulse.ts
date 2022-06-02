@@ -32,8 +32,8 @@ export interface PpFunctionalArea {
 }
 
 export interface PpCategory {
-  user_id: number;
-  category_name: string;
+  id: number;
+  category: string;
   direct_supervisor: boolean;
   status: boolean;
 }

@@ -1,57 +1,97 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 import {
   PpCategory,
-  // PpFunctionalArea,
   PpFilterOptions,
-  // PpPost,
   PpPostwMeta
 } from 'src/app/interfaces';
+// import { WsApiService } from './ws-api.service';
+import { CasTicketService } from './cas-ticket.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PeoplepulseService {
   // TODO: change  once api is deployed
-  private apiUrl = 'http://localhost:3001';
+  private apiUrl = 'https://6tgcwjvkih.execute-api.ap-southeast-1.amazonaws.com/dev';
   private httpOptions = {
     headers: { 'Content-Type': 'application/json' },
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private cas: CasTicketService) {}
 
   getPosts(userId: string): Observable<PpPostwMeta> {
-    return this.http.get<PpPostwMeta>(`${this.apiUrl}/post?page=1&user_id=${userId}`);
+    // const options = {
+      // attempts: 4,
+      // auth: true,
+      // caching: 'network-or-cache',
+      // headers: {},
+      // params: {},
+      // timeout: 20000,
+      // url: this.apiUrl,
+      // withCredentials: false,
+    // };
+    // const opt = {
+      // params: options.params,
+      // withCredentials: options.withCredentials,
+      // headers: options.headers
+    // };
+    return this.cas.getST(this.apiUrl).pipe(
+      // switchMap(ticket => this.http.get<PpPostwMeta>(url, { params: { ticket } })
+      switchMap(ticket => this.http.get<PpPostwMeta>(`${this.apiUrl}/post?user_id=${userId}&ticket=${ticket}`))
+    );
   }
 
   getPostCategories(userId: string, staffId: string): Observable<PpCategory[]> {
-    return this.http.get<PpCategory[]>(`${this.apiUrl}/post_category?user_id=${userId}&staff_id=${staffId}`);
+    return this.cas.getST(this.apiUrl).pipe(
+      switchMap(ticket =>
+        this.http.get<PpCategory[]>(
+          `${this.apiUrl}/post_category?user_id=${userId}&staff_id=${staffId}&ticket=${ticket}`))
+    );
   }
 
-  postPost(userId: string, tag: string, postCategoryId: string, postContent: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/post`, {
-      user_id: userId,
-      tag,
-      post_category_id: postCategoryId,
-      post_content: postContent,
-    }, this.httpOptions);
+  getUserPosts(userId: string): Observable<PpPostwMeta> {
+    return this.cas.getST(this.apiUrl).pipe(
+      switchMap(ticket => this.http.get<PpPostwMeta>(`${this.apiUrl}/user_post?user_id=${userId}&ticket=${ticket}`))
+    );
+  }
+
+  postPost(userId: string, tag: string, postCategoryId: number, postContent: string): Observable<any> {
+    return this.cas.getST(this.apiUrl).pipe(
+      switchMap(ticket => {
+        return this.http.post(`${this.apiUrl}/post?ticket=${ticket}`, {
+          user_id: userId,
+          tag,
+          post_category_id: postCategoryId,
+          post_content: postContent,
+        }, this.httpOptions);
+      })
+    );
   }
 
   deletePost(userId: string, postId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/user_post?user_id=${userId}&post_id=${postId}`, this.httpOptions);
+    return this.cas.getST(this.apiUrl).pipe(
+      switchMap(ticket => {
+        return this.http.delete(`${this.apiUrl}/user_post?user_id=${userId}&post_id=${postId}&ticket=${ticket}`, this.httpOptions);
+      })
+    );
   }
 
-  editPost(userId: string, staffId: string, postId: number, categoryId: string, postContent: string): Observable<any> {
-    return this.http.put(`${this.apiUrl}/user_post`, {
-      user_id: userId,
-      post_id: postId,
-      staff_id: staffId,
-      post_content: postContent,
-      category_id: categoryId,
-    }, this.httpOptions);
+  editPost(userId: string, staffId: string, postId: number, categoryId: number, postContent: string): Observable<any> {
+    return this.cas.getST(this.apiUrl).pipe(
+      switchMap(ticket => {
+        return this.http.put(`${this.apiUrl}/user_post?ticket=${ticket}`, {
+            user_id: userId,
+            post_id: postId,
+            staff_id: staffId,
+            post_content: postContent,
+            category_id: categoryId,
+        }, this.httpOptions);
+      })
+    );
   }
 
   // FOR DEMO ONLY (REAL IMPLEMENTATION DETAILS IS IN BACKEND, SO FRONTEND JUST

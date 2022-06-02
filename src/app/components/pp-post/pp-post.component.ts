@@ -36,6 +36,7 @@ export class PpPostComponent implements OnInit {
     this.formattedDate = this.timeSince(new Date(this.post.datetime));
     // this.post.poster.name = this.titleCase(this.cleanup(this.post.poster.name))
     // this.post.tagged.name = this.titleCase(this.cleanup(this.post.tagged.name))
+    // console.log('wwwww', DateWithTimezonePipe.transform(this.post.datetime))
   }
 
   async presentDeleteModal() {
