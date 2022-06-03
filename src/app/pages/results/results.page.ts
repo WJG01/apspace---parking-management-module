@@ -114,7 +114,7 @@ export class ResultsPage {
       this.studentProfile = p;
       if (p.BLOCK) {
         this.block = true;
-        this.course$ = this.ws.get<Course[]>('/student/courses', { url: this.prodUrl, caching }).pipe(
+        this.course$ = this.ws.get<Course[]>('/student/courses', { caching }).pipe(
           tap(i => {
             if ('SEMESTER_WORDING' in i[0]) {
                this.semesterWording = i[0].SEMESTER_WORDING;
