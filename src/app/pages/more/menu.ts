@@ -82,7 +82,7 @@ export const menuItems = [
     id: 'e-forms' as const,
     title: 'e-Forms',
     group: 'Collaboration & Information Resources',
-    url: 'http://forms.sites.apiit.edu.my/home/',
+    url: 'http://forms.sites.apiit.edu.my/',
     attachTicket: true,
     img: 'assets/img/more-icons/forms-and-applications.png',
     role: Role.Student | Role.Lecturer | Role.Admin,
@@ -782,16 +782,16 @@ export const menuItems = [
     tags: ['about', 'developer', 'contact', 'version', 'cti', 'who'],
     parents: [],
   },
-  {
-    id: 'logout' as const,
-    title: 'Logout',
-    group: 'Others',
-    url: 'logout',
-    img: 'assets/img/more-icons/logout.png',
-    role: Role.Student | Role.Lecturer | Role.Admin,
-    tags: ['exit', 'log out', 'log-out', 'sign out', 'sign-out'],
-    parents: [],
-  },
+  // {
+  //   id: 'logout' as const,
+  //   title: 'Logout',
+  //   group: 'Others',
+  //   url: 'logout',
+  //   img: 'assets/img/more-icons/logout.png',
+  //   role: Role.Student | Role.Lecturer | Role.Admin,
+  //   tags: ['exit', 'log out', 'log-out', 'sign out', 'sign-out'],
+  //   parents: [],
+  // },
   // END OF OTHERS
 
   // START OF UNGROUPED

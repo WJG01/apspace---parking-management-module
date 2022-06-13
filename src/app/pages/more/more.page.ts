@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuItem } from "./menu.interface";
+import { MenuID, MenuItem } from './menu.interface';
 import { Storage } from '@ionic/storage';
 import { Browser } from '@capacitor/browser';
-import { menu } from "./menu";
-import { Observable } from "rxjs";
-import { Role } from "../../interfaces";
-import Fuse from "fuse.js";
-import { CasTicketService, SettingsService } from "../../services";
-import { AlertButton, AlertController, NavController, Platform } from "@ionic/angular";
-import { ComponentService } from "../../services";
-import {map} from "rxjs/operators";
+import { menu } from './menu';
+import { Network } from '@capacitor/network';
+import { Observable } from 'rxjs';
+import { Role } from '../../interfaces';
+import { CasTicketService, SettingsService } from '../../services';
+import { AlertButton, AlertController, NavController, Platform, ToastController } from '@ionic/angular';
+import { ComponentService } from '../../services';
+import { map } from 'rxjs/operators';
 
 interface KeyIconMap { [key: string]: string; }
 
@@ -32,19 +32,15 @@ export class MorePage implements OnInit {
     ['Others']: 'assets/img/more-icons/others.png'
   };
 
+  view$: Observable<'list' | 'cards'>;
+  fav$: Observable<MenuItem[]>; // favourite items
+  term: '';
+  editMode = false;
+
   menuItems: MenuItem[] = menu;
   filteredMenu = [] as MenuItem[];
 
-  view$: Observable<'list' | 'cards'>;
-  fav$: Observable<MenuItem[]>; // favourite items
-
-  options: Fuse.IFuseOptions<MenuItem> = {
-    keys: ['title', 'tags']
-  };
-
   isMobile = this.platform.is('capacitor');
-  term: '';
-  editMode = false;
 
   constructor(
     private cas: CasTicketService,
@@ -53,18 +49,19 @@ export class MorePage implements OnInit {
     public navCtrl: NavController,
     private platform: Platform,
     private settings: SettingsService,
-    public component: ComponentService
+    private toastCtrl: ToastController,
+    public component: ComponentService,
   ) { }
 
   ngOnInit() {
     // assert no duplicate id (probably not able to be done during compile time)
-    this.filteredMenu.forEach((menu, _i, arr) => {
+    this.menuItems.forEach((menu, _i, arr) => {
       if (arr.find(item => item.id === menu.id) !== menu) {
         console.warn(`duplicate '${menu.id}' in menuFull`);
       }
     });
     this.view$ = this.settings.get$('menuUI');
-    this.view$.subscribe(res => console.log(res));
+
     Promise.all([
       this.storage.get('role'),
       this.storage.get('canAccessResults')
@@ -85,6 +82,7 @@ export class MorePage implements OnInit {
       }
 
       this.fav$ = this.settings.get$('favoriteItems').pipe(
+        // tslint:disable-next-line:no-bitwise
         map(favs => favs.map(fav => this.menuItems.find(menu => menu.id === fav && menu.role & role))
           .filter(menu => menu !== undefined)),
       );
@@ -110,7 +108,7 @@ export class MorePage implements OnInit {
   noop(): number {
     return 0;
   }
-  //
+
   async openInAppBrowser(url: string) {
     if (this.isMobile) {
       await Browser.open({url: url});
@@ -122,7 +120,50 @@ export class MorePage implements OnInit {
   /** Open page, manually check for third party pages. */
   async openPage(url: string, attachTicket = false) {
     if (!this.editMode) {
-      await this.openInAppBrowser(url);
+      // external pages does not use relative or absolute link
+      if (url.startsWith('http://') || url.startsWith('https://')) {
+        // Manually exclude sites that do not need services ticket
+        if (!attachTicket) {
+          await this.openInAppBrowser(url);
+        } else {
+          const networkStatus = await Network.getStatus();
+          if (networkStatus.connected) {
+            this.cas.getST(url).subscribe(st => {
+              this.openInAppBrowser(`${url}?ticket=${st}`);
+            });
+          } else {
+            this.presentToast('External links cannot be opened in offline mode. Please ensure you have a network connection and try again');
+          }
+        }
+      } else {
+        url !== 'logout' ? this.navCtrl.navigateForward([url]) : this.logout();
+      }
     }
+  }
+
+  addToFav(id: MenuID) {
+    const fav = this.settings.get('favoriteItems');
+    const i = fav.indexOf(id);
+    if (i !== -1) {
+      this.settings.set('favoriteItems', [...fav.slice(0, i), ...fav.slice(i + 1)]);
+    } else {
+      this.settings.set('favoriteItems', [...fav, id]);
+    }
+  }
+
+  async presentToast(msg: string) {
+    const toast = await this.toastCtrl.create({
+      message: msg,
+      color: 'danger',
+      duration: 6000,
+      position: 'top',
+      buttons: [
+        {
+          text: 'Close',
+          role: 'cancel'
+        }
+      ],
+    });
+    toast.present();
   }
 }
