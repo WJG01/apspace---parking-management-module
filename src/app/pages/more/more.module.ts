@@ -5,14 +5,21 @@ import { IonicModule } from '@ionic/angular';
 
 import { MorePageRoutingModule } from './more-routing.module';
 import { MorePage } from './more.page';
+import { SharedPipesModule } from "../../shared/shared-pipes.module";
+import { ByGroupPipe } from "./by-group.pipe";
+import { ItemInFavPipe } from "./item-in-fav.pipe";
+import { ByItemPipe } from "./by-item.pipe";
+import { ComponentsModule } from "../../components/components.module";
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    MorePageRoutingModule
+    MorePageRoutingModule,
+    SharedPipesModule,
+    ComponentsModule
   ],
-  declarations: [MorePage]
+  declarations: [MorePage, ByGroupPipe, ItemInFavPipe, ByItemPipe]
 })
 export class MorePageModule { }
