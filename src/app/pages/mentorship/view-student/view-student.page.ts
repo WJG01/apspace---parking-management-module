@@ -7,7 +7,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { StaffProfile, StudentProfile } from 'src/app/interfaces';
 import { MentorshipCourseDetail, MentorshipIntake, StudentRemark } from 'src/app/interfaces/mentorship';
 import { MentorshipService } from 'src/app/services/mentorship.service';
-import { WsApiService } from '../../../services';
+import { AppLauncherService, WsApiService } from '../../../services';
 import { AddRemarksModalPage } from './add-remarks-modal/add-remarks-modal.page';
 import { EditRemarksModalPage } from './edit-remarks-modal/edit-remarks-modal.page';
 import { ShowDetailsPage } from './show-details/show-details.page';
@@ -41,7 +41,8 @@ export class ViewStudentPage {
     private mentorship: MentorshipService,
     private route: ActivatedRoute,
     private modalCtrl: ModalController,
-    private ws: WsApiService
+    private ws: WsApiService,
+    private appLauncherService: AppLauncherService
   ) {}
 
   ionViewDidEnter() {
@@ -157,6 +158,24 @@ export class ViewStudentPage {
       }
     });
     return await modal.present();
+  }
+
+  chatInTeams(studentID: string) {
+    const androidSchemeUrl = 'com.microsoft.teams';
+    const iosSchemeUrl = 'microsoft-teams://';
+    const webUrl = `https://teams.microsoft.com/l/chat/0/0?users=${studentID}@mail.apu.edu.my`;
+    const appStoreUrl = 'https://itunes.apple.com/us/app/microsoft-teams/id1113153706?mt=8';
+    const appViewUrl = 'https://teams.microsoft.com/l/chat/0/0?users=';
+    // tslint:disable-next-line: max-line-length
+    const playStoreUrl = `https://play.google.com/store/apps/details?id=com.microsoft.teams&hl=en&referrer=utm_source%3Dgoogle%26utm_medium%3Dorganic%26utm_term%3D'com.microsoft.teams'&pcampaignid=APPU_1_NtLTXJaHKYr9vASjs6WwAg`;
+    this.appLauncherService.launchExternalApp(
+      iosSchemeUrl,
+      androidSchemeUrl,
+      appViewUrl,
+      webUrl,
+      playStoreUrl,
+      appStoreUrl,
+      `${studentID}@mail.apu.edu.my`);
   }
 
   async presentEditRemarks(studentID: string, remarks: string, staffID: string, remarksDate: string) {

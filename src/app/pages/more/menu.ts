@@ -84,7 +84,7 @@ export const menusRaw = [
     id: 'e-forms' as const,
     title: 'e-Forms',
     group: 'Collaboration & Information Resources',
-    url: 'http://forms.sites.apiit.edu.my/home/',
+    url: 'http://forms.sites.apiit.edu.my/',
     attachTicket: true,
     img: 'assets/img/forms-and-applications.png',
     role: Role.Student | Role.Lecturer | Role.Admin,
@@ -506,16 +506,16 @@ export const menusRaw = [
     tags: [],
     parents: [],
   },
-  {
-    id: 'fyp-bank' as const,
-    title: 'FYP Bank Homepage',
-    group: 'Academic & Enrollment',
-    url: 'https://fypbank.apiit.edu.my/', // no ticket
-    img: 'assets/img/fyp.png',
-    role: Role.Student | Role.Lecturer | Role.Admin,
-    tags: ['fyp', 'bank', 'final project', 'project'],
-    parents: [],
-  },
+  // {
+  //   id: 'fyp-bank' as const,
+  //   title: 'FYP Bank Homepage',
+  //   group: 'Academic & Enrollment',
+  //   url: 'https://fypbank.apiit.edu.my/', // no ticket
+  //   img: 'assets/img/fyp.png',
+  //   role: Role.Student | Role.Lecturer | Role.Admin,
+  //   tags: ['fyp', 'bank', 'final project', 'project'],
+  //   parents: [],
+  // },
   {
     id: 'intake-calendar' as const,
     title: 'Intake Calendar',
@@ -571,7 +571,7 @@ export const menusRaw = [
     id: 'pgd-bank' as const,
     title: 'PGD Bank Homepage',
     group: 'Academic & Enrollment',
-    url: 'https://pgd.apiit.edu.my/', // no ticket
+    url: 'https://pgd.apu.edu.my/', // no ticket
     img: 'assets/img/fyp.png',
     role: Role.Student | Role.Lecturer | Role.Admin,
     tags: ['fyp', 'bank', 'final project', 'project'],
