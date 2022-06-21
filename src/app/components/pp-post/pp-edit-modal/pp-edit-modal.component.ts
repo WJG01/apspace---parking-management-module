@@ -28,15 +28,19 @@ export class PpEditModalComponent implements OnInit {
       (staff) => this.profile = staff[0],
       (err) => console.log(err),
       () => {
-        this.pp.getPostCategories(this.profile.ID, this.post.tagged.id)
-          .subscribe((cats) => (this.categories = cats));
         this.content = this.post.content;
-        this.category = {
-          id: this.categories.filter((c) => c.category === this.post.category)[0].id,
-          category: this.post.category,
-          direct_supervisor: this.categories.filter((c) => c.category === this.post.category)[0].direct_supervisor,
-          status: this.categories.filter((c) => c.category === this.post.category)[0].status,
-        };
+        this.pp.getPostCategories(this.profile.ID, this.post.tagged.id).subscribe(
+          (cats) => (this.categories = cats),
+          (err) => console.log(err),
+          () => {
+            this.category = {
+              id: this.categories.filter((c) => c.category === this.post.category)[0].id,
+              category: this.post.category,
+              direct_supervisor: this.categories.filter((c) => c.category === this.post.category)[0].direct_supervisor,
+              status: this.categories.filter((c) => c.category === this.post.category)[0].status,
+            };
+          }
+        );
       }
     );
   }

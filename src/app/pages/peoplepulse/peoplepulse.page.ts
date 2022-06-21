@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 // import { share } from 'rxjs/operators';
 
 import {
@@ -44,6 +45,7 @@ export class PeoplepulsePage implements OnInit {
     private ws: WsApiService,
     private pp: PeoplepulseService,
     private storage: Storage,
+    private router: Router,
     private filterOptions: PpFilterOptionsService,
     public popoverController: PopoverController,
   ) {}
@@ -70,9 +72,6 @@ export class PeoplepulsePage implements OnInit {
       // () => this.getPosts()
     );
   }
-
-  // ionViewDidEnter() {
-  // }
 
   getProfile() {
     if (this.indecitor) {
@@ -166,6 +165,18 @@ export class PeoplepulsePage implements OnInit {
       const date2 = !isSortedAsc ? dateA : dateB;
       return date1.valueOf() - date2.valueOf();
     });
+  }
+
+  navigateToAddPost() {
+    this.router.navigate(['/peoplepulse/add-post']);
+  }
+
+  navigateToStaffs() {
+    this.router.navigate(['/peoplepulse/staffs']);
+  }
+
+  navigateToProfile() {
+    this.router.navigate(['/peoplepulse/profile']);
   }
 
   // for some reason can't filter category & func separately

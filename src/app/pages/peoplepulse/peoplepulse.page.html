@@ -2,11 +2,14 @@
   <ion-toolbar>
     <ion-title>PeoplePulse</ion-title>
 
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
     <ion-buttons slot="end" style="margin-right: 1rem">
       <!-- desktop searchbar -->
       <ion-button
-        href="/peoplepulse/staffs"
         class="ion-hide-sm-down"
+        (click)="navigateToStaffs()"
       >
         <ion-icon slot="icon-only" name="search-outline"></ion-icon>
       </ion-button>
@@ -16,43 +19,38 @@
         <ion-icon slot="icon-only" name="options-outline"></ion-icon>
       </ion-button>
 
-      <!-- <ion-button> -->
-      <!-- <ion-icon slot="icon-only" name="notifications-outline"></ion-icon> -->
-      <!-- </ion-button> -->
-
       <!-- profile -->
-      <!-- student profile for testing -->
-      <a href="/peoplepulse/profile">
-        <ion-avatar style="margin-left: 1rem">
-          <ng-template let-photo [ngIf]="photo$ | async">
-            <!-- <ion-img class="profile-photo virtual-card-student-img" [src]=" -->
-            <!-- 'data:image/jpg;base64,' + -->
-            <!-- photo?.base64_photo -->
-            <!-- " (ionError)="$event.target.src = 'assets/img/no_img.png'"> -->
-            <!-- </ion-img> -->
-            <!-- for demo use this -->
-            <img
-              class="profile-photo"
-              src="https://d37plr7tnxt7lb.cloudfront.net/436.jpg"
-              onerror="this.src='assets/img/no_img.png'"
-              alt="Profile"
-            />
-          </ng-template>
+      <ion-avatar style="margin-left: 1rem" (click)="navigateToProfile()">
+        <!-- student profile for testing -->
+        <ng-template let-photo [ngIf]="photo$ | async">
+          <!-- <ion-img class="profile-photo virtual-card-student-img" [src]=" -->
+          <!-- 'data:image/jpg;base64,' + -->
+          <!-- photo?.base64_photo -->
+          <!-- " (ionError)="$event.target.src = 'assets/img/no_img.png'"> -->
+          <!-- </ion-img> -->
+          <!-- for demo use this -->
+          <img
+            class="profile-photo"
+            src="https://d37plr7tnxt7lb.cloudfront.net/436.jpg"
+            onerror="this.src='assets/img/no_img.png'"
+            alt="Profile"
+          />
+        </ng-template>
 
-          <!-- staff img test with staff acc -->
-          <ng-template #staffImage>
-            <ng-container>
-              <ng-container *ngIf="staffProfile$ | async as staffProfile">
-                <img
-                  [src]="staffProfile[0].PHOTO"
-                  onerror="this.src='assets/img/no_img.png'"
-                  alt="Profile"
-                />
-              </ng-container>
+        <!-- staff img test with staff acc -->
+        <ng-template #staffImage>
+          <ng-container>
+            <ng-container *ngIf="staffProfile$ | async as staffProfile">
+              <img
+                [src]="staffProfile[0].PHOTO"
+                onerror="this.src='assets/img/no_img.png'"
+                alt="Profile"
+              />
             </ng-container>
-          </ng-template>
-        </ion-avatar>
-      </a>
+          </ng-container>
+        </ng-template>
+      </ion-avatar>
+
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -62,7 +60,7 @@
   </ion-content>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button href="/peoplepulse/add-post">
+    <ion-fab-button (click)="navigateToAddPost()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

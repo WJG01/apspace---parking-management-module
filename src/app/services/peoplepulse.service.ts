@@ -18,7 +18,10 @@ export class PeoplepulseService {
   // TODO: change  once api is deployed
   private apiUrl = 'https://6tgcwjvkih.execute-api.ap-southeast-1.amazonaws.com/dev';
   private httpOptions = {
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin' : '*'
+    },
   };
 
   constructor(private http: HttpClient, private cas: CasTicketService) {}
