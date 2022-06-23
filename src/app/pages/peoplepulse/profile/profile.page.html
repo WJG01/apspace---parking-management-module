@@ -90,10 +90,29 @@
   </div>
 
   <h1 class="ion-text-center">Your Posts</h1>
-  <div *ngIf="posts.length > 0; else noPosts">
-    <app-pp-post *ngFor="let post of posts" [post]="post" editable="true"> </app-pp-post>
+  <div *ngIf="posts; else loading">
+    <div *ngIf="posts.length > 0; else noPosts">
+      <app-pp-post *ngFor="let post of posts" [post]="post" editable="true">
+      </app-pp-post>
+    </div>
+    <ng-template #noPosts>
+      <p class="ion-text-center">You haven't posted anything</p>
+    </ng-template>
   </div>
-  <ng-template #noPosts>
-    <p class="ion-text-center">You haven't posted anything</p>
+  <ng-template #loading>
+    <ion-card *ngFor="let i of [].constructor(3)" class="skeleton-card">
+      <ion-card-header>
+        <span class="display: flex">
+        <ion-avatar style="--border-radius: 0">
+          <ion-skeleton-text animated></ion-skeleton-text>
+        </ion-avatar>
+        </span>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+        <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+        <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+      </ion-card-content>
+    </ion-card>
   </ng-template>
 </ion-content>

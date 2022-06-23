@@ -20,7 +20,7 @@ export class StaffDirectoryInfoPage implements OnInit {
   isStudent = false;
   id: string;
   meta: PpMeta;
-  posts: any[] = [];
+  posts: any[];
   staffs: any;
 
   constructor(

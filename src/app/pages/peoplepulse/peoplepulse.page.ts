@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { PopoverController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
 // import { share } from 'rxjs/operators';
 
 import {
@@ -31,7 +31,7 @@ export class PeoplepulsePage implements OnInit {
   indecitor = false;
   meta: PpMeta;
   // TODO: implement these as actual interfaces so no guessing later
-  posts: any[] = [];
+  posts: any[];
   backupPosts: any[] = [];
   staffs: any;
   isFilterOpen = false;
@@ -47,7 +47,7 @@ export class PeoplepulsePage implements OnInit {
     private storage: Storage,
     private router: Router,
     private filterOptions: PpFilterOptionsService,
-    public popoverController: PopoverController,
+    public modalController: ModalController,
   ) {}
 
   ngOnInit() {
@@ -69,20 +69,14 @@ export class PeoplepulsePage implements OnInit {
         );
       },
       (err) => console.log(err),
-      // () => this.getPosts()
     );
   }
 
   getProfile() {
     if (this.indecitor) {
       this.storage.get('role').then((role: Role) => {
-        // TODO: remove this when get staff account
         // tslint:disable-next-line:no-bitwise
-        if (role & Role.Student) {
-          this.studentRole = true;
-          this.photo$ = this.ws.get<StudentPhoto>('/student/photo');
-          // tslint:disable-next-line:no-bitwise
-        } else if (role & (Role.Lecturer | Role.Admin)) {
+        if (role & (Role.Lecturer | Role.Admin)) {
           this.staffProfile$ = this.ws.get<StaffProfile[]>('/staff/profile');
           this.staffProfile$.subscribe((staff) => this.getPosts(staff[0].ID));
         }
@@ -117,7 +111,6 @@ export class PeoplepulsePage implements OnInit {
               break;
           }
           this.filterCatFunc(opt.categories, opt.funcAreas);
-          // this.filterFuncAreas(opt.funcAreas);
         });
       }
     );
@@ -128,12 +121,12 @@ export class PeoplepulsePage implements OnInit {
   }
 
   async presentFilterModal() {
-    const popover = await this.popoverController.create({
+    const modal = await this.modalController.create({
       component: PpFilterModalComponent,
-      cssClass: 'filter-modal',
-      translucent: true,
+      // cssClass: 'filter-modal',
+      swipeToClose: true,
     });
-    await popover.present();
+    await modal.present();
   }
 
   // here don't forget to sort the backup posts
@@ -188,9 +181,4 @@ export class PeoplepulsePage implements OnInit {
       .filter((p) => catNames.indexOf(p.category) >= 0)
       .filter((p) => areaNames.indexOf(p.poster.dep) >= 0);
   }
-
-  // filterFuncAreas(areas: PpFilterOptionsSelectable[]) {
-  // const areaNames = areas.filter((f) => f.selected).map((f) => f.name)
-  // this.posts = this.backupPosts.filter((p) => areaNames.indexOf(p.poster.dep) >= 0)
-  // }
 }

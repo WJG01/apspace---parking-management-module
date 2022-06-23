@@ -7,3 +7,21 @@ ion-segment-button {
   padding: 0.1rem 0;
   font-size: 16px;
 }
+
+#segments {
+  display: flex;
+  flex-direction: column;
+}
+
+ion-chip {
+  font-size: .75rem;
+}
+
+@media (min-width: 768px) {
+  #segments {
+    flex-direction: row;
+  }
+  ion-chip {
+    font-size: .875rem;
+  }
+}

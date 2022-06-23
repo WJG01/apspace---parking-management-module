@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { share } from 'rxjs/operators';
+// import { Observable } from 'rxjs';
+// import { share } from 'rxjs/operators';
 
 import { PpCategory, StaffDirectory } from 'src/app/interfaces';
 import { PeoplepulseService, WsApiService } from 'src/app/services';
@@ -12,7 +12,7 @@ import { PeoplepulseService, WsApiService } from 'src/app/services';
   styleUrls: ['./add-post.page.scss'],
 })
 export class AddPostPage implements OnInit {
-  staffs$: Observable<StaffDirectory[]>;
+  staffs: StaffDirectory[];
   staff: StaffDirectory = null;
   categories: PpCategory[] = [];
   category: PpCategory = null;
@@ -28,10 +28,10 @@ export class AddPostPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.staffs$ = this.ws
-      .get<StaffDirectory[]>('/staff/listing', { caching: 'cache-only' })
-      .pipe(share());
-    this.ws.get<StaffDirectory[]>('/staff/profile').subscribe((staff) => this.profile = staff[0]);
+    this.ws.get<StaffDirectory[]>('/staff/listing', { caching: 'cache-only' })
+      .subscribe((staffs) => this.staffs = staffs);
+    this.ws.get<StaffDirectory[]>('/staff/profile')
+      .subscribe((staff) => this.profile = staff[0]);
   }
 
   getCategories() {
@@ -50,8 +50,14 @@ export class AddPostPage implements OnInit {
     this.isStaffOpen = !this.isStaffOpen;
   }
 
-  selectStaff(staff: StaffDirectory) {
-    this.staff = staff;
+  // selectStaff(staff: StaffDirectory) {
+    // this.staff = staff;
+    // this.toggleStaff();
+    // this.getCategories();
+  // }
+  selectStaff($event) {
+    const staffId = $event;
+    this.staff = this.staffs.filter((staff) => staff.ID === staffId)[0]
     this.toggleStaff();
     this.getCategories();
   }

@@ -18,16 +18,11 @@
 @import './theme/responsive-design.scss';
 
 // peoplepulse
-.filter-modal .popover-content {
-  max-width: 768px;
-  max-height: 480px;
-}
-
 .delete-modal {
   --border-radius: 5px;
 }
 
-@media (min-width: 758px) {
+@media (min-width: 768px) {
   .delete-modal {
     --height: 16rem;
   }

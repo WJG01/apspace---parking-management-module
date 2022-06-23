@@ -47,7 +47,7 @@ export class PpPostComponent implements OnInit {
     });
     await modal.present();
     const { data } = await modal.onDidDismiss();
-    if (data.toDelete) {
+    if (data && data.toDelete) {
       this.ws.get<StaffDirectory[]>('/staff/profile').subscribe((staff) => {
         // p.posts = p.posts.filter((post) => post.post_id !== this.post.id);
         this.pp.deletePost(staff[0].ID, this.post.id).subscribe(() => window.location.reload());
@@ -65,7 +65,7 @@ export class PpPostComponent implements OnInit {
     });
     await modal.present();
     const { data } = await modal.onDidDismiss();
-    if (data.updated) { this.color = this.lookup[this.post.category]; }
+    if (data && data.updated) { this.color = this.lookup[this.post.category]; }
   }
 
   cleanup(str: string) {

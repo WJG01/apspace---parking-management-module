@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/peoplepulse"></ion-back-button>
     </ion-buttons>
-    <ion-title>Add Post</ion-title>
+    <ion-title style="font-weight: 900">Add Post</ion-title>
     <ion-buttons slot="primary" (click)="post()">
       <ion-button [disabled]="content.trim().length === 0" color="primary">Post</ion-button>
     </ion-buttons>
@@ -13,21 +13,30 @@
 <ion-content>
   <div class="add-content">
     <!-- staff -->
-    <ion-item button detail (click)="toggleStaff()" *ngIf="staff === null; else staffPicked">
+    <ion-item button detail
+      [class.ion-hide]="isStaffOpen"
+      *ngIf="staff === null; else staffPicked"
+      (click)="toggleStaff()"
+    >
       <ion-label>Select Employee</ion-label>
     </ion-item>
 
-    <ion-list [class.ion-hide]="!isStaffOpen" *ngIf="staffs$ | async as staffs">
-      <ion-item button *ngFor="let staff of staffs" (click)="selectStaff(staff)">
-        <ion-label>{{ staff.FULLNAME }}</ion-label>
-      </ion-item>
-    </ion-list>
-
     <ng-template #staffPicked>
       <ion-item button (click)="clearStaff()">
+        <ion-avatar slot="start">
+          <img
+            [src]="staff.PHOTO"
+            onerror="this.src='assets/img/no_img.png'"
+            alt="Profile"
+          />
+        </ion-avatar>
         <ion-label>{{ staff.FULLNAME }}</ion-label>
       </ion-item>
     </ng-template>
+
+    <ion-list [class.ion-hide]="!isStaffOpen">
+      <staff-directory (staffID)="selectStaff($event)"></staff-directory>
+    </ion-list>
     <!-- staff -->
 
     <!-- category -->

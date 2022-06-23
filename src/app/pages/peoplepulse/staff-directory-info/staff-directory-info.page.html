@@ -82,13 +82,35 @@
             </ion-card-content>
           </ion-card>
         </ion-col>
+
         <ion-col size-xs="12" size-lg="8" class="ion-padding">
           <h1 class="ion-text-center">Posts about {{ staff.FULLNAME }}</h1>
-          <div *ngIf="filterById(staff.ID).length > 0; else noPosts">
-            <app-pp-post *ngFor="let post of filterById(staff.ID)" [post]="post"> </app-pp-post>
+          <div *ngIf="posts; else loading">
+            <div *ngIf="filterById(staff.ID).length > 0; else noPosts">
+              <app-pp-post *ngFor="let post of filterById(staff.ID)" [post]="post">
+              </app-pp-post>
+            </div>
+            <ng-template #noPosts>
+              <div style="text-align: center">
+                <ion-label>No posts yet...</ion-label>
+              </div>
+            </ng-template>
           </div>
-          <ng-template #noPosts>
-            <ion-label>No Posts</ion-label>
+          <ng-template #loading>
+            <ion-card *ngFor="let i of [].constructor(3)" class="skeleton-card">
+              <ion-card-header>
+                <span class="display: flex">
+                <ion-avatar style="--border-radius: 0">
+                  <ion-skeleton-text animated></ion-skeleton-text>
+                </ion-avatar>
+                </span>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+                <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+                <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+              </ion-card-content>
+            </ion-card>
           </ng-template>
         </ion-col>
       </ion-row>

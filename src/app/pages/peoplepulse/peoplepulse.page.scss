@@ -1,6 +1,28 @@
 ion-avatar {
   width: 2.5rem;
   height: 2.5rem;
-  border: 1px solid blue;
+  // border: 1px solid blue;
   cursor: pointer;
+}
+
+.skeleton-card {
+  max-width: 42rem;
+  margin: auto;
+  margin-top: 2rem;
+}
+
+.skeleton-card-text {
+  height: 1rem;
+  margin: .5rem 0;
+}
+
+@media (min-width: 1024px) {
+  ion-fab {
+    margin: 3rem 5rem;
+  }
+}
+@media (min-width: 1280px) {
+  ion-fab {
+    margin: 3rem 14rem;
+  }
 }

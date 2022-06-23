@@ -1,12 +1,12 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>PeoplePulse</ion-title>
-
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
+
+    <!-- desktop search & filter -->
     <ion-buttons slot="end" style="margin-right: 1rem">
-      <!-- desktop searchbar -->
       <ion-button
         class="ion-hide-sm-down"
         (click)="navigateToStaffs()"
@@ -14,49 +14,77 @@
         <ion-icon slot="icon-only" name="search-outline"></ion-icon>
       </ion-button>
 
-      <!-- desktop filter -->
       <ion-button class="ion-hide-sm-down" id="filter-btn" (click)="presentFilterModal()">
         <ion-icon slot="icon-only" name="options-outline"></ion-icon>
       </ion-button>
 
       <!-- profile -->
       <ion-avatar style="margin-left: 1rem" (click)="navigateToProfile()">
-        <!-- student profile for testing -->
-        <ng-template let-photo [ngIf]="photo$ | async">
-          <!-- <ion-img class="profile-photo virtual-card-student-img" [src]=" -->
-          <!-- 'data:image/jpg;base64,' + -->
-          <!-- photo?.base64_photo -->
-          <!-- " (ionError)="$event.target.src = 'assets/img/no_img.png'"> -->
-          <!-- </ion-img> -->
-          <!-- for demo use this -->
-          <img
-            class="profile-photo"
-            src="https://d37plr7tnxt7lb.cloudfront.net/436.jpg"
-            onerror="this.src='assets/img/no_img.png'"
-            alt="Profile"
-          />
-        </ng-template>
-
         <!-- staff img test with staff acc -->
-        <ng-template #staffImage>
-          <ng-container>
-            <ng-container *ngIf="staffProfile$ | async as staffProfile">
-              <img
-                [src]="staffProfile[0].PHOTO"
-                onerror="this.src='assets/img/no_img.png'"
-                alt="Profile"
-              />
-            </ng-container>
+        <ng-container>
+          <ng-container *ngIf="staffProfile$ | async as staffProfile">
+            <img
+              [src]="staffProfile[0].PHOTO"
+              onerror="this.src='assets/img/no_img.png'"
+              alt="Profile"
+            />
           </ng-container>
-        </ng-template>
+        </ng-container>
       </ion-avatar>
-
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
+  <!-- mobile search & filter -->
+  <ion-item class="ion-hide-sm-up" style="--background: none" lines="none">
+    <ion-buttons slot="end">
+      <ion-button
+        color="primary"
+        fill="solid"
+        size="small"
+        class="ion-hide-sm-up"
+        (click)="navigateToStaffs()"
+      >
+        Search
+        <ion-icon slot="start" name="search-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button 
+        color="primary"
+        fill="solid"
+        size="small"
+        class="ion-hide-sm-up"
+        id="filter-btn"
+        (click)="presentFilterModal()"
+      >
+        Filter
+        <ion-icon slot="start" name="options-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-item>
+
+  <!-- posts -->
   <ion-content class="ion-padding">
-    <app-pp-post *ngFor="let post of posts" [post]="post"></app-pp-post>
+    <div *ngIf="posts; else loading">
+      <app-pp-post *ngFor="let post of posts" [post]="post"></app-pp-post>
+    </div>
+    <ng-template #loading>
+      <ion-card *ngFor="let i of [].constructor(3)" class="skeleton-card">
+        <ion-card-header>
+          <span class="display: flex">
+          <ion-avatar style="--border-radius: 0">
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </ion-avatar>
+          </span>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+          <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+          <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+        </ion-card-content>
+      </ion-card>
+    </ng-template>
   </ion-content>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">

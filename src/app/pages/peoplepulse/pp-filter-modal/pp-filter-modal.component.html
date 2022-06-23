@@ -1,10 +1,14 @@
-<div class="popover-content">
-  <h3>Set Filters</h3>
+<ion-content class="ion-padding" style="overflow-y: auto">
+  <ion-item style="--background: none; --padding-start: 0" lines="none">
+    <h3 slot="start">Set Filters</h3>
+    <ion-button slot="end" class="ion-hide-md-up" size="default">
+      Done
+    </ion-button>
+  </ion-item>
   <p>Sort by</p>
-  <div style="display: flex">
+  <div id="segments">
     <ion-segment
       [value]="options.sortBy"
-      mode="ios"
       (ionChange)="onSortByChange($event)"
       style="margin-right: 1rem"
     >
@@ -17,7 +21,6 @@
     </ion-segment>
     <ion-segment
       [value]="options.isSortedAsc ? 'Asc' : 'Dsc'"
-      mode="ios"
       (ionChange)="onIsSortedAscChange($event)"
     >
       <ion-segment-button value="Asc">
@@ -31,7 +34,11 @@
 
   <p>Filter by category</p>
   <div>
-    <ion-chip *ngFor="let i of selectedCats" [color]="lookup[i.name]" (click)="addCategory(i.name)">
+    <ion-chip 
+      *ngFor="let i of selectedCats"
+      [color]="lookup[i.name]"
+      (click)="addCategory(i.name)"
+    >
       {{ i.name }}
       <ion-icon name="close-circle"></ion-icon>
     </ion-chip>
@@ -58,4 +65,4 @@
       </ion-checkbox>
     </ion-item>
   </ion-list>
-</div>
+</ion-content>

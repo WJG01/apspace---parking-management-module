@@ -17,7 +17,7 @@ export class ProfilePage implements OnInit {
   skeltons = [80, 30, 100, 45, 60, 76];
   // for demo purpose until can test with a staff acc...
   meta: PpMeta;
-  posts: any[] = [];
+  posts: any[];
   staffs: any;
   // current staff
   staff: StaffProfile;

@@ -22,3 +22,14 @@ img {
 #noPosts ion-card {
   padding: 1rem;
 }
+
+.skeleton-card {
+  max-width: 42rem;
+  margin: auto;
+  margin-top: 2rem;
+}
+
+.skeleton-card-text {
+  height: 1rem;
+  margin: .5rem 0;
+}
