@@ -39,5 +39,11 @@
     </div>
   </ion-item>
 
-  <ion-card-content class="ion-padding">{{ post.content }}</ion-card-content>
+  <ion-card-content 
+    class="ion-padding"
+    (click)="toggleShownContent()"
+    style="cursor: pointer"
+  >
+    {{ shownContent }}
+  </ion-card-content>
 </ion-card>

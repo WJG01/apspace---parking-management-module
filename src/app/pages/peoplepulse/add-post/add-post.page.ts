@@ -16,6 +16,14 @@ export class AddPostPage implements OnInit {
   staff: StaffDirectory = null;
   categories: PpCategory[] = [];
   category: PpCategory = null;
+  lookup = {
+    Praise: 'primary',
+    Welfare: 'secondary',
+    'Issue Escalation': 'tertiary',
+    Achievement: 'success',
+    'Help Request': 'warning',
+    Announcement: 'danger',
+  };
   content = '';
   isStaffOpen = false;
   isCatsOpen = false;
@@ -57,7 +65,7 @@ export class AddPostPage implements OnInit {
   // }
   selectStaff($event) {
     const staffId = $event;
-    this.staff = this.staffs.filter((staff) => staff.ID === staffId)[0]
+    this.staff = this.staffs.filter((staff) => staff.ID === staffId)[0];
     this.toggleStaff();
     this.getCategories();
   }

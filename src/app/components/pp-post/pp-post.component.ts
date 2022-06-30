@@ -24,6 +24,7 @@ export class PpPostComponent implements OnInit {
     Announcement: 'danger',
   };
   formattedDate = '';
+  shownContent = '';
 
   constructor(
     private modalController: ModalController,
@@ -33,10 +34,20 @@ export class PpPostComponent implements OnInit {
 
   ngOnInit() {
     this.color = this.lookup[this.post.category];
+    this.post.datetime = this.post.datetime + 'Z'; // convert to utc
     this.formattedDate = this.timeSince(new Date(this.post.datetime));
+    this.shownContent = this.post.content.length > 297
+      ? this.post.content.slice(0, 297) + '...'
+      : this.post.content;
+
     // this.post.poster.name = this.titleCase(this.cleanup(this.post.poster.name))
     // this.post.tagged.name = this.titleCase(this.cleanup(this.post.tagged.name))
-    // console.log('wwwww', DateWithTimezonePipe.transform(this.post.datetime))
+  }
+
+  toggleShownContent() {
+    this.shownContent = this.shownContent.length > 300
+      ? this.post.content.slice(0, 297) + '...'
+      : this.post.content;
   }
 
   async presentDeleteModal() {

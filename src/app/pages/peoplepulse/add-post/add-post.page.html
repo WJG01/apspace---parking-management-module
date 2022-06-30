@@ -52,13 +52,17 @@
 
     <ng-template #catPicked>
       <ion-item (click)="clearCategory()">
-        <ion-label>{{ category.category }}</ion-label>
+        <ion-label>
+          <ion-chip [color]="lookup[category.category]">{{ category.category }}</ion-chip>
+        </ion-label>
       </ion-item>
     </ng-template>
 
     <ion-list *ngIf="isCatsOpen">
       <ion-item button *ngFor="let cat of categories" (click)="selectCategory(cat)">
-        <ion-label>{{ cat.category }}</ion-label>
+        <ion-label>
+          <ion-chip [color]="lookup[cat.category]">{{ cat.category }}</ion-chip>
+        </ion-label>
       </ion-item>
     </ion-list>
     <!-- category -->
@@ -73,6 +77,9 @@
         rows="12"
         auto-grow="true"
       >
+        <small>
+          <ion-text color="medium">({{ content.length }}/2000)</ion-text>
+        </small>
       </ion-textarea>
     </ion-item>
   </div>
