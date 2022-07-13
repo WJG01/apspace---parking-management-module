@@ -4,7 +4,7 @@
       <ion-back-button defaultHref="/peoplepulse"></ion-back-button>
     </ion-buttons>
     <ion-title style="font-weight: 900">Add Post</ion-title>
-    <ion-buttons slot="primary" (click)="post()">
+    <ion-buttons slot="primary" (click)="post()" class="ion-hide-sm-up">
       <ion-button [disabled]="content.trim().length === 0" color="primary">Post</ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -82,5 +82,14 @@
         </small>
       </ion-textarea>
     </ion-item>
+
+    <div style="float: right; margin-top: .5rem">
+      <ion-button fill="solid" color="light" (click)="goBack()">
+        Discard
+      </ion-button>
+      <ion-button fill="solid" color="primary" [disabled]="content.trim().length === 0" (click)="post()">
+        Post
+      </ion-button>
+    </div>
   </div>
 </ion-content>

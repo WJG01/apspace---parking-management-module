@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 import { PpFilterOptions, PpFilterOptionsSelectable } from 'src/app/interfaces';
 import { PpFilterOptionsService } from 'src/app/services';
@@ -24,7 +25,7 @@ export class PpFilterModalComponent implements OnInit {
   };
 
   constructor(
-    // private peoplepulseService: PeoplepulseService,
+    private modalController: ModalController,
     public filterOptions: PpFilterOptionsService
   ) {}
 
@@ -76,5 +77,9 @@ export class PpFilterModalComponent implements OnInit {
       return c;
     });
     this.filterOptions.setOptions(this.options);
+  }
+
+  dismissModal() {
+    this.modalController.dismiss();
   }
 }

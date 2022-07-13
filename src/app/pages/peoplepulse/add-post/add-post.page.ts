@@ -1,7 +1,5 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-// import { Observable } from 'rxjs';
-// import { share } from 'rxjs/operators';
 
 import { PpCategory, StaffDirectory } from 'src/app/interfaces';
 import { PeoplepulseService, WsApiService } from 'src/app/services';
@@ -32,8 +30,8 @@ export class AddPostPage implements OnInit {
   constructor(
     private ws: WsApiService,
     private pp: PeoplepulseService,
-    private location: Location
-  ) {}
+    private location: Location,
+  ) { }
 
   ngOnInit() {
     this.ws.get<StaffDirectory[]>('/staff/listing', { caching: 'cache-only' })
@@ -49,20 +47,17 @@ export class AddPostPage implements OnInit {
   post() {
     this.pp
       .postPost(this.profile.ID, this.staff.ID, this.category.id, this.content)
-      .subscribe(() => this.location.back());
-    // console.log(this.location)
-    // this.location.back();
+      .subscribe(() => location.href = '/peoplepulse');
   }
 
   toggleStaff() {
     this.isStaffOpen = !this.isStaffOpen;
   }
 
-  // selectStaff(staff: StaffDirectory) {
-    // this.staff = staff;
-    // this.toggleStaff();
-    // this.getCategories();
-  // }
+  goBack() {
+    this.location.back();
+  }
+
   selectStaff($event) {
     const staffId = $event;
     this.staff = this.staffs.filter((staff) => staff.ID === staffId)[0];

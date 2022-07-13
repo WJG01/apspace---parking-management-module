@@ -76,7 +76,10 @@ export class PpPostComponent implements OnInit {
     });
     await modal.present();
     const { data } = await modal.onDidDismiss();
-    if (data && data.updated) { this.color = this.lookup[this.post.category]; }
+    if (data && data.updated) {
+      this.color = this.lookup[this.post.category];
+      this.shownContent = this.post.content;
+    }
   }
 
   cleanup(str: string) {

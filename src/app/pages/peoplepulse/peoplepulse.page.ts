@@ -11,7 +11,6 @@ import {
   Role,
   StaffDirectory,
   StaffProfile,
-  StudentPhoto,
 } from 'src/app/interfaces';
 import {
   PeoplepulseService,
@@ -26,7 +25,6 @@ import { PpFilterModalComponent } from './pp-filter-modal/pp-filter-modal.compon
   styleUrls: ['./peoplepulse.page.scss'],
 })
 export class PeoplepulsePage implements OnInit {
-  photo$: Observable<StudentPhoto>;
   staffProfile$: Observable<StaffProfile[]>;
   indecitor = false;
   meta: PpMeta;
@@ -35,11 +33,7 @@ export class PeoplepulsePage implements OnInit {
   backupPosts: any[] = [];
   staffs: any;
   isFilterOpen = false;
-
-  // throw
-  studentRole = false;
-  intakeModified = false;
-  timetableAndExamScheduleIntake = '';
+  staff: StaffProfile;
 
   constructor(
     private ws: WsApiService,
@@ -78,7 +72,10 @@ export class PeoplepulsePage implements OnInit {
         // tslint:disable-next-line:no-bitwise
         if (role & (Role.Lecturer | Role.Admin)) {
           this.staffProfile$ = this.ws.get<StaffProfile[]>('/staff/profile');
-          this.staffProfile$.subscribe((staff) => this.getPosts(staff[0].ID));
+          this.staffProfile$.subscribe((staff) => {
+            this.staff = staff[0];
+            this.getPosts(staff[0].ID);
+          });
         }
       });
       this.indecitor = false;
