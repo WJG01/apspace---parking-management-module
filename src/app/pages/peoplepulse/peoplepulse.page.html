@@ -7,6 +7,10 @@
 
     <!-- desktop search & filter -->
     <ion-buttons slot="end" style="margin-right: 1rem">
+      <ion-button class="ion-hide-sm-down" id="admin-btn" (click)="navigateToAdmin()">
+        <ion-icon slot="icon-only" name="cog-outline"></ion-icon>
+      </ion-button>
+       
       <ion-button
         class="ion-hide-sm-down"
         (click)="navigateToStaffs()"
@@ -17,6 +21,7 @@
       <ion-button class="ion-hide-sm-down" id="filter-btn" (click)="presentFilterModal()">
         <ion-icon slot="icon-only" name="options-outline"></ion-icon>
       </ion-button>
+
 
       <!-- profile -->
       <ion-avatar style="margin-left: 1rem" (click)="navigateToProfile()">
@@ -67,7 +72,28 @@
   <!-- posts -->
   <ion-content class="ion-padding">
     <div *ngIf="posts; else loading">
-      <app-pp-post *ngFor="let post of posts" [post]="post" editable="post.user_id === staff.ID"></app-pp-post>
+      <div *ngIf="posts.length > 0; else noPosts">
+        <app-pp-post *ngFor="let post of posts; let i = index" [post]="post" id="post-{{i+1}}"editable="post.user_id === staff.ID"></app-pp-post>
+        <div *ngIf="loadingMore">
+          <ion-card *ngFor="let i of [].constructor(3)" class="skeleton-card">
+            <ion-card-header>
+              <span class="display: flex">
+              <ion-avatar style="--border-radius: 0">
+                <ion-skeleton-text animated></ion-skeleton-text>
+              </ion-avatar>
+              </span>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+              <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+              <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </div>
+      <ng-template #noPosts>
+        <p class="ion-text-center">No posts yet...</p>
+      </ng-template>
     </div>
     <ng-template #loading>
       <ion-card *ngFor="let i of [].constructor(3)" class="skeleton-card">

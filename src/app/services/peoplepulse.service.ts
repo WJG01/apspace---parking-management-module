@@ -26,7 +26,7 @@ export class PeoplepulseService {
 
   constructor(private http: HttpClient, private cas: CasTicketService) {}
 
-  getPosts(userId: string): Observable<PpPostwMeta> {
+  getPosts(userId: string, page?: number): Observable<PpPostwMeta> {
     // const options = {
       // attempts: 4,
       // auth: true,
@@ -44,7 +44,7 @@ export class PeoplepulseService {
     // };
     return this.cas.getST(this.apiUrl).pipe(
       // switchMap(ticket => this.http.get<PpPostwMeta>(url, { params: { ticket } })
-      switchMap(ticket => this.http.get<PpPostwMeta>(`${this.apiUrl}/post?user_id=${userId}&ticket=${ticket}`))
+      switchMap(ticket => this.http.get<PpPostwMeta>(`${this.apiUrl}/post?user_id=${userId}&page=${page}&ticket=${ticket}`))
     );
   }
 
@@ -153,5 +153,35 @@ export class PpFilterOptionsService {
   setOptions(newOptions: PpFilterOptions) {
     this.options.next(newOptions);
     localStorage.setItem('filter-options', JSON.stringify(newOptions));
+  }
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class PpInfiniteScrollService {
+  public intersectionOptions = {
+    root: null, //implies the root is the document viewport
+    rootMargin: '0px',
+    threshold: [0, 0.5, 1]
+  }
+  private intersectionSubject = new BehaviorSubject<boolean>(false);
+  private observer: any = new IntersectionObserver(this.intersectionCallback.bind(this));
+
+
+  getObservable() {
+    return this.intersectionSubject.asObservable();
+  }
+
+  setObserver() {
+    return this.observer;
+  }
+
+  intersectionCallback(entries) {
+    entries.forEach(entry => {
+      entry.intersectionRatio === 0.5
+        ? this.intersectionSubject.next(true)
+        : this.intersectionSubject.next(false);
+    })
   }
 }

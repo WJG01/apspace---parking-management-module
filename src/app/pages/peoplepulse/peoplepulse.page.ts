@@ -15,7 +15,8 @@ import {
 import {
   PeoplepulseService,
   PpFilterOptionsService,
-  WsApiService
+  PpInfiniteScrollService,
+  WsApiService,
 } from 'src/app/services';
 import { PpFilterModalComponent } from './pp-filter-modal/pp-filter-modal.component';
 
@@ -27,13 +28,15 @@ import { PpFilterModalComponent } from './pp-filter-modal/pp-filter-modal.compon
 export class PeoplepulsePage implements OnInit {
   staffProfile$: Observable<StaffProfile[]>;
   indecitor = false;
-  meta: PpMeta;
+  meta: PpMeta = null;
   // TODO: implement these as actual interfaces so no guessing later
   posts: any[];
   backupPosts: any[] = [];
   staffs: any;
   isFilterOpen = false;
   staff: StaffProfile;
+  endLimit = 10;
+  loadingMore = false;
 
   constructor(
     private ws: WsApiService,
@@ -41,6 +44,7 @@ export class PeoplepulsePage implements OnInit {
     private storage: Storage,
     private router: Router,
     private filterOptions: PpFilterOptionsService,
+    private scrollService: PpInfiniteScrollService,
     public modalController: ModalController,
   ) {}
 
@@ -64,6 +68,11 @@ export class PeoplepulsePage implements OnInit {
       },
       (err) => console.log(err),
     );
+    this.scrollService.getObservable().subscribe(status => {
+      if (!status) return;
+      this.endLimit += 10;
+      this.getPosts();
+    })
   }
 
   getProfile() {
@@ -74,7 +83,7 @@ export class PeoplepulsePage implements OnInit {
           this.staffProfile$ = this.ws.get<StaffProfile[]>('/staff/profile');
           this.staffProfile$.subscribe((staff) => {
             this.staff = staff[0];
-            this.getPosts(staff[0].ID);
+            this.getPosts();
           });
         }
       });
@@ -82,11 +91,22 @@ export class PeoplepulsePage implements OnInit {
     }
   }
 
-  getPosts(staffId) {
-    this.pp.getPosts(staffId).subscribe(
+  getPosts() {
+    let page = this.meta === null 
+      ? 1 
+      : this.meta.has_next
+        ? this.meta.next_page
+        : -1; // means no more posts to fetch
+
+    console.log('page is', page)
+    if (page < 0) return;
+    console.log('fetching more posts...')
+    if (page > 1) this.loadingMore = true;
+
+    this.pp.getPosts(this.staff.ID, page).subscribe(
       ({ meta, posts }) => {
         this.meta = meta;
-        this.posts = posts.map((p) => ({
+        const fetchedPosts = posts.map((p) => ({
           id: p.post_id,
           content: p.post_content,
           category: p.post_category,
@@ -94,6 +114,18 @@ export class PeoplepulsePage implements OnInit {
           poster: this.staffs[p.user_id],
           tagged: this.staffs[p.tags[0].staff_id],
         }));
+
+        if (this.loadingMore) this.loadingMore = false;
+        if (!this.posts) this.posts = [];
+        this.posts = [...this.posts, ...fetchedPosts];
+
+        let clear = setInterval(() => {
+          let target = document.querySelector(`#post-${this.endLimit - 3}`)
+          if (target) {
+            clearInterval(clear);
+            this.scrollService.setObserver().observe(target)
+          }
+        }, 1000)
       },
       (err) => console.log(err),
       () => {
@@ -167,6 +199,10 @@ export class PeoplepulsePage implements OnInit {
 
   navigateToProfile() {
     this.router.navigate(['/peoplepulse/profile']);
+  }
+  
+  navigateToAdmin() {
+    this.router.navigate(['/peoplepulse/admin']);
   }
 
   // for some reason can't filter category & func separately
