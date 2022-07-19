@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-searchbar #searchbar placeholder="Try 'About' or 'Version'" [(ngModel)]="searchTerm"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-container *ngIf="searchTerm; else notSearching">
+    <ng-container *ngIf="(menus | fuse:searchTerm:options) as filteredMenu">
+      <ng-container *ngIf="filteredMenu.length > 0; else notFound">
+        <ion-item lines="none" *ngFor="let m of filteredMenu" button="true" (click)="selectMenu(m.url)">
+          <ion-icon [name]="m.parents.length > 0 ? 'albums-outline' : 'grid-outline'" slot="start" color="primary">
+          </ion-icon>
+          <ion-label>
+            <span *ngFor="let parent of m.parents" class="parent glob-fw-600">{{ menusTitle[parent] }}</span>
+            <ion-text class="glob-fw-600" [color]="m.parents.length > 0 ? 'medium' : undefined">{{ m.title }}
+            </ion-text>
+            <p>{{ m.group }}</p>
+          </ion-label>
+        </ion-item>
+      </ng-container>
+
+      <ng-template #notFound>
+        <h2 class="text-message danger">No items found for "{{ searchTerm }}"</h2>
+      </ng-template>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #notSearching>
+    <h2 class="text-message">Type to search</h2>
+  </ng-template>
+</ion-content>
+
+<ion-footer>
+  <ion-button expand="full" color="danger" (click)="selectMenu(null)">
+    Cancel
+  </ion-button>
+</ion-footer>

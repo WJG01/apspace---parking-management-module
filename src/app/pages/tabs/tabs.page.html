@@ -5,17 +5,13 @@
       <img class="logo-img" alt="APSpace Logo" [src]="logo" />
     </ion-title>
     <ion-buttons slot="end">
-      <ion-button [color]="'primary'">
+      <ion-button color="primary" (click)="openSearch()">
         <ion-icon slot="icon-only" name="search"></ion-icon>
       </ion-button>
-      <ion-button color="primary">
+      <ion-button color="primary" (click)="openHelpCentre()">
         <ion-icon slot="icon-only" name="information-circle-sharp"></ion-icon>
       </ion-button>
     </ion-buttons>
-  </ion-toolbar>
-  <ion-toolbar *ngIf="shownSearchBar">
-    <ion-searchbar>
-    </ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
@@ -31,7 +27,7 @@
         </ion-col>
         <!--Search Bar-->
         <ion-col class="ion-no-padding">
-          <ion-searchbar placeholder="(S)earch APSpace" class="tabs-searchbar"></ion-searchbar>
+          <ion-searchbar placeholder="(S)earch APSpace" class="tabs-searchbar" (click)="openSearch()"></ion-searchbar>
         </ion-col>
       </ion-row>
       <!--Tab Items-->

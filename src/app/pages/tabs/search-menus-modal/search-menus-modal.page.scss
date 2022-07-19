@@ -1,0 +1,18 @@
+.text-message {
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--ion-color-medium);
+
+  &.danger {
+    color: var(--ion-color-danger);
+  }
+}
+
+.parent::after {
+  content: ' » ';
+}
+
+span,
+ion-text {
+  font-size: 14px;
+}
