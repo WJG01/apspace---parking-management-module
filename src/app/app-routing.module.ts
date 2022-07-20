@@ -159,6 +159,11 @@ const routes: Routes = [
       }
     ]
   },
+  {
+    path: 'iconsult',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./pages/iconsult/iconsult.module').then(m => m.IconsultModule)
+  },
   { // this path must always be at the end of the routes array
     path: '**',
     canActivate: [AuthGuard],

@@ -79,6 +79,45 @@
       }
     }
 
+    &.available {
+      background: var(--ion-color-success) !important;
+
+      &.on-selected {
+        background-color: transparent !important;
+        border: 3px solid var(--ion-color-success) !important;
+
+        p {
+          color: var(--ion-color-success) !important;
+        }
+      }
+    }
+
+    &.booked {
+      background: var(--ion-color-danger) !important;
+
+      &.on-selected {
+        background-color: transparent !important;
+        border: 3px solid var(--ion-color-danger) !important;
+
+        p {
+          color: var(--ion-color-danger) !important;
+        }
+      }
+    }
+
+    &.partially-booked {
+      background: var(--ion-color-warning) !important;
+
+      &.on-selected {
+        background-color: transparent !important;
+        border: 3px solid var(--ion-color-warning) !important;
+
+        p {
+          color: var(--ion-color-warning) !important;
+        }
+      }
+    }
+
     &.attendance {
       background: var(--ion-color-primary) !important;
 
@@ -90,6 +129,20 @@
           color: var(--ion-color-primary) !important;
         }
       }
+    }
+  }
+
+  &.filter-date-picker {
+    .days-btn.today p {
+      color: var(--ion-color-medium) !important;
+    }
+
+    .days-btn.today.colored p {
+      color: var(--ion-text-color) !important;
+    }
+
+    .days-btn.on-selected {
+      background-color: transparent !important;
     }
   }
 }
