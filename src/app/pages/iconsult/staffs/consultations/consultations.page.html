@@ -55,7 +55,7 @@
               </ion-row>
 
               <div class="ion-text-center">
-                <ion-button size="small" color="danger" (click)="toggleCancelSlot()">
+                <ion-button size="small" color="danger" (click)="toggleCancelSlot()" [disabled]="slotsToBeCancelled.length > 0">
                   {{ deleteMode ? 'Discard Changes' : 'Delete Slots' }}
                 </ion-button>
               </div>
@@ -119,7 +119,7 @@
                   </ion-label>
                 </ion-item-divider>
 
-                <ion-item *ngFor="let slot of slots.items; let isLast = last" [lines]="isLast ? 'none' : undefined">
+                <ion-item *ngFor="let slot of slots.slots; let isLast = last" [lines]="isLast ? 'none' : undefined">
                   <ion-checkbox *ngIf="deleteMode && (slot | validateCheckbox)" slot="start"
                     (ngModelChange)="getSelectedSlot(slot)" [(ngModel)]="slot.isChecked"></ion-checkbox>
 
@@ -137,17 +137,15 @@
                   </ion-label>
                 </ion-item>
 
-                <ion-row>
+                <ion-row *ngIf="deleteMode && slotsToBeCancelled.length > 0">
                   <ion-col>
-                    <ion-button color="primary" expand="block" (click)="resetSelectedSlots(dates)"
-                      *ngIf="deleteMode && this.slotsToBeCancelled.length > 0">
+                    <ion-button color="primary" expand="block" (click)="resetSelectedSlots(dates)">
                       Uncheck All
                     </ion-button>
                   </ion-col>
 
                   <ion-col>
-                    <ion-button color="danger" expand="block" (click)="cancelAvailableSlot()"
-                      *ngIf="deleteMode && this.slotsToBeCancelled.length > 0">
+                    <ion-button color="danger" expand="block" (click)="cancelAvailableSlot()">
                       Cancel Slot
                     </ion-button>
                   </ion-col>
@@ -194,17 +192,15 @@
                   </ion-button>
                 </ion-item>
 
-                <ion-row>
+                <ion-row *ngIf="deleteMode && slotsToBeCancelled.length > 0">
                   <ion-col>
-                    <ion-button color="primary" expand="block" (click)="resetSelectedSlots(dates)"
-                      *ngIf="deleteMode && this.slotsToBeCancelled.length > 0">
+                    <ion-button color="primary" expand="block" (click)="resetSelectedSlots(dates)">
                       Uncheck All
                     </ion-button>
                   </ion-col>
 
                   <ion-col>
-                    <ion-button color="danger" expand="block" (click)="cancelAvailableSlot()"
-                      *ngIf="deleteMode && this.slotsToBeCancelled.length > 0">
+                    <ion-button color="danger" expand="block" (click)="cancelAvailableSlot()">
                       Cancel Slot
                     </ion-button>
                   </ion-col>

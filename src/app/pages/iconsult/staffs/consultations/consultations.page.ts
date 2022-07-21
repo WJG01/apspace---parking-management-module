@@ -4,7 +4,7 @@ import { forkJoin, map, Observable, tap, finalize } from 'rxjs';
 import { add } from 'date-fns';
 import { CalendarComponentOptions, DayConfig } from 'ion2-calendar';
 
-import { ConsultationHour, ConsultationSlot } from '../../../../interfaces';
+import { ConsultationHour, ConsultationSlot, MappedSlots } from '../../../../interfaces';
 import { WsApiService } from '../../../../services';
 import { DateWithTimezonePipe } from '../../../../shared/date-with-timezone/date-with-timezone.pipe';
 
@@ -15,7 +15,7 @@ import { DateWithTimezonePipe } from '../../../../shared/date-with-timezone/date
 })
 export class ConsultationsPage implements OnInit {
 
-  slots$: Observable<{ [date: string]: { items: ConsultationSlot[] } }>;
+  slots$: Observable<MappedSlots[]>;
   summary: { availableSlots: number, bookedSlots: number };
   daysConfigurations: DayConfig[] = []; // ion-calendar plugin
   options: CalendarComponentOptions = {
@@ -59,7 +59,7 @@ export class ConsultationsPage implements OnInit {
     this.slots$ = forkJoin([this.ws.get<ConsultationSlot[]>('/iconsult/slots'), this.ws.get<ConsultationHour[]>('/iconsult/bookings')])
       .pipe(
         map(([slots, bookings]) => {
-          return slots.reduce((r, a) => {
+          const slotsPerDate = slots.reduce((r, a) => {
             // Grouping the slots daily and get the summary data
             if (a.status !== 'Cancelled' && a.status !== 'Cancelled by lecturer') {
               if (a.status === 'Booked') {
@@ -82,17 +82,19 @@ export class ConsultationsPage implements OnInit {
             }
             return r;
           }, {});
+
+          return Object.keys(slotsPerDate).map(date => ({ date, slots: slotsPerDate[date].items as ConsultationSlot[] }));
         }),
-        tap(dates => {
+        tap(slots => {
           // Add css classes for slot type
-          Object.keys(dates).forEach(date => {
-            const items: ConsultationSlot[] = dates[date].items;
+          slots.forEach(slot => {
+            const items = slot.slots;
             const numberOfAvailableAndBookedSlots = items.filter(item => item.status === 'Available' || item.status === 'Booked').length;
             const numberOfBookedSlots = items.filter(item => item.status === 'Booked').length;
             const cssClass = numberOfAvailableAndBookedSlots === numberOfBookedSlots && numberOfBookedSlots > 0 ? 'booked' : numberOfBookedSlots > 0 ? 'partially-booked' : numberOfBookedSlots === 0 && numberOfAvailableAndBookedSlots !== 0 ? 'available' : null;
 
             this.daysConfigurations.push({
-              date: new Date(date),
+              date: new Date(slot.date),
               subTitle: '',
               cssClass: cssClass,
               disable: false
@@ -115,7 +117,7 @@ export class ConsultationsPage implements OnInit {
     }
   }
 
-  getSelectedRangeSlot(dates: { [date: string]: { items: ConsultationSlot[] } }) {
+  getSelectedRangeSlot(dates: MappedSlots[]) {
     this.slotsToBeCancelled = [];
     const startDate = new Date(this.dateRange.from);
     const endDate = new Date(this.dateRange.to);
@@ -151,14 +153,9 @@ export class ConsultationsPage implements OnInit {
     this.slotsToBeCancelled.splice(i, 1);
   }
 
-  resetSelectedSlots(dates: { [date: string]: { items: ConsultationSlot[] } }) {
+  resetSelectedSlots(dates: MappedSlots[]) {
     if (!this.rangeMode) {
-      const datesKeys = Object.keys(dates);
-      datesKeys.forEach(datesKey => dates[datesKey].items.forEach(item => {
-        const { isChecked, ...formattedItem } = item;
-
-        return formattedItem;
-      }));
+      dates.forEach(datesKey => datesKey.slots.forEach(item => delete item.isChecked));
     }
     this.slotsToBeCancelled = [];
   }

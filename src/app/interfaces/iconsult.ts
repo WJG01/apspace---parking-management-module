@@ -34,3 +34,8 @@ export interface Venue {
   room_code: string;
   venue: string;
 }
+
+export interface MappedSlots {
+  date: string;
+  slots: ConsultationSlot[];
+}

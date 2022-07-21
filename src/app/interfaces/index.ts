@@ -17,6 +17,7 @@ export {
 export {
   ConsultationHour,
   ConsultationSlot,
+  MappedSlots,
   Venue
 } from './iconsult';
 export { IntakeListing } from './intake-listing';
