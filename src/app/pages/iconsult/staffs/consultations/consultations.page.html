@@ -56,7 +56,7 @@
 
               <div class="ion-text-center">
                 <ion-button size="small" color="danger" (click)="toggleCancelSlot()">
-                  {{ onSelect ? 'Discard Changes' : 'Delete Slots' }}
+                  {{ deleteMode ? 'Discard Changes' : 'Delete Slots' }}
                 </ion-button>
               </div>
             </ion-card-content>
@@ -76,9 +76,8 @@
             </ion-card-content>
 
             <ion-card-content>
-              <ion-calendar *ngIf="!onRange; else rangeCalendar" class="filter-date-picker glob-calendar"
-                (change)="todaysDate = $event.toString()" [(ngModel)]="dateToFilter" [options]="options"
-                [type]="'string'" [format]="'YYYY-MM-DD'">
+              <ion-calendar *ngIf="!rangeMode; else rangeCalendar" class="filter-date-picker glob-calendar"
+                [(ngModel)]="selectedDate" [options]="options" [type]="'string'" [format]="'YYYY-MM-DD'">
               </ion-calendar>
 
               <ng-template #rangeCalendar>
@@ -112,16 +111,16 @@
 
         <ion-col size="12" size-md="7">
           <ion-card class="ion-no-margin">
-            <ng-container *ngIf="!onRange; else rangeSlots">
-              <ng-container *ngIf="dateToFilter && (dates | slots: todaysDate) as slots; else noSlotsToday">
+            <ng-container *ngIf="!rangeMode; else rangeSlots">
+              <ng-container *ngIf="(dates | slots:selectedDate) as slots; else noSlotsToday">
                 <ion-item-divider lines="none" color="primary" mode="md">
                   <ion-label class="glob-text-bold">
-                    List of slots opened on {{ todaysDate | date: 'MMMM d, y' }}
+                    List of slots opened on {{ selectedDate | date: 'MMMM d, y' }}
                   </ion-label>
                 </ion-item-divider>
 
                 <ion-item *ngFor="let slot of slots.items; let isLast = last" [lines]="isLast ? 'none' : undefined">
-                  <ion-checkbox *ngIf="onSelect && (slot | validateCheckbox)" slot="start"
+                  <ion-checkbox *ngIf="deleteMode && (slot | validateCheckbox)" slot="start"
                     (ngModelChange)="getSelectedSlot(slot)" [(ngModel)]="slot.isChecked"></ion-checkbox>
 
                   <ion-label>
@@ -137,12 +136,28 @@
                     </p>
                   </ion-label>
                 </ion-item>
+
+                <ion-row>
+                  <ion-col>
+                    <ion-button color="primary" expand="block" (click)="resetSelectedSlots(dates)"
+                      *ngIf="deleteMode && this.slotsToBeCancelled.length > 0">
+                      Uncheck All
+                    </ion-button>
+                  </ion-col>
+
+                  <ion-col>
+                    <ion-button color="danger" expand="block" (click)="cancelAvailableSlot()"
+                      *ngIf="deleteMode && this.slotsToBeCancelled.length > 0">
+                      Cancel Slot
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
               </ng-container>
 
               <ng-template #noSlotsToday>
                 <ion-card-content>
                   <message-with-svg messageTitle="No Consultations Added!"
-                    messageContent="You have not added any consultations on {{ todaysDate | date: 'MMMM d, y' }}. You can check consultations added for other days by changing the date on the calendar to one of the coloured dates"
+                    messageContent="You have not added any consultations on {{ selectedDate | date: 'MMMM d, y' }}. You can check consultations added for other days by changing the date on the calendar to one of the coloured dates"
                     imageUrl="assets/img/search_not_found.svg">
                   </message-with-svg>
                 </ion-card-content>
@@ -182,14 +197,14 @@
                 <ion-row>
                   <ion-col>
                     <ion-button color="primary" expand="block" (click)="resetSelectedSlots(dates)"
-                      *ngIf="onSelect && this.slotsToBeCancelled.length > 0">
+                      *ngIf="deleteMode && this.slotsToBeCancelled.length > 0">
                       Uncheck All
                     </ion-button>
                   </ion-col>
 
                   <ion-col>
                     <ion-button color="danger" expand="block" (click)="cancelAvailableSlot()"
-                      *ngIf="onSelect && this.slotsToBeCancelled.length > 0">
+                      *ngIf="deleteMode && this.slotsToBeCancelled.length > 0">
                       Cancel Slot
                     </ion-button>
                   </ion-col>
@@ -213,23 +228,23 @@
   </div>
 </ion-content>
 
-<ion-fab *ngIf="!onSelect" vertical="bottom" horizontal="end" slot="fixed">
+<ion-fab *ngIf="!deleteMode" vertical="bottom" horizontal="end" slot="fixed">
   <ion-fab-button color="primary">
     <ion-icon name="add"></ion-icon>
   </ion-fab-button>
 </ion-fab>
 
-<ion-footer *ngIf="onSelect">
+<ion-footer *ngIf="deleteMode">
   <ion-toolbar color="danger">
     <ion-item lines="none" color="danger">
       <ion-label class="ion-text-wrap">
-        <p>
-          {{ !onRange ? 'Select more than one slot to cancel' : 'Select start and end date to cancel' }}
+        <p class="glob-text-bold">
+          {{ !rangeMode ? 'Select more than one slot to cancel' : 'Select start and end date to cancel' }}
         </p>
       </ion-label>
 
-      <ion-button color="light" slot="end" (click)="onRange = !onRange">
-        {{ !onRange ? 'Range' : 'Checkbox' }}
+      <ion-button color="light" slot="end" (click)="rangeMode = !rangeMode">
+        {{ !rangeMode ? 'Range' : 'Checkbox' }}
       </ion-button>
     </ion-item>
   </ion-toolbar>

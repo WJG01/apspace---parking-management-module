@@ -23,19 +23,18 @@ export class ConsultationsPage implements OnInit {
     to: null, // null to disable all calendar button. Days configurations will enable only dates with slots
     daysConfig: this.daysConfigurations
   };
-  todaysDate = this.dateWithTimezonePipe.transform(new Date(), 'yyyy-MM-dd');
-  dateToFilter = this.todaysDate;
+  selectedDate = this.dateWithTimezonePipe.transform(new Date(), 'yyyy-MM-dd'); // Default to todays date
   skeleton = new Array(5);
   // for select multiple slots to cancel
   dateRange: { from: string; to: string; };
   optionsRange: CalendarComponentOptions = {
     pickMode: 'range',
-    from: add(new Date(this.todaysDate), { days: 1 }),
-    to: add(new Date(this.todaysDate), { days: 1, months: 12 }),
-    disableWeeks: [0]
+    from: add(new Date(this.selectedDate), { days: 1 }),
+    to: add(new Date(this.selectedDate), { days: 1, months: 12 }),
+    disableWeeks: [0] // Disable Sundays
   };
-  onSelect = false; // enable or disable select more than one slot to cancel.
-  onRange = false; // enable or disable select date range to perform bulk cancel.
+  deleteMode: boolean; // Allow staffs to delete slots
+  rangeMode: boolean; // Determine if the ion-calendar is normal or range mode
   slotsToBeCancelled: ConsultationSlot[] = [];
 
   constructor(
@@ -61,6 +60,7 @@ export class ConsultationsPage implements OnInit {
       .pipe(
         map(([slots, bookings]) => {
           return slots.reduce((r, a) => {
+            // Grouping the slots daily and get the summary data
             if (a.status !== 'Cancelled' && a.status !== 'Cancelled by lecturer') {
               if (a.status === 'Booked') {
                 this.summary.bookedSlots++;
@@ -93,8 +93,8 @@ export class ConsultationsPage implements OnInit {
 
             this.daysConfigurations.push({
               date: new Date(date),
-              subTitle: '.',
-              cssClass: cssClass + ' colored',
+              subTitle: '',
+              cssClass: cssClass,
               disable: false
             });
           });
@@ -108,14 +108,14 @@ export class ConsultationsPage implements OnInit {
   }
 
   toggleCancelSlot() {
-    this.onSelect = !this.onSelect;
+    this.deleteMode = !this.deleteMode;
 
-    if (this.onRange === true) {
-      this.onRange = false;
+    if (this.rangeMode === true) {
+      this.rangeMode = false;
     }
   }
 
-  getSelectedRangeSlot(dates) {
+  getSelectedRangeSlot(dates: { [date: string]: { items: ConsultationSlot[] } }) {
     this.slotsToBeCancelled = [];
     const startDate = new Date(this.dateRange.from);
     const endDate = new Date(this.dateRange.to);
@@ -151,15 +151,25 @@ export class ConsultationsPage implements OnInit {
     this.slotsToBeCancelled.splice(i, 1);
   }
 
-  resetSelectedSlots(dates) {
-    if (!this.onRange) {
+  resetSelectedSlots(dates: { [date: string]: { items: ConsultationSlot[] } }) {
+    if (!this.rangeMode) {
       const datesKeys = Object.keys(dates);
-      datesKeys.forEach(datesKey => dates[datesKey].items.forEach(item => delete item.isChecked));
+      datesKeys.forEach(datesKey => dates[datesKey].items.forEach(item => {
+        const { isChecked, ...formattedItem } = item;
+
+        return formattedItem;
+      }));
     }
     this.slotsToBeCancelled = [];
   }
 
   cancelAvailableSlot() {
-    console.log('Begin Cancel Slot');
+    if (this.slotsToBeCancelled.length < 1) return;
+
+    if (this.slotsToBeCancelled.length > 1) {
+      console.log('Show Modal');
+    } else {
+      console.log('Show Alert');
+    }
   }
 }

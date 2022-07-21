@@ -26,6 +26,7 @@ export interface ConsultationSlot {
   start_time: string;
   status: string;
   venue: string;
+  isChecked?: boolean;
 }
 
 export interface Venue {
