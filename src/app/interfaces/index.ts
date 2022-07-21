@@ -15,6 +15,7 @@ export {
   FeesTotalSummary
 } from './fees';
 export { Venue } from './iconsult';
+export { Graduater } from './graduater';
 export { IntakeListing } from './intake-listing';
 export { InterimLegend } from './interim-legend';
 export { FormattedDaysLecturerTimetable, FormattedLecturerTimetable, LecturerTimetable, MappedLecturerTimetable } from './lecturer-timetable';
