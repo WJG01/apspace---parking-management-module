@@ -15,7 +15,7 @@ export class GraduateVerificationServicePage {
   formsURL : string= 'https://apiit.atlassian.net/servicedesk/customer/portal/6/group/10/create/10181';
   graduater$: Observable<Graduater[]>;
   searchKeyword: string;
-  userSearched: boolean = false;
+  userSearched: boolean;
   resultKeyWord: string;
 
   constructor(
