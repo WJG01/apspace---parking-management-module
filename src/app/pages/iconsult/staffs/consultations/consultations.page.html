@@ -55,7 +55,8 @@
               </ion-row>
 
               <div class="ion-text-center">
-                <ion-button size="small" color="danger" (click)="toggleCancelSlot()" [disabled]="slotsToBeCancelled.length > 0">
+                <ion-button size="small" color="danger" (click)="toggleCancelSlot()"
+                  [disabled]="slotsToBeCancelled.length > 0">
                   {{ deleteMode ? 'Discard Changes' : 'Delete Slots' }}
                 </ion-button>
               </div>
@@ -119,7 +120,9 @@
                   </ion-label>
                 </ion-item-divider>
 
-                <ion-item *ngFor="let slot of slots.slots; let isLast = last" [lines]="isLast ? 'none' : undefined">
+                <ion-item *ngFor="let slot of slots.slots; let isLast = last" [lines]="isLast ? 'none' : undefined"
+                  [detail]="slot.status !== 'Available'" [button]="slot.status !== 'Available'"
+                  (click)="slotDetails(slot)">
                   <ion-checkbox *ngIf="deleteMode && (slot | validateCheckbox)" slot="start"
                     (ngModelChange)="getSelectedSlot(slot)" [(ngModel)]="slot.isChecked"></ion-checkbox>
 

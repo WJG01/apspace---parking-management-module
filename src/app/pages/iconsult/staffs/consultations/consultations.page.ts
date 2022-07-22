@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { forkJoin, map, Observable, tap, finalize } from 'rxjs';
+import { ModalController } from '@ionic/angular';
 
 import { add } from 'date-fns';
 import { CalendarComponentOptions, DayConfig } from 'ion2-calendar';
@@ -7,6 +8,7 @@ import { CalendarComponentOptions, DayConfig } from 'ion2-calendar';
 import { ConsultationHour, ConsultationSlot, MappedSlots } from '../../../../interfaces';
 import { WsApiService } from '../../../../services';
 import { DateWithTimezonePipe } from '../../../../shared/date-with-timezone/date-with-timezone.pipe';
+import { SlotDetailsModalPage } from '../slot-details-modal/slot-details-modal.page';
 
 @Component({
   selector: 'app-consultations',
@@ -39,7 +41,8 @@ export class ConsultationsPage implements OnInit {
 
   constructor(
     private ws: WsApiService,
-    private dateWithTimezonePipe: DateWithTimezonePipe
+    private dateWithTimezonePipe: DateWithTimezonePipe,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit() {
@@ -107,6 +110,26 @@ export class ConsultationsPage implements OnInit {
           }
         })
       );
+  }
+
+  async slotDetails(slot: ConsultationSlot) {
+    if (slot.status === 'Available') return; // Ignore if slot is not booked
+
+    const modal = await this.modalCtrl.create({
+      component: SlotDetailsModalPage,
+      componentProps: {
+        slot
+      },
+      breakpoints: [0, 1],
+      initialBreakpoint: 1
+    });
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+
+    if (data?.completed) {
+      this.doRefresh(true);
+    }
   }
 
   toggleCancelSlot() {
