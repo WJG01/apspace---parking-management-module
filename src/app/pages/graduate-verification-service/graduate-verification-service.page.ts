@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
+
 import { Graduater } from 'src/app/interfaces';
 import { WsApiService } from 'src/app/services';
 import { ComponentService } from '../../services';
@@ -10,12 +11,12 @@ import { ComponentService } from '../../services';
   styleUrls: ['./graduate-verification-service.page.scss'],
 })
 export class GraduateVerificationServicePage {
-  applieedYear = '2015';
-  formsURL = 'https://apiit.atlassian.net/servicedesk/customer/portal/6/group/10/create/10181';
+  appliedYear : string = '2015';
+  formsURL : string= 'https://apiit.atlassian.net/servicedesk/customer/portal/6/group/10/create/10181';
   graduater$: Observable<Graduater[]>;
-  searchKeyword;
-  userSearched = false;
-  resultKeyWord;
+  searchKeyword: string;
+  userSearched: boolean = false;
+  resultKeyWord: string;
 
   constructor(
     private component: ComponentService,
