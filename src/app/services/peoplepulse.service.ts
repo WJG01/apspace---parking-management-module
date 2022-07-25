@@ -142,7 +142,6 @@ export class PpFilterOptionsService {
   constructor() {}
 
   init(functionalAreas) {
-    console.log('fuck');
     const funcAreas = functionalAreas.map(i => ({name: i.functional_area, selected: true}));
     let options = JSON.parse(localStorage.getItem('filter-options'));
     if (options === null) {
@@ -161,7 +160,6 @@ export class PpFilterOptionsService {
       };
     }
     if (options.funcAreas.length === 0) { options.funcAreas = funcAreas; }
-    console.log('fmfd', options);
     this.options.next(options);
     localStorage.setItem('filter-options', JSON.stringify(options));
   }

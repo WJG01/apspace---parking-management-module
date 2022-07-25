@@ -36,7 +36,6 @@ export class PpPostComponent implements OnInit {
 
   ngOnInit() {
     this.color = this.lookup[this.post.category.category];
-    console.log('the fuck?', this.post.datetime);
     const utc = this.post.datetime + 'Z'; // convert to utc
     this.formattedDate = this.timeSince(new Date(utc));
     this.shownContent = this.post.content.length > 297
@@ -79,7 +78,6 @@ export class PpPostComponent implements OnInit {
     });
     await modal.present();
     const { data } = await modal.onDidDismiss();
-    console.log(data, this.post);
     if (data && data.updated) {
       this.color = this.lookup[this.post.category.category];
       this.shownContent = this.post.content;
@@ -103,7 +101,6 @@ export class PpPostComponent implements OnInit {
   timeSince(date: Date) {
     // use valueOf bcuz typescript doesn't like it without
     const seconds = Math.floor((new Date().valueOf() - date.valueOf()) / 1000);
-    console.log('seconds', seconds);
 
     let interval = seconds / 31536000;
     if (interval > 1) {

@@ -69,7 +69,6 @@ export class StaffDirectoryInfoPage implements OnInit {
   getPosts() {
     this.ws.get<StaffDirectory[]>('/staff/profile').subscribe((staff) => {
       this.pp.getPosts(staff[0].ID).subscribe(({ meta, posts }) => {
-        console.log('cibai', posts);
         this.meta = meta;
         this.posts = posts.map((p) => ({
           id: p.post_id,

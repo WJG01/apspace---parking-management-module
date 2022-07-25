@@ -52,7 +52,6 @@ export class PeoplepulsePage implements OnInit {
     .subscribe((events: RoutesRecognized[]) => {
       const prevUrl = events[0].urlAfterRedirects;
       if (prevUrl === '/peoplepulse/add-post') {
-        // console.log(this.posts)
         this.meta = this.posts = null;
         this.getPosts();
       }
@@ -98,7 +97,6 @@ export class PeoplepulsePage implements OnInit {
     this.pp.getPosts(this.staff.ID, page).subscribe(
       ({ meta, posts }) => {
         this.meta = meta;
-        console.log(posts[0]);
         const fetchedPosts = posts.map((p) => ({
           id: p.post_id,
           content: p.post_content,
