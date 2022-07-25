@@ -1,35 +1,21 @@
 <ion-content class="ion-padding" style="overflow-y: auto">
   <ion-item style="--background: none; --padding-start: 0" lines="none">
     <h3 slot="start">Set Filters</h3>
-    <ion-button slot="end" class="ion-hide-md-up" size="default" (click)="dismissModal()">
-      Done
+    <ion-button slot="end" fill="clear" shape="round" (click)="dismissModal()">
+      <ion-icon slot="icon-only" name="close-outline"></ion-icon>
     </ion-button>
   </ion-item>
-  <p>Sort by</p>
-  <div id="segments">
-    <ion-segment
-      [value]="options.sortBy"
-      (ionChange)="onSortByChange($event)"
-      style="margin-right: 1rem"
-    >
-      <ion-segment-button value="Name">
-        <ion-label>Name</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="Date">
-        <ion-label>Date</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-    <ion-segment
-      [value]="options.isSortedAsc ? 'Asc' : 'Dsc'"
-      (ionChange)="onIsSortedAscChange($event)"
-    >
-      <ion-segment-button value="Asc">
-        <ion-label>Ascending</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="Dsc">
-        <ion-label>Descending</ion-label>
-      </ion-segment-button>
-    </ion-segment>
+  <p>Sort Posts</p>
+  <div>
+    <ion-item>
+      <ion-label>Sort by</ion-label>
+      <ion-select [(ngModel)]="options.sortBy" (ionChange)="onSortByChange()" placeholder="Sort by">
+        <ion-select-option value="date-desc">Date Descending</ion-select-option>
+        <ion-select-option value="date-asc">Date Ascending</ion-select-option>
+        <ion-select-option value="name-desc">Name Descending</ion-select-option>
+        <ion-select-option value="name-asc">Name Ascending</ion-select-option>
+      </ion-select>
+    </ion-item>
   </div>
 
   <p>Filter by category</p>

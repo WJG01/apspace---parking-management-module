@@ -16,13 +16,25 @@ ion-avatar {
   margin: .5rem 0;
 }
 
+
+#onboarding {
+  max-width: 42rem;
+  margin: auto;
+  margin-bottom: 2rem;
+}
+
+#onboarding ion-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.button-native {
+  margin: 0;
+}
+
 @media (min-width: 1024px) {
   ion-fab {
-    margin: 3rem 5rem;
-  }
-}
-@media (min-width: 1280px) {
-  ion-fab {
-    margin: 3rem 14rem;
+    margin: 0 calc((100vw  - 54rem) / 2) 4vh 0;
   }
 }

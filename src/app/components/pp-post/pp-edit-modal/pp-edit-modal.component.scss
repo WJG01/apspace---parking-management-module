@@ -1,0 +1,10 @@
+ion-textarea {
+  position: relative
+}
+
+ion-textarea small {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: .5rem;
+}

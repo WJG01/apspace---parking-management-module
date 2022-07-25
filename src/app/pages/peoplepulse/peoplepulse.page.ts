@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RoutesRecognized } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
-// import { share } from 'rxjs/operators';
+import { filter, pairwise } from 'rxjs/operators';
 
 import {
   PpFilterOptionsSelectable,
   PpMeta,
   Role,
-  StaffDirectory,
   StaffProfile,
 } from 'src/app/interfaces';
 import {
@@ -32,11 +31,11 @@ export class PeoplepulsePage implements OnInit {
   // TODO: implement these as actual interfaces so no guessing later
   posts: any[];
   backupPosts: any[] = [];
-  staffs: any;
   isFilterOpen = false;
   staff: StaffProfile;
   endLimit = 10;
   loadingMore = false;
+  showMessage = true;
 
   constructor(
     private ws: WsApiService,
@@ -46,33 +45,28 @@ export class PeoplepulsePage implements OnInit {
     private filterOptions: PpFilterOptionsService,
     private scrollService: PpInfiniteScrollService,
     public modalController: ModalController,
-  ) {}
+  ) {
+    // check if previous page is /peoplepulse/add-post, fetch new post
+    this.router.events
+    .pipe(filter((evt: any) => evt instanceof RoutesRecognized), pairwise())
+    .subscribe((events: RoutesRecognized[]) => {
+      const prevUrl = events[0].urlAfterRedirects;
+      if (prevUrl === '/peoplepulse/add-post') {
+        // console.log(this.posts)
+        this.meta = this.posts = null;
+        this.getPosts();
+      }
+    });
+  }
 
   ngOnInit() {
     this.indecitor = true;
     this.getProfile();
-    this.ws.get<StaffDirectory[]>('/staff/listing', { caching: 'cache-only' }).subscribe(
-      (staffs) => {
-        this.staffs = staffs.reduce(
-          (acc, cur) => ({
-            ...acc,
-            [cur.ID]: {
-              id: cur.ID,
-              name: cur.FULLNAME,
-              dep: cur.DEPARTMENT,
-              photo: cur.PHOTO,
-            },
-          }),
-          {}
-        );
-      },
-      (err) => console.log(err),
-    );
     this.scrollService.getObservable().subscribe(status => {
-      if (!status) return;
+      if (!status) { return; }
       this.endLimit += 10;
       this.getPosts();
-    })
+    });
   }
 
   getProfile() {
@@ -92,57 +86,65 @@ export class PeoplepulsePage implements OnInit {
   }
 
   getPosts() {
-    let page = this.meta === null 
-      ? 1 
+    const page = this.meta === null
+      ? 1
       : this.meta.has_next
         ? this.meta.next_page
         : -1; // means no more posts to fetch
 
-    console.log('page is', page)
-    if (page < 0) return;
-    console.log('fetching more posts...')
-    if (page > 1) this.loadingMore = true;
+    if (page < 0) { return; }
+    if (page > 1) { this.loadingMore = true; }
 
     this.pp.getPosts(this.staff.ID, page).subscribe(
       ({ meta, posts }) => {
         this.meta = meta;
+        console.log(posts[0]);
         const fetchedPosts = posts.map((p) => ({
           id: p.post_id,
           content: p.post_content,
           category: p.post_category,
           datetime: p.datetime,
-          poster: this.staffs[p.user_id],
-          tagged: this.staffs[p.tags[0].staff_id],
+          poster: p.user_id,
+          tagged: p.tags[0].tagged_user,
         }));
 
-        if (this.loadingMore) this.loadingMore = false;
-        if (!this.posts) this.posts = [];
+        if (this.loadingMore) { this.loadingMore = false; }
+        if (!this.posts) { this.posts = []; }
         this.posts = [...this.posts, ...fetchedPosts];
 
-        let clear = setInterval(() => {
-          let target = document.querySelector(`#post-${this.endLimit - 3}`)
+        const clear = setInterval(() => {
+          const target = document.querySelector(`#post-${this.endLimit }`);
           if (target) {
             clearInterval(clear);
-            this.scrollService.setObserver().observe(target)
+            this.scrollService.setObserver().observe(target);
           }
-        }, 1000)
+        }, 1000);
       },
       (err) => console.log(err),
       () => {
         this.backupPosts = this.posts;
-        this.filterOptions.sharedOptions$.subscribe((opt) => {
-          switch (opt.sortBy) {
-            case 'Name':
-              this.sortByName(opt.isSortedAsc);
-              break;
-            case 'Date':
-              this.sortByDate(opt.isSortedAsc);
-              break;
+        this.pp.getFunctionalAreas(this.staff.ID).subscribe(
+          funcAreas => {
+            this.filterOptions.init(funcAreas);
+          },
+          (error) => console.log(error),
+          () => {
+            this.filterOptions.sharedOptions$.subscribe((opt) => {
+              switch (opt.sortBy) {
+                case 'name-asc': this.sortByName(true); break;
+                case 'name-desc': this.sortByName(false); break;
+                case 'date-asc': this.sortByDate(true); break;
+                case 'date-desc': this.sortByDate(false); break;
+              }
+              this.filterCatFunc(opt.categories, opt.funcAreas);
+            });
           }
-          this.filterCatFunc(opt.categories, opt.funcAreas);
-        });
-      }
+      ); }
     );
+  }
+
+  deletePost(postId) {
+    this.posts = this.posts.filter((post) => post.id !== postId);
   }
 
   toggleFilter() {
@@ -189,6 +191,20 @@ export class PeoplepulsePage implements OnInit {
     });
   }
 
+  // for some reason can't filter category & func separately
+  // TODO: fix in future
+  filterCatFunc(cats: PpFilterOptionsSelectable[], areas: PpFilterOptionsSelectable[]) {
+    const catNames = cats.filter((c) => c.selected).map((c) => c.name);
+    const areaNames = areas.filter((f) => f.selected).map((f) => f.name);
+    this.posts = this.backupPosts
+      .filter((p) => catNames.indexOf(p.category.category) >= 0)
+      .filter((p) => areaNames.indexOf(p.poster.functional_area.functional_area) >= 0);
+  }
+
+  hideMessage() {
+    this.showMessage = false;
+  }
+
   navigateToAddPost() {
     this.router.navigate(['/peoplepulse/add-post']);
   }
@@ -200,18 +216,9 @@ export class PeoplepulsePage implements OnInit {
   navigateToProfile() {
     this.router.navigate(['/peoplepulse/profile']);
   }
-  
+
   navigateToAdmin() {
     this.router.navigate(['/peoplepulse/admin']);
   }
 
-  // for some reason can't filter category & func separately
-  // TODO: fix in future
-  filterCatFunc(cats: PpFilterOptionsSelectable[], areas: PpFilterOptionsSelectable[]) {
-    const catNames = cats.filter((c) => c.selected).map((c) => c.name);
-    const areaNames = areas.filter((f) => f.selected).map((f) => f.name);
-    this.posts = this.backupPosts
-      .filter((p) => catNames.indexOf(p.category) >= 0)
-      .filter((p) => areaNames.indexOf(p.poster.dep) >= 0);
-  }
 }

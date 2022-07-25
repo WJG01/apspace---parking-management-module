@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 import { StaffDirectory } from 'src/app/interfaces';
@@ -14,6 +14,8 @@ import { PpEditModalComponent } from './pp-edit-modal/pp-edit-modal.component';
 export class PpPostComponent implements OnInit {
   @Input() post: any;
   @Input() editable = false;
+  @Output() afterDelete = new EventEmitter<string>();
+
   color = 'primary';
   lookup = {
     Praise: 'primary',
@@ -33,9 +35,10 @@ export class PpPostComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.color = this.lookup[this.post.category];
-    this.post.datetime = this.post.datetime + 'Z'; // convert to utc
-    this.formattedDate = this.timeSince(new Date(this.post.datetime));
+    this.color = this.lookup[this.post.category.category];
+    console.log('the fuck?', this.post.datetime);
+    const utc = this.post.datetime + 'Z'; // convert to utc
+    this.formattedDate = this.timeSince(new Date(utc));
     this.shownContent = this.post.content.length > 297
       ? this.post.content.slice(0, 297) + '...'
       : this.post.content;
@@ -60,8 +63,8 @@ export class PpPostComponent implements OnInit {
     const { data } = await modal.onDidDismiss();
     if (data && data.toDelete) {
       this.ws.get<StaffDirectory[]>('/staff/profile').subscribe((staff) => {
-        // p.posts = p.posts.filter((post) => post.post_id !== this.post.id);
-        this.pp.deletePost(staff[0].ID, this.post.id).subscribe(() => window.location.reload());
+        this.afterDelete.emit(this.post.id);
+        this.pp.deletePost(staff[0].ID, this.post.id).subscribe();
       });
     }
   }
@@ -76,8 +79,9 @@ export class PpPostComponent implements OnInit {
     });
     await modal.present();
     const { data } = await modal.onDidDismiss();
+    console.log(data, this.post);
     if (data && data.updated) {
-      this.color = this.lookup[this.post.category];
+      this.color = this.lookup[this.post.category.category];
       this.shownContent = this.post.content;
     }
   }
@@ -99,6 +103,7 @@ export class PpPostComponent implements OnInit {
   timeSince(date: Date) {
     // use valueOf bcuz typescript doesn't like it without
     const seconds = Math.floor((new Date().valueOf() - date.valueOf()) / 1000);
+    console.log('seconds', seconds);
 
     let interval = seconds / 31536000;
     if (interval > 1) {

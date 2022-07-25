@@ -6,7 +6,9 @@ import { switchMap } from 'rxjs/operators';
 import {
   PpCategory,
   PpFilterOptions,
-  PpPostwMeta
+  PpFunctionalArea,
+  PpPostwMeta,
+  PpStaff
 } from 'src/app/interfaces';
 // import { WsApiService } from './ws-api.service';
 import { CasTicketService } from './cas-ticket.service';
@@ -56,9 +58,27 @@ export class PeoplepulseService {
     );
   }
 
-  getUserPosts(userId: string): Observable<PpPostwMeta> {
+  getUserPosts(userId: string, page?: number): Observable<PpPostwMeta> {
     return this.cas.getST(this.apiUrl).pipe(
-      switchMap(ticket => this.http.get<PpPostwMeta>(`${this.apiUrl}/user_post?user_id=${userId}&ticket=${ticket}`))
+      switchMap(ticket => this.http.get<PpPostwMeta>(`${this.apiUrl}/user_post?user_id=${userId}&page=${page}&ticket=${ticket}`))
+    );
+  }
+
+  getSearchUserPosts(userId: string, staffId: string, page?: number) {
+    return this.cas.getST(this.apiUrl).pipe(
+      switchMap(ticket => this.http.get<PpPostwMeta>(`${this.apiUrl}/search_user?user_id=${userId}&staff_id=${staffId}&page=${page}&ticket=${ticket}`))
+    );
+  }
+
+  getFunctionalAreas(userId: string): Observable<PpFunctionalArea[]> {
+    return this.cas.getST(this.apiUrl).pipe(
+      switchMap(ticket => this.http.get<PpFunctionalArea[]>(`${this.apiUrl}/functional_area_id?user_id=${userId}&ticket=${ticket}`))
+    );
+  }
+
+  getUsers(userId: string): Observable<PpStaff[]> {
+    return this.cas.getST(this.apiUrl).pipe(
+      switchMap(ticket => this.http.get<PpStaff[]>(`${this.apiUrl}/users?user_id=${userId}&ticket=${ticket}`))
     );
   }
 
@@ -97,21 +117,19 @@ export class PeoplepulseService {
     );
   }
 
-  // FOR DEMO ONLY (REAL IMPLEMENTATION DETAILS IS IN BACKEND, SO FRONTEND JUST
-  // SEND USER DETAILS TO PUT/PATCH/DELETE)
-  // postPost(posts: PpPostwMeta) {
-    // return this.http.put<PpPostwMeta>(`${this.apiUrl}/post`, posts, this.httpOptions);
-  // }
-
-  // deletePost(posts: PpPostwMeta) {
-    // return this.http.put<PpPostwMeta>(`${this.apiUrl}/post`, posts, this.httpOptions);
-  // }
-
-  // editPost(posts: PpPostwMeta) {
-    // return this.http.put<PpPostwMeta>(`${this.apiUrl}/post`, posts, this.httpOptions);
-  // }
-  // DEMO
-
+  editUserSettings(userId: string, staffId: string, status: boolean, accessLevel: boolean, adminAccess: boolean): Observable<any> {
+    return this.cas.getST(this.apiUrl).pipe(
+      switchMap(ticket => {
+        return this.http.put(`${this.apiUrl}/user_settings?ticket=${ticket}`, {
+            user_id: userId,
+            staff_id: staffId,
+            status,
+            access_level: accessLevel,
+            admin_access: adminAccess,
+        }, this.httpOptions);
+      })
+    );
+  }
 }
 
 @Injectable({
@@ -121,31 +139,29 @@ export class PpFilterOptionsService {
   options = new BehaviorSubject<PpFilterOptions>(null);
   sharedOptions$ = this.options.asObservable();
 
-  constructor() {
+  constructor() {}
+
+  init(functionalAreas) {
+    console.log('fuck');
+    const funcAreas = functionalAreas.map(i => ({name: i.functional_area, selected: true}));
     let options = JSON.parse(localStorage.getItem('filter-options'));
     if (options === null) {
       options = {
-        sortBy: 'Date',
-        isSortedAsc: false,
+        // date-asc, date-desc, name-asc, name-desc
+        sortBy: 'date-desc',
         categories: [
           { name: 'Praise', selected: true },
           { name: 'Achievement', selected: true },
           { name: 'Welfare', selected: true },
           { name: 'Issue Escalation', selected: true },
           { name: 'Announcement', selected: true },
-          { name: 'Help Request', selected: false },
+          { name: 'Help Request', selected: true },
         ],
-        funcAreas: [
-          { name: 'Centre of Technology and Innovation', selected: true },
-          { name: 'CEO Office', selected: true },
-          { name: 'Student Services and Marketing', selected: true },
-          { name: 'School of Computing', selected: true },
-          { name: 'Finance', selected: true },
-          { name: 'Library', selected: true },
-          { name: 'School of Media, Arts and Design', selected: true },
-        ],
+        funcAreas: [],
       };
     }
+    if (options.funcAreas.length === 0) { options.funcAreas = funcAreas; }
+    console.log('fmfd', options);
     this.options.next(options);
     localStorage.setItem('filter-options', JSON.stringify(options));
   }
@@ -161,10 +177,10 @@ export class PpFilterOptionsService {
 })
 export class PpInfiniteScrollService {
   public intersectionOptions = {
-    root: null, //implies the root is the document viewport
+    root: null, // implies the root is the document viewport
     rootMargin: '0px',
     threshold: [0, 0.5, 1]
-  }
+  };
   private intersectionSubject = new BehaviorSubject<boolean>(false);
   private observer: any = new IntersectionObserver(this.intersectionCallback.bind(this));
 
@@ -179,9 +195,9 @@ export class PpInfiniteScrollService {
 
   intersectionCallback(entries) {
     entries.forEach(entry => {
-      entry.intersectionRatio === 0.5
+      entry.intersectionRatio > 0
         ? this.intersectionSubject.next(true)
         : this.intersectionSubject.next(false);
-    })
+    });
   }
 }

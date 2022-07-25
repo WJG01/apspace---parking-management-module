@@ -1,6 +1,6 @@
 <ion-card>
   <ion-item>
-    <img [src]="post.poster.photo" onerror="this.src='assets/img/no_img.png'" alt="Profile" slot="start" />
+    <img [src]="post.poster.profile_picture_uri" onerror="this.src='assets/img/no_img.png'" alt="Profile" slot="start" />
 
     <ion-label>
       <strong>{{ post.poster.name }}</strong>
@@ -13,7 +13,7 @@
         [class.ion-hide-sm-down]="editable"
         [color]="color"
       >
-        {{ post.category }}
+        {{ post.category.category }}
       </ion-chip>
 
       <ion-button

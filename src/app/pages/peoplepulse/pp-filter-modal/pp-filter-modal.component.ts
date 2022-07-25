@@ -37,13 +37,7 @@ export class PpFilterModalComponent implements OnInit {
     });
   }
 
-  onSortByChange(e: any) {
-    this.options.sortBy = e.detail.value;
-    this.filterOptions.setOptions(this.options);
-  }
-
-  onIsSortedAscChange(e: any) {
-    this.options.isSortedAsc = e.detail.value === 'Asc';
+  onSortByChange() {
     this.filterOptions.setOptions(this.options);
   }
 

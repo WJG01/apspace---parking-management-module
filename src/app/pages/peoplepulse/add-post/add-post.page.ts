@@ -47,8 +47,7 @@ export class AddPostPage implements OnInit {
   post() {
     this.pp
       .postPost(this.profile.ID, this.staff.ID, this.category.id, this.content)
-      .subscribe(() => true);
-      // .subscribe(() => location.href = '/peoplepulse');
+      .subscribe(() => this.location.back());
   }
 
   toggleStaff() {

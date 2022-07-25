@@ -21,7 +21,6 @@ export class StaffDirectoryInfoPage implements OnInit {
   id: string;
   meta: PpMeta;
   posts: any[];
-  staffs: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,26 +36,7 @@ export class StaffDirectoryInfoPage implements OnInit {
     this.staffs$ = this.ws
       .get<StaffDirectory[]>('/staff/listing', { caching: 'cache-only' })
       .pipe(share());
-
-    this.staffs$.subscribe(
-      (staffs) => {
-        this.staffs = staffs.reduce(
-          (acc, cur) => ({
-            ...acc,
-            [cur.ID]: {
-              id: cur.ID,
-              name: cur.FULLNAME,
-              dep: cur.DEPARTMENT,
-              photo: cur.PHOTO,
-            },
-          }),
-          {}
-        );
-      },
-      (err) => console.log(err),
-      () => this.getPosts()
-    );
-
+    this.getPosts();
     this.storage.get('role').then((role: Role) => {
       // tslint:disable-next-line: no-bitwise
       this.isStudent = Boolean(role & Role.Student);
@@ -88,15 +68,16 @@ export class StaffDirectoryInfoPage implements OnInit {
 
   getPosts() {
     this.ws.get<StaffDirectory[]>('/staff/profile').subscribe((staff) => {
-      this.pp.getUserPosts(staff[0].ID).subscribe(({ meta, posts }) => {
+      this.pp.getPosts(staff[0].ID).subscribe(({ meta, posts }) => {
+        console.log('cibai', posts);
         this.meta = meta;
         this.posts = posts.map((p) => ({
           id: p.post_id,
           content: p.post_content,
           category: p.post_category,
           datetime: p.datetime,
-          poster: this.staffs[p.user_id],
-          tagged: this.staffs[p.tags[0].staff_id],
+          poster: p.user_id,
+          tagged: p.tags[0].tagged_user,
         }));
       });
     });
