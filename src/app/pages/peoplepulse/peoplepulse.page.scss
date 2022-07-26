@@ -16,17 +16,20 @@ ion-avatar {
   margin: .5rem 0;
 }
 
-
 #onboarding {
   max-width: 42rem;
   margin: auto;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 #onboarding ion-card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+#onboarding p {
+  color: black;
 }
 
 .button-native {

@@ -36,8 +36,17 @@ export class PpPostComponent implements OnInit {
 
   ngOnInit() {
     this.color = this.lookup[this.post.category.category];
-    const utc = this.post.datetime + 'Z'; // convert to utc
-    this.formattedDate = this.timeSince(new Date(utc));
+    const date = new Date(this.post.datetime);
+    const dateStr = date.toLocaleString('en-GB', {
+      hour12: false,
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    // use british english. american english put month first smh
+    this.formattedDate = `${this.timeSince(date)} ago, ${dateStr} MYT`;
     this.shownContent = this.post.content.length > 297
       ? this.post.content.slice(0, 297) + '...'
       : this.post.content;

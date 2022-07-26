@@ -5,18 +5,29 @@
       <ion-icon slot="icon-only" name="close-outline"></ion-icon>
     </ion-button>
   </ion-item>
-  <p>Sort Posts</p>
-  <div>
-    <ion-item>
-      <ion-label>Sort by</ion-label>
-      <ion-select [(ngModel)]="options.sortBy" (ionChange)="onSortByChange()" placeholder="Sort by">
-        <ion-select-option value="date-desc">Date Descending</ion-select-option>
-        <ion-select-option value="date-asc">Date Ascending</ion-select-option>
-        <ion-select-option value="name-desc">Name Descending</ion-select-option>
-        <ion-select-option value="name-asc">Name Ascending</ion-select-option>
-      </ion-select>
-    </ion-item>
-  </div>
+  <p>Sort By</p>
+    <ion-radio-group [(ngModel)]="options.sortBy" (ionChange)="onSortByChange()">
+      <div class="sortby">
+        <ion-item>
+          <ion-label>Date Descending</ion-label>
+          <ion-radio slot="start" value="date-desc"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>Date Ascending</ion-label>
+          <ion-radio slot="start" value="date-asc"></ion-radio>
+        </ion-item>
+      </div>
+      <div class="sortby">
+        <ion-item>
+          <ion-label>Name Descending</ion-label>
+          <ion-radio slot="start" value="name-desc"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>Name Ascending</ion-label>
+          <ion-radio slot="start" value="name-asc"></ion-radio>
+        </ion-item>
+      </div>
+    </ion-radio-group>
 
   <p>Filter by category</p>
   <div>

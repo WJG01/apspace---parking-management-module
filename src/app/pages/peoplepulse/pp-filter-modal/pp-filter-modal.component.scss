@@ -24,4 +24,10 @@ ion-chip {
   ion-chip {
     font-size: .875rem;
   }
+  ion-radio-group {
+    display: flex;
+  }
+  .sortby {
+    width: 50%;
+  }
 }
