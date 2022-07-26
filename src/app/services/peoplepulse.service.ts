@@ -18,7 +18,8 @@ import { CasTicketService } from './cas-ticket.service';
 })
 export class PeoplepulseService {
   // TODO: change  once api is deployed
-  private apiUrl = 'https://6tgcwjvkih.execute-api.ap-southeast-1.amazonaws.com/dev/';
+  // private apiUrl = 'https://6tgcwjvkih.execute-api.ap-southeast-1.amazonaws.com/dev/';
+  private apiUrl = 'https://xbwck8xex7.execute-api.ap-southeast-1.amazonaws.com/dev';
   private httpOptions = {
     headers: {
       'Content-Type': 'application/json',
