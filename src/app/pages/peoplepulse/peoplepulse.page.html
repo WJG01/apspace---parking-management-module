@@ -72,31 +72,31 @@
   <!-- posts -->
   <ion-content class="ion-padding">
     <div *ngIf="posts; else loading">
+      <ion-card id="onboarding" style="max-width: 42rem" [class.ion-hide]="!showMessage">
+        <ion-card-header>
+          <ion-card-title><h2><strong>Welcome to PeoplePulse</strong></h2></ion-card-title>
+          <ion-button fill="clear" shape="round" (click)="hideMessage()">
+            <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+          </ion-button>
+        </ion-card-header>
+        <ion-card-content style="display: flex">
+          <div style="margin-right: 1rem">
+            <p>Hello {{ staff.FULLNAME | titlecase }},</p>
+            <br>
+            <p>Welcome! In case you didn't know 
+            yet, PeoplePulse is an internal feedback platform for APU staff. You can 
+            start using it by viewing the posts in this page, or by clickin on the 
+            plus button on the bottom right of this page.
+            </p>
+            <br>
+            <p>For more information, you can check out the documentation page 
+              <a href="https://apiit.atlassian.net/wiki/spaces/PE/pages/2007498753/PeoplePulse+user+manual?atlOrigin=eyJpIjoiM" target="_blank">here.</a>
+            </p>
+          </div>
+          <img src='assets/img/hr.svg' width="75%" class="ion-hide-sm-down"/>
+        </ion-card-content>
+      </ion-card>
       <div *ngIf="posts.length > 0; else noPosts">
-        <ion-card id="onboarding" style="max-width: 42rem" [class.ion-hide]="!showMessage">
-          <ion-card-header>
-            <ion-card-title><h2><strong>Welcome to PeoplePulse</strong></h2></ion-card-title>
-            <ion-button fill="clear" shape="round" (click)="hideMessage()">
-              <ion-icon slot="icon-only" name="close-outline"></ion-icon>
-            </ion-button>
-          </ion-card-header>
-          <ion-card-content style="display: flex">
-            <div style="margin-right: 1rem">
-              <p>Hello {{ staff.FULLNAME | titlecase }},</p>
-              <br>
-              <p>Welcome! In case you didn't know 
-              yet, PeoplePulse is an internal feedback platform for APU staff. You can 
-              start using it by viewing the posts in this page, or by clickin on the 
-              plus button on the bottom right of this page.
-              </p>
-              <br>
-              <p>For more information, you can check out the documentation page 
-                <a href="https://apiit.atlassian.net/wiki/spaces/PE/pages/2007498753/PeoplePulse+user+manual?atlOrigin=eyJpIjoiM" target="_blank">here.</a>
-              </p>
-            </div>
-            <img src='assets/img/hr.svg' width="75%" class="ion-hide-sm-down"/>
-          </ion-card-content>
-        </ion-card>
         <app-pp-post 
           *ngFor="let post of posts; let i = index"
           [post]="post"
@@ -127,20 +127,25 @@
       </ng-template>
     </div>
     <ng-template #loading>
-      <ion-card *ngFor="let i of [].constructor(3)" class="skeleton-card">
-        <ion-card-header>
-          <span class="display: flex">
-          <ion-avatar style="--border-radius: 0">
-            <ion-skeleton-text animated></ion-skeleton-text>
-          </ion-avatar>
-          </span>
-        </ion-card-header>
-        <ion-card-content>
-          <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
-          <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
-          <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
-        </ion-card-content>
-      </ion-card>
+      <div *ngIf="fetchError; else fetchError">
+        <ion-card *ngFor="let i of [].constructor(3)" class="skeleton-card">
+          <ion-card-header>
+            <span class="display: flex">
+            <ion-avatar style="--border-radius: 0">
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-avatar>
+            </span>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+            <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+            <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      <ng-template #fetchError>
+        <p class="ion-text-center">Error fetching posts</p>
+      </ng-template>
     </ng-template>
   </ion-content>
 
