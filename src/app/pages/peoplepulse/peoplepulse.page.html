@@ -1,68 +1,151 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>PeoplePulse</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
 
+    <!-- desktop search & filter -->
     <ion-buttons slot="end" style="margin-right: 1rem">
-      <!-- desktop searchbar -->
+      <!-- <ion-button class="ion-hide-sm-down" id="admin-btn" (click)="navigateToAdmin()"> -->
+        <!-- <ion-icon slot="icon-only" name="cog-outline"></ion-icon> -->
+      <!-- </ion-button> -->
+       
       <ion-button
-        href="/peoplepulse/staffs"
         class="ion-hide-sm-down"
+        (click)="navigateToStaffs()"
       >
         <ion-icon slot="icon-only" name="search-outline"></ion-icon>
       </ion-button>
 
-      <!-- desktop filter -->
       <ion-button class="ion-hide-sm-down" id="filter-btn" (click)="presentFilterModal()">
         <ion-icon slot="icon-only" name="options-outline"></ion-icon>
       </ion-button>
 
-      <!-- <ion-button> -->
-      <!-- <ion-icon slot="icon-only" name="notifications-outline"></ion-icon> -->
-      <!-- </ion-button> -->
 
       <!-- profile -->
-      <!-- student profile for testing -->
-      <a href="/peoplepulse/profile">
-        <ion-avatar style="margin-left: 1rem">
-          <ng-template let-photo [ngIf]="photo$ | async">
-            <!-- <ion-img class="profile-photo virtual-card-student-img" [src]=" -->
-            <!-- 'data:image/jpg;base64,' + -->
-            <!-- photo?.base64_photo -->
-            <!-- " (ionError)="$event.target.src = 'assets/img/no_img.png'"> -->
-            <!-- </ion-img> -->
-            <!-- for demo use this -->
+      <ion-avatar style="margin-left: 1rem" (click)="navigateToProfile()">
+        <!-- staff img test with staff acc -->
+        <ng-container>
+          <ng-container *ngIf="staffProfile$ | async as staffProfile">
             <img
-              class="profile-photo"
-              src="https://d37plr7tnxt7lb.cloudfront.net/436.jpg"
+              [src]="staffProfile[0].PHOTO"
               onerror="this.src='assets/img/no_img.png'"
               alt="Profile"
             />
-          </ng-template>
-
-          <!-- staff img test with staff acc -->
-          <ng-template #staffImage>
-            <ng-container>
-              <ng-container *ngIf="staffProfile$ | async as staffProfile">
-                <img
-                  [src]="staffProfile[0].PHOTO"
-                  onerror="this.src='assets/img/no_img.png'"
-                  alt="Profile"
-                />
-              </ng-container>
-            </ng-container>
-          </ng-template>
-        </ion-avatar>
-      </a>
+          </ng-container>
+        </ng-container>
+      </ion-avatar>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
+  <!-- mobile search & filter -->
+  <ion-item class="ion-hide-sm-up" style="--background: none" lines="none">
+    <ion-buttons slot="end">
+      <ion-button
+        color="primary"
+        fill="solid"
+        size="small"
+        class="ion-hide-sm-up"
+        (click)="navigateToStaffs()"
+      >
+        Search
+        <ion-icon slot="start" name="search-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button 
+        color="primary"
+        fill="solid"
+        size="small"
+        class="ion-hide-sm-up"
+        id="filter-btn"
+        (click)="presentFilterModal()"
+      >
+        Filter
+        <ion-icon slot="start" name="options-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-item>
+
+  <!-- posts -->
   <ion-content class="ion-padding">
-    <app-pp-post *ngFor="let post of posts" [post]="post"></app-pp-post>
+    <div *ngIf="posts; else loading">
+      <div *ngIf="posts.length > 0; else noPosts">
+        <ion-card id="onboarding" style="max-width: 42rem" [class.ion-hide]="!showMessage">
+          <ion-card-header>
+            <ion-card-title><h2><strong>Welcome to PeoplePulse</strong></h2></ion-card-title>
+            <ion-button fill="clear" shape="round" (click)="hideMessage()">
+              <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+            </ion-button>
+          </ion-card-header>
+          <ion-card-content style="display: flex">
+            <div style="margin-right: 1rem">
+              <p>Hello {{ staff.FULLNAME | titlecase }},</p>
+              <br>
+              <p>Welcome! In case you didn't know 
+              yet, PeoplePulse is an internal feedback platform for APU staff. You can 
+              start using it by viewing the posts in this page, or by clickin on the 
+              plus button on the bottom right of this page.
+              </p>
+              <br>
+              <p>For more information, you can check out the documentation page 
+                <a href="https://apiit.atlassian.net/wiki/spaces/PE/pages/2007498753/PeoplePulse+user+manual?atlOrigin=eyJpIjoiM" target="_blank">here.</a>
+              </p>
+            </div>
+            <img src='assets/img/hr.svg' width="75%" class="ion-hide-sm-down"/>
+          </ion-card-content>
+        </ion-card>
+        <app-pp-post 
+          *ngFor="let post of posts; let i = index"
+          [post]="post"
+          id="post-{{i+1}}"
+          [editable]="post.poster.id === staff.ID"
+          (afterDelete)="deletePost($event)"
+        >
+        </app-pp-post>
+        <div *ngIf="loadingMore">
+          <ion-card *ngFor="let i of [].constructor(3)" class="skeleton-card">
+            <ion-card-header>
+              <span class="display: flex">
+              <ion-avatar style="--border-radius: 0">
+                <ion-skeleton-text animated></ion-skeleton-text>
+              </ion-avatar>
+              </span>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+              <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+              <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </div>
+      <ng-template #noPosts>
+        <p class="ion-text-center">No posts yet...</p>
+      </ng-template>
+    </div>
+    <ng-template #loading>
+      <ion-card *ngFor="let i of [].constructor(3)" class="skeleton-card">
+        <ion-card-header>
+          <span class="display: flex">
+          <ion-avatar style="--border-radius: 0">
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </ion-avatar>
+          </span>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+          <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+          <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+        </ion-card-content>
+      </ion-card>
+    </ng-template>
   </ion-content>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button href="/peoplepulse/add-post">
+    <ion-fab-button (click)="navigateToAddPost()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

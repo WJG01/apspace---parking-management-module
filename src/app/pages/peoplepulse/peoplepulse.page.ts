@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { PopoverController } from '@ionic/angular';
+import { Router, RoutesRecognized } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs';
-// import { share } from 'rxjs/operators';
+import { filter, pairwise } from 'rxjs/operators';
 
 import {
   PpFilterOptionsSelectable,
   PpMeta,
   Role,
-  StaffDirectory,
   StaffProfile,
-  StudentPhoto,
 } from 'src/app/interfaces';
 import {
   PeoplepulseService,
   PpFilterOptionsService,
-  WsApiService
+  PpInfiniteScrollService,
+  WsApiService,
 } from 'src/app/services';
 import { PpFilterModalComponent } from './pp-filter-modal/pp-filter-modal.component';
 
@@ -25,103 +25,124 @@ import { PpFilterModalComponent } from './pp-filter-modal/pp-filter-modal.compon
   styleUrls: ['./peoplepulse.page.scss'],
 })
 export class PeoplepulsePage implements OnInit {
-  photo$: Observable<StudentPhoto>;
   staffProfile$: Observable<StaffProfile[]>;
   indecitor = false;
-  meta: PpMeta;
+  meta: PpMeta = null;
   // TODO: implement these as actual interfaces so no guessing later
-  posts: any[] = [];
+  posts: any[];
   backupPosts: any[] = [];
-  staffs: any;
   isFilterOpen = false;
-
-  // throw
-  studentRole = false;
-  intakeModified = false;
-  timetableAndExamScheduleIntake = '';
+  staff: StaffProfile;
+  endLimit = 10;
+  loadingMore = false;
+  showMessage = true;
 
   constructor(
     private ws: WsApiService,
     private pp: PeoplepulseService,
     private storage: Storage,
+    private router: Router,
     private filterOptions: PpFilterOptionsService,
-    public popoverController: PopoverController,
-  ) {}
+    private scrollService: PpInfiniteScrollService,
+    public modalController: ModalController,
+  ) {
+    // check if previous page is /peoplepulse/add-post, fetch new post
+    this.router.events
+    .pipe(filter((evt: any) => evt instanceof RoutesRecognized), pairwise())
+    .subscribe((events: RoutesRecognized[]) => {
+      const prevUrl = events[0].urlAfterRedirects;
+      if (prevUrl === '/peoplepulse/add-post') {
+        this.meta = this.posts = null;
+        this.getPosts();
+      }
+    });
+  }
 
   ngOnInit() {
     this.indecitor = true;
     this.getProfile();
-    this.ws.get<StaffDirectory[]>('/staff/listing', { caching: 'cache-only' }).subscribe(
-      (staffs) => {
-        this.staffs = staffs.reduce(
-          (acc, cur) => ({
-            ...acc,
-            [cur.ID]: {
-              id: cur.ID,
-              name: cur.FULLNAME,
-              dep: cur.DEPARTMENT,
-              photo: cur.PHOTO,
-            },
-          }),
-          {}
-        );
-      },
-      (err) => console.log(err),
-      // () => this.getPosts()
-    );
+    this.scrollService.getObservable().subscribe(status => {
+      if (!status) { return; }
+      this.endLimit += 10;
+      this.getPosts();
+    });
   }
-
-  // ionViewDidEnter() {
-  // }
 
   getProfile() {
     if (this.indecitor) {
       this.storage.get('role').then((role: Role) => {
-        // TODO: remove this when get staff account
         // tslint:disable-next-line:no-bitwise
-        if (role & Role.Student) {
-          this.studentRole = true;
-          this.photo$ = this.ws.get<StudentPhoto>('/student/photo');
-          // tslint:disable-next-line:no-bitwise
-        } else if (role & (Role.Lecturer | Role.Admin)) {
+        if (role & (Role.Lecturer | Role.Admin)) {
           this.staffProfile$ = this.ws.get<StaffProfile[]>('/staff/profile');
-          this.staffProfile$.subscribe((staff) => this.getPosts(staff[0].ID));
+          this.staffProfile$.subscribe((staff) => {
+            this.staff = staff[0];
+            this.getPosts();
+          });
         }
       });
       this.indecitor = false;
     }
   }
 
-  getPosts(staffId) {
-    this.pp.getPosts(staffId).subscribe(
+  getPosts() {
+    const page = this.meta === null
+      ? 1
+      : this.meta.has_next
+        ? this.meta.next_page
+        : -1; // means no more posts to fetch
+
+    if (page < 0) { return; }
+    if (page > 1) { this.loadingMore = true; }
+
+    this.pp.getPosts(this.staff.ID, page).subscribe(
       ({ meta, posts }) => {
         this.meta = meta;
-        this.posts = posts.map((p) => ({
+        const fetchedPosts = posts.map((p) => ({
           id: p.post_id,
           content: p.post_content,
           category: p.post_category,
           datetime: p.datetime,
-          poster: this.staffs[p.user_id],
-          tagged: this.staffs[p.tags[0].tag_id],
+          poster: p.user_id,
+          tagged: p.tags[0].tagged_user,
         }));
+
+        if (this.loadingMore) { this.loadingMore = false; }
+        if (!this.posts) { this.posts = []; }
+        this.posts = [...this.posts, ...fetchedPosts];
+
+        const clear = setInterval(() => {
+          const target = document.querySelector(`#post-${this.endLimit }`);
+          if (target) {
+            clearInterval(clear);
+            this.scrollService.setObserver().observe(target);
+          }
+        }, 1000);
       },
       (err) => console.log(err),
       () => {
         this.backupPosts = this.posts;
-        this.filterOptions.sharedOptions$.subscribe((opt) => {
-          switch (opt.sortBy) {
-            case 'Name':
-              this.sortByName(opt.isSortedAsc);
-              break;
-            case 'Date':
-              this.sortByDate(opt.isSortedAsc);
-              break;
+        this.pp.getFunctionalAreas(this.staff.ID).subscribe(
+          funcAreas => {
+            this.filterOptions.init(funcAreas);
+          },
+          (error) => console.log(error),
+          () => {
+            this.filterOptions.sharedOptions$.subscribe((opt) => {
+              switch (opt.sortBy) {
+                case 'name-asc': this.sortByName(true); break;
+                case 'name-desc': this.sortByName(false); break;
+                case 'date-asc': this.sortByDate(true); break;
+                case 'date-desc': this.sortByDate(false); break;
+              }
+              this.filterCatFunc(opt.categories, opt.funcAreas);
+            });
           }
-          this.filterCatFunc(opt.categories, opt.funcAreas);
-          // this.filterFuncAreas(opt.funcAreas);
-        });
-      }
+      ); }
     );
+  }
+
+  deletePost(postId) {
+    this.posts = this.posts.filter((post) => post.id !== postId);
   }
 
   toggleFilter() {
@@ -129,12 +150,12 @@ export class PeoplepulsePage implements OnInit {
   }
 
   async presentFilterModal() {
-    const popover = await this.popoverController.create({
+    const modal = await this.modalController.create({
       component: PpFilterModalComponent,
-      cssClass: 'filter-modal',
-      translucent: true,
+      // cssClass: 'filter-modal',
+      swipeToClose: true,
     });
-    await popover.present();
+    await modal.present();
   }
 
   // here don't forget to sort the backup posts
@@ -174,12 +195,28 @@ export class PeoplepulsePage implements OnInit {
     const catNames = cats.filter((c) => c.selected).map((c) => c.name);
     const areaNames = areas.filter((f) => f.selected).map((f) => f.name);
     this.posts = this.backupPosts
-      .filter((p) => catNames.indexOf(p.category) >= 0)
-      .filter((p) => areaNames.indexOf(p.poster.dep) >= 0);
+      .filter((p) => catNames.indexOf(p.category.category) >= 0)
+      .filter((p) => areaNames.indexOf(p.poster.functional_area.functional_area) >= 0);
   }
 
-  // filterFuncAreas(areas: PpFilterOptionsSelectable[]) {
-  // const areaNames = areas.filter((f) => f.selected).map((f) => f.name)
-  // this.posts = this.backupPosts.filter((p) => areaNames.indexOf(p.poster.dep) >= 0)
-  // }
+  hideMessage() {
+    this.showMessage = false;
+  }
+
+  navigateToAddPost() {
+    this.router.navigate(['/peoplepulse/add-post']);
+  }
+
+  navigateToStaffs() {
+    this.router.navigate(['/peoplepulse/staffs']);
+  }
+
+  navigateToProfile() {
+    this.router.navigate(['/peoplepulse/profile']);
+  }
+
+  navigateToAdmin() {
+    this.router.navigate(['/peoplepulse/admin']);
+  }
+
 }

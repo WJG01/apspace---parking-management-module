@@ -1,5 +1,43 @@
 ion-avatar {
   width: 2.5rem;
   height: 2.5rem;
-  border: 1px solid blue;
+  // border: 1px solid blue;
+  cursor: pointer;
+}
+
+.skeleton-card {
+  max-width: 42rem;
+  margin: auto;
+  margin-top: 2rem;
+}
+
+.skeleton-card-text {
+  height: 1rem;
+  margin: .5rem 0;
+}
+
+#onboarding {
+  max-width: 42rem;
+  margin: auto;
+  margin-bottom: 1rem;
+}
+
+#onboarding ion-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#onboarding p {
+  color: black;
+}
+
+.button-native {
+  margin: 0;
+}
+
+@media (min-width: 1024px) {
+  ion-fab {
+    margin: 0 calc((100vw  - 54rem) / 2) 4vh 0;
+  }
 }

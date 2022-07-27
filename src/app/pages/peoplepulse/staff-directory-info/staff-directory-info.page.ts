@@ -20,8 +20,7 @@ export class StaffDirectoryInfoPage implements OnInit {
   isStudent = false;
   id: string;
   meta: PpMeta;
-  posts: any[] = [];
-  staffs: any;
+  posts: any[];
 
   constructor(
     private route: ActivatedRoute,
@@ -37,26 +36,7 @@ export class StaffDirectoryInfoPage implements OnInit {
     this.staffs$ = this.ws
       .get<StaffDirectory[]>('/staff/listing', { caching: 'cache-only' })
       .pipe(share());
-
-    this.staffs$.subscribe(
-      (staffs) => {
-        this.staffs = staffs.reduce(
-          (acc, cur) => ({
-            ...acc,
-            [cur.ID]: {
-              id: cur.ID,
-              name: cur.FULLNAME,
-              dep: cur.DEPARTMENT,
-              photo: cur.PHOTO,
-            },
-          }),
-          {}
-        );
-      },
-      (err) => console.log(err),
-      () => this.getPosts()
-    );
-
+    this.getPosts();
     this.storage.get('role').then((role: Role) => {
       // tslint:disable-next-line: no-bitwise
       this.isStudent = Boolean(role & Role.Student);
@@ -95,8 +75,8 @@ export class StaffDirectoryInfoPage implements OnInit {
           content: p.post_content,
           category: p.post_category,
           datetime: p.datetime,
-          poster: this.staffs[p.user_id],
-          tagged: this.staffs[p.tags[0].tag_id],
+          poster: p.user_id,
+          tagged: p.tags[0].tagged_user,
         }));
       });
     });

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 import { PpFilterOptions, PpFilterOptionsSelectable } from 'src/app/interfaces';
 import { PpFilterOptionsService } from 'src/app/services';
@@ -24,7 +25,7 @@ export class PpFilterModalComponent implements OnInit {
   };
 
   constructor(
-    // private peoplepulseService: PeoplepulseService,
+    private modalController: ModalController,
     public filterOptions: PpFilterOptionsService
   ) {}
 
@@ -36,13 +37,7 @@ export class PpFilterModalComponent implements OnInit {
     });
   }
 
-  onSortByChange(e: any) {
-    this.options.sortBy = e.detail.value;
-    this.filterOptions.setOptions(this.options);
-  }
-
-  onIsSortedAscChange(e: any) {
-    this.options.isSortedAsc = e.detail.value === 'Asc';
+  onSortByChange() {
     this.filterOptions.setOptions(this.options);
   }
 
@@ -76,5 +71,9 @@ export class PpFilterModalComponent implements OnInit {
       return c;
     });
     this.filterOptions.setOptions(this.options);
+  }
+
+  dismissModal() {
+    this.modalController.dismiss();
   }
 }

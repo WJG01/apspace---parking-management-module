@@ -61,6 +61,7 @@ export {
     PpMeta,
     PpCategory,
     PpFunctionalArea,
+    PpStaff,
     PpFilterOptions,
     PpFilterOptionsSelectable,
 } from './peoplepulse';

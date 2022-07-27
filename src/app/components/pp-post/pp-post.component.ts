@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 import { StaffDirectory } from 'src/app/interfaces';
@@ -14,6 +14,8 @@ import { PpEditModalComponent } from './pp-edit-modal/pp-edit-modal.component';
 export class PpPostComponent implements OnInit {
   @Input() post: any;
   @Input() editable = false;
+  @Output() afterDelete = new EventEmitter<string>();
+
   color = 'primary';
   lookup = {
     Praise: 'primary',
@@ -24,6 +26,7 @@ export class PpPostComponent implements OnInit {
     Announcement: 'danger',
   };
   formattedDate = '';
+  shownContent = '';
 
   constructor(
     private modalController: ModalController,
@@ -32,10 +35,30 @@ export class PpPostComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.color = this.lookup[this.post.category];
-    this.formattedDate = this.timeSince(new Date(this.post.datetime));
+    this.color = this.lookup[this.post.category.category];
+    const date = new Date(this.post.datetime);
+    const dateStr = date.toLocaleString('en-GB', {
+      hour12: false,
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    // use british english. american english put month first smh
+    this.formattedDate = `${this.timeSince(date)} ago, ${dateStr} MYT`;
+    this.shownContent = this.post.content.length > 297
+      ? this.post.content.slice(0, 297) + '...'
+      : this.post.content;
+
     // this.post.poster.name = this.titleCase(this.cleanup(this.post.poster.name))
     // this.post.tagged.name = this.titleCase(this.cleanup(this.post.tagged.name))
+  }
+
+  toggleShownContent() {
+    this.shownContent = this.shownContent.length > 300
+      ? this.post.content.slice(0, 297) + '...'
+      : this.post.content;
   }
 
   async presentDeleteModal() {
@@ -46,10 +69,10 @@ export class PpPostComponent implements OnInit {
     });
     await modal.present();
     const { data } = await modal.onDidDismiss();
-    if (data.toDelete) {
+    if (data && data.toDelete) {
       this.ws.get<StaffDirectory[]>('/staff/profile').subscribe((staff) => {
-        // p.posts = p.posts.filter((post) => post.post_id !== this.post.id);
-        this.pp.deletePost(staff[0].ID, this.post.id).subscribe(() => window.location.reload());
+        this.afterDelete.emit(this.post.id);
+        this.pp.deletePost(staff[0].ID, this.post.id).subscribe();
       });
     }
   }
@@ -64,7 +87,10 @@ export class PpPostComponent implements OnInit {
     });
     await modal.present();
     const { data } = await modal.onDidDismiss();
-    if (data.updated) { this.color = this.lookup[this.post.category]; }
+    if (data && data.updated) {
+      this.color = this.lookup[this.post.category.category];
+      this.shownContent = this.post.content;
+    }
   }
 
   cleanup(str: string) {

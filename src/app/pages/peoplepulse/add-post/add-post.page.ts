@@ -1,7 +1,5 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { share } from 'rxjs/operators';
 
 import { PpCategory, StaffDirectory } from 'src/app/interfaces';
 import { PeoplepulseService, WsApiService } from 'src/app/services';
@@ -12,10 +10,18 @@ import { PeoplepulseService, WsApiService } from 'src/app/services';
   styleUrls: ['./add-post.page.scss'],
 })
 export class AddPostPage implements OnInit {
-  staffs$: Observable<StaffDirectory[]>;
+  staffs: StaffDirectory[];
   staff: StaffDirectory = null;
   categories: PpCategory[] = [];
   category: PpCategory = null;
+  lookup = {
+    Praise: 'primary',
+    Welfare: 'secondary',
+    'Issue Escalation': 'tertiary',
+    Achievement: 'success',
+    'Help Request': 'warning',
+    Announcement: 'danger',
+  };
   content = '';
   isStaffOpen = false;
   isCatsOpen = false;
@@ -24,14 +30,14 @@ export class AddPostPage implements OnInit {
   constructor(
     private ws: WsApiService,
     private pp: PeoplepulseService,
-    private location: Location
-  ) {}
+    private location: Location,
+  ) { }
 
   ngOnInit() {
-    this.staffs$ = this.ws
-      .get<StaffDirectory[]>('/staff/listing', { caching: 'cache-only' })
-      .pipe(share());
-    this.ws.get<StaffDirectory[]>('/staff/profile').subscribe((staff) => this.profile = staff[0]);
+    this.ws.get<StaffDirectory[]>('/staff/listing', { caching: 'cache-only' })
+      .subscribe((staffs) => this.staffs = staffs);
+    this.ws.get<StaffDirectory[]>('/staff/profile')
+      .subscribe((staff) => this.profile = staff[0]);
   }
 
   getCategories() {
@@ -40,18 +46,21 @@ export class AddPostPage implements OnInit {
 
   post() {
     this.pp
-      .postPost(this.profile.ID, this.staff.ID, this.category.category_name, this.content)
+      .postPost(this.profile.ID, this.staff.ID, this.category.id, this.content)
       .subscribe(() => this.location.back());
-    // console.log(this.location)
-    // this.location.back();
   }
 
   toggleStaff() {
     this.isStaffOpen = !this.isStaffOpen;
   }
 
-  selectStaff(staff: StaffDirectory) {
-    this.staff = staff;
+  goBack() {
+    this.location.back();
+  }
+
+  selectStaff($event) {
+    const staffId = $event;
+    this.staff = this.staffs.filter((staff) => staff.ID === staffId)[0];
     this.toggleStaff();
     this.getCategories();
   }

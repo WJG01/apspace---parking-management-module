@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Admin</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/peoplepulse"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="content">
+    <ion-list lines="none" style="margin-buttom: 0px">
+      <ion-searchbar placeholder="Staff name, job title, extension number.." showCancelButton="focus"></ion-searchbar>
+    </ion-list>
+    <ion-item>
+      <ion-label>Functional Area</ion-label>
+      <ion-select interface="popover" [(ngModel)]="dept">
+        <ion-select-option selected value="">ALL</ion-select-option>
+        <ion-select-option *ngFor="let f of funcAreas" [value]="f">{{ f }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <div *ngIf="staffs; else loading">
+    </div>
+
+    <ng-template #loading>
+      <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+      <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+      <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+    </ng-template>
+  </div>
+</ion-content>

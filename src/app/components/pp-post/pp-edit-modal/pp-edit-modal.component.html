@@ -3,37 +3,53 @@
 
   <!-- staff -->
   <ion-item>
-    <ion-label>Tagged user: {{ this.post.tagged.name }}</ion-label>
+    <ion-avatar slot="start">
+      <img [src]="this.post.tagged.profile_picture_uri" oneerror="this.src='assets/img/no_img.png'" alt="Tagged Staff" />
+    </ion-avatar>
+    <ion-label>{{ this.post.tagged.name }}</ion-label>
   </ion-item>
 
   <!-- category -->
-  <ion-item button detail *ngIf="category === null; else catPicked" (click)="toggleCategories()">
+  <ion-item
+    button
+    detail
+    *ngIf="category === null; else catPicked"
+    (click)="toggleCategories()"
+  >
     <ion-label>Select Category</ion-label>
   </ion-item>
 
   <ng-template #catPicked>
     <ion-item button (click)="clearCategory()">
-      <ion-label>{{ category.category_name }}</ion-label>
+      <ion-label>
+        <ion-chip [color]="lookup[category.category]">{{ category.category }}</ion-chip>
+      </ion-label>
     </ion-item>
   </ng-template>
 
   <ion-list *ngIf="isCatsOpen">
     <ion-item button *ngFor="let cat of categories" (click)="selectCategory(cat)">
-      <ion-label>{{ cat.category_name }}</ion-label>
+      <ion-label>
+        <ion-chip [color]="lookup[cat.category]">{{ cat.category }}</ion-chip>
+      </ion-label>
     </ion-item>
   </ion-list>
   <!-- category -->
 
-  <ion-textarea
-    [disabled]="category === null"
-    placeholder="Say something about them..."
-    [(ngModel)]="content"
-    maxLength="2000"
-    minLength="2"
-    rows="6"
-    style="background: white"
-  >
-  </ion-textarea>
+  <ion-item>
+    <ion-textarea
+      [disabled]="category === null"
+      placeholder="Say something about them..."
+      [(ngModel)]="content"
+      maxLength="2000"
+      minLength="2"
+      rows="6"
+    >
+      <small>
+        <ion-text color="medium">({{ content.length }} / 2000)</ion-text>
+      </small>
+    </ion-textarea>
+  </ion-item>
 
   <div class="ion-float-right" style="margin-top: 1rem">
     <ion-button style="margin-right: 1rem" (click)="onCancelClick()">Cancel</ion-button>

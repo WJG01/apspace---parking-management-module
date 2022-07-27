@@ -1,33 +1,49 @@
 <ion-card>
-  <ion-card-header class="ion-justify-content-between" style="display: flex">
-    <div style="display: flex">
-      <img [src]="post.poster.photo" onerror="this.src='assets/img/no_img.png'" alt="Profile" />
-      <div id="post-details">
-        <ion-card-title>{{ post.poster.name }}</ion-card-title>
-        <p>{{ post.poster.dep }} • posted {{ formattedDate }} ago</p>
-        <p>posted about: {{ post.tagged.name }}</p>
-      </div>
-    </div>
-    <ion-chip [color]="color">{{ post.category }}</ion-chip>
-    <ion-button
-      *ngIf="editable"
-      fill="clear"
-      shape="round"
-      size="small"
-      (click)="presentEditModal()"
-    >
-      <ion-icon slot="icon-only" name="create-outline"></ion-icon>
-    </ion-button>
-    <ion-button
-      *ngIf="editable"
-      fill="clear"
-      shape="round"
-      size="small"
-      (click)="presentDeleteModal()"
-    >
-      <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
-    </ion-button>
-  </ion-card-header>
+  <ion-item>
+    <img [src]="post.poster.profile_picture_uri" onerror="this.src='assets/img/no_img.png'" alt="Profile" slot="start" />
 
-  <ion-card-content class="ion-padding">{{ post.content }}</ion-card-content>
+    <ion-label>
+      <strong>{{ post.poster.name }}</strong>
+      <ion-label class="sublabel">tagged: {{ post.tagged.name }}</ion-label>
+      <ion-label class="sublabel">{{ formattedDate }}</ion-label>
+    </ion-label>
+
+    <div slot="end" style="display: flex; align-items: center">
+      <ion-chip 
+        [class.ion-hide-sm-down]="editable"
+        [color]="color"
+      >
+        {{ post.category.category }}
+      </ion-chip>
+
+      <ion-button
+        *ngIf="editable"
+        fill="clear"
+        shape="round"
+        size="small"
+        (click)="presentEditModal()"
+        style="margin-right: 5px"
+      >
+        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        *ngIf="editable"
+        fill="clear"
+        shape="round"
+        size="small"
+        (click)="presentDeleteModal()"
+      >
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-item>
+
+  <ion-card-content 
+    class="ion-padding"
+    (click)="toggleShownContent()"
+    style="cursor: pointer"
+  >
+    {{ shownContent }}
+  </ion-card-content>
 </ion-card>

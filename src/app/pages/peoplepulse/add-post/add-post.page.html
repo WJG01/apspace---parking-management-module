@@ -3,8 +3,8 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/peoplepulse"></ion-back-button>
     </ion-buttons>
-    <ion-title>Add Post</ion-title>
-    <ion-buttons slot="primary" (click)="post()">
+    <ion-title style="font-weight: 900">Add Post</ion-title>
+    <ion-buttons slot="primary" (click)="post()" class="ion-hide-sm-up">
       <ion-button [disabled]="content.trim().length === 0" color="primary">Post</ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -13,21 +13,30 @@
 <ion-content>
   <div class="add-content">
     <!-- staff -->
-    <ion-item button detail (click)="toggleStaff()" *ngIf="staff === null; else staffPicked">
+    <ion-item button detail
+      [class.ion-hide]="isStaffOpen"
+      *ngIf="staff === null; else staffPicked"
+      (click)="toggleStaff()"
+    >
       <ion-label>Select Employee</ion-label>
     </ion-item>
 
-    <ion-list [class.ion-hide]="!isStaffOpen" *ngIf="staffs$ | async as staffs">
-      <ion-item button *ngFor="let staff of staffs" (click)="selectStaff(staff)">
-        <ion-label>{{ staff.FULLNAME }}</ion-label>
-      </ion-item>
-    </ion-list>
-
     <ng-template #staffPicked>
       <ion-item button (click)="clearStaff()">
+        <ion-avatar slot="start">
+          <img
+            [src]="staff.PHOTO"
+            onerror="this.src='assets/img/no_img.png'"
+            alt="Profile"
+          />
+        </ion-avatar>
         <ion-label>{{ staff.FULLNAME }}</ion-label>
       </ion-item>
     </ng-template>
+
+    <ion-list [class.ion-hide]="!isStaffOpen">
+      <staff-directory (staffID)="selectStaff($event)"></staff-directory>
+    </ion-list>
     <!-- staff -->
 
     <!-- category -->
@@ -43,27 +52,44 @@
 
     <ng-template #catPicked>
       <ion-item (click)="clearCategory()">
-        <ion-label>{{ category.category_name }}</ion-label>
+        <ion-label>
+          <ion-chip [color]="lookup[category.category]">{{ category.category }}</ion-chip>
+        </ion-label>
       </ion-item>
     </ng-template>
 
     <ion-list *ngIf="isCatsOpen">
       <ion-item button *ngFor="let cat of categories" (click)="selectCategory(cat)">
-        <ion-label>{{ cat.category_name }}</ion-label>
+        <ion-label>
+          <ion-chip [color]="lookup[cat.category]">{{ cat.category }}</ion-chip>
+        </ion-label>
       </ion-item>
     </ion-list>
     <!-- category -->
 
-    <ion-textarea
-      [disabled]="category === null"
-      placeholder="Say something about them..."
-      [(ngModel)]="content"
-      maxLength="2000"
-      minLength="2"
-      rows="12"
-      auto-grow="true"
-      style="background: white"
-    >
-    </ion-textarea>
+    <ion-item>
+      <ion-textarea
+        [disabled]="category === null"
+        placeholder="Say something about them..."
+        [(ngModel)]="content"
+        maxLength="2000"
+        minLength="2"
+        rows="12"
+        auto-grow="true"
+      >
+        <small>
+          <ion-text color="medium">({{ content.length }}/2000)</ion-text>
+        </small>
+      </ion-textarea>
+    </ion-item>
+
+    <div style="float: right; margin-top: .5rem">
+      <ion-button fill="solid" color="light" (click)="goBack()">
+        Discard
+      </ion-button>
+      <ion-button fill="solid" color="primary" [disabled]="content.trim().length === 0" (click)="post()">
+        Post
+      </ion-button>
+    </div>
   </div>
 </ion-content>
