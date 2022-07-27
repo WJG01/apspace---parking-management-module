@@ -36,6 +36,7 @@ export class PeoplepulsePage implements OnInit {
   endLimit = 10;
   loadingMore = false;
   showMessage = true;
+  fetchError = false;
 
   constructor(
     private ws: WsApiService,
@@ -60,6 +61,7 @@ export class PeoplepulsePage implements OnInit {
 
   ngOnInit() {
     this.indecitor = true;
+    this.fetchError = false;
     this.getProfile();
     this.scrollService.getObservable().subscribe(status => {
       if (!status) { return; }
@@ -118,7 +120,10 @@ export class PeoplepulsePage implements OnInit {
           }
         }, 1000);
       },
-      (err) => console.log(err),
+      (err) => {
+        this.fetchError = true;
+        console.log(err);
+      },
       () => {
         this.backupPosts = this.posts;
         this.pp.getFunctionalAreas(this.staff.ID).subscribe(
