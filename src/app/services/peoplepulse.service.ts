@@ -30,63 +30,54 @@ export class PeoplepulseService {
   constructor(private http: HttpClient, private cas: CasTicketService) {}
 
   getPosts(userId: string, page?: number): Observable<PpPostwMeta> {
-    // const options = {
-      // attempts: 4,
-      // auth: true,
-      // caching: 'network-or-cache',
-      // headers: {},
-      // params: {},
-      // timeout: 20000,
-      // url: this.apiUrl,
-      // withCredentials: false,
-    // };
-    // const opt = {
-      // params: options.params,
-      // withCredentials: options.withCredentials,
-      // headers: options.headers
-    // };
-    return this.cas.getST(this.apiUrl).pipe(
-      // switchMap(ticket => this.http.get<PpPostwMeta>(url, { params: { ticket } })
-      switchMap(ticket => this.http.get<PpPostwMeta>(`${this.apiUrl}/post?user_id=${userId}&page=${page}&ticket=${ticket}`))
+    const url = `${this.apiUrl}/post`;
+    return this.cas.getST(url).pipe(
+      switchMap(ticket => this.http.get<PpPostwMeta>(`${url}?user_id=${userId}&page=${page}&ticket=${ticket}`))
     );
   }
 
   getPostCategories(userId: string, staffId: string): Observable<PpCategory[]> {
-    return this.cas.getST(this.apiUrl).pipe(
+    const url = `${this.apiUrl}/post_category`;
+    return this.cas.getST(url).pipe(
       switchMap(ticket =>
         this.http.get<PpCategory[]>(
-          `${this.apiUrl}/post_category?user_id=${userId}&staff_id=${staffId}&ticket=${ticket}`))
+          `${url}?user_id=${userId}&staff_id=${staffId}&ticket=${ticket}`))
     );
   }
 
   getUserPosts(userId: string, page?: number): Observable<PpPostwMeta> {
-    return this.cas.getST(this.apiUrl).pipe(
-      switchMap(ticket => this.http.get<PpPostwMeta>(`${this.apiUrl}/user_post?user_id=${userId}&page=${page}&ticket=${ticket}`))
+    const url = `${this.apiUrl}/user_post`;
+    return this.cas.getST(url).pipe(
+      switchMap(ticket => this.http.get<PpPostwMeta>(`${url}?user_id=${userId}&page=${page}&ticket=${ticket}`))
     );
   }
 
   getSearchUserPosts(userId: string, staffId: string, page?: number) {
-    return this.cas.getST(this.apiUrl).pipe(
-      switchMap(ticket => this.http.get<PpPostwMeta>(`${this.apiUrl}/search_user?user_id=${userId}&staff_id=${staffId}&page=${page}&ticket=${ticket}`))
+    const url = `${this.apiUrl}/search_user`;
+    return this.cas.getST(url).pipe(
+      switchMap(ticket => this.http.get<PpPostwMeta>(`${url}?user_id=${userId}&staff_id=${staffId}&page=${page}&ticket=${ticket}`))
     );
   }
 
   getFunctionalAreas(userId: string): Observable<PpFunctionalArea[]> {
-    return this.cas.getST(this.apiUrl).pipe(
-      switchMap(ticket => this.http.get<PpFunctionalArea[]>(`${this.apiUrl}/functional_area_id?user_id=${userId}&ticket=${ticket}`))
+    const url = `${this.apiUrl}/functional_area_id`;
+    return this.cas.getST(url).pipe(
+      switchMap(ticket => this.http.get<PpFunctionalArea[]>(`${url}?user_id=${userId}&ticket=${ticket}`))
     );
   }
 
   getUsers(userId: string): Observable<PpStaff[]> {
-    return this.cas.getST(this.apiUrl).pipe(
-      switchMap(ticket => this.http.get<PpStaff[]>(`${this.apiUrl}/users?user_id=${userId}&ticket=${ticket}`))
+    const url = `${this.apiUrl}/users`;
+    return this.cas.getST(url).pipe(
+      switchMap(ticket => this.http.get<PpStaff[]>(`${url}?user_id=${userId}&ticket=${ticket}`))
     );
   }
 
   postPost(userId: string, tag: string, postCategoryId: number, postContent: string): Observable<any> {
-    return this.cas.getST(this.apiUrl).pipe(
+    const url = `${this.apiUrl}/post`;
+    return this.cas.getST(url).pipe(
       switchMap(ticket => {
-        return this.http.post(`${this.apiUrl}/post?ticket=${ticket}`, {
+        return this.http.post(`${url}?ticket=${ticket}`, {
           user_id: userId,
           tag,
           post_category_id: postCategoryId,
@@ -97,17 +88,19 @@ export class PeoplepulseService {
   }
 
   deletePost(userId: string, postId: number): Observable<any> {
-    return this.cas.getST(this.apiUrl).pipe(
+    const url = `${this.apiUrl}/user_post`;
+    return this.cas.getST(url).pipe(
       switchMap(ticket => {
-        return this.http.delete(`${this.apiUrl}/user_post?user_id=${userId}&post_id=${postId}&ticket=${ticket}`, this.httpOptions);
+        return this.http.delete(`${url}?user_id=${userId}&post_id=${postId}&ticket=${ticket}`, this.httpOptions);
       })
     );
   }
 
   editPost(userId: string, staffId: string, postId: number, categoryId: number, postContent: string): Observable<any> {
-    return this.cas.getST(this.apiUrl).pipe(
+    const url = `${this.apiUrl}/user_post`;
+    return this.cas.getST(url).pipe(
       switchMap(ticket => {
-        return this.http.put(`${this.apiUrl}/user_post?ticket=${ticket}`, {
+        return this.http.put(`${url}?ticket=${ticket}`, {
             user_id: userId,
             post_id: postId,
             staff_id: staffId,
@@ -119,9 +112,10 @@ export class PeoplepulseService {
   }
 
   editUserSettings(userId: string, staffId: string, status: boolean, accessLevel: boolean, adminAccess: boolean): Observable<any> {
-    return this.cas.getST(this.apiUrl).pipe(
+    const url = `${this.apiUrl}/user_settings`;
+    return this.cas.getST(url).pipe(
       switchMap(ticket => {
-        return this.http.put(`${this.apiUrl}/user_settings?ticket=${ticket}`, {
+        return this.http.put(`${url}?ticket=${ticket}`, {
             user_id: userId,
             staff_id: staffId,
             status,
