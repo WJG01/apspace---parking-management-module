@@ -34,7 +34,7 @@ export class AddRemarksModalPage implements OnInit {
     };
     const headers = { 'Content-Type': 'application/json' };
     if (body) {
-      this.ws.post<any>(`?id=${this.tp}`, { body, headers }).subscribe(
+      this.ws.post<any>(`/mentor/add_remarks?id=${this.tp}`, { body, headers }).subscribe(
         () => {
           this.showToastMessage('You have successfully submitted the remarks.', 'success');
         },
