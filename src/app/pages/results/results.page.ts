@@ -50,6 +50,7 @@ export class ResultsPage {
   studentSelected: boolean;
   intakeSelected: boolean;
   unauthorised = false;
+  semesterWording = false;
 
   studentsList$: Observable<any>;
   studentProfile$: Observable<StudentProfile>;
@@ -114,6 +115,11 @@ export class ResultsPage {
       if (p.BLOCK) {
         this.block = true;
         this.course$ = this.ws.get<Course[]>('/student/courses', { caching }).pipe(
+          tap(i => {
+            if ('SEMESTER_WORDING' in i[0]) {
+               this.semesterWording = i[0].SEMESTER_WORDING;
+            }
+          }),
           tap(i => this.selectedIntake = i[0].INTAKE_CODE),
           tap(i => this.results$ = this.getResults(i[0].INTAKE_CODE, { caching })),
           tap(i => this.getCourseDetails(i[0].INTAKE_CODE, { caching })),

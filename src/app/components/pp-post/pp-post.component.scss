@@ -1,0 +1,49 @@
+ion-card {
+  max-width: 42rem;
+  margin: auto;
+  margin-bottom: .5rem;
+}
+
+img {
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.25rem;
+  border-radius: 50px;
+}
+
+ion-button, p {
+  margin: 0;
+}
+
+ion-label strong {
+  font-size: .75rem;
+  font-weight: 900;
+}
+
+.sublabel, ion-chip {
+  font-size: .6rem;
+  line-height: .875rem; 
+}
+
+ion-button {
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+@media (min-width: 600px) {
+  img {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-right: 0.5rem;
+  }
+  ion-label strong {
+    font-size: 1.125rem;
+  }
+  .sublabel, ion-chip {
+    font-size: .875rem;
+    line-height: 1.25rem;
+  }
+  ion-card {
+    margin-bottom: .5rem;
+  }
+}

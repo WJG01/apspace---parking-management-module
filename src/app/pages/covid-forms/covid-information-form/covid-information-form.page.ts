@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController, ToastController } from '@ionic/angular';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { LoadingController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { format } from 'date-fns';
 import { Observable } from 'rxjs';
 
-import { OrientationStudentDetails, Role, StaffProfile, StudentProfile } from 'src/app/interfaces';
+import { Role, StaffProfile, StudentProfile } from 'src/app/interfaces';
 import { UserVaccineInfo, VaccinationStatus, VaccinationType } from '../../../interfaces/covid-forms';
 import { WsApiService } from '../../../services';
 
@@ -18,11 +19,11 @@ export class CovidInformationFormPage implements OnInit {
   loading: HTMLIonLoadingElement;
   // User Profile
   studentRole: boolean;
+  isCordova: boolean;
   isStudent: boolean;
   userProfile: any = {};
   staffProfile$: Observable<StaffProfile>;
   studentProfile$: Observable<StudentProfile>;
-  orientationStudentDetails$: Observable<OrientationStudentDetails>;
 
   // Vaccination
   devUrl = 'https://9t7k8i4yu5.execute-api.ap-southeast-1.amazonaws.com/dev/covid19';
@@ -67,9 +68,12 @@ export class CovidInformationFormPage implements OnInit {
     private router: Router,
     private storage: Storage,
     private toastCtrl: ToastController,
+    private iab: InAppBrowser,
+    private platform: Platform,
   ) {}
 
   ngOnInit() {
+    this.isCordova = this.platform.is('cordova');
     this.todaysDate = format(new Date(), 'yyyy-MM-dd');
     this.getVaccinationStatus();
     this.getVaccinationTypes();
@@ -182,10 +186,11 @@ export class CovidInformationFormPage implements OnInit {
 
   uploadFile($event): void {
     this.pcrEvidence = $event.target.files[0];
-    if (!this.pcrEvidence) {
-      this.showToastMessage('Error: File cannot be empty!', 'danger');
-      return;
-    }
+    // Commented since pcr not compulsory now
+    // if (!this.pcrEvidence) {
+    //   this.showToastMessage('Error: File cannot be empty!', 'danger');
+    //   return;
+    // }
     if (this.pcrEvidence.size > 2000000) {
       this.showToastMessage('Error: Maximum File size is 2 MB. Please upload another file', 'danger');
       this.pcrEvidence = null;
@@ -222,18 +227,14 @@ export class CovidInformationFormPage implements OnInit {
     else if (this.vaccinationStatus === this.partiallyVaccinated) {
       body.append('vaccine_type', this.vaccinationType.toString());
       body.append('dose1_date', this.doseOneDate);
+    }
+    if (this.pcrEvidence) {
       body.append('pcr_result', this.pcrResult);
       const pcrDate = new Date(this.pcrEvidenceDate);
       body.append('pcr_date', format(pcrDate, 'yyyy-MM-dd'));
       body.append('pcr_evidence', this.pcrEvidence);
     }
-    // Not Vaccinated
-    else if (this.vaccinationStatus === this.notVaccinated) {
-      body.append('pcr_result', this.pcrResult);
-      const pcrDate = new Date(this.pcrEvidenceDate);
-      body.append('pcr_date', format(pcrDate, 'yyyy-MM-dd'));
-      body.append('pcr_evidence', this.pcrEvidence);
-    }
+    // Not Vaccinated got nothing exceptional for now
     if (body) {
       this.ws.post<any>('', { url: this.devUrl + '/user/add', body }).subscribe(
         () => {
@@ -246,6 +247,16 @@ export class CovidInformationFormPage implements OnInit {
         },
         () => this.dismissLoading()
       );
+    }
+  }
+
+  // QUICK ACCESS FUNCTIONS
+  openCovidURL() {
+    const url = 'https://apu.edu.my/explore-apu/covid-19-updates-advisory';
+    if (this.isCordova) {
+      this.iab.create(url, '_system');
+    } else {
+      this.iab.create(url, '_blank');
     }
   }
 

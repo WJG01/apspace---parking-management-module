@@ -1,0 +1,219 @@
+<ion-header>
+  <ion-toolbar mode="md">
+    <ion-title>Staff Info</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/peoplepulse/staffs"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="staffs$ | async as staffs; else loading">
+    <ion-grid *ngIf="staffs | byId:id as staff; else notFound">
+      <ion-row>
+        <ion-col size-xs="12" size-lg="4">
+          <ion-card>
+            <ion-card-header>
+              <ion-avatar class="profile-image">
+                <img
+                  id="bg"
+                  [src]="'https://d37plr7tnxt7lb.cloudfront.net/' + staff.RefNo + '.jpg'"
+                  onerror="this.src='assets/img/no_img.png'"
+                />
+              </ion-avatar>
+              <hr class="ion-margin-top ion-margin-button hr-custom" />
+            </ion-card-header>
+            <ion-card-content style="padding-top: 0px">
+              <h2>Name:</h2>
+              <h2 class="glob-text-bold">{{ staff.FULLNAME }}</h2>
+              <br />
+              <h2>Job Title:</h2>
+              <h2 class="glob-text-bold" [innerHTML]="staff.TITLE"></h2>
+              <br />
+              <h2>Email:</h2>
+              <h2>
+                <a class="glob-text-bold" href="mailto:{{staff.EMAIL}}">
+                  <ion-text color="primary"> {{ staff.EMAIL }} </ion-text>
+                </a>
+              </h2>
+              <br />
+              <div *ngIf="staff.LOCATION">
+                <h2>Office Location:</h2>
+                <h2 class="glob-text-bold">{{ staff.LOCATION }}</h2>
+                <br />
+              </div>
+              <h2>Contact Number:</h2>
+              <h2>
+                <a class="glob-text-bold" href="tel:+60389961000">
+                  <ion-text color="primary">
+                    +6 03-8996 1000 (Ext. {{ staff.EXTENSION }})
+                  </ion-text>
+                </a>
+              </h2>
+              <br />
+              <div *ngIf="staff.DEPARTMENT || staff.DEPARTMENT2 || staff.DEPARTMENT3">
+                <h2>Functional Area(s):</h2>
+                <h2
+                  class="glob-text-bold"
+                  *ngIf="staff.DEPARTMENT"
+                  [innerHTML]="staff.DEPARTMENT"
+                ></h2>
+                <h2
+                  class="glob-text-bold"
+                  *ngIf="staff.DEPARTMENT2"
+                  [innerHTML]="staff.DEPARTMENT2"
+                ></h2>
+                <h2
+                  class="glob-text-bold"
+                  *ngIf="staff.DEPARTMENT3"
+                  [innerHTML]="staff.DEPARTMENT3"
+                ></h2>
+                <br />
+              </div>
+              <ion-grid>
+                <ion-row>
+                  <ion-col>
+                    <ion-button class="chat-in-teams" expand="full" (click)="chatInTeams(staff.ID)"
+                      >Chat In Teams
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size-xs="12" size-lg="8" class="ion-padding">
+          <h1 class="ion-text-center">Posts about {{ staff.FULLNAME }}</h1>
+          <div *ngIf="posts; else loading">
+            <div *ngIf="filterById(staff.ID).length > 0; else noPosts">
+              <app-pp-post *ngFor="let post of filterById(staff.ID)" [post]="post">
+              </app-pp-post>
+            </div>
+            <ng-template #noPosts>
+              <div style="text-align: center">
+                <ion-label>No posts yet...</ion-label>
+              </div>
+            </ng-template>
+          </div>
+          <ng-template #loading>
+            <ion-card *ngFor="let i of [].constructor(3)" class="skeleton-card">
+              <ion-card-header>
+                <span class="display: flex">
+                <ion-avatar style="--border-radius: 0">
+                  <ion-skeleton-text animated></ion-skeleton-text>
+                </ion-avatar>
+                </span>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+                <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+                <ion-skeleton-text animated class="skeleton-card-text"></ion-skeleton-text>
+              </ion-card-content>
+            </ion-card>
+          </ng-template>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ng-template #notFound>
+      <app-message-with-svg
+        messageTitle="No Data To Show!"
+        messageContent="The staff ID you have entered/chosen does not match with any staff profile"
+        imageUrl="assets/img/empty.svg"
+        wrapperOffset="4"
+        wrapperSize="4"
+        wrapperMarginTop="50px"
+      >
+      </app-message-with-svg>
+    </ng-template>
+  </div>
+  <ng-template #loading>
+    <ion-grid>
+      <ion-row>
+        <ion-col size-xs="12" size-lg="4">
+          <ion-card>
+            <ion-card-header>
+              <ion-avatar class="profile-image" style="--border-radius: 0">
+                <ion-skeleton-text
+                  animated
+                  style="line-height: 240px; width: 200px; margin: auto"
+                ></ion-skeleton-text>
+              </ion-avatar>
+              <hr class="ion-margin-top ion-margin-button hr-custom" />
+            </ion-card-header>
+            <ion-card-content style="padding-top: 0px">
+              <h2>
+                <ion-skeleton-text
+                  animated
+                  style="line-height: 25px; width: 40%"
+                ></ion-skeleton-text>
+              </h2>
+              <h2>
+                <ion-skeleton-text
+                  animated
+                  style="line-height: 20px; width: 70%"
+                ></ion-skeleton-text>
+              </h2>
+              <br />
+              <h2>
+                <ion-skeleton-text
+                  animated
+                  style="line-height: 25px; width: 60%"
+                ></ion-skeleton-text>
+              </h2>
+              <h2>
+                <ion-skeleton-text
+                  animated
+                  style="line-height: 20px; width: 40%"
+                ></ion-skeleton-text>
+              </h2>
+              <br />
+              <h2>
+                <ion-skeleton-text
+                  animated
+                  style="line-height: 25px; width: 70%"
+                ></ion-skeleton-text>
+              </h2>
+              <h2>
+                <ion-skeleton-text
+                  animated
+                  style="line-height: 20px; width: 40%"
+                ></ion-skeleton-text>
+              </h2>
+              <br />
+              <h2>
+                <ion-skeleton-text
+                  animated
+                  style="line-height: 25px; width: 20%"
+                ></ion-skeleton-text>
+              </h2>
+              <h2>
+                <ion-skeleton-text
+                  animated
+                  style="line-height: 25px; width: 40%"
+                ></ion-skeleton-text>
+              </h2>
+              <br />
+              <ion-grid>
+                <ion-row>
+                  <ion-col>
+                    <ion-skeleton-text
+                      animated
+                      style="line-height: 40px; width: 90%"
+                    ></ion-skeleton-text>
+                  </ion-col>
+                  <ion-col>
+                    <ion-skeleton-text
+                      animated
+                      style="line-height: 40px; width: 90%"
+                    ></ion-skeleton-text>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ng-template>
+</ion-content>

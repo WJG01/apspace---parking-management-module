@@ -133,7 +133,7 @@
                               <img class="covid-info-icon" src="assets/img/covid-icon.png" alt="COVID-19 Icon">
                             </ion-col>
                             <ion-col class="covid-info-status glob-text-bold">
-                              Test Result Expired - Update Result
+                              Update PCR/RTK Test Result
                             </ion-col>
                           </ion-row>
                         </ion-card-content>
@@ -204,6 +204,9 @@
               </ion-col>
               <ion-col class="quick-access-item glob-border-radius quick-access-moodle" size-lg="5.8" size-md="12" size-xs="5.8" (click)="openMoodle()">
                 <p>Moodle</p>
+              </ion-col>
+              <ion-col *ngIf="!isStudent" class="quick-access-item glob-border-radius quick-access-hr" size-lg="5.8" size-md="12" size-xs="5.8" [routerLink]="['/peoplepulse']">
+                <p>PeoplePulse</p>
               </ion-col>
             </ion-row>
           </ion-card-content>
@@ -584,13 +587,9 @@
                       </ion-col>
                     </ion-row>
                     <ng-container *ngIf="upcomingTrips.length < 2">
-                      <ion-row class="ion-padding-bottom">
-                        <ion-col size=".5" class="ion-no-padding">
-                          <div class="color-indicator" [style.background]="trip.trip_to_color">
-                          </div>
-                        </ion-col>
+                      <ion-row class="ion-margin-bottom bus-timing-container">
                         <!--Indicates Title and Bus Timing-->
-                        <ion-col size="11.5">
+                        <ion-col class="bus-border" [style.borderLeft]="'1rem solid ' + trip.trip_to_color" style="border-radius: 5px 0 0 5px">
                           <div class="ion-padding bus-timing-container">
                             <h3 class="locations glob-text-bold">
                               <span class="ion-padding-end">{{trip.trip_to}}</span>

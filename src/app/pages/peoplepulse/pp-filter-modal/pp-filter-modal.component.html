@@ -1,0 +1,65 @@
+<ion-content class="ion-padding" style="overflow-y: auto">
+  <ion-item style="--background: none; --padding-start: 0" lines="none">
+    <h3 slot="start">Set Filters</h3>
+    <ion-button slot="end" fill="clear" shape="round" (click)="dismissModal()">
+      <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+    </ion-button>
+  </ion-item>
+  <p>Sort By</p>
+    <ion-radio-group [(ngModel)]="options.sortBy" (ionChange)="onSortByChange()">
+      <div class="sortby">
+        <ion-item>
+          <ion-label>Date Descending</ion-label>
+          <ion-radio slot="start" value="date-desc"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>Date Ascending</ion-label>
+          <ion-radio slot="start" value="date-asc"></ion-radio>
+        </ion-item>
+      </div>
+      <div class="sortby">
+        <ion-item>
+          <ion-label>Name Descending</ion-label>
+          <ion-radio slot="start" value="name-desc"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>Name Ascending</ion-label>
+          <ion-radio slot="start" value="name-asc"></ion-radio>
+        </ion-item>
+      </div>
+    </ion-radio-group>
+
+  <p>Filter by category</p>
+  <div>
+    <ion-chip 
+      *ngFor="let i of selectedCats"
+      [color]="lookup[i.name]"
+      (click)="addCategory(i.name)"
+    >
+      {{ i.name }}
+      <ion-icon name="close-circle"></ion-icon>
+    </ion-chip>
+  </div>
+  <div>
+    <ion-chip
+      *ngFor="let i of notSelectedCats"
+      [color]="lookup[i.name]"
+      (click)="delCategory(i.name)"
+    >
+      {{ i.name }}
+    </ion-chip>
+  </div>
+
+  <p>Filter by functional area</p>
+  <ion-list>
+    <ion-item>
+      <ion-label>All functional areas</ion-label>
+      <ion-checkbox slot="end" (click)="toggleCheck()" [(ngModel)]="allChecked"></ion-checkbox>
+    </ion-item>
+    <ion-item *ngFor="let i of options.funcAreas">
+      <ion-label>{{ i.name }}</ion-label>
+      <ion-checkbox slot="end" [(ngModel)]="i.selected" (ionChange)="onFuncAreasChange()">
+      </ion-checkbox>
+    </ion-item>
+  </ion-list>
+</ion-content>

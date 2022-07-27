@@ -20,28 +20,30 @@
       </ion-row>
       <div *ngIf="userVaccinationInfo$ | async as userVaccinationStatus">
         <div *ngIf="(userVaccinationStatus | keyvalue)?.length else disable">
-          <div class="form-margin">
-            <!--RTK Test Date-->
-            <ion-item>
-              <ion-label>RTK Test Date</ion-label>
-              <ion-datetime displayFormat="DD-MMM-YYYY" placeholder="Select Date" [min]=getDate() [max]="todaysDate" required [(ngModel)]="rtkEvidenceDate"></ion-datetime>
-            </ion-item>
-            <!--RTK Result-->
-            <ion-item>
-              <ion-label>RTK Result</ion-label>
-              <ion-select interface="popover" required [(ngModel)]="rtkResult">
-                <ion-select-option value="Negative">Negative</ion-select-option>
-                <ion-select-option value="Positive">Positive</ion-select-option>
-              </ion-select>
-            </ion-item>
-            <!--File Uploader-->
-            <ion-item>
-              <ion-label position="stacked">Upload RTK Result Evidence (Format: JPG/PNG/PDF)<p class="form-subtitle">Maximum File Size: 2MB</p></ion-label>
-              <ion-input class="ion-margin-top" type="file" accept="application/pdf, image/jpeg, image/png" button (change)="uploadFile($event)" required></ion-input>
-            </ion-item>
-            <p class="ion-margin-horizontal form-subtitle">By clicking the submit button, I hereby declare that the above is accurate and complete information. I understand that any misleading or falsified information can lead to action to be taken against me.</p>
+          <div *ngIf="userVaccinationStatus.ispcr else disable">
+            <div class="form-margin">
+              <!--RTK Test Date-->
+              <ion-item>
+                <ion-label>RTK Test Date</ion-label>
+                <ion-datetime displayFormat="DD-MMM-YYYY" placeholder="Select Date" [min]=getDate() [max]="todaysDate" required [(ngModel)]="rtkEvidenceDate"></ion-datetime>
+              </ion-item>
+              <!--RTK Result-->
+              <ion-item>
+                <ion-label>RTK Result</ion-label>
+                <ion-select interface="popover" required [(ngModel)]="rtkResult">
+                  <ion-select-option value="Negative">Negative</ion-select-option>
+                  <ion-select-option value="Positive">Positive</ion-select-option>
+                </ion-select>
+              </ion-item>
+              <!--File Uploader-->
+              <ion-item>
+                <ion-label position="stacked">Upload RTK Result Evidence (Format: JPG/PNG/PDF)<p class="form-subtitle">Maximum File Size: 2MB</p></ion-label>
+                <ion-input class="ion-margin-top" type="file" accept="application/pdf, image/jpeg, image/png" button (change)="uploadFile($event)" required></ion-input>
+              </ion-item>
+              <p class="ion-margin-horizontal form-subtitle">By clicking the submit button, I hereby declare that the above is accurate and complete information. I understand that any misleading or falsified information can lead to action to be taken against me.</p>
+            </div>
+            <ion-button class="ion-margin" expand="block" [disabled]="!rtkResult || !rtkEvidenceDate || !rtkEvidence" (click)="onSubmit()">Submit</ion-button>
           </div>
-          <ion-button class="ion-margin" expand="block" [disabled]="!rtkResult || !rtkEvidenceDate || !rtkEvidence" (click)="onSubmit()">Submit</ion-button>
         </div>
       </div>
       <ng-template #disable>

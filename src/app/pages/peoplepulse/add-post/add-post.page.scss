@@ -1,0 +1,26 @@
+.add-content {
+  max-width: 42rem;
+  margin: auto;
+}
+
+ion-list {
+  // overflow-y: auto;
+}
+
+#emailto {
+  display: flex;
+  align-items: center;
+  float: right;
+  margin-top: 1rem;
+}
+
+ion-textarea {
+  position: relative;
+}
+
+ion-textarea small {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: .5rem;
+}

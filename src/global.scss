@@ -5,6 +5,7 @@
 @import '~@ionic/angular/css/typography.css';
 
 @import '~@ionic/angular/css/padding.css';
+@import '~@ionic/angular/css/display.css';
 @import '~@ionic/angular/css/float-elements.css';
 @import '~@ionic/angular/css/text-alignment.css';
 @import '~@ionic/angular/css/text-transformation.css';
@@ -16,4 +17,13 @@
 @import './theme/custom-library.scss';
 @import './theme/responsive-design.scss';
 
+// peoplepulse
+.delete-modal {
+  --border-radius: 5px;
+}
 
+@media (min-width: 768px) {
+  .delete-modal {
+    --height: 16rem;
+  }
+}

@@ -1,0 +1,35 @@
+.profile-image {
+  margin-bottom: 15px !important;
+  margin: auto;
+  width: 50%;
+  height: 100%;
+}
+
+img {
+  border-radius: 11px;
+}
+
+.hr-custom {
+  border: 2px solid var(--ion-color-secondary);
+  width: 100%;
+}
+
+.chat-in-teams {
+  --background: #464775;
+  --background-hover: #5f60a3;
+}
+
+#noPosts ion-card {
+  padding: 1rem;
+}
+
+.skeleton-card {
+  max-width: 42rem;
+  margin: auto;
+  margin-top: 2rem;
+}
+
+.skeleton-card-text {
+  height: 1rem;
+  margin: .5rem 0;
+}

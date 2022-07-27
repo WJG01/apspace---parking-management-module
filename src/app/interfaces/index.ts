@@ -55,3 +55,13 @@ export { OrientationStudentDetails, OrientationStudentsList } from './e-orientat
 export { Role } from './role';
 export { NewFeedbackSummary, NewFeedback, NewFeedbackComment, FeedbackCategory } from './new-feedback';
 export { MoodleEvent } from './moodle-event';
+export {
+    PpPostwMeta,
+    PpPost,
+    PpMeta,
+    PpCategory,
+    PpFunctionalArea,
+    PpStaff,
+    PpFilterOptions,
+    PpFilterOptionsSelectable,
+} from './peoplepulse';

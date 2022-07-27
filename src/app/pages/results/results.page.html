@@ -259,7 +259,7 @@
                         <ng-container *ngFor="let semesterResult of results">
                           <ion-card>
                             <ion-card-header color="secondary">
-                              <ion-card-title>Semester {{ semesterResult.semester }}</ion-card-title>
+                              <ion-card-title *ngIf="semesterWording">Semester {{ semesterResult.semester }}</ion-card-title>
                               <ion-card-subtitle>
                                 <ion-grid class="ion-no-padding ion-no-margin">
                                   <ion-row class="ion-no-padding ion-no-margin">
@@ -419,7 +419,7 @@
                   <ng-container *ngFor="let semesterResult of results">
                     <ion-card>
                       <ion-card-header color="secondary">
-                        <ion-card-title>Semester {{ semesterResult.semester }}</ion-card-title>
+                        <ion-card-title *ngIf="semesterWording">Semester {{ semesterResult.semester }}</ion-card-title>
                         <ion-card-subtitle>
                           <ion-grid class="ion-no-padding ion-no-margin">
                             <ion-row class="ion-no-padding ion-no-margin">

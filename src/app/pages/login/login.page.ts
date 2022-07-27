@@ -270,7 +270,7 @@ export class LoginPage implements OnInit {
               dept_phone: companies[0].company_departments[7].dept_phone,
               shifts: companies[0].company_departments[7].shifts
             },
-            {
+            /*{
               dept_email: companies[0].company_departments[8].dept_email,
               dept_icon: 'print-outline',
               dept_icon_color: '#c1cd32',
@@ -279,7 +279,7 @@ export class LoginPage implements OnInit {
               dept_name: companies[0].company_departments[8].dept_name,
               dept_phone: companies[0].company_departments[8].dept_phone,
               shifts: companies[0].company_departments[8].shifts
-            }
+            }*/
           ],
           company_id: companies[0].company_id,
           company_name: companies[0].company_name,

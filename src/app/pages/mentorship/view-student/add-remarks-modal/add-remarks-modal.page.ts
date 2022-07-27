@@ -13,7 +13,6 @@ export class AddRemarksModalPage implements OnInit {
   loading: HTMLIonLoadingElement;
   remarks: string;
   tp: string;
-  devURL = 'https://gmywrxsd75.execute-api.ap-southeast-1.amazonaws.com/dev/mentor/add_remarks';
 
   constructor(
     private ws: WsApiService,
@@ -35,7 +34,7 @@ export class AddRemarksModalPage implements OnInit {
     };
     const headers = { 'Content-Type': 'application/json' };
     if (body) {
-      this.ws.post<any>('', { url: this.devURL + `?id=${this.tp}`, body, headers }).subscribe(
+      this.ws.post<any>(`/mentor/add_remarks?id=${this.tp}`, { body, headers }).subscribe(
         () => {
           this.showToastMessage('You have successfully submitted the remarks.', 'success');
         },

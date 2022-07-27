@@ -7,6 +7,9 @@ import { IonicModule } from '@ionic/angular';
 import { SharedPipesModule } from '../shared/shared-pipes.module';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner';
 import { MessageWithSvgComponent } from './message-with-svg/message-with-svg.component';
+import { PpDeleteModalComponent } from './pp-post/pp-delete-modal/pp-delete-modal.component';
+import { PpEditModalComponent } from './pp-post/pp-edit-modal/pp-edit-modal.component';
+import { PpPostComponent } from './pp-post/pp-post.component';
 import { SearchModalComponent } from './search-modal/search-modal.component';
 import { StaysafeComponent } from './staysafe/staysafe.component';
 
@@ -15,7 +18,10 @@ import { StaysafeComponent } from './staysafe/staysafe.component';
     SearchModalComponent,
     LoadingSpinnerComponent,
     MessageWithSvgComponent,
-    StaysafeComponent
+    StaysafeComponent,
+    PpPostComponent,
+    PpEditModalComponent,
+    PpDeleteModalComponent,
   ],
   imports: [
     CommonModule,
@@ -23,13 +29,14 @@ import { StaysafeComponent } from './staysafe/staysafe.component';
     ReactiveFormsModule,
     IonicModule,
     RouterModule,
-    SharedPipesModule
+    SharedPipesModule,
   ],
   exports: [
     SearchModalComponent,
     LoadingSpinnerComponent,
     MessageWithSvgComponent,
-    StaysafeComponent
+    StaysafeComponent,
+    PpPostComponent,
   ],
 })
 export class ComponentsModule { }

@@ -16,7 +16,6 @@ export class EditRemarksModalPage implements OnInit {
   staffID: string;
   remarksDate: string;
   tp: string;
-  devURL = 'https://gmywrxsd75.execute-api.ap-southeast-1.amazonaws.com/dev/mentor/update_remarks';
 
   constructor(
     private ws: WsApiService,
@@ -45,7 +44,7 @@ export class EditRemarksModalPage implements OnInit {
     };
     const headers = { 'Content-Type': 'application/json' };
     if (body) {
-      this.ws.put<any>('', { url: this.devURL + `?id=${this.tp}`, body, headers }).subscribe(
+      this.ws.put<any>(`/mentor/update_remarks?id=${this.tp}`, { body, headers }).subscribe(
         () => {
           this.showToastMessage('You have successfully edited the remarks.', 'success');
         },

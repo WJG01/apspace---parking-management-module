@@ -1,0 +1,49 @@
+<ion-card>
+  <ion-item>
+    <img [src]="post.poster.profile_picture_uri" onerror="this.src='assets/img/no_img.png'" alt="Profile" slot="start" />
+
+    <ion-label>
+      <strong>{{ post.poster.name }}</strong>
+      <ion-label class="sublabel">tagged: {{ post.tagged.name }}</ion-label>
+      <ion-label class="sublabel">{{ formattedDate }}</ion-label>
+    </ion-label>
+
+    <div slot="end" style="display: flex; align-items: center">
+      <ion-chip 
+        [class.ion-hide-sm-down]="editable"
+        [color]="color"
+      >
+        {{ post.category.category }}
+      </ion-chip>
+
+      <ion-button
+        *ngIf="editable"
+        fill="clear"
+        shape="round"
+        size="small"
+        (click)="presentEditModal()"
+        style="margin-right: 5px"
+      >
+        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        *ngIf="editable"
+        fill="clear"
+        shape="round"
+        size="small"
+        (click)="presentDeleteModal()"
+      >
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </ion-item>
+
+  <ion-card-content 
+    class="ion-padding"
+    (click)="toggleShownContent()"
+    style="cursor: pointer"
+  >
+    {{ shownContent }}
+  </ion-card-content>
+</ion-card>
