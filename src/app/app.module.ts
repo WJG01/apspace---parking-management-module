@@ -13,6 +13,7 @@ import { NgChartsModule } from 'ng2-charts';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { NewsModalPageModule } from './pages/news/news-modal.module';
 
 registerLocaleData(localEn, 'en-US', localeEnExtra);
 
@@ -25,7 +26,8 @@ registerLocaleData(localEn, 'en-US', localeEnExtra);
     AppRoutingModule,
     HttpClientModule,
     IonicStorageModule.forRoot(),
-    NgChartsModule
+    NgChartsModule,
+    NewsModalPageModule
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

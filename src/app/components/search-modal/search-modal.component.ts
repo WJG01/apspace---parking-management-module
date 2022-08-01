@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { IonSearchbar, ModalController, PopoverController } from '@ionic/angular';
 import { concat, distinctUntilChanged, map, Observable, of, startWith } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search-modal',
@@ -32,7 +33,8 @@ export class SearchModalComponent implements OnInit {
 
   constructor(
     private modalCtrl: ModalController,
-    private popoverCtrl: PopoverController
+    private popoverCtrl: PopoverController,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -82,5 +84,9 @@ export class SearchModalComponent implements OnInit {
       ? items.filter(item => item.indexOf(term) !== -1)
       : items;
     return filteredItems;
+  }
+
+  goToFeedback() {
+    this.modalCtrl.dismiss().then(_ => this.router.navigateByUrl('/feedback'));
   }
 }
