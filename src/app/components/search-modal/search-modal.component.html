@@ -3,10 +3,13 @@
     <ion-searchbar #searchbar [formControl]="searchControl" [placeholder]="placeholder"
       (ionInput)="searchbar.value = searchbar.value.toUpperCase()">
     </ion-searchbar>
+    <ion-button slot="end" fill="clear" (click)="select(null)">
+      <ion-icon name="close" size="large"></ion-icon>
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="glob-container">
   <ng-container *ngIf="(searchItems$ | async) as items; else loading">
     <ng-container *ngIf="items.length > 0; else noItems">
       <ion-item *ngFor="let item of items" lines="none" button="true" (click)="select(item)">
@@ -32,13 +35,3 @@
     </div>
   </ng-template>
 </ion-content>
-
-<ion-footer>
-  <ion-row>
-    <ion-col>
-      <ion-button expand="block" color="danger" (click)="select(null)">
-        Cancel
-      </ion-button>
-    </ion-col>
-  </ion-row>
-</ion-footer>

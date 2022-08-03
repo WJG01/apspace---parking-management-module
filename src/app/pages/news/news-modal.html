@@ -1,0 +1,20 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="md">
+    <ion-title [innerHTML]="newsItem.title"></ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content parallax-header>
+  <ion-img [src]="newsItem.url"></ion-img>
+  <div class="ion-padding">
+    <h3 *ngIf="newsItem.title" class="colored-text ion-margin-top ion-margin-bottom ion-padding-start"
+        [innerHTML]="newsItem.title"></h3>
+    <article *ngIf="newsItem.body" class="main-text-color ion-padding-start"
+             [innerHTML]="newsItem.body | safe: 'sanitizeHtml'"></article>
+  </div>
+</ion-content>

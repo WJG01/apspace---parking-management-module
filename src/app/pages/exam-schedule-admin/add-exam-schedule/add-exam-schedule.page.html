@@ -1,0 +1,127 @@
+<ion-header>
+  <ion-toolbar mode="md">
+    <ion-buttons slot="start">
+      <ion-button color="primary" (click)="closeModal()">
+        CLOSE
+      </ion-button>
+    </ion-buttons>
+    <ion-title *ngIf="!onEdit else editTitle">Create Exam Schedule</ion-title>
+    <ng-template #editTitle>
+      <ion-title>Edit Exam Schedule</ion-title>
+    </ng-template>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid class="ion-no-padding">
+    <ion-row>
+      <ion-col class="ion-no-padding" size-xs="12" size-md="8" offset-md="2" size-lg="6" offset-lg="3">
+        <ion-card>
+          <ion-card-content class="ion-no-padding">
+            <ion-item lines="none">
+              <ion-label position="stacked" class="item-label">
+                Publication Date
+              </ion-label>
+              <ion-calendar [formControl]="examScheduleForm.controls['publicationDate']" [options]="optionsRange"
+                            [type]="type" [format]="'DD-MMM-YYYY'" class="form-input glob-calendar"></ion-calendar>
+            </ion-item>
+
+            <ion-item lines="none">
+              <ion-label position="stacked" class="item-label">
+                Module
+              </ion-label>
+              <ion-input (click)="presentModuleSearch()" [formControl]="examScheduleForm.controls['module']" class="form-input"></ion-input>
+            </ion-item>
+
+            <ion-grid class="ion-no-padding">
+              <ion-row class="ion-no-padding">
+                <ion-col class="ion-no-padding ion-align-self-end">
+                  <ion-item lines="none">
+                    <ion-label position="stacked" class="item-label">
+                      Start Date
+                    </ion-label>
+                    <ion-input *ngIf="!isCapacitor else date" (ionChange)="showDuration()" type="date" class="form-input" [max]="nextYearHtmlInput" [formControl]="examScheduleForm.controls['date']"></ion-input>
+                    <ng-template #date>
+                      <ion-datetime (ionChange)="showDuration()" [max]="nextYears" [formControl]="examScheduleForm.controls['date']" class="form-input"></ion-datetime>
+                    </ng-template>
+                  </ion-item>
+                </ion-col>
+                <ion-col class="ion-no-padding ion-align-self-end">
+                  <ion-item lines="none">
+                    <ion-label position="stacked" class="item-label">
+                      End Date
+                    </ion-label>
+                    <ion-input *ngIf="!isCapacitor else dateEnd" (ionChange)="showDuration()" type="date" class="form-input" [max]="nextYearHtmlInput" [formControl]="examScheduleForm.controls['endDate']"></ion-input>
+                    <ng-template #dateEnd>
+                      <ion-datetime (ionChange)="showDuration()" [max]="nextYears" [formControl]="examScheduleForm.controls['endDate']" class="form-input"></ion-datetime>
+                    </ng-template>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+            <ion-grid class="ion-no-padding">
+              <ion-row class="ion-no-padding">
+                <ion-col class="ion-no-padding ion-align-self-end">
+                  <ion-item lines="none">
+                    <ion-label position="stacked" class="item-label">
+                      Start Time
+                    </ion-label>
+                    <ion-input (ionChange)="showDuration()" *ngIf="!isCapacitor else timeStart" type="time" [formControl]="examScheduleForm.controls['startTime']" class="form-input"></ion-input>
+                    <ng-template #timeStart>
+                      <ion-datetime (ionChange)="showDuration()" [formControl]="examScheduleForm.controls['startTime']" displayFormat="h:mm A"
+                                    placeholder="Start Time" class="form-input"></ion-datetime>
+                    </ng-template>
+                  </ion-item>
+                </ion-col>
+                <ion-col class="ion-no-padding ion-align-self-end">
+                  <ion-item lines="none">
+                    <ion-label position="stacked" class="item-label">
+                      End Time
+                    </ion-label>
+                    <ion-input (ionChange)="showDuration()" *ngIf="!isCapacitor else timeEnd" type="time" [formControl]="examScheduleForm.controls['endTime']" class="form-input"></ion-input>
+                    <ng-template #timeEnd>
+                      <ion-datetime (ionChange)="showDuration()" [formControl]="examScheduleForm.controls['endTime']" displayFormat="h:mm A"
+                                    placeholder="End Time" class="form-input"></ion-datetime>
+                    </ng-template>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+            <ion-item *ngIf="examDuration" lines="none" class="ion-margin-top duration-item">
+              <ion-label class="item-label duration-label">
+                Duration
+              </ion-label>
+              <ion-badge slot="end">
+                {{examDuration}}
+              </ion-badge>
+            </ion-item>
+
+            <ion-item lines="none">
+              <ion-label position="stacked" class="item-label">
+                Assessment Type
+              </ion-label>
+              <ion-select *ngIf="assessmentTypes$ | async as assessmentTypes; else loading"[formControl]="examScheduleForm.controls['assessmentType']" class="form-input">
+                <ion-select-option *ngFor="let assessmentType of assessmentTypes" [value]="assessmentType.ASSESSMENT_TYPE">{{ assessmentType.ASSESSMENT_TYPE }}</ion-select-option>
+              </ion-select>
+              <ng-template #loading>
+                <ion-skeleton-text animated class="ion-padding-vertical"></ion-skeleton-text>
+              </ng-template>
+            </ion-item>
+            <ion-button (click)="manageAssessmentTypes()" color="primary" class="ion-margin-horizontal" fill="outline">MANAGE ASSESSMENT TYPES</ion-button>
+
+            <ion-item lines="none">
+              <ion-label position="stacked" class="item-label">
+                Remarks
+              </ion-label>
+              <ion-input [formControl]="examScheduleForm.controls['remarks']" class="form-input"></ion-input>
+            </ion-item>
+            <ion-button (click)="submit()" [disabled]="examScheduleForm.invalid" expand="block"
+                        class="ion-margin" color="primary">SUBMIT</ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

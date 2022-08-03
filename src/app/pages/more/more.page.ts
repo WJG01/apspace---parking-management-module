@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuID, MenuItem } from './menu.interface';
 import { Storage } from '@ionic/storage';
-import { Browser } from '@capacitor/browser';
 import { menu } from './menu';
 import { Network } from '@capacitor/network';
 import { Observable } from 'rxjs';
 import { Role } from '../../interfaces';
 import { CasTicketService, SettingsService } from '../../services';
-import { AlertButton, AlertController, NavController, Platform, ToastController } from '@ionic/angular';
+import { AlertButton, AlertController, NavController, Platform} from '@ionic/angular';
 import { ComponentService } from '../../services';
 import { map } from 'rxjs/operators';
 
@@ -49,8 +48,7 @@ export class MorePage implements OnInit {
     public navCtrl: NavController,
     private platform: Platform,
     private settings: SettingsService,
-    private toastCtrl: ToastController,
-    public component: ComponentService,
+    public component: ComponentService
   ) { }
 
   ngOnInit() {
@@ -110,11 +108,7 @@ export class MorePage implements OnInit {
   }
 
   async openInAppBrowser(url: string) {
-    if (this.isMobile) {
-      await Browser.open({url: url});
-    } else {
-      await Browser.open({url: url});
-    }
+    await this.component.openLink(url);
   }
 
   /** Open page, manually check for third party pages. */
@@ -132,7 +126,7 @@ export class MorePage implements OnInit {
               this.openInAppBrowser(`${url}?ticket=${st}`);
             });
           } else {
-            this.presentToast('External links cannot be opened in offline mode. Please ensure you have a network connection and try again');
+            await this.component.toastMessage('External links cannot be opened in offline mode. Please ensure you have a network connection and try again', 'danger');
           }
         }
       } else {
@@ -149,21 +143,5 @@ export class MorePage implements OnInit {
     } else {
       this.settings.set('favoriteItems', [...fav, id]);
     }
-  }
-
-  async presentToast(msg: string) {
-    const toast = await this.toastCtrl.create({
-      message: msg,
-      color: 'danger',
-      duration: 6000,
-      position: 'top',
-      buttons: [
-        {
-          text: 'Close',
-          role: 'cancel'
-        }
-      ],
-    });
-    toast.present();
   }
 }

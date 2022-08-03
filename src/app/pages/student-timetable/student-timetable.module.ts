@@ -10,19 +10,18 @@ import { StudentTimetablePageRoutingModule } from './student-timetable-routing.m
 import { StudentTimetablePage } from './student-timetable.page';
 import { ClassesPipe } from './classes.pipe';
 import { GenPipe } from './gen.pipe';
-import { StrToColorPipe } from './str-to-color.pipe';
 import { ThedayPipe } from './theday.pipe';
 import { TheWeekPipe } from './theweek.pipe';
 import { TimeParserPipe } from './time-parser.pipe';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    StudentTimetablePageRoutingModule,
-    SharedPipesModule
-  ],
-  declarations: [StudentTimetablePage, ClassesPipe, GenPipe, StrToColorPipe, ThedayPipe, TheWeekPipe, TimeParserPipe]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        StudentTimetablePageRoutingModule,
+        SharedPipesModule
+    ],
+    declarations: [StudentTimetablePage, ClassesPipe, GenPipe, ThedayPipe, TheWeekPipe, TimeParserPipe]
 })
 export class StudentTimetablePageModule {}

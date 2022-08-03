@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar mode="md">
+    <ion-title>News Feed</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" pullMax="400" pullMin="60" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Notice Board SECTION -->
+  <div class="glob-container">
+    <ion-row class="ion-margin-top ion-justify-content-center">
+      <ion-col size="8">
+        <app-notice-board></app-notice-board>
+      </ion-col>
+    </ion-row>
+    <!--News-->
+    <ion-grid color="primary">
+      <ion-text>
+        <h2 class="news-header" class="glob-text-bold ion-text-center">News</h2>
+      </ion-text>
+      <ion-row>
+        <ng-template let-news [ngIf]="news$ | async" [ngIfElse]="loadingNews">
+          <ng-template [ngIf]="news && news.length > 0" [ngIfElse]="noNews">
+            <ion-col size="12" size-sm="6" size-lg="4" size-xl="4" *ngFor="let newsItem of news">
+              <ion-card class="ion-no-margin" tappable (click)="openModal(newsItem)">
+                <ion-img [src]="newsItem.url"></ion-img>
+                <div class="text-overlay">
+                  <ion-label>
+                    <h2 [innerHTML]="newsItem.title"></h2>
+                    <p>Posted on {{ newsItem.updated | dateWithTimezone : 'MMM d, y, h:mm a'}}</p>
+                  </ion-label>
+                </div>
+              </ion-card>
+            </ion-col>
+          </ng-template>
+          <!-- No News -->
+          <ng-template #noNews>
+            <ion-col size="12" size-sm="6" size-lg="4" size-xl="4">
+              <ion-card class="ion-no-margin">
+                <ion-card-content>
+                  <ion-title>No News Available</ion-title>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ng-template>
+        </ng-template>
+        <!-- Loading News -->
+        <ng-template #loadingNews>
+          <ion-col size="12" size-sm="6" size-lg="4" size-xl="4" *ngFor="let s of skeletonSettings.numberOfSkeltons">
+            <ion-card class="ion-no-margin">
+              <ion-card-header class="ion-no-padding">
+                <ion-skeleton-text class="ion-no-margin" animated style="height: 120px; width: 100%;">
+                </ion-skeleton-text>
+              </ion-card-header>
+            </ion-card>
+          </ion-col>
+        </ng-template>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>

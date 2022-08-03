@@ -10,4 +10,7 @@ export class MessageWithSvgComponent {
   @Input() messageContent?: string;
   @Input() imageUrl?: string;
   @Input() advancedMode?= false;
+  @Input() wrapperMarginTop = '0px';
+  @Input() wrapperOffset: string;
+  @Input() wrapperSize: string;
 }
