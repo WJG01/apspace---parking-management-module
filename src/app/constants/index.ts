@@ -14,3 +14,4 @@ export {
   TimeFormats,
   Themes
 } from './settings-options';
+export { accentColors } from './accent-colors';
