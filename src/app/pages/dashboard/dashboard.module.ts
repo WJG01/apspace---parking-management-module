@@ -11,8 +11,6 @@ import { ComponentsModule } from 'src/app/components/components.module';
 import { SharedPipesModule } from '../../shared/shared-pipes.module';
 import { DashboardPage } from './dashboard.page';
 import { TimeParserPipe } from './time-parser.pipe';
-import { DisabledPipe } from './disabled.pipe';
-import { SectionNamePipe } from './section-name.pipe';
 
 @NgModule({
   imports: [
@@ -25,6 +23,6 @@ import { SectionNamePipe } from './section-name.pipe';
     ReactiveFormsModule,
     DashboardPageRoutingModule
   ],
-  declarations: [DashboardPage, TimeParserPipe, DisabledPipe, SectionNamePipe]
+  declarations: [DashboardPage, TimeParserPipe]
 })
 export class DashboardPageModule { }

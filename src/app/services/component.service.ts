@@ -34,7 +34,7 @@ export class ComponentService {
     await toast.present();
   }
 
-  async alertMessage(header: string, message: string, cancelText?: string, button?: AlertButton, alertCssClass?: string) {
+  async alertMessage(header: string, message: string, cancelText?: string, button?: AlertButton, cssClass?: string) {
     const buttons: AlertButton[] = [{
       text: cancelText ? cancelText : 'Dismiss',
       role: 'cancel',
@@ -49,7 +49,7 @@ export class ComponentService {
       header,
       message,
       buttons,
-      cssClass : alertCssClass ? alertCssClass : '',
+      cssClass : cssClass ? cssClass : '',
     });
     await alert.present();
   }
