@@ -392,7 +392,7 @@
       <ion-col *ngIf="activeDashboardSections.length > 0" size-xs="12" size-md="7"
                class="dash-padding dash-padding-bottom">
         <!-- Slide shows -->
-        <!-- <section class="image-slider ion-margin-bottom" *ngIf="activeDashboardSections.includes('noticeBoard')">
+        <section class="image-slider ion-margin-bottom" *ngIf="activeDashboardSections.includes('noticeBoard')">
           <ion-slides #imageSliderSlides pager="true" [options]="imageSliderOpts">
             <ng-container *ngIf="noticeBoardItems$ | async as noticeBoardItems; else loadingNoticeBoard">
               <ng-container *ngIf="noticeBoardItems.length > 0; else noNoticeBoardItems">
@@ -412,14 +412,14 @@
             <ion-skeleton-text animated style="height: 150px"></ion-skeleton-text>
           </ng-template>
           <ng-template #noNoticeBoardItems>
-            <app-message-with-svg wrapperSize="6" wrapperOffset="3" imageUrl="assets/img/empty.svg"
+            <message-with-svg wrapperSize="6" wrapperOffset="3" imageUrl="assets/img/empty.svg"
                                   messageTitle="Nothing to show yet!" messageContent="Try to come later :)">
-            </app-message-with-svg>
+            </message-with-svg>
           </ng-template>
-        </section> -->
+        </section>
 
         <!-- News -->
-        <!-- <ion-card class="ion-no-margin ion-margin-bottom no-border-rad"
+        <ion-card class="ion-no-margin ion-margin-bottom no-border-rad"
                   *ngIf="activeDashboardSections.includes('news')">
           <ion-card-header>
             <ion-row class="ion-align-items-center">
@@ -454,11 +454,11 @@
             </ion-row>
           </ng-template>
           <ng-template #noNews>
-            <app-message-with-svg wrapperSize="6" wrapperOffset="3" imageUrl="assets/img/empty.svg"
+            <message-with-svg wrapperSize="6" wrapperOffset="3" imageUrl="assets/img/empty.svg"
                                   messageTitle="No News yet!" messageContent="Try to come later :)">
-            </app-message-with-svg>
+            </message-with-svg>
           </ng-template>
-        </ion-card> -->
+        </ion-card>
 
         <!--Bus Schedule Card-->
         <ion-card class="ion-no-margin ion-margin-bottom no-border-rad"

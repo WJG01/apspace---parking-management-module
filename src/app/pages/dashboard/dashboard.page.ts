@@ -1,12 +1,3 @@
-/* eslint-disable @typescript-eslint/member-delimiter-style */
-/* eslint-disable @typescript-eslint/type-annotation-spacing */
-/* eslint-disable no-bitwise */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/quotes */
-/* eslint-disable max-len */
-/* eslint-disable arrow-body-style */
-/* eslint-disable @typescript-eslint/prefer-for-of */
-
 import { Component, DoCheck, OnInit, ViewChild } from '@angular/core';
 // import { FirebaseX } from '@ionic-native/firebase-x/ngx'; v4: this need to migrate in the future
 import { AlertButton, IonSlides, ModalController, NavController, Platform } from '@ionic/angular';
@@ -28,17 +19,15 @@ import {
   StaffDirectory, StaffProfile, StudentPhoto, StudentProfile, StudentTimetable
 } from 'src/app/interfaces';
 import {
-   CasTicketService,
+   CasTicketService,NewsService,
    NotificationService, SettingsService, StudentTimetableService,
   WsApiService,ComponentService,
 } from 'src/app/services';
 import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-with-timezone.pipe';
-// import { NotifierService } from 'src/app/shared/notifier/notifier.service';
-// import { NewsModalPage } from '../news/news-modal';
-// import { NotificationModalPage } from '../notifications/notification-modal';
+// import { NotifierService } from 'src/app/shared/notifier/notifier.service'; v4: this need to migrate in the future
+import { NewsModalPage } from '../news/news-modal';
+// import { NotificationModalPage } from '../notifications/notification-modal'; v4: this need to migrate in the future
 import { ChartData, ChartOptions } from 'chart.js';
-
-
 
 @Component({
   selector: 'app-dashboard',
@@ -374,7 +363,7 @@ export class DashboardPage implements OnInit, DoCheck {
     private studentTimetableService: StudentTimetableService,
     private navCtrl: NavController,
     private notificationService: NotificationService,
-    // private news: NewsService,
+    private news: NewsService,
     private modalCtrl: ModalController,
     private cas: CasTicketService,
     // private appLauncherService: AppLauncherService,
@@ -476,25 +465,25 @@ export class DashboardPage implements OnInit, DoCheck {
   doRefresh(refresher?) {
     this.getLocations(refresher);
     // tslint:disable-next-line:no-bitwise
-    // this.news$ = this.news.get(refresher, this.isStudent, this.isLecturer || Boolean(this.role & Role.Admin)).pipe(
-    //   map(newsList => {
-    //     return newsList.map(item => {
-    //       if (item && item.featured_media_source.length > 0 && item.featured_media_source[0].source_url) {
-    //         return {
-    //           url: item.featured_media_source[0].source_url,
-    //           title: item.title && item.title.rendered ? item.title.rendered : '',
-    //           updated: item.modified ? new Date(item.modified) : '',
-    //           body: item.content && item.content.rendered ? item.content.rendered : ''
-    //         };
-    //       }
-    //     }).slice(0, 6);
-    //   }),
-    // );
+    this.news$ = this.news.get(refresher, this.isStudent, this.isLecturer || Boolean(this.role & Role.Admin)).pipe(
+      map(newsList => {
+        return newsList.map(item => {
+          if (item && item.featured_media_source.length > 0 && item.featured_media_source[0].source_url) {
+            return {
+              url: item.featured_media_source[0].source_url,
+              title: item.title && item.title.rendered ? item.title.rendered : '',
+              updated: item.modified ? new Date(item.modified) : '',
+              body: item.content && item.content.rendered ? item.content.rendered : ''
+            };
+          }
+        }).slice(0, 6);
+      }),
+    );
 
     this.quote$ = this.ws.get<Quote>('/apspacequote', { auth: false });
     this.holidays$ = this.getHolidays(true);
     // tslint:disable-next-line: no-bitwise
-    // this.noticeBoardItems$ = this.news.getSlideshow(refresher, this.isStudent, this.isLecturer || Boolean(this.role & Role.Admin));
+    this.noticeBoardItems$ = this.news.getSlideshow(refresher, this.isStudent, this.isLecturer || Boolean(this.role & Role.Admin));
     this.upcomingTrips$ = this.getUpcomingTrips(this.firstLocation, this.secondLocation);
     this.photo$ = this.ws.get<StudentPhoto>('/student/photo');  // no-cache for student photo
     this.displayGreetingMessage();
@@ -662,23 +651,23 @@ export class DashboardPage implements OnInit, DoCheck {
 
 
   // NEWS
-  // async openModal(newsItem: ShortNews) {
-  //   const modal = await this.modalCtrl.create({
-  //     component: NewsModalPage,
-  //     componentProps: { newsItem },
-  //   });
-  //   await modal.present();
-  //   await modal.onDidDismiss();
-  // }
+  async openModal(newsItem: ShortNews) {
+    const modal = await this.modalCtrl.create({
+      component: NewsModalPage,
+      componentProps: { newsItem },
+    });
+    await modal.present();
+    await modal.onDidDismiss();
+  }
 
-  // async openNewsModal(item: News) {
-  //   const modal = await this.modalCtrl.create({
-  //     component: NewsModalPage,
-  //     componentProps: { item, notFound: 'No news Selected' },
-  //   });
-  //   await modal.present();
-  //   await modal.onDidDismiss();
-  // }
+  async openNewsModal(item: News) {
+    const modal = await this.modalCtrl.create({
+      component: NewsModalPage,
+      componentProps: { item, notFound: 'No news Selected' },
+    });
+    await modal.present();
+    await modal.onDidDismiss();
+  }
 
   // TODAYS SCHEDULE FUNCTIONS
   getTodaysSchedule(intakeOrStaffId: string, refresher?: boolean) {
