@@ -37,7 +37,6 @@ import { ChartData, ChartOptions } from 'chart.js';
 })
 export class DashboardPage implements OnInit, DoCheck {
   // USER SETTINGS
-  @ViewChild('slides') slides: IonSlides;
 
   @ViewChild('imageSliderSlides') sliderSlides: IonSlides;
   imageSliderOpts = {
@@ -58,23 +57,7 @@ export class DashboardPage implements OnInit, DoCheck {
     }
   };
 
-  noticeSlideOpts = {
-    initialSlide: 0,
-    slidesPerView: 1,
-    spaceBetween: 10,
-    autoplay: true,
-    centeredContent: false,
-    speed: 500,
-    loop: false,
-    autoplayDisableOnInteraction: true,
-    pagination: {
-      el: '.swiper-pagination',
-      clickable: true,
-      renderBullet: (_, className) => {
-        return '<span style="width: 10px; height: 10px; background-color: #E50565 !important;" class="' + className + '"></span>';
-      }
-    }
-  };
+
 
   role: Role;
   isStudent: boolean;
