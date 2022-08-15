@@ -22,7 +22,7 @@ export class DateWithTimezonePipe implements PipeTransform {
     if (format === 'time' || format === 'bus') {
       this.timeFormat = this.config.getMockSettings().timeFormat;
 
-      this.timeFormat === '24' ? newFormat = 'HH:mm (zzz)' : newFormat = 'h:mm aa (zzz)';
+      this.timeFormat === '24' ? newFormat = 'HH:mm (zzz)' : newFormat = 'hh:mm aa (zzz)';
     } else {
       newFormat = format;
     }

@@ -1,0 +1,17 @@
+.details-section {
+  margin-bottom: 20px;
+}
+
+.details-section:not(:last-child) {
+  border-right: solid 1.5px;
+}
+
+.small-margin-right {
+  margin-right: 5px;
+}
+
+.text-message {
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--ion-color-danger);
+}

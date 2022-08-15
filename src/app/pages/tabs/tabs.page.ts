@@ -1,11 +1,14 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { IonSearchbar, IonTabs } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { Keyboard } from '@capacitor/keyboard';
+import { IonTabs, ModalController, Platform } from '@ionic/angular';
 
 import { Storage } from '@ionic/storage-angular';
 
 import { TabItems } from '../../constants';
 import { Role } from '../../interfaces';
-import { ConfigurationsService } from '../../services';
+import { ComponentService, ConfigurationsService } from '../../services';
+import { SearchMenusModalPage } from './search-menus-modal/search-menus-modal.page';
 import { TabItem } from './tab-item';
 
 @Component({
@@ -19,18 +22,16 @@ export class TabsPage implements OnInit {
   tabItems: TabItem[];
   activeTab: string;
   @ViewChild(IonTabs) tabs: IonTabs;
-  // Other Variables
-  shownSearchBar: boolean;
   smallScreen: boolean;
   logo: string;
-  // Search Variables
-  @ViewChild(IonSearchbar, { static: false }) searchbar: IonSearchbar;
-  term = '';
-  searching = false; // user focusing on searchbar
 
   constructor(
     private storage: Storage,
-    private config: ConfigurationsService
+    private config: ConfigurationsService,
+    private modalCtrl: ModalController,
+    private plt: Platform,
+    private component: ComponentService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -38,6 +39,7 @@ export class TabsPage implements OnInit {
 
     this.storage.get('role').then((role: Role) => {
       if (!role) {
+        // TODO: Logout when no role
         console.error('Invalid role');
         return;
       }
@@ -52,33 +54,46 @@ export class TabsPage implements OnInit {
     this.activeTab = this.tabs.getSelected();
   }
 
-  toggleSearchBar() {
-    this.shownSearchBar = !this.shownSearchBar;
-    if (this.shownSearchBar) {
-      setTimeout(() => this.searchbar.setFocus(), 400);
+  // Key Combination (Ctrl + S)
+  @HostListener('document:keydown.control.s')
+  async openSearch() {
+    if (!this.router.url.includes('tabs')) {
+      // Ignore Key Combination to prevent issues with other pages
+      return;
+    }
+
+    if (this.plt.is('capacitor')) {
+      await Keyboard.hide();
+    }
+
+    const modal = await this.modalCtrl.create({
+      component: SearchMenusModalPage
+    });
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+
+    if (data?.path) {
+      this.openPage(data?.path);
     }
   }
 
-  openHelpCentre() {
-    console.log('https://apiit.atlassian.net/servicedesk/customer/portals');
+  openPage(path: string) {
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return this.component.openLink(path);
+    }
+    this.router.navigateByUrl(path);
   }
 
-  /** Stop searching after some time, for link clicking time. */
-  stopSearching() {
-    setTimeout(() => this.searching = false, 500);
-  }
-
-  @HostListener('document:keydown.f1')
-  @HostListener('document:keydown.?')
+  // Key Combination (Shift + ?)
   @HostListener('document:keydown.shift.?')
-  onKeydownHelp() {
-    this.openHelpCentre();
-  }
+  openHelpCentre() {
+    if (!this.router.url.includes('tabs')) {
+      // Ignore Key Combination to prevent issues with other pages
+      return;
+    }
 
-  @HostListener('document:keydown.s')
-  onKeydownS() {
-    // prevent key 's' propagated into search
-    setTimeout(() => this.searchbar.setFocus(), 10);
+    this.component.openLink('https://apiit.atlassian.net/servicedesk/customer/portals');
   }
 
   // Listens to window resize

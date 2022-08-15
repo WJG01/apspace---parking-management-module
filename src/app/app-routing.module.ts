@@ -160,6 +160,11 @@ const routes: Routes = [
     ]
   },
   {
+    path: 'iconsult',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./pages/iconsult/iconsult.module').then(m => m.IconsultModule)
+  },
+  {
     path: 'news',
     loadChildren: () => import('./pages/news/news.module').then( m => m.NewsPageModule)
   },

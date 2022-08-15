@@ -23,6 +23,11 @@ export interface ConsultationHour {
   synced_to_gims: string;
 }
 
+export interface MappedSlots {
+  date: string;
+  slots: ConsultationSlot[];
+}
+
 export interface ConsultationSlot {
   end_time: string;
   id: number;
@@ -32,4 +37,9 @@ export interface ConsultationSlot {
   start_time: string;
   status: string;
   venue: string;
+}
+
+export interface MappedSlots {
+  date: string;
+  slots: ConsultationSlot[];
 }

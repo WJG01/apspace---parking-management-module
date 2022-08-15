@@ -4,10 +4,8 @@
   position: absolute;
   overflow-y: scroll;
   max-height: 90vh;
-  background-color: var(
-    --ion-tab-bar-background,
-    var(--ion-background-color, #444)
-  );
+  background-color: var(--ion-tab-bar-background,
+      var(--ion-background-color, #444));
   padding: 0 32px;
   width: 100%;
 
@@ -67,7 +65,7 @@ ion-searchbar {
   text-align: left;
   --background: var(--ion-color-step-100);
   --placeholder-color: var(--ion-color-step-950);
-  display: none;
+  caret-color: transparent;
 }
 
 .tab-icons {
@@ -89,10 +87,6 @@ ion-searchbar {
 }
 
 @media screen and (min-width: 720px) {
-  .tabs-searchbar {
-    display: block;
-  }
-
   .active-tab {
     border-top: 0;
     border-bottom: 2px solid var(--ion-color-primary);
