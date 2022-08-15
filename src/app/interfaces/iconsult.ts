@@ -1,3 +1,9 @@
+export interface Venue {
+  id: number;
+  room_code: string;
+  venue: string;
+}
+
 export interface ConsultationHour {
   id: number;
   additional_note: string;
@@ -17,6 +23,11 @@ export interface ConsultationHour {
   synced_to_gims: string;
 }
 
+export interface MappedSlots {
+  date: string;
+  slots: ConsultationSlot[];
+}
+
 export interface ConsultationSlot {
   end_time: string;
   id: number;
@@ -25,13 +36,6 @@ export interface ConsultationSlot {
   slot_id: number;
   start_time: string;
   status: string;
-  venue: string;
-  isChecked?: boolean;
-}
-
-export interface Venue {
-  id: number;
-  room_code: string;
   venue: string;
 }
 

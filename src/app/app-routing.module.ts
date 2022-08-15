@@ -164,6 +164,26 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: () => import('./pages/iconsult/iconsult.module').then(m => m.IconsultModule)
   },
+  {
+    path: 'news',
+    loadChildren: () => import('./pages/news/news.module').then( m => m.NewsPageModule)
+  },
+  {
+    path: 'exam-schedule-admin',
+    loadChildren: () => import('./pages/exam-schedule-admin/exam-schedule-admin.module').then( m => m.ExamScheduleAdminPageModule)
+  },
+  {
+    path: 'exam-schedule-details/:examId',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./pages/exam-schedule-admin/exam-schedule-details/exam-schedule-details.module').then(m => m.ExamScheduleDetailsPageModule)
+  },
+  {
+    path: 'graduate-verification-service',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Lecturer | Role.Admin },
+    loadChildren: () => import('./pages/graduate-verification-service/graduate-verification-service.module').then( m => m.GraduateVerificationServicePageModule)
+  },
   { // this path must always be at the end of the routes array
     path: '**',
     canActivate: [AuthGuard],

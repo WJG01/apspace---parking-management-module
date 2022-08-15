@@ -1,39 +1,512 @@
 <ion-content>
-  <ion-row>
-    <ion-col size-xs="12" size-md="7" class="margin-auto">
-      <div class="ion-text-center ion-margin-top">
-        <img src="assets/icon/apspace-white.svg" />
-      </div>
+  <ng-template #systemName let-mobile>
+    <h1 [class.glob-system-title]="mobile === 'web'" [class.ion-text-end]="mobile === 'web'"
+        [class.mobile]="mobile === 'mobile'">
+      APSpace
+    </h1>
+  </ng-template>
 
-      <form [formGroup]="loginForm">
-        <div class="input-form">
-          <ion-label [color]="(apkey.dirty || apkey.touched) && apkey.errors ? 'danger' : 'primary'">
-            APKey
-          </ion-label>
-          <ion-input placeholder="Your TP Number" formControlName="apkey"
-            [ngClass]="(apkey.dirty || apkey.touched) && apkey.errors ? 'error-shadow' : null"></ion-input>
-          <small class="error-message" *ngIf="(apkey.dirty || apkey.touched) && apkey.errors?.required">
-            APKey is required
-          </small>
+  <!--Mobile Version-->
+  <ng-container *ngIf="platform.is('cordova'); else webVersion">
+    <ion-grid class="main-grid ion-no-padding mobile">
+      <ion-row header class="ion-align-items-start ion-align-items-stretch">
+        <!-- Logo -->
+        <ion-col size="10" offset="1" size-md="6" offset-md="3" size-lg="4" offset-lg="4">
+          <ion-img src="assets/img/login.png"></ion-img>
+        </ion-col>
+        <!--Form & Welcome Message-->
+        <ion-col size="10" offset="1" size-md="6" offset-md="3" size-lg="4" offset-lg="4">
+          <form (ngSubmit)="login()" class="ion-no-padding">
+            <ion-row class="ion-align-items-start">
+              <ion-col class="title-text-wrapper" size="12">
+                <ng-container *ngTemplateOutlet="systemName; context: {$implicit: 'mobile'}"></ng-container>
+                <h2>Your digital university companion</h2>
+              </ion-col>
+            </ion-row>
+            <!-- Input-fields -->
+            <ion-row>
+              <ion-col size="12">
+                <div input-field>
+                  <!-- Input-field-apkey -->
+                  <ion-item class="ion-no-padding">
+                    <ion-input type="text" [placeholder]="'APKey'" [(ngModel)]="apkey" (keyup.enter)="login()"
+                               [autofocus]="true" [required]="true" name="apkey"></ion-input>
+                  </ion-item>
+                  <!-- Input-field-password -->
+                  <ion-item class="ion-no-padding">
+                    <ion-input class="ion-padding-start" [type]="showPassword ? 'text' : 'password'"
+                               [placeholder]="'Password'" [(ngModel)]="password" clear-on-edit="false" (keyup.enter)="login()"
+                               [required]="true" name="password">
+                    </ion-input>
+                    <ion-button type="button" clear slot="end" (click)="showPassword = !showPassword">
+                      <ion-icon name="eye"></ion-icon>
+                    </ion-button>
+                  </ion-item>
+                </div>
+                <!-- Login Button -->
+                <ion-col size="12" class="ion-no-padding">
+                  <ion-button type="submit" class="login-button ion-no-margin"
+                              [attr.color]="userDidLogin && userUnauthenticated ? 'danger' : userDidLogin && userAuthenticated? 'success': 'primary'"
+                              [class.btn_center]="userDidLogin && (userUnauthenticated || loginProcessLoading || userAuthenticated)">
+                    <span *ngIf="!userDidLogin" class="ion-text-capitalize">Log In</span>
+                    <!-- LOADING -->
+                    <ion-icon *ngIf="!userDidLogin" name="log-in" slot="end" size="large"></ion-icon>
+                    <span *ngIf="userDidLogin && loginProcessLoading">
+                      <loading-spinner></loading-spinner>
+                    </span>
+                    <!-- USER ENTER VALID CREDENTIALS -->
+                    <span *ngIf="userDidLogin && userAuthenticated">
+                      <ion-icon name="happy" slot="end" size="large"></ion-icon>
+                    </span>
+                    <!-- USER ENTER INVALID CREDENTIALS -->
+                    <span *ngIf="userDidLogin && userUnauthenticated">
+                      <ion-icon name="sad" slot="end" size="large"></ion-icon>
+                    </span>
+                  </ion-button>
+                </ion-col>
+                <!-- Useful Links -->
+                <div description class="ion-text-center">
+                  <ion-row>
+                    <!-- Timetable Link -->
+                    <ion-col size="12" class="ion-no-padding ion-margin-top">
+                      <p class="ion-no-margin ion-no-padding">Check The Timetable? <a routerLink="/student-timetable"
+                                                                                      routerDirection="forward">Students Timetable</a> </p>
+                    </ion-col>
+                    <!-- Graduate Verification Service Link -->
+                    <ion-col size="12" class="ion-no-padding ion-margin-vertical">
+                      <p class="ion-no-margin ion-no-padding">Verify Academic Qualification? <a
+                        routerLink="/graduate-verification-service" routerDirection="forward">Graduate Verification
+                        Service</a> </p>
+                    </ion-col>
+                    <!-- KB APKey Troubleshooting Link -->
+                    <ion-col size="12" class="ion-no-padding ion-no-margin">
+                      <p class="ion-no-margin ion-no-padding">Forgot Your Password? <a
+                        (click)="openLink('troubleshooting')">APKey Troubleshooting</a>
+                      </p>
+                    </ion-col>
+                  </ion-row>
+                </div>
+              </ion-col>
+            </ion-row>
+          </form>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ng-container>
+
+  <ng-template #webVersion>
+    <div class="main-container web-version">
+      <section class="header">
+        <div class="glob-container">
+          <ion-grid class="ion-no-padding">
+            <ion-row>
+              <ion-col class="ion-padding" size="10" offset="1" offset-sm="" size-sm="5" size-md="4" size-lg="3">
+                <ion-img class="logo" src="assets/img/apu.png"></ion-img>
+              </ion-col>
+              <ion-col class="glob-margin-auto ion-padding-end ion-padding-start" size="10" offset="1" offset-sm=""
+                       size-sm="7" size-md="8" size-lg="9">
+                <ng-container *ngTemplateOutlet="systemName; context: {$implicit: 'web'}"></ng-container>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </div>
+      </section>
 
-        <div class="input-form">
-          <ion-label color="danger" *ngIf="(password.dirty || password.touched) && password.errors; else validPass">
-            Password</ion-label>
-          <ng-template #validPass>
-            <ion-label color="primary">Password</ion-label>
+      <section class="login">
+        <div class="glob-container">
+          <ion-grid class="ion-no-padding">
+            <ion-row>
+              <ion-col class="ion-no-padding ion-padding-start ion-padding-end">
+                <ion-button size="small" fill="clear" class="always-light-button ion-text-capitalize"
+                            routerLink="/graduate-verification-service" routerDirection="forward">
+                  Graduate Verification Service
+                  <ion-icon name="shield-checkmark-outline" slot="end"></ion-icon>
+                </ion-button>
+              </ion-col>
+              <ion-col class="ion-no-padding ion-padding-start ion-padding-end ion-text-right">
+                <ion-button size="small" fill="clear" class="always-light-button ion-text-capitalize"
+                            (click)="showLoginSection = !showLoginSection">
+                  Login
+                  <ion-icon slot="end" name="person-circle"></ion-icon>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+            <ion-row class="login-hidden-section" [style.maxHeight]="showLoginSection ? '1000px' : 0"
+                     [style.paddingBottom]="showLoginSection ? '20px' : 0">
+              <ion-col size="10" offset="1" size-md="4" offset-md="1">
+                <form (ngSubmit)="login()" class="ion-no-padding">
+                  <div class="login-form-container ion-padding">
+                    <div class="login-form-container ion-padding">
+                      <div class="input-container ion-margin-top">
+                        <p>APKey</p>
+                        <ion-input placeholder="Ex: TP012345" type="text" [(ngModel)]="apkey" (keyup.enter)="login()"
+                                   [autofocus]="true" [required]="true" name="apkey"></ion-input>
+                      </div>
+                      <div class="input-container ion-margin-top">
+                        <p>Password</p>
+                        <ion-input class="passowrd-input" placeholder="APKey Password"
+                                   [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" clear-on-edit="false"
+                                   (keyup.enter)="login()" [required]="true" name="password">
+                          <ion-button *ngIf="password" type="button" fill="clear" class="eye-button"
+                                      (click)="showPassword = !showPassword">
+                            <ion-icon [name]="showPassword ? 'eye-off' : 'eye'" class="show-password"></ion-icon>
+                          </ion-button>
+                        </ion-input>
+                      </div>
+                      <div class="login-button-container">
+                        <ion-button expand="block" type="submit"
+                                    [attr.color]="userDidLogin && userUnauthenticated ? 'danger' : 'success'"
+                                    [class.btn_center]="userDidLogin && (userUnauthenticated || loginProcessLoading || userAuthenticated)">
+                          <ng-container *ngIf="!userDidLogin">LOGIN</ng-container>
+                          <!-- LOADING -->
+                          <ion-icon *ngIf="!userDidLogin" name="log-in-outline" slot="end"></ion-icon>
+                          <ng-container *ngIf="userDidLogin && loginProcessLoading">
+                            <loading-spinner></loading-spinner>
+                          </ng-container>
+                          <!-- USER ENTER VALID CREDENTIALS -->
+                          <ng-container *ngIf="userDidLogin && userAuthenticated">
+                            <ion-icon name="happy-outline" slot="end" size="large"></ion-icon>
+                          </ng-container>
+                          <!-- USER ENTER INVALID CREDENTIALS -->
+                          <ng-container *ngIf="userDidLogin && userUnauthenticated">
+                            <ion-icon name="sad-outline" slot="end" size="large"></ion-icon>
+                          </ng-container>
+                        </ion-button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </ion-col>
+              <ion-col size="12" size-md="1" class="hide-on-small-devices">
+                <div class="vl"></div>
+              </ion-col>
+              <ion-col class="login-instruction" size="10" offset="1" offset-sm="" size-md="5">
+                <h4 class="glob-text-bold">Login Instructions:</h4>
+                <div class="ion-padding-start">
+                  <li class="high-line-height">
+                    Enter your APKey
+                    <ion-icon tappable color="success" (click)="openLink('apkey')" name="help-circle"></ion-icon>
+                  </li>
+                  <li class="high-line-height">
+                    Enter your APKey Password
+                    <ion-icon tappable color="success" (click)="openLink('apkeyPassword')" name="help-circle"></ion-icon>
+                  </li>
+                  <li class="high-line-height">Click on the green "Login" Button</li>
+                </div>
+                <p>
+                  <ion-text color="medium">For more information, check this troubleshooting <a tappable
+                                                                                               (click)="openLink('troubleshooting')">
+                    <ion-text color="success">article</ion-text>
+                  </a></ion-text>
+                </p>
+                <p>
+                  <ion-text color="medium">Still having troubles, no worries! you can reach us at <a
+                    class="glob-text-success" tappable href="mailto:assist@staffemail.apu.edu.my">
+                    <ion-text color="success">assist@staffemail.apu.edu.my</ion-text>
+                  </a> and our team will assist you.</ion-text>
+                </p>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </section>
+
+      <section class="ion-padding-top ion-padding-bottom">
+        <div class="glob-container">
+          <ion-grid class="ion-no-padding">
+            <ion-row>
+              <ion-col size="12" class="ion-padding no-padding-on-small-devices">
+                <app-notice-board></app-notice-board>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </section>
+      <!--Cards-->
+      <section class="main-items ion-padding-top ion-padding-bottom">
+        <div class="glob-container">
+          <ion-grid class="ion-no-padding">
+            <ion-row>
+              <ion-col size="6" size-sm="6" size-lg="3" class="ion-padding">
+                <div class='box course-materials' (click)="openLink('moodle')">
+                  <div class='wave -one'></div>
+                  <div class='wave -two'></div>
+                  <div class='wave -three'></div>
+                  <div class="icon">
+                    <ion-icon name="book-sharp"></ion-icon>
+                  </div>
+                  <div class='title'>Course Materials</div>
+                </div>
+              </ion-col>
+              <ion-col size="6" size-sm="6" size-lg="3" class="ion-padding">
+                <div class='box intake-timetable' (click)="openLink('timetable')">
+                  <div class='wave -one'></div>
+                  <div class='wave -two'></div>
+                  <div class='wave -three'></div>
+                  <div class="icon">
+                    <ion-icon name="calendar"></ion-icon>
+                  </div>
+                  <div class='title'>Intake Timetable</div>
+                </div>
+              </ion-col>
+              <ion-col size="6" size-sm="6" size-lg="3" class="ion-padding">
+                <div class='box holidays' (click)="openLink('holiday')">
+                  <div class='wave -one'></div>
+                  <div class='wave -two'></div>
+                  <div class='wave -three'></div>
+                  <div class="icon">
+                    <ion-icon name="bed"></ion-icon>
+                  </div>
+                  <div class='title'>Holidays Calendar</div>
+                </div>
+              </ion-col>
+              <ion-col size="6" size-sm="6" size-lg="3" class="ion-padding">
+                <div class='box graduation' tappable>
+                  <div class='wave -one'></div>
+                  <div class='wave -two'></div>
+                  <div class='wave -three'></div>
+                  <div class="icon">
+                    <ion-icon name="school-sharp"></ion-icon>
+                  </div>
+                  <div class='title'>Graduation Ceremony</div>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </section>
+      <!--News-->
+      <section class="news">
+        <div class="glob-container">
+          <ng-container *ngIf="news$ | async as news; else loadingNews">
+            <ng-container *ngIf="news.length > 0; else noNews">
+              <ion-grid class="ion-no-padding ion-padding-top ion-padding-bottom">
+                <ion-row>
+                  <ion-col class="ion-padding" size="12" size-sm="6" size-lg="4" *ngFor="let newsItem of news">
+                    <ion-card class="ion-no-margin" tappable (click)="openNewsModal(newsItem)">
+                      <img style="max-height: 200px; width: 100%;" [src]="newsItem.url">
+                      <ion-card-header>
+                        <ion-card-title class="glob-limit-lines glob-one-line" [innerHTML]="newsItem.title">
+                        </ion-card-title>
+                        <ion-card-subtitle>
+                          Posted on {{ newsItem.updated | dateWithTimezone : 'yyyy-MM-dd HH:mm:ss' }}
+                        </ion-card-subtitle>
+                      </ion-card-header>
+                    </ion-card>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            </ng-container>
+            <ng-template #noNews>
+
+            </ng-template>
+          </ng-container>
+          <ng-template #loadingNews>
+
           </ng-template>
-          <ion-input type="password" placeholder="Password" formControlName="password"
-            [ngClass]="(password.dirty || password.touched) && password.errors ? 'error-shadow' : null"></ion-input>
-          <small class="error-message" *ngIf="(password.dirty || password.touched) && password.errors?.required">
-            Password is required
-          </small>
         </div>
-      </form>
+      </section>
+      <section class="sub-footer">
+        <div class="glob-container">
+          <ion-grid class="ion-no-padding">
+            <ion-row>
+              <ion-col size="12" size-md="4" class="group ion-padding ion-no-padding-bottom-on-small-devices">
+                <h3 class="title">APIIT Education Group</h3>
+                <h3 class="sub-title">
+                  <ion-text color="primary" tappable (click)="openLink('apu')">APU</ion-text>
+                </h3>
+                <h3 class="sub-title">
+                  <ion-text color="primary" tappable (click)="openLink('apiit')">APIIT</ion-text>
+                </h3>
+                <h3 class="sub-title">
+                  <ion-text color="primary" tappable (click)="openLink('aplc')">APLC</ion-text>
+                </h3>
+                <h3 class="sub-title">
+                  <ion-text color="primary" tappable (click)="openLink('corporateTraining')">Corporate Training
+                  </ion-text>
+                </h3>
+                <div class="stay-connected ion-margin-top">
+                  <h3 class="title">Stay Connected</h3>
+                  <ion-icon (click)="openLink('facebook')" class="facebook" name="logo-facebook"></ion-icon>
+                  <ion-icon (click)="openLink('twitter')" class="twitter" name="logo-twitter"></ion-icon>
+                  <ion-icon (click)="openLink('linkedin')" class="linkedin" name="logo-linkedin"></ion-icon>
+                  <ion-icon (click)="openLink('playStore')" class="playstore" name="logo-google-playstore"></ion-icon>
+                  <ion-icon (click)="openLink('appStore')" class="apple" name="logo-apple"></ion-icon>
+                </div>
+              </ion-col>
+              <ion-col size="12" size-md="8" class="support ion-padding">
+                <h3 class="title">Support</h3>
+                <ion-grid class="ion-no-padding">
+                  <ion-row class="dark-color">
+                    <ion-col size="12">
+                      <div class="support-item general">
+                        <h3 class="sub-title">General Line</h3>
+                        <a href="tel:+60389961000">
+                          <p><span class="glob-text-bold">Tel:</span> +603-89961000 / 1 300 888 278 (Toll-free)</p>
+                        </a>
+                        <p><span class="glob-text-bold">Mon - Fri: </span> 8:30 AM - 7:00 PM</p>
+                        <p><span class="glob-text-bold">Saturday: </span> 8:30 AM - 1:00 PM</p>
+                      </div>
+                    </ion-col>
+                    <ion-col size="12" size-md="6">
+                      <div class="support-item emergency">
+                        <h3 class="sub-title">APU Security/Emergency Hotline</h3>
+                        <a href="tel:0172381300">
+                          <p><span class="glob-text-bold">HP:</span> 017-238 1300</p>
+                        </a>
+                        <p>7:00 PM - 7:00 AM</p>
+                      </div>
+                    </ion-col>
+                    <ion-col size="12" size-md="6">
+                      <div class="support-item weekends">
+                        <h3 class="sub-title"> Weekends, Public Holidays Only</h3>
+                        <a href="tel:0173791700">
+                          <p><span class="glob-text-bold">HP:</span> 017-379 1700</p>
+                        </a>
+                        <p>7:00 AM - 7:00 PM</p>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </section>
 
-      <ion-button expand="block" (click)="login()">
-        Login
-      </ion-button>
-    </ion-col>
-  </ion-row>
+      <section class="operating-hours">
+        <div class="glob-container">
+          <ion-grid class="ion-no-padding" *ngIf="quixCompanies$ | async as quixCompanies">
+            <ion-row>
+              <ion-col size="12" size-sm="10" offset-sm="1" size-md="6" offset-md="6" size-lg="4" offset-lg="4" class="ion-padding">
+                <ion-segment [(ngModel)]="selectedQuixSegment" mode="ios" class="operation-hours-companies">
+                  <ion-segment-button *ngFor="let company of quixCompanies" [value]="company.company_id">
+                    {{ company.company_id }}
+                  </ion-segment-button>
+                </ion-segment>
+              </ion-col>
+            </ion-row>
+            <ion-row class="dark-color">
+              <ion-col size="12" class="ion-padding">
+                <swiper class="mySwiper" [lazy]="true" [navigation]="true" [slidesPerView]="4" [centeredSlides]="true" [grabCursor]="true">
+                  <ng-container *ngIf="(quixCompanies | operationHoursFilter: selectedQuixSegment) as filteredCompany" swiperSlide>
+                    <ng-container *ngIf="filteredCompany; else noCompanies">
+                      <ng-container *ngIf="filteredCompany.company_departments.length > 0; else noDepartments">
+                        <ng-template *ngFor="let department of filteredCompany.company_departments" swiperSlide>
+                          <ion-card class="ion-padding operating-hours-card" color="dark">
+                            <ion-row class="ion-padding-top">
+                              <ion-col class="ion-no-padding">
+                                <h3 class="ion-no-margin ion-text-capitalize">{{ department.dept_name }}</h3>
+                                <p *ngIf="department.dept_email" class="ion-no-margin ion-no-padding">{{ department.dept_email }}</p>
+                              </ion-col>
+                              <ion-col class="department-icon" size="auto">
+                                <ion-icon [name]="department.dept_icon" [style.color]="department.dept_icon_color">
+                                </ion-icon>
+                              </ion-col>
+                            </ion-row>
+                            <ion-row *ngIf="(department.shifts['Mon-Thu'].length === department.shifts['Fri'].length
+                                        && department.shifts['Mon-Thu'].length > 0
+                                        && department.shifts['Mon-Thu'][0].start_time === department.shifts['Fri'][0].start_time
+                                        && department.shifts['Mon-Thu'][0].end_time === department.shifts['Fri'][0].end_time
+                                        && department.shifts['Mon-Thu'][1]); else showSeperate">
+                              <ion-col>
+                                <p class="ion-no-margin ion-margin-top operation-hours-subtitle">
+                                  Monday - Friday
+                                </p>
+                                <div *ngFor="let slot of department.shifts['Mon-Thu']">
+                                  <p *ngIf="slot.start_time" class="ion-no-margin ion-no-padding">
+                                    {{ (slot.start_time | timeFormatter) }} - {{ (slot.end_time | timeFormatter) }}
+                                  </p>
+                                </div>
+                              </ion-col>
+                            </ion-row>
+                            <ng-template #showSeperate>
+                              <ion-row *ngIf="department.shifts['Mon-Thu'].length > 0">
+                                <ion-col>
+                                  <p class="ion-no-margin ion-margin-top operation-hours-subtitle">
+                                    Monday - Thursday
+                                  </p>
+                                  <div *ngFor="let slot of department.shifts['Mon-Thu']">
+                                    <p *ngIf="slot.start_time" class="ion-no-margin ion-no-padding">
+                                      {{ (slot.start_time | timeFormatter) }} - {{ (slot.end_time | timeFormatter) }}
+                                    </p>
+                                  </div>
+                                </ion-col>
+                              </ion-row>
+                            </ng-template>
+                            <ion-row *ngIf="department.shifts['Fri'].length > 0 ">
+                              <ion-col>
+                                <p class="ion-no-margin ion-margin-top operation-hours-subtitle">Friday</p>
+                                <div *ngFor="let slot of department.shifts['Fri']">
+                                  <p *ngIf="slot.start_time" class="ion-no-margin ion-no-padding">
+                                    {{ (slot.start_time | timeFormatter) }} - {{ (slot.end_time | timeFormatter) }}
+                                  </p>
+                                </div>
+                              </ion-col>
+                            </ion-row>
+                            <ion-row *ngIf="department.shifts['Sat'].length > 0 ">
+                              <ion-col>
+                                <p class="ion-no-margin ion-margin-top operation-hours-subtitle">Saturday</p>
+                                <div *ngFor="let slot of department.shifts['Sat']">
+                                  <p *ngIf="slot.start_time" class="ion-no-margin ion-no-padding">
+                                    {{ (slot.start_time | timeFormatter) }} - {{ (slot.end_time | timeFormatter) }}
+                                  </p>
+                                </div>
+                              </ion-col>
+                            </ion-row>
+                            <ion-row class="ion-align-items-center ion-margin-top">
+                              <ion-col size="auto" class="ion-margin-end">
+                                <ion-icon name="call"></ion-icon>
+                              </ion-col>
+                              <ion-col>
+                                <a [href]="'tel' + department.dept_phone[0]">
+                                  <ion-text class="ion-no-margin ion-margin-top">{{ department.dept_phone }}</ion-text>
+                                </a>
+                              </ion-col>
+                            </ion-row>
+                          </ion-card>
+                        </ng-template>
+                      </ng-container>
+                      <ng-template #noDepartments>
+                        No Departments
+                      </ng-template>
+                    </ng-container>
+                    <ng-template #noCompanies>
+                      No Companies
+                    </ng-template>
+                  </ng-container>
+                </swiper>
+              </ion-col>
+            </ion-row>
+
+          </ion-grid>
+        </div>
+      </section>
+
+      <section class="footer">
+        <div class="glob-container">
+          <ion-grid class="ion-padding">
+            <ion-row>
+              <ion-col size="12" size-md="7" size-lg="6" class="ion-no-padding glob-margin-auto">
+                <p class="ion-no-margin ion-no-padding ion-text-left small-text">
+                  &copy; {{ currentYear }} Asia Pacific University of Technology and Innovation (APU). All rights
+                  reserved.
+                </p>
+              </ion-col>
+              <ion-col size="12" size-md="5" size-lg="6" class="ion-no-padding ion-text-right">
+                <ion-button size="small" fill="clear" class="always-light-button" (click)="openLink('privacyPolicy')">
+                  Privacy Policy
+                </ion-button>
+                <ion-button size="small" fill="clear" class="always-light-button" (click)="openLink('termsOfUse')">
+                  Terms of Use
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </section>
+
+    </div>
+  </ng-template>
+
 </ion-content>

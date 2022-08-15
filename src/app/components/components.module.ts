@@ -12,6 +12,7 @@ import { SearchModalComponent } from './search-modal/search-modal.component';
 import { StaffDirectoryComponent } from './staff-directory/staff-directory.component';
 import { SharedPipesModule } from '../shared/shared-pipes.module';
 import { FormatByDayPipe } from './lecturer-timetable/format-by-day/format-by-day.pipe';
+import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { FormatByDayPipe } from './lecturer-timetable/format-by-day/format-by-da
     NotFoundCardComponent,
     SearchModalComponent,
     StaffDirectoryComponent,
+    LoadingSpinnerComponent,
     FormatByDayPipe
   ],
   imports: [
@@ -38,7 +40,8 @@ import { FormatByDayPipe } from './lecturer-timetable/format-by-day/format-by-da
     MessageWithSvgComponent,
     NotFoundCardComponent,
     SearchModalComponent,
-    StaffDirectoryComponent
+    StaffDirectoryComponent,
+    LoadingSpinnerComponent
   ]
 })
 export class ComponentsModule { }

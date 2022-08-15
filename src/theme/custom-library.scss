@@ -41,6 +41,15 @@
   text-decoration: underline;
 }
 
+.glob-full-page-modal {
+  --width: 100%;
+  --height: 100%;
+}
+
+.glob-popover {
+  --width: 70% !important;
+}
+
 .glob-calendar {
   background-color: var(--secondary-bg-color) !important;
   padding: 0 !important;
@@ -144,5 +153,11 @@
     .days-btn.on-selected {
       background-color: transparent !important;
     }
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .glob-popover {
+    --width: 100% !important;
   }
 }

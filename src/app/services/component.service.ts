@@ -34,7 +34,7 @@ export class ComponentService {
     await toast.present();
   }
 
-  async alertMessage(header: string, message: string, cancelText?: string, button?: AlertButton) {
+  async alertMessage(header: string, message: string, cancelText?: string, button?: AlertButton, cssClass?: string) {
     const buttons: AlertButton[] = [{
       text: cancelText ? cancelText : 'Dismiss',
       role: 'cancel',
@@ -48,7 +48,8 @@ export class ComponentService {
     const alert = await this.alertCtrl.create({
       header,
       message,
-      buttons
+      buttons,
+      cssClass : cssClass ? cssClass : '',
     });
     await alert.present();
   }

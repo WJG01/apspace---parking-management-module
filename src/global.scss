@@ -13,3 +13,7 @@
 @import "./theme/custom-library.scss";
 @import "./theme/native-elements.scss";
 @import "./theme/responsive-design.scss";
+@import "~swiper/swiper.min.css";
+@import "~swiper/modules/navigation/navigation.min.css";
+@import "~swiper/modules/pagination/pagination.min.css";
+@import "~swiper/modules/lazy/lazy.min.css";
