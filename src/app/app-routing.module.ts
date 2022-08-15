@@ -173,6 +173,12 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/exam-schedule-admin/exam-schedule-details/exam-schedule-details.module').then(m => m.ExamScheduleDetailsPageModule)
   },
+  {
+    path: 'graduate-verification-service',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Lecturer | Role.Admin },
+    loadChildren: () => import('./pages/graduate-verification-service/graduate-verification-service.module').then( m => m.GraduateVerificationServicePageModule)
+  },
   { // this path must always be at the end of the routes array
     path: '**',
     canActivate: [AuthGuard],

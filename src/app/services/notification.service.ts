@@ -142,6 +142,29 @@ export class NotificationService {
     }
   }
 
+  getMessageDetail(messageID: any): Observable<any> {
+    if (this.config.connectionStatus) {
+      return this.cas.getST(this.serviceUrl).pipe(
+        switchMap(st => {
+          const url = `${this.apiUrl}/client/messages/${messageID}?ticket=${st}`;
+          return this.http.get(url).pipe(
+            catchError(err => {
+              if (400 <= err.status && err.status < 500) {
+                this.component.toastMessage('Something happened while we get the message details.','danger');
+                return throwError(err.message);
+              } else {
+                console.error('Unknown notification error', err);
+                return NEVER;
+              }
+            })
+          );
+        }),
+      );
+    } else {
+      return from('network none');
+    }
+  }
+
   getSubscription(): Observable<NotificationStatus> {
     if (this.config.connectionStatus) {
       return this.cas.getST(this.serviceUrl).pipe(

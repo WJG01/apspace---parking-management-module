@@ -9,3 +9,4 @@ export { VersionService } from './version.service';
 export { StudentTimetableService } from './student-timetable.service';
 export { WebspacePasswordService } from './webspace-password.service';
 export { NotifierService } from './notifier.service';
+export { NewsService } from './news.service';

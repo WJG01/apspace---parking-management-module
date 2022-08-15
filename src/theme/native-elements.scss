@@ -41,3 +41,27 @@
     color: #fff;
   }
 }
+
+.danger-alert {
+  .alert-wrapper {
+    .alert-head {
+      background-color: var(--ion-color-danger);
+
+      .alert-title,
+      .alert-sub-title {
+        color: #FFFFFF !important;
+      }
+    }
+
+    .alert-message {
+      padding-top: 10px !important;
+      padding-bottom: 0 !important;
+    }
+
+    .alert-button-group {
+      .main {
+        color: var(--ion-color-danger);
+      }
+    }
+  }
+}

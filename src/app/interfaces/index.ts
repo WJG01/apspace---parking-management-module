@@ -14,7 +14,8 @@ export {
   FeesSummary,
   FeesTotalSummary
 } from './fees';
-export { Venue } from './iconsult';
+export { Venue, ConsultationHour, ConsultationSlot} from './iconsult';
+export { Graduater } from './graduater';
 export { IntakeListing } from './intake-listing';
 export { InterimLegend } from './interim-legend';
 export { FormattedDaysLecturerTimetable, FormattedLecturerTimetable, LecturerTimetable, MappedLecturerTimetable } from './lecturer-timetable';
@@ -31,3 +32,11 @@ export { StaffDirectory } from './staff';
 export { SurveyIntake, SurveyModule } from './student-survey';
 export { BeAPUStudentDetails, StudentPhoto, StudentSearch } from './student';
 export { Subcourse } from './subcourses';
+export { CgpaPerIntake } from './cgpa-per-intake';
+export { DashboardCardComponentConfigurations } from './dashboard-card-component-configurations';
+export { EventComponentConfigurations } from './event-component-configurations';
+export { Holidays, Holiday } from './holiday';
+export { MoodleEvent } from './moodle-event';
+export { News, ShortNews } from './news';
+export { OrientationStudentDetails, OrientationStudentsList } from './e-orientation';
+export { Quote } from './quote';
