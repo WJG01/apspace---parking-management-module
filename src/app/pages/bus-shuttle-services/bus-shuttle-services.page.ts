@@ -153,6 +153,17 @@ export class BusShuttleServicesPage implements OnInit {
     );
   }
 
+  // Swap between from and to location
+  swapLocations() {
+    if (this.filterObject.fromLocation === this.filterObject.toLocation) return; // Prevent user from spamming the button if from and to location is the same
+    // Prevent an issue where swap location wont work
+    const oldToLocation = this.filterObject.toLocation;
+
+    this.filterObject.toLocation = this.filterObject.fromLocation;
+    this.filterObject.fromLocation = oldToLocation;
+    this.doRefresh();
+  }
+
   clearFilter() {
     this.filterObject = {
       fromLocation: '',
