@@ -165,16 +165,19 @@ const routes: Routes = [
   {
     path: 'news',
     canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
     loadChildren: () => import('./pages/news/news.module').then( m => m.NewsPageModule)
   },
   {
     path: 'exam-schedule-admin',
     canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
     loadChildren: () => import('./pages/exam-schedule-admin/exam-schedule-admin.module').then( m => m.ExamScheduleAdminPageModule)
   },
   {
     path: 'exam-schedule-details/:examId',
     canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
     loadChildren: () =>
       import('./pages/exam-schedule-admin/exam-schedule-details/exam-schedule-details.module').then(m => m.ExamScheduleDetailsPageModule)
   },
@@ -208,6 +211,8 @@ const routes: Routes = [
   },
   {
     path: 'logout',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
     loadChildren: () => import('./pages/logout/logout.module').then( m => m.LogoutPageModule)
   },
   {
