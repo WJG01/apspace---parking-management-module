@@ -166,30 +166,27 @@ const routes: Routes = [
     path: 'news',
     canActivate: [AuthGuard],
     data: { role: Role.Student | Role.Admin | Role.Lecturer },
-    loadChildren: () => import('./pages/news/news.module').then( m => m.NewsPageModule)
+    loadChildren: () => import('./pages/news/news.module').then(m => m.NewsPageModule)
   },
   {
     path: 'exam-schedule-admin',
     canActivate: [AuthGuard],
     data: { role: Role.Student | Role.Admin | Role.Lecturer },
-    loadChildren: () => import('./pages/exam-schedule-admin/exam-schedule-admin.module').then( m => m.ExamScheduleAdminPageModule)
-  },
-  {
-    path: 'exam-schedule-details/:examId',
-    canActivate: [AuthGuard],
-    data: { role: Role.Student | Role.Admin | Role.Lecturer },
-    loadChildren: () =>
-      import('./pages/exam-schedule-admin/exam-schedule-details/exam-schedule-details.module').then(m => m.ExamScheduleDetailsPageModule)
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./pages/exam-schedule-admin/exam-schedule-admin.module').then(m => m.ExamScheduleAdminPageModule)
+      },
+      {
+        path: ':examId',
+        loadChildren: () => import('./pages/exam-schedule-admin/exam-schedule-details/exam-schedule-details.module').then(m => m.ExamScheduleDetailsPageModule)
+      }
+    ]
   },
   {
     path: 'profile',
     canActivate: [AuthGuard],
-    children: [
-      {
-        path: '',
-        loadChildren: () => import('./pages/profile/profile.module').then( m => m.ProfilePageModule)
-      }
-    ],
+    loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule)
   },
   {
     path: 'visa-status',
@@ -201,7 +198,7 @@ const routes: Routes = [
     path: 'mentorship',
     canActivate: [AuthGuard],
     data: { role: Role.Admin | Role.Lecturer },
-    loadChildren: () => import('./pages/mentorship/mentorship.module').then( m => m.MentorshipPageModule)
+    loadChildren: () => import('./pages/mentorship/mentorship.module').then(m => m.MentorshipPageModule)
   },
   {
     path: 'beapu',
@@ -213,13 +210,13 @@ const routes: Routes = [
     path: 'logout',
     canActivate: [AuthGuard],
     data: { role: Role.Student | Role.Admin | Role.Lecturer },
-    loadChildren: () => import('./pages/logout/logout.module').then( m => m.LogoutPageModule)
+    loadChildren: () => import('./pages/logout/logout.module').then(m => m.LogoutPageModule)
   },
   {
     path: 'graduate-verification-service',
     canActivate: [AuthGuard],
     data: { role: Role.Student | Role.Lecturer | Role.Admin },
-    loadChildren: () => import('./pages/graduate-verification-service/graduate-verification-service.module').then( m => m.GraduateVerificationServicePageModule)
+    loadChildren: () => import('./pages/graduate-verification-service/graduate-verification-service.module').then(m => m.GraduateVerificationServicePageModule)
   },
   {
     path: 'aplc-progress-report',
