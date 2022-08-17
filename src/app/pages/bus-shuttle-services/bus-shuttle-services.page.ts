@@ -4,7 +4,7 @@ import { finalize, forkJoin, map, Observable, tap } from 'rxjs';
 import { parse, parseISO, format, max } from 'date-fns';
 
 import { APULocation, APULocations, BusTrip, BusTrips } from '../../interfaces';
-import { ConfigurationsService, WsApiService } from '../../services';
+import { SettingsService, WsApiService } from '../../services';
 import { DateWithTimezonePipe } from '../../shared/date-with-timezone/date-with-timezone.pipe';
 
 @Component({
@@ -32,12 +32,16 @@ export class BusShuttleServicesPage implements OnInit {
   constructor(
     private ws: WsApiService,
     private dateWithTimezonePipe: DateWithTimezonePipe,
-    private config: ConfigurationsService
+    private settings: SettingsService
   ) { }
 
   ngOnInit() {
-    this.filterObject.fromLocation = this.config.getMockSettings().tripFrom;
-    this.filterObject.toLocation = this.config.getMockSettings().tripTo;
+    if (this.settings.get('tripFrom')) {
+      this.filterObject.fromLocation = this.settings.get('tripFrom');
+    }
+    if (this.settings.get('tripTo')) {
+      this.filterObject.toLocation = this.settings.get('tripTo');
+    }
 
     this.doRefresh();
   }
@@ -73,7 +77,7 @@ export class BusShuttleServicesPage implements OnInit {
         if (!this.detailedView) {
           filteredArray = filteredArray.filter(trip => {
             // FILTER TRIPS TO UPCOMING TRIPS ONLY
-            const timeFormat = this.config.getMockSettings().timeFormat;
+            const timeFormat = this.settings.get('timeFormat');
             const timeFilter = timeFormat === '24' ?
               parse(trip.trip_time.replace(' (GMT+8)', ''), 'HH:mm', new Date()) >= this.todaysDate :
               parse(trip.trip_time.replace(' (GMT+8)', ''), 'hh:mm aa', new Date()) >= this.todaysDate;
@@ -103,11 +107,10 @@ export class BusShuttleServicesPage implements OnInit {
 
         return result;
       }),
-      // TODO: Enable this back
-      // tap(_ => {
-      //   this.settings.set('tripFrom', this.filterObject.fromLocation);
-      //   this.settings.set('tripTo', this.filterObject.toLocation);
-      // }),
+      tap(_ => {
+        this.settings.set('tripFrom', this.filterObject.fromLocation);
+        this.settings.set('tripTo', this.filterObject.toLocation);
+      }),
       finalize(() => refresher && refresher.target.complete()),
     );
   }
