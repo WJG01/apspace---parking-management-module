@@ -27,12 +27,13 @@ export class NotificationService {
 
   constructor(
     private config: ConfigurationsService,
-    private plt: Platform,
+    private platform: Platform,
     private cas: CasTicketService,
+    // public firebaseX: FirebaseX,
     private storage: Storage,
     private http: HttpClient,
     private component: ComponentService,
-    private badge: Badge
+    private badge: Badge,
   ) { }
 
   /**
@@ -41,7 +42,7 @@ export class NotificationService {
   getMessages(): Observable<NotificationHistory> {
     if (this.config.connectionStatus) {
       let token = '';
-      if (this.plt.is('capacitor')) {
+      if (this.platform.is('capacitor')) {
         return from(FCM.getToken()).pipe(
           switchMap(responseToken => {
             token = responseToken.token;
@@ -85,10 +86,35 @@ export class NotificationService {
   /**
    * Get the list of categories
    */
+  // sendTokenOnLogout() {
+  //   let token = '';
+  //   if (this.platform.is('capacitor')) {
+  //     return from (
+  //       this.firebaseX.getToken()
+  //     ).pipe(
+  //       switchMap(
+  //         responseToken => {
+  //           token = responseToken;
+  //           return this.cas.getST(this.serviceUrl);
+  //         },
+  //       ),
+  //       switchMap(
+  //         st => {
+  //           const body = {
+  //             device_token: token,
+  //           };
+  //           const url = `${this.apiUrl}/client/logout?ticket=${st}`;
+  //           return this.http.post(url, body, { headers: this.headers });
+  //         },
+  //       ),
+  //     );
+  //   }
+  // }
+
+
   getCategories() {
     if (this.config.connectionStatus) {
       const url = `${this.apiUrl}/client/categories`;
-
       return this.http.get(url, { headers: this.headers }).pipe(
         map(c => c['categories']),
         tap(categories => this.storage.set(CATEGORIES_KEY, categories)),
@@ -123,7 +149,7 @@ export class NotificationService {
 
           return this.http.post(url, body, { headers: this.headers }).pipe(
             tap(() => {
-              if (this.plt.is('capacitor')) {
+              if (this.platform.is('capacitor')) {
                 this.badge.decrease(1);
               }
             }),
