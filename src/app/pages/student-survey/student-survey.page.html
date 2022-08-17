@@ -182,8 +182,7 @@
                 <ion-card class="ion-no-margin">
                   <div class="ion-margin-top">
                     <message-with-svg messageTitle="No Surveys Needed!" messageContent="Either you have completed all of the
-                    surveys for the selected intake
-                    '{{ intakeCode }}', or the
+                    surveys for '{{ intakeCode }}', or the
                     surveys are not out yet." imageUrl="assets/img/people_celebrating.svg" wrapperSize="5"
                       wrapperOffset="4">
                     </message-with-svg>
@@ -194,7 +193,7 @@
                 <ion-card class="ion-no-margin">
                   <div class="ion-margin-top">
                     <message-with-svg messageTitle="No Module Selected!"
-                      messageContent="Select an Module to submit the survey"
+                      messageContent="Select a Module to submit the survey"
                       imageUrl="assets/img/person_with_selection.svg" wrapperSize="5" wrapperOffset="4">
                     </message-with-svg>
                   </div>
@@ -206,7 +205,7 @@
             <ng-container *ngIf="!surveyType; else surveyTypeSelected">
               <ion-card class="ion-no-margin">
                 <div class="ion-margin-top">
-                  <message-with-svg messageTitle="No Surveys Due!" messageContent="None of the survey types are due now"
+                  <message-with-svg messageTitle="No Surveys Due!" messageContent="No survey that are currently due"
                     imageUrl="assets/img/people_celebrating.svg" wrapperSize="5" wrapperOffset="4">
                   </message-with-svg>
                 </div>
