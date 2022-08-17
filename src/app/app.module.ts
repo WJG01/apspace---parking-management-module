@@ -9,6 +9,7 @@ import localeEnExtra from '@angular/common/locales/extra/en';
 
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { Badge } from '@awesome-cordova-plugins/badge/ngx';
+import { AppAvailability } from '@awesome-cordova-plugins/app-availability/ngx';
 import { NgChartsModule } from 'ng2-charts';
 
 import { AppComponent } from './app.component';
@@ -32,7 +33,8 @@ registerLocaleData(localEn, 'en-US', localeEnExtra);
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: LOCALE_ID, useValue: 'en-US' },
-    Badge
+    Badge,
+    AppAvailability
   ],
   bootstrap: [AppComponent],
 })

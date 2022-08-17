@@ -23,8 +23,6 @@ const routes: Routes = [
   },
   {
     path: 'student-timetable',
-    canActivate: [AuthGuard],
-    data: { role: Role.Student },
     loadChildren: () => import('./pages/student-timetable/student-timetable.module').then(m => m.StudentTimetablePageModule)
   },
   {
@@ -166,10 +164,12 @@ const routes: Routes = [
   },
   {
     path: 'news',
+    canActivate: [AuthGuard],
     loadChildren: () => import('./pages/news/news.module').then( m => m.NewsPageModule)
   },
   {
     path: 'exam-schedule-admin',
+    canActivate: [AuthGuard],
     loadChildren: () => import('./pages/exam-schedule-admin/exam-schedule-admin.module').then( m => m.ExamScheduleAdminPageModule)
   },
   {
@@ -177,6 +177,38 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./pages/exam-schedule-admin/exam-schedule-details/exam-schedule-details.module').then(m => m.ExamScheduleDetailsPageModule)
+  },
+  {
+    path: 'profile',
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./pages/profile/profile.module').then( m => m.ProfilePageModule)
+      }
+    ],
+  },
+  {
+    path: 'visa-status',
+    canActivate: [AuthGuard],
+    data: { role: Role.Admin | Role.Student },
+    loadChildren: () => import('./pages/profile/visa-status/visa-status.module').then(m => m.VisaStatusPageModule)
+  },
+  {
+    path: 'mentorship',
+    canActivate: [AuthGuard],
+    data: { role: Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/mentorship/mentorship.module').then( m => m.MentorshipPageModule)
+  },
+  {
+    path: 'beapu',
+    canActivate: [AuthGuard],
+    data: { role: Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/filing-report/filing-report.module').then(m => m.FilingReportPageModule)
+  },
+  {
+    path: 'logout',
+    loadChildren: () => import('./pages/logout/logout.module').then( m => m.LogoutPageModule)
   },
   {
     path: 'graduate-verification-service',

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuID, MenuItem } from './menu.interface';
-import { Storage } from '@ionic/storage';
+import { Storage } from '@ionic/storage-angular';
 import { menu } from './menu';
 import { Network } from '@capacitor/network';
 import { Observable } from 'rxjs';
