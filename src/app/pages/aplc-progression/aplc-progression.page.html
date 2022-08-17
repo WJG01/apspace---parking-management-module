@@ -1,0 +1,466 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>APLC Progress Report</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="glob-container">
+    <ion-row>
+      <ion-col size-xs="12" [attr.size-md]="subjectCode && classCode ? 4 : 12"
+        [attr.push-md]="subjectCode && classCode ? 8 : 0">
+        <ion-card class="ion-no-margin">
+          <ion-item-divider lines="none" color="light" mode="md">
+            <ion-label class="glob-text-bold">
+              <h2>Configuration Section</h2>
+              <p>Select a Subject Code & Class Code before proceeding</p>
+            </ion-label>
+          </ion-item-divider>
+
+          <ng-container *ngIf="(subjects$ | async) as subjects; else loadingSubjects">
+            <ion-item lines="full">
+              <ion-label position="stacked">Subject Code</ion-label>
+              <ion-select interface="popover" placeholder="Select a Subject" [disabled]="!(subjects.length > 0)"
+                [ngModel]="subjectCode" (ngModelChange)="onSubjectCodeChange()">
+                <ion-select-option *ngFor="let subject of subjects" [value]="subject.SUBJECT_CODE">
+                  {{ subject.SUBJECT_CODE }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ng-container *ngIf="subjectCode; else disabledClassCode">
+              <ng-container *ngIf="(classes$ | async) as classes; else loadingClasses">
+                <ion-item lines="none">
+                  <ion-label position="stacked">Class Code</ion-label>
+                  <ion-select placeholder="Select a Class Code" [ngModel]="classCode"
+                    (ngModelChange)="onClassCodeChange()">
+                    <ion-select-option *ngFor="let class of classes" [value]="class.CLASS_CODE">
+                      {{ class.CLASS_CODE }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ng-container>
+
+              <ng-template #loadingClasses>
+                <ion-item lines="none">
+                  <ion-skeleton-text animated style="width: 100%; height: 35px;"></ion-skeleton-text>
+                </ion-item>
+              </ng-template>
+            </ng-container>
+
+            <ng-template #disabledClassCode>
+              <ion-item lines="none" [disabled]="!subjectCode">
+                <ion-label position="stacked">Class Code</ion-label>
+                <ion-select placeholder="Select a Class Code"></ion-select>
+              </ion-item>
+            </ng-template>
+          </ng-container>
+
+          <ng-template #loadingSubjects>
+            <ion-item lines="full">
+              <ion-skeleton-text animated style="width: 100%; height: 35px;"></ion-skeleton-text>
+            </ion-item>
+
+            <ion-item lines="none">
+              <ion-skeleton-text animated style="width: 100%; height: 35px;"></ion-skeleton-text>
+            </ion-item>
+          </ng-template>
+        </ion-card>
+      </ion-col>
+
+      <!-- TODO: In Progress -->
+      <!-- <ng-container *ngIf="subjectCode && classCode">
+        <ion-col size-xs="12" size-md="8" pull-md="4">
+          <ng-container *ngIf="studentsBehaviour$ | async as studentBehaviors; else studentsBehaviourLoading">
+            <ion-card>
+              <ion-card-header color="primary">
+                <ion-card-title>Summary</ion-card-title>
+              </ion-card-header>
+              <ion-card-content class="ion-no-padding ion-padding-top">
+                <ng-container *ngIf="classDescription$ | async as classDescription; else classDescriptionIsLoading">
+                  <ion-grid>
+                    <ion-row class="ion-padding-start">
+                      <ion-col size="12" size-md="6">
+                        <P>Class Code:</P>
+                        <ion-text color="primary">
+                          <h6 class="glob-text-bold">{{ classCode }}</h6>
+                        </ion-text>
+                      </ion-col>
+                      <ion-col size="12" size-md="6">
+                        <P>Subject Code (Module Code):</P>
+                        <h6 class="glob-text-bold">{{ subjectCode || 'N/A' }}</h6>
+                      </ion-col>
+                      <ion-col size="12" size-md="6" *ngIf="classDescription[0].SDATE">
+                        <P>Start Date:</P>
+                        <h6 class="glob-text-bold">{{ classDescription[0].SDATE || 'N/A' }}</h6>
+                      </ion-col>
+                      <ion-col size="12" size-md="6" *ngIf="classDescription[0].EDATE">
+                        <P>End Date:</P>
+                        <h6 class="glob-text-bold">{{ classDescription[0].EDATE || 'N/A' }}</h6>
+                      </ion-col>
+                      <ion-col size="12" size-md="6" *ngIf="classDescription[0].LECTURER_NAME">
+                        <P>Lecturer Name:</P>
+                        <h6 class="glob-text-bold">{{ classDescription[0].LECTURER_NAME || 'N/A' }}</h6>
+                      </ion-col>
+                      <ion-col size="12" size-md="6" *ngIf="numberOfStudents > 0">
+                        <P>Reports Submitted:</P>
+                        <h6 class="glob-text-bold">
+                          <ion-text
+                            [color]="numberOfReportsSubmitted === numberOfStudents ? 'success' : numberOfReportsSubmitted === 0 ? 'danger' : 'warning'">
+                            {{ numberOfReportsSubmitted }} out of {{numberOfStudents}}
+                            {{numberOfStudents <=1 ? ' Report' : ' Reports' }}</ion-text>
+                        </h6>
+                      </ion-col>
+                      <ion-col size="12" *ngIf="classDescription[0].CLASS_DESCRIPTION">
+                        <P>Class Description:</P>
+                        <h6 class="glob-text-bold">{{ classDescription[0].CLASS_DESCRIPTION }}</h6>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ng-container>
+                <ng-template #classDescriptionIsLoading>
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="12" size-md="6">
+                        <ion-skeleton-text animated style="width: 70%; line-height: 20px;"></ion-skeleton-text>
+                        <ion-skeleton-text animated style="width: 90%; line-height: 20px;"></ion-skeleton-text>
+                      </ion-col>
+                      <ion-col size="12" size-md="6">
+                        <ion-skeleton-text animated style="width: 80%; line-height: 20px;"></ion-skeleton-text>
+                        <ion-skeleton-text animated style="width: 40%; line-height: 20px;"></ion-skeleton-text>
+                      </ion-col>
+                      <ion-col size="12" size-md="6">
+                        <ion-skeleton-text animated style="width: 50%; line-height: 20px;"></ion-skeleton-text>
+                        <ion-skeleton-text animated style="width: 40%; line-height: 20px;"></ion-skeleton-text>
+                      </ion-col>
+                      <ion-col size="12" size-md="6">
+                        <ion-skeleton-text animated style="width: 50%; line-height: 20px;"></ion-skeleton-text>
+                        <ion-skeleton-text animated style="width: 40%; line-height: 20px;"></ion-skeleton-text>
+                      </ion-col>
+                      <ion-col size="12" size-md="6">
+                        <ion-skeleton-text animated style="width: 60%; line-height: 20px;"></ion-skeleton-text>
+                        <ion-skeleton-text animated style="width: 100%; line-height: 20px;"></ion-skeleton-text>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ng-template>
+              </ion-card-content>
+            </ion-card>
+
+            <ion-grid class="ion-no-padding ion-padding-start ion-padding-end">
+              <ion-row>
+                <ion-col>
+                  <ion-searchbar color="light" [(ngModel)]="term" class="medium-border" placeholder="Student Name/ID">
+                  </ion-searchbar>
+                </ion-col>
+                <ion-col size="auto" class="glob-margin-auto ion-padding-start">
+                  <ng-container *ngIf="!editMode">
+                    <ion-button color="secondary" fill="outline" (click)="generateReport()">
+                      Report
+                      <ion-icon name="newspaper-outline" slot="end"></ion-icon>
+                    </ion-button>
+                    <ion-button color="tertiary" (click)="editMode = true">
+                      Edit
+                      <ion-icon name="create-sharp" slot="end"></ion-icon>
+                    </ion-button>
+                  </ng-container>
+
+                  <ng-container *ngIf="editMode">
+                    <ion-button color="danger" fill="outline" (click)="editMode = false">
+                      Cancel
+                      <ion-icon name="close-outline" slot="end"></ion-icon>
+                    </ion-button>
+                    <ion-button color="success" (click)="submit(studentBehaviors)">
+                      Save
+                      <ion-icon name="save-outline" slot="end"></ion-icon>
+                    </ion-button>
+                  </ng-container>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+            <ng-container *ngIf="!editMode; else edit">
+              <ion-card>
+                <ion-card-header color="primary">
+                  <ion-card-title>
+                    Progress Report Data
+                  </ion-card-title>
+                </ion-card-header>
+                <ion-card-content class="ion-no-padding">
+                  <ng-container *ngIf="studentBehaviors.length > 0; else emptyList">
+                    <ng-container *ngFor="let studentBehavior of (studentBehaviors | search: term)">
+                      <ion-item lines="full" class="student-record" [ngClass]="{
+                      'success-border': +studentBehavior.AVERAGE_BEH >= 2,
+                      'danger-border': +studentBehavior.AVERAGE_BEH < 2 && +studentBehavior.AVERAGE_BEH > 0}">
+                        <ion-label class="glob-white-space-normal">
+                          <ion-grid class="ion-no-padding">
+                            <ion-row>
+                              <ion-col size="12" class="small-margin-bottom">
+                                <ion-text class="glob-text-bold"
+                                  [color]="+studentBehavior.AVERAGE_BEH >= 2 ? 'success' : +studentBehavior.AVERAGE_BEH < 2 && +studentBehavior.AVERAGE_BEH > 0 ? 'danger' : ''">
+                                  <h2 class="glob-text-bold">
+                                    {{ studentBehavior.STUDENT_NAME }} ({{studentBehavior.STUDENT_NUMBER}})
+                                  </h2>
+                                </ion-text>
+                              </ion-col>
+                              <ion-col size="12" class="small-margin-bottom">
+                                <p><span>Average Score: </span>
+                                  <ion-text class="glob-text-bold"
+                                    [color]="+studentBehavior.AVERAGE_BEH >= 2 ? 'success' : +studentBehavior.AVERAGE_BEH < 2 && +studentBehavior.AVERAGE_BEH > 0 ? 'danger' : ''">
+                                    {{ +studentBehavior.AVERAGE_BEH > 0 ? studentBehavior.AVERAGE_BEH : 'N/A' }}
+                                  </ion-text>
+                                </p>
+                              </ion-col>
+                              <ion-col size="12">
+                                <p><span class="glob-text-bold">Remarks: </span>
+                                  <ion-text>{{ studentBehavior.REMARK || 'N/A' }}</ion-text>
+                                </p>
+                              </ion-col>
+                            </ion-row>
+                          </ion-grid>
+                        </ion-label>
+                      </ion-item>
+                    </ng-container>
+                  </ng-container>
+                  <ng-template #emptyList>
+                    <ion-grid>
+                      <ion-row>
+                        <ion-col size="12">
+                          <div class="ion-text-center ion-margin-bottom ion-margin-top">
+                            <ion-text color="danger">
+                              <h3 class="glob-text-bold">No Data To Show!</h3>
+                            </ion-text>
+                            <h6>
+                              There is no students added under the class code {{classCode}}
+                            </h6>
+                          </div>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+
+                  </ng-template>
+                </ion-card-content>
+              </ion-card>
+            </ng-container>
+            <ng-template #edit>
+              <ion-card>
+                <ion-card-header color="primary">
+                  <ion-card-title>
+                    Edit Progress Report Data
+                  </ion-card-title>
+                </ion-card-header>
+                <ion-card-content class="ion-no-padding">
+                  <ng-container *ngIf="studentBehaviors.length > 0; else emptyList">
+                    <ng-container *ngFor="let studentBehavior of (studentBehaviors | search: term)">
+                      <div class="student-record edit ion-padding-top">
+                        <ion-grid class="ion-no-padding">
+                          <ion-row>
+                            <ion-col size="12" class="small-margin-bottom">
+                              <ion-text color="primary" class="glob-text-bold">
+                                <h2 class="glob-text-bold small-margin-bottom ion-padding-horizontal">
+                                  {{ studentBehavior.STUDENT_NAME }} ({{studentBehavior.STUDENT_NUMBER}})
+                                </h2>
+                              </ion-text>
+                            </ion-col>
+                            <ion-col size="12">
+                              <ion-item color="light" lines="full">
+                                <ion-label>Completing Assignments</ion-label>
+                                <ion-select [(ngModel)]="studentBehavior.COMPLETING_BEH" interface="popover">
+                                  <ion-select-option *ngFor="let score of scores" [value]="score">
+                                    {{score}}
+                                  </ion-select-option>
+                                </ion-select>
+                              </ion-item>
+                              <ion-item color="light" lines="full">
+                                <ion-label>Academic Behaviour</ion-label>
+                                <ion-select [(ngModel)]="studentBehavior.ACADEMIC_BEH" interface="popover">
+                                  <ion-select-option *ngFor="let score of scores" [value]="score">
+                                    {{score}}
+                                  </ion-select-option>
+                                </ion-select>
+                              </ion-item>
+                              <ion-item color="light" lines="full">
+                                <ion-label>Understanding Key Concepts</ion-label>
+                                <ion-select [(ngModel)]="studentBehavior.CONCEPT_BEH" interface="popover">
+                                  <ion-select-option *ngFor="let score of scores" [value]="score">
+                                    {{score}}
+                                  </ion-select-option>
+                                </ion-select>
+                              </ion-item>
+                              <ion-item color="light" lines="full">
+                                <ion-label>Social Behaviour</ion-label>
+                                <ion-select [(ngModel)]="studentBehavior.SOCIAL_BEH" interface="popover">
+                                  <ion-select-option *ngFor="let score of scores" [value]="score">
+                                    {{score}}
+                                  </ion-select-option>
+                                </ion-select>
+                              </ion-item>
+                              <ion-item color="light" lines="none">
+                                <ion-label position="stacked">Remarks:</ion-label>
+                                <ion-textarea rows="2" placeholder="Enter Your Remarks Here"
+                                  [(ngModel)]="studentBehavior.REMARK">
+                                  <p class="ion-text-right" *ngIf="studentBehavior.REMARK">
+                                    <ion-text
+                                      [color]="remarksLimit >= studentBehavior.REMARK.length ? 'success' : 'danger'">
+                                      {{studentBehavior.REMARK.length}}/<span
+                                        class="glob-text-bold">{{remarksLimit}}</span>
+                                    </ion-text>
+                                  </p>
+                                </ion-textarea>
+                              </ion-item>
+                            </ion-col>
+                          </ion-row>
+                        </ion-grid>
+                      </div>
+                    </ng-container>
+                    <div class="ion-padding ion-text-right">
+                      <ion-button color="danger" fill="outline" (click)="editMode = false">
+                        Cancel
+                        <ion-icon name="close-outline" slot="end"></ion-icon>
+                      </ion-button>
+                      <ion-button color="success" (click)="submit(studentBehaviors)">
+                        Save
+                        <ion-icon name="save-outline" slot="end"></ion-icon>
+                      </ion-button>
+                    </div>
+                  </ng-container>
+                  <ng-template #emptyList>
+                    <ion-grid>
+                      <ion-row>
+                        <ion-col size="12">
+                          <div class="ion-text-center ion-margin-bottom ion-margin-top">
+                            <ion-text color="danger">
+                              <h3 class="glob-text-bold">No Data To Show!</h3>
+                            </ion-text>
+                            <h6>
+                              There is no students added under the class code {{classCode}}
+                            </h6>
+                          </div>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+
+                  </ng-template>
+                </ion-card-content>
+              </ion-card>
+            </ng-template>
+          </ng-container>
+          <ng-template #studentsBehaviourLoading>
+            <ion-card class="students-list-card">
+              <ion-card-content>
+                <ion-grid>
+                  <ion-row *ngFor="let _ of skeletons">
+                    <ion-col size="2">
+                      <ion-skeleton-text animated style="width: 100%; line-height: 20px;"></ion-skeleton-text>
+                    </ion-col>
+                    <ion-col size="2">
+                      <ion-skeleton-text animated style="width: 100%; line-height: 20px;"></ion-skeleton-text>
+                    </ion-col>
+                    <ion-col size="2">
+                      <ion-skeleton-text animated style="width: 100%; line-height: 20px;"></ion-skeleton-text>
+                    </ion-col>
+                    <ion-col size="2">
+                      <ion-skeleton-text animated style="width: 100%; line-height: 20px;"></ion-skeleton-text>
+                    </ion-col>
+                    <ion-col size="4">
+                      <ion-skeleton-text animated style="width: 100%; line-height: 20px;"></ion-skeleton-text>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card-content>
+            </ion-card>
+          </ng-template>
+
+          <ng-container *ngIf="scoreLegend$ | async as scoreLegends; else scoreLegendLoading">
+            <ion-card color="light">
+              <ion-card-header color="medium">
+                <ion-card-title>
+                  Average Score Legend
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <ion-grid>
+                  <ion-row *ngFor="let scoreLegend of scoreLegends | keyvalue">
+                    <ion-col size="2" class="glob-margin-auto">
+                      <p class="ion-text-center glob-text-bold">{{scoreLegend.key}}</p>
+                    </ion-col>
+                    <ion-col size="10">
+                      <p>{{ scoreLegend.value }}</p>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card-content>
+            </ion-card>
+
+          </ng-container>
+          <ng-template #scoreLegendLoading>
+            <ion-card class="students-list-card">
+              <ion-card-content>
+                <ion-grid>
+                  <ion-row *ngFor="let _ of skeletons">
+                    <ion-col size="2" style="margin:auto">
+                      <ion-skeleton-text animated style="width: 100%; line-height: 20px;"></ion-skeleton-text>
+                    </ion-col>
+                    <ion-col size="2" style="margin:auto">
+                      <ion-skeleton-text animated style="width: 100%; line-height: 20px;"></ion-skeleton-text>
+                    </ion-col>
+                    <ion-col size="8" style="margin:auto">
+                      <ion-skeleton-text animated style="width: 100%; line-height: 80px;"></ion-skeleton-text>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card-content>
+            </ion-card>
+          </ng-template>
+
+          <ng-container *ngIf="descriptionLegend$ | async as descriptionLegends; else descriptionLegendLoading">
+            <ion-card color="light">
+              <ion-card-header color="medium">
+                <ion-card-title>
+                  Scores Legend
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content class="ion-no-padding">
+                <ion-item color="light" lines="full" *ngFor="let descriptionLegend of descriptionLegends | keyvalue">
+                  <ion-label class="glob-white-space-normal">
+                    <ion-grid>
+                      <ion-row>
+                        <ion-col class="glob-margin-auto" size="12" size-md="2">
+                          <ion-text color="secondary">
+                            <p class="ion-text-center glob-text-bold">{{descriptionLegend.key}}</p>
+                          </ion-text>
+                        </ion-col>
+                        <ion-col size="12" size-md="10">
+                          <ng-container *ngFor="let description of descriptionLegend.value">
+                            <ng-container *ngFor="let d of description | keyvalue">
+                              <ion-grid>
+                                <ion-row>
+                                  <ion-col class="glob-margin-auto" size="12" size-md="4">
+                                    <p class="ion-text-center">{{d.key}}</p>
+                                  </ion-col>
+                                  <ion-col size="12" size-md="8">
+                                    <p>{{d.value}}</p>
+                                  </ion-col>
+                                </ion-row>
+                              </ion-grid>
+                            </ng-container>
+                          </ng-container>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </ion-label>
+                </ion-item>
+              </ion-card-content>
+            </ion-card>
+          </ng-container>
+          <ng-template #descriptionLegendLoading>
+            loading descriptions....
+          </ng-template>
+
+        </ion-col>
+      </ng-container> -->
+    </ion-row>
+  </div>
+</ion-content>
