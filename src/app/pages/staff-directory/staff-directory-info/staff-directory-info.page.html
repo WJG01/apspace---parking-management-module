@@ -9,20 +9,6 @@
 
 <ion-content>
   <div class="glob-container">
-    <ion-breadcrumbs [maxItems]="2">
-      <ion-breadcrumb>
-        Staffs
-        <ion-icon slot="separator" name="chevron-forward"></ion-icon>
-      </ion-breadcrumb>
-      <ion-breadcrumb>
-        All
-        <ion-icon slot="separator" name="chevron-forward"></ion-icon>
-      </ion-breadcrumb>
-      <ion-breadcrumb>
-        {{ id | uppercase }}
-      </ion-breadcrumb>
-    </ion-breadcrumbs>
-
     <ng-container *ngIf="(staffs$ | async) as staffs; else loading">
       <ng-container *ngIf="(staffs | byId:id) as staff; else notFound">
         <ion-row>
