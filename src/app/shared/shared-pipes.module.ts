@@ -6,6 +6,7 @@ import { DateWithTimezonePipe } from './date-with-timezone/date-with-timezone.pi
 import { FusePipe } from './fuse/fuse.pipe';
 import { SafePipe } from './safe/safe.pipe';
 import { StrToColorPipe } from './str-to-color/str-to-color.pipe';
+import { ReversePipe } from './reverse/reverse.pipe';
 
 @NgModule({
     declarations: [
@@ -13,15 +14,17 @@ import { StrToColorPipe } from './str-to-color/str-to-color.pipe';
       DateWithTimezonePipe,
       FusePipe,
       SafePipe,
-      StrToColorPipe
+      StrToColorPipe,
+      ReversePipe
     ],
     imports: [CommonModule],
     exports: [
-      AttendanceStatusPipe,
-      DateWithTimezonePipe,
-      FusePipe,
-      SafePipe,
-      StrToColorPipe
+        AttendanceStatusPipe,
+        DateWithTimezonePipe,
+        FusePipe,
+        SafePipe,
+        StrToColorPipe,
+        ReversePipe
     ]
 })
 export class SharedPipesModule { }

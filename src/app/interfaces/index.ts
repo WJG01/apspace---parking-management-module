@@ -7,6 +7,7 @@ export { ClassificationLegend } from './classfication-legend';
 export { CourseDetails } from './course-details';
 export { Course } from './course';
 export { DeterminationLegend } from './determination-legend';
+export { OrientationStudentDetails } from './e-orientation';
 export { ExamSchedule } from './exam-schedule';
 export {
   FeesBankDraft,
@@ -35,13 +36,24 @@ export { StaffProfile } from './staff-profile'
 export { StudentProfile } from './student-profile'
 export { StaffDirectory } from './staff';
 export { SurveyIntake, SurveyModule } from './student-survey';
+export { VisaDetails, StatusHistory } from './visa-status';
+export { Name, CountryData } from './country-data';
 export { BeAPUStudentDetails, StudentPhoto, StudentSearch } from './student';
 export { Subcourse } from './subcourses';
+export {
+  MentorshipAttendance,
+  MentorshipCourseDetail,
+  MentorshipIntake,
+  MentorshipResult,
+  MentorshipSemesterSummary,
+  MentorshipStudentList,
+  MentorshipSubcourse, StudentRemark
+} from './mentorship';
+
 export { CgpaPerIntake } from './cgpa-per-intake';
 export { DashboardCardComponentConfigurations } from './dashboard-card-component-configurations';
 export { EventComponentConfigurations } from './event-component-configurations';
 export { Holidays, Holiday } from './holiday';
 export { MoodleEvent } from './moodle-event';
 export { News, ShortNews } from './news';
-export { OrientationStudentDetails, OrientationStudentsList } from './e-orientation';
 export { Quote } from './quote';

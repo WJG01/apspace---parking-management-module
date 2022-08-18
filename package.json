@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "~13.3.8",
     "@angular/router": "~13.3.8",
     "@apollo/client": "^3.6.4",
+    "@awesome-cordova-plugins/app-availability": "^5.44.0",
     "@awesome-cordova-plugins/badge": "^5.41.0",
     "@awesome-cordova-plugins/core": "^5.41.0",
     "@awesome-cordova-plugins/file-opener": "^5.44.0",

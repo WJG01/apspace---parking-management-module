@@ -1,0 +1,92 @@
+.small-margin-top {
+  margin-top: 10px;
+}
+
+.avatar {
+  margin: auto;
+  width: 128px;
+  height: 128px;
+}
+
+.filter-item {
+  padding-left: 8px;
+  padding-right: 8px;
+  --padding-start: 10px;
+}
+
+.right-notch {
+  padding-right: 10px;
+}
+
+.teams-chat-button {
+  --background: #464775;
+  --background-hover: #5f60a3;
+}
+
+.remarks-container {
+  .remarks-name {
+    color: var(--ion-color-primary);
+  }
+
+  .remarks-time {
+    font-size: .8rem;
+  }
+
+  .remarks-comment {
+    font-size: 1rem;
+    color: var(--ion-color-dark);
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+  }
+
+  .remarks-icon-container {
+    margin-left: 1rem;
+    font-size: 1.5rem;
+  }
+
+  .remarks-edit-icon {
+    transition: .2s ease-in-out;
+  }
+
+  .remarks-edit-icon:hover {
+    color: var(--ion-color-primary);
+    transition: .2s ease-in-out;
+  }
+}
+
+.remarks-container:not(:last-child) {
+  border-bottom: .1px var(--ion-color-light) solid;
+}
+
+.remarks-container:not(:first-child) {
+  margin-top: .5rem;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+// Small Screen (Mobile)
+@media only screen and (max-width: 576px) {
+  .avatar {
+    width: 115px;
+    height: 99px;
+    margin: auto;
+    margin-bottom: 15px;
+  }
+
+  .remarks-container {
+    .remarks-comment {
+      font-size:.8rem;
+    }
+  }
+}
+
+// Small Screen (Mobile)
+@media only screen and (max-width: 768px) {
+  .remarks-container {
+    .remarks-icon-container {
+      margin-left: 0;
+    }
+  }
+}
