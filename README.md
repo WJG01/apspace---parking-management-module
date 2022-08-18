@@ -2,7 +2,7 @@
 
 APSpace is an open source application that provides convenient access to important information and to most of APU services. We always welcome any Pull Request for Features, Bug Fixes and more. When contributing you are required to adhere to our code practice and requirements in order for your Pull Request to be accepted
 
-## ðŸ”— Useful Links
+## Useful Links
 
 [Download on Google Play Store](https://play.google.com/store/apps/details?id=my.edu.apiit.apspace)
 
