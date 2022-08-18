@@ -104,7 +104,7 @@ export const menuItems = [
     title: 'iConsult',
     group: 'Collaboration & Information Resources',
     img: 'assets/img/more-icons/iconsult.png',
-    url: 'iconsult/my-consultations',
+    url: 'iconsult/consultations',
     role: Role.Lecturer | Role.Admin,
     tags: ['consultation', 'slot'],
     parents: [],
