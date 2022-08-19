@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
-import { Observable, shareReplay, tap } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
 
-import { add, formatISO, parseISO } from 'date-fns';
+import { add, format, formatISO, parse, parseISO } from 'date-fns';
 import { CalendarComponentOptions } from 'ion2-calendar';
 
 import { DatePickerComponent } from '../../../../components/date-picker/date-picker.component';
 import { Venue } from '../../../../interfaces';
-import { SettingsService, WsApiService } from '../../../../services';
+import { ComponentService, SettingsService, WsApiService } from '../../../../services';
 
 @Component({
   selector: 'app-add-free-slot',
@@ -50,13 +50,14 @@ export class AddFreeSlotPage implements OnInit {
     private fb: FormBuilder,
     private settings: SettingsService,
     private modalCtrl: ModalController,
-    private ws: WsApiService
+    private ws: WsApiService,
+    private component: ComponentService
   ) { }
 
   ngOnInit() {
     const startDate = formatISO(add(parseISO(this.todaysDate), { days: 1 }), { representation: 'date' });
     const location = this.settings.get('defaultCampus') || 'Online';
-    const venue = this.settings.get('defaultVenue') || {};
+    const venue = this.settings.get('defaultVenue') || '';
 
     this.venues$ = this.ws.get<Venue[]>(`/iconsult/locations?venue=${location}`).pipe(shareReplay(1));
 
@@ -64,7 +65,7 @@ export class AddFreeSlotPage implements OnInit {
       slotType: [this.consultationType[0].value, [Validators.required]],
       startDate: [startDate, [Validators.required]],
       repeatOn: [[]],
-      noOfWeeks: [0, [Validators.pattern(/[0-9]*/)]],
+      noOfWeeks: [0],
       endDate: [''],
       location: [location, [Validators.required]],
       venue: [venue, [Validators.required]],
@@ -87,7 +88,6 @@ export class AddFreeSlotPage implements OnInit {
     if (event.detail.value === this.consultationType[0].value) {
       this.endDate.setValue('');
       this.repeatOn.setValue([]);
-      this.noOfWeeks.setValue([]);
       // Remove validation from all additional when type is single
       this.repeatOn.setValidators(null);
       this.repeatOn.updateValueAndValidity();
@@ -95,6 +95,7 @@ export class AddFreeSlotPage implements OnInit {
       this.endDate.setValidators(null);
       this.endDate.updateValueAndValidity();
 
+      this.noOfWeeks.setValue(0);
       this.noOfWeeks.setValidators(null);
       this.noOfWeeks.updateValueAndValidity();
     }
@@ -105,13 +106,13 @@ export class AddFreeSlotPage implements OnInit {
       this.repeatOn.updateValueAndValidity();
       // add validation when type is single slot
       this.noOfWeeks.setValidators(Validators.required);
+      this.noOfWeeks.setValidators(Validators.pattern(/^([1-9][0-9]{1,3}){1}?$/));
       this.noOfWeeks.updateValueAndValidity();
       // remove validation from end date when type is weekly repeatd
       this.endDate.setValidators(null);
       this.endDate.updateValueAndValidity();
     }
     if (event.detail.value === this.consultationType[2].value) {
-      this.noOfWeeks.setValue([]);
       // add validation when type is single slot
       this.repeatOn.setValidators(Validators.required);
       this.repeatOn.updateValueAndValidity();
@@ -120,6 +121,7 @@ export class AddFreeSlotPage implements OnInit {
       this.endDate.updateValueAndValidity();
 
       // remove validation from number of weeks when type is date range
+      this.noOfWeeks.setValue(0);
       this.noOfWeeks.setValidators(null);
       this.noOfWeeks.updateValueAndValidity();
     }
@@ -157,8 +159,11 @@ export class AddFreeSlotPage implements OnInit {
     const { data } = await modal.onWillDismiss();
 
     if (data?.time) {
-      this.getTimeControl(i, 'slotsTime').setValue(data?.time);
+      this.getTimeControl(i).setValue(data?.time);
+      return;
     }
+    // Show error message when no time is selected
+    this.getTimeControl(i).markAsTouched();
   }
 
   removeTimeSlot(i: number) {
@@ -167,16 +172,66 @@ export class AddFreeSlotPage implements OnInit {
   }
 
   locationChanged(event) {
-    // When the user changes the location, get the list of venues again
+    // Get new Venues list when location is changed
+    const venue = event.detail.value;
+
     this.venue.setValue('');
-    // this.venueFieldDisabled = true;
-    this.venues$ = this.ws.get<Venue[]>(
-      `/iconsult/locations?venue=${event.detail.value}`
-    ).pipe(tap(c => console.log(c)));
+    this.venues$ = this.ws.get<Venue[]>(`/iconsult/locations?venue=${venue}`);
   }
 
-  submit() {
-    console.log(this.slotsForm.value);
+  openReview() {
+    if (!this.slotsForm.valid) {
+      this.slotsForm.markAllAsTouched();
+      return;
+    }
+    const body: { location_id: number, datetime: string }[] = [];
+    let startDate: string = this.startDate.value;
+    let endDate: string = this.endDate.value;
+    // if else: single adding slot, else multiple adding slot.
+    if (this.slotType.value === this.consultationType[0].value) {
+      this.time.controls.forEach(time => {
+        const timeSlot = {
+          location_id: this.venue.value,
+          datetime: startDate + 'T' + format(parse(time.value.slotsTime, 'HH:mm', new Date(startDate)), 'HH:mm:00+0800') // 2019-11-27T17:00:00Z
+        };
+
+        body.push(timeSlot);
+      });
+    } else {
+      if (this.noOfWeeks.value > 0) {
+        endDate = formatISO(add(parseISO(this.startDate.value),
+          { days: (+this.noOfWeeks.value * 7) - 1 }), { representation: 'date' });
+      }
+
+      while (startDate <= endDate) {
+        const dayName = format(Date.parse(startDate), 'EEE');
+        if (this.repeatOn.value.includes(dayName)) {
+          this.time.controls.forEach(time => {
+            const timeSlot = {
+              location_id: this.venue.value,
+              datetime: startDate + 'T' + format(parse(time.value.slotsTime, 'HH:mm', new Date(startDate)), 'HH:mm:00+0800') // 2019-11-27T17:00:00Z
+            };
+
+            body.push(timeSlot);
+          });
+        }
+
+        const nextDate = formatISO(add(Date.parse(startDate), { days: 1 }), { representation: 'date' });
+        startDate = nextDate;
+      }
+
+      if (body.length > 200) {
+        this.component.toastMessage('You can only add up to 200 slots at a time.', 'danger');
+
+        return;
+      }
+    }
+
+    if (body.length > 1) {
+      console.log('Show Modal');
+    } else {
+      console.log('Show Alert');
+    }
   }
 
   get slotType(): AbstractControl {
@@ -189,6 +244,10 @@ export class AddFreeSlotPage implements OnInit {
 
   get noOfWeeks(): AbstractControl {
     return this.slotsForm.get('noOfWeeks');
+  }
+
+  get startDate(): AbstractControl {
+    return this.slotsForm.get('startDate');
   }
 
   get endDate(): AbstractControl {
@@ -207,9 +266,9 @@ export class AddFreeSlotPage implements OnInit {
     return this.slotsForm.get('time') as FormArray;
   }
 
-  getTimeControl(i: number, control: string): AbstractControl {
+  getTimeControl(i: number): AbstractControl {
     const schedule = this.slotsForm.get('time') as FormArray;
 
-    return schedule.controls[i].get(control);
+    return schedule.controls[i].get('slotsTime');
   }
 }

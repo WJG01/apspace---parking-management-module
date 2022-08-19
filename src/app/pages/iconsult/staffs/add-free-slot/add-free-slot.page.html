@@ -34,6 +34,7 @@
               </ion-label>
             </ion-item-divider>
 
+            <!-- Main Calendar -->
             <ion-item lines="none">
               <ion-label class="glob-fw-600 small-bottom-margin" position="stacked">
                 {{ slotType.value === consultationType[0].value ? 'Date' : ' Start Date' }}
@@ -44,24 +45,55 @@
               </ion-calendar>
             </ion-item>
 
-            <div *ngIf="slotType.value === consultationType[2].value">
-              <ion-item lines="none">
-                <ion-label class="glob-fw-600 small-bottom-margin" position="stacked">
-                  Repeat Until
-                </ion-label>
+            <div class="error-message" *ngIf="(startDate.dirty || startDate.touched) && startDate.errors?.required">
+              <ion-text color="danger">
+                <small>
+                  {{
+                  slotType.value === consultationType[0].value
+                  ? 'Please specify your slot date.' :
+                  'Please enter your slot start date.'
+                  }}
+                </small>
+              </ion-text>
+            </div>
 
-                <ion-calendar class="glob-calendar" formControlName="endDate" [options]="repeatUntilDateOptions"
-                  [type]="'string'" [format]="'YYYY-MM-DD'">
-                </ion-calendar>
-              </ion-item>
+            <!-- Repeat Until Calendar -->
+            <ion-item *ngIf="slotType.value === consultationType[2].value" lines="none">
+              <ion-label class="glob-fw-600 small-bottom-margin" position="stacked">
+                Repeat Until
+              </ion-label>
+
+              <ion-calendar class="glob-calendar" formControlName="endDate" [options]="repeatUntilDateOptions"
+                [type]="'string'" [format]="'YYYY-MM-DD'">
+              </ion-calendar>
+            </ion-item>
+
+            <div class="error-message" *ngIf="(endDate.dirty || endDate.touched) && endDate.errors?.required">
+              <ion-text color="danger">
+                <small>
+                  Please specify the date you would like to repeat until.
+                </small>
+              </ion-text>
             </div>
 
             <ion-item *ngIf="slotType.value === consultationType[1].value" lines="inset">
               <ion-label position="stacked">Number of Weeks</ion-label>
 
-              <ion-input placeholder="Enter a number" formControlName="noOfWeeks">
-              </ion-input>
+              <ion-input placeholder="Enter a number" formControlName="noOfWeeks"></ion-input>
             </ion-item>
+
+            <div class="error-message"
+              *ngIf="(noOfWeeks.dirty || noOfWeeks.touched) && (noOfWeeks.errors?.required || noOfWeeks.errors?.pattern.requiredPattern)">
+              <ion-text color="danger">
+                <small *ngIf="noOfWeeks.errors?.required">
+                  Number of Weeks is required.
+                </small>
+
+                <small *ngIf="noOfWeeks.errors?.pattern.requiredPattern">
+                  Please enter a valid Positive number.
+                </small>
+              </ion-text>
+            </div>
 
             <ion-item lines="none" *ngIf="slotType.value !== consultationType[0].value">
               <ion-label position="stacked">Repeated Day(s)</ion-label>
@@ -71,6 +103,14 @@
                 </ion-select-option>
               </ion-select>
             </ion-item>
+
+            <div class="error-message" *ngIf="(repeatOn.dirty || repeatOn.touched) && repeatOn.errors?.required">
+              <ion-text color="danger">
+                <small>
+                  Please select the days you want the slots to repeat.
+                </small>
+              </ion-text>
+            </div>
 
             <ion-item-divider class="ion-padding-start ion-padding-end glob-text-bold" color="light" mode="md">
               <ion-label>
@@ -83,18 +123,29 @@
             </ion-item-divider>
 
             <div formArrayName="time">
-              <ion-item *ngFor="let _ of time.controls; let i = index; let isLast = last" [formGroupName]="i"
-                [lines]="isLast ? 'none' : undefined" button="true" (click)="openPicker(i)">
-                <ion-label>
-                  <h3>Time (Slot {{ i + 1 }})</h3>
-                  <p>{{ getTimeControl(i, 'slotsTime').value || 'Select a Time' }}</p>
-                </ion-label>
+              <div *ngFor="let _ of time.controls; let i = index; let isLast = last">
+                <ion-item [formGroupName]="i" [lines]="isLast ? 'none' : undefined" button="true"
+                  (click)="openPicker(i)">
+                  <ion-label>
+                    <h3>Time Slot {{ i + 1 }}</h3>
+                    <p>{{ getTimeControl(i).value || 'Select a Time' }}</p>
+                  </ion-label>
 
-                <ion-button *ngIf="time.controls.length > 1" slot="end" fill="clear" color="danger"
-                  (click)="removeTimeSlot(i)">
-                  <ion-icon slot="icon-only" icon="trash" color="danger"></ion-icon>
-                </ion-button>
-              </ion-item>
+                  <ion-button *ngIf="time.controls.length > 1" slot="end" fill="clear" color="danger"
+                    (click)="removeTimeSlot(i)">
+                    <ion-icon slot="icon-only" icon="trash" color="danger"></ion-icon>
+                  </ion-button>
+                </ion-item>
+
+                <div class="timeslot-error"
+                  *ngIf="(getTimeControl(i).dirty || getTimeControl(i).touched) && getTimeControl(i).errors?.required">
+                  <ion-text color="danger">
+                    <small>
+                      Timeslot cannot be empty
+                    </small>
+                  </ion-text>
+                </div>
+              </div>
             </div>
 
             <ion-item-divider class="ion-padding-start ion-padding-end glob-text-bold" color="light" mode="md">
@@ -103,9 +154,9 @@
               </ion-label>
             </ion-item-divider>
 
-            <ion-row>
+            <ion-row class="border-color">
               <ion-col size-xs="12" size-md="5" class="ion-no-padding">
-                <ion-item lines="full">
+                <ion-item lines="none">
                   <ion-label position="stacked">Location</ion-label>
                   <ion-select placeholder="Select a type" interface="popover" formControlName="location"
                     (ionChange)="locationChanged($event)">
@@ -114,10 +165,18 @@
                     </ion-select-option>
                   </ion-select>
                 </ion-item>
+
+                <div class="error-message" *ngIf="(location.dirty || location.touched) && location.errors?.required">
+                  <ion-text color="danger">
+                    <small>
+                      Please select a Location.
+                    </small>
+                  </ion-text>
+                </div>
               </ion-col>
 
               <ion-col size-xs="12" size-md="7" class="ion-no-padding">
-                <ion-item lines="full">
+                <ion-item lines="none">
                   <ion-label position="stacked">Venue</ion-label>
 
                   <ng-container *ngIf="(venues$ | async) as venues; else loadVenues">
@@ -132,13 +191,21 @@
                     <ion-skeleton-text animated style="width: 100%; height: 20px;"></ion-skeleton-text>
                   </ng-template>
                 </ion-item>
+
+                <div class="error-message" *ngIf="(venue.dirty || venue.touched) && venue.errors?.required">
+                  <ion-text color="danger">
+                    <small>
+                      Please select a Venue.
+                    </small>
+                  </ion-text>
+                </div>
               </ion-col>
             </ion-row>
           </form>
 
           <ion-card-content>
-            <ion-button expand="block" color="success" (click)="submit()">
-              Submit
+            <ion-button expand="block" color="success" (click)="openReview()">
+              Review
             </ion-button>
           </ion-card-content>
         </ion-card>
