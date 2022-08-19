@@ -1,9 +1,148 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>add-free-slot</ion-title>
+    <ion-title>Add Free Slots</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/iconsult/consultations"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <div class="glob-container">
+    <ion-row>
+      <ion-col size-xs="12" size-md="8" class="glob-margin-auto">
+        <ion-card class="ion-no-margin">
+          <form [formGroup]="slotsForm">
+            <ion-item-divider class="ion-padding-start ion-padding-end glob-text-bold" color="light" mode="md">
+              <ion-label>
+                Slot Type
+              </ion-label>
+            </ion-item-divider>
 
+            <ion-radio-group formControlName="slotType" (ionChange)="typeChanged($event)">
+              <ion-item lines="none" *ngFor="let type of consultationType">
+                <ion-label>
+                  {{ type.name }}
+                </ion-label>
+                <ion-radio slot="end" [value]="type.value"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+
+            <ion-item-divider class="ion-padding-start ion-padding-end glob-text-bold" color="light" mode="md">
+              <ion-label>
+                Slot Date & Repeat Options
+              </ion-label>
+            </ion-item-divider>
+
+            <ion-item lines="none">
+              <ion-label class="glob-fw-600 small-bottom-margin" position="stacked">
+                {{ slotType.value === consultationType[0].value ? 'Date' : ' Start Date' }}
+              </ion-label>
+
+              <ion-calendar class="glob-calendar" formControlName="startDate" [options]="mainDateOptions"
+                (change)="mainDateChanged($event)" [type]="'string'" [format]="'YYYY-MM-DD'">
+              </ion-calendar>
+            </ion-item>
+
+            <div *ngIf="slotType.value === consultationType[2].value">
+              <ion-item lines="none">
+                <ion-label class="glob-fw-600 small-bottom-margin" position="stacked">
+                  Repeat Until
+                </ion-label>
+
+                <ion-calendar class="glob-calendar" formControlName="endDate" [options]="repeatUntilDateOptions"
+                  [type]="'string'" [format]="'YYYY-MM-DD'">
+                </ion-calendar>
+              </ion-item>
+            </div>
+
+            <ion-item *ngIf="slotType.value === consultationType[1].value" lines="inset">
+              <ion-label position="stacked">Number of Weeks</ion-label>
+
+              <ion-input placeholder="Enter a number" formControlName="noOfWeeks">
+              </ion-input>
+            </ion-item>
+
+            <ion-item lines="none" *ngIf="slotType.value !== consultationType[0].value">
+              <ion-label position="stacked">Repeated Day(s)</ion-label>
+              <ion-select placeholder="Select Day(s)" interface="popover" formControlName="repeatOn" multiple="true">
+                <ion-select-option *ngFor="let day of days" [value]="day.value">
+                  {{ day.name }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item-divider class="ion-padding-start ion-padding-end glob-text-bold" color="light" mode="md">
+              <ion-label>
+                Slot(s) Time
+              </ion-label>
+
+              <ion-button slot="end" fill="clear" color="success" (click)="addTimeSlot()">
+                <ion-icon slot="icon-only" icon="add" color="success"></ion-icon>
+              </ion-button>
+            </ion-item-divider>
+
+            <div formArrayName="time">
+              <ion-item *ngFor="let _ of time.controls; let i = index; let isLast = last" [formGroupName]="i"
+                [lines]="isLast ? 'none' : undefined" button="true" (click)="openPicker(i)">
+                <ion-label>
+                  <h3>Time (Slot {{ i + 1 }})</h3>
+                  <p>{{ getTimeControl(i, 'slotsTime').value || 'Select a Time' }}</p>
+                </ion-label>
+
+                <ion-button *ngIf="time.controls.length > 1" slot="end" fill="clear" color="danger"
+                  (click)="removeTimeSlot(i)">
+                  <ion-icon slot="icon-only" icon="trash" color="danger"></ion-icon>
+                </ion-button>
+              </ion-item>
+            </div>
+
+            <ion-item-divider class="ion-padding-start ion-padding-end glob-text-bold" color="light" mode="md">
+              <ion-label>
+                Slot Location & Venue
+              </ion-label>
+            </ion-item-divider>
+
+            <ion-row>
+              <ion-col size-xs="12" size-md="5" class="ion-no-padding">
+                <ion-item lines="full">
+                  <ion-label position="stacked">Location</ion-label>
+                  <ion-select placeholder="Select a type" interface="popover" formControlName="location"
+                    (ionChange)="locationChanged($event)">
+                    <ion-select-option *ngFor="let location of locations" [value]="location">
+                      {{ location }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </ion-col>
+
+              <ion-col size-xs="12" size-md="7" class="ion-no-padding">
+                <ion-item lines="full">
+                  <ion-label position="stacked">Venue</ion-label>
+
+                  <ng-container *ngIf="(venues$ | async) as venues; else loadVenues">
+                    <ion-select placeholder="Select a Venue" interface="popover" formControlName="venue">
+                      <ion-select-option *ngFor="let v of venues" [value]="v.id">
+                        {{ v.room_code }}
+                      </ion-select-option>
+                    </ion-select>
+                  </ng-container>
+
+                  <ng-template #loadVenues>
+                    <ion-skeleton-text animated style="width: 100%; height: 20px;"></ion-skeleton-text>
+                  </ng-template>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </form>
+
+          <ion-card-content>
+            <ion-button expand="block" color="success" (click)="submit()">
+              Submit
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </div>
 </ion-content>

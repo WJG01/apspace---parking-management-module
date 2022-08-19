@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { forkJoin, map, Observable, tap, finalize } from 'rxjs';
 import { ModalController } from '@ionic/angular';
 
@@ -42,7 +43,8 @@ export class ConsultationsPage implements OnInit {
   constructor(
     private ws: WsApiService,
     private dateWithTimezonePipe: DateWithTimezonePipe,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -191,5 +193,9 @@ export class ConsultationsPage implements OnInit {
     } else {
       console.log('Show Alert');
     }
+  }
+
+  addSlots() {
+    this.router.navigateByUrl('/iconsult/add-free-slot');
   }
 }

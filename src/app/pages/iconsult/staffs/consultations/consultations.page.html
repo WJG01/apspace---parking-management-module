@@ -228,7 +228,7 @@
 </ion-content>
 
 <ion-fab *ngIf="!deleteMode" vertical="bottom" horizontal="end" slot="fixed">
-  <ion-fab-button color="primary">
+  <ion-fab-button color="primary" (click)="addSlots()">
     <ion-icon name="add"></ion-icon>
   </ion-fab-button>
 </ion-fab>

@@ -15,6 +15,8 @@ export class DatePickerComponent {
   @Input() maxDate?: string;
   @Input() selected?: string;
   @Input() hourValues?: string[];
+  @Input() hourCycle?: 'h12' | 'h23' = 'h12';
+  @Input() minuteValues?: string[];
 
   constructor(private modalCtrl: ModalController) { }
 
