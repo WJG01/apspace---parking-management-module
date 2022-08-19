@@ -134,7 +134,6 @@ export class PrintTransactionsModalPage implements OnInit {
         keywords: 'APCard APSpace Reports',
         creator: 'APSpace_Reports',
         producer: 'APSpace_Reports',
-        creationDate: this.todayDate.toDateString(),
         modDate: this.todayDate.toDateString()
       },
       content: [
