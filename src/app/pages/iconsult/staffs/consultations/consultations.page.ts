@@ -27,7 +27,7 @@ export class ConsultationsPage implements OnInit {
     daysConfig: this.daysConfigurations
   };
   selectedDate = this.dateWithTimezonePipe.transform(new Date(), 'yyyy-MM-dd'); // Default to todays date
-  skeleton = new Array(5);
+  skeleton = new Array(3);
   // for select multiple slots to cancel
   dateRange: { from: string; to: string; };
   optionsRange: CalendarComponentOptions = {

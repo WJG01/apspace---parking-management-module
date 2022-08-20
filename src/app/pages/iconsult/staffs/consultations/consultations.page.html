@@ -221,7 +221,109 @@
       </ng-container>
 
       <ng-template #loading>
-        <h1>Loading...</h1>
+        <ion-col size="12" size-md="5">
+          <ion-card class="ion-no-margin">
+            <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end">
+              <ion-row>
+                <ion-item class="ion-no-padding">
+                  <ion-label>
+                    <p class="glob-fw-600">
+                      Consultation Summary
+                    </p>
+                  </ion-label>
+                </ion-item>
+              </ion-row>
+
+              <ion-row class="ion-align-items-center">
+                <ion-col class="details-section ion-text-center" size="6">
+                  <ion-text color="success">
+                    <h3 class="glob-text-bold">
+                      Available Slots
+                    </h3>
+                  </ion-text>
+
+                  <ion-text>
+                    <ion-skeleton-text class="glob-margin-auto" animated style="width: 38%; line-height: 15px;">
+                    </ion-skeleton-text>
+                  </ion-text>
+                </ion-col>
+
+                <ion-col class="details-section ion-text-center" size="6">
+                  <ion-text color="danger">
+                    <h3 class="glob-text-bold">
+                      Booked Slots
+                    </h3>
+                  </ion-text>
+
+                  <ion-text>
+                    <ion-skeleton-text class="glob-margin-auto" animated style="width: 38%; line-height: 15px;">
+                    </ion-skeleton-text>
+                  </ion-text>
+                </ion-col>
+              </ion-row>
+
+              <div class="ion-text-center">
+                <ion-button size="small" color="danger" disabled="true">
+                  Delete Slots
+                </ion-button>
+              </div>
+            </ion-card-content>
+
+            <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end">
+              <ion-row>
+                <ion-item class="ion-no-padding">
+                  <ion-label class="ion-text-wrap">
+                    Calendar Filter
+
+                    <p class="glob-fw-600">
+                      Choose a day to see the list of slots opened on that day
+                    </p>
+                  </ion-label>
+                </ion-item>
+              </ion-row>
+            </ion-card-content>
+
+            <ion-card-content>
+              <ion-skeleton-text animated class="ion-margin-start ion-margin-end ion-margin-bottom"
+                style="width: 90%; line-height: 212px;">
+              </ion-skeleton-text>
+            </ion-card-content>
+
+            <ion-card-content
+              class="ion-no-padding ion-padding-start ion-padding-end ion-padding-bottom ion-text-center">
+              <p class="ion-padding-bottom glob-fw-600">
+                Legends
+              </p>
+
+              <ion-badge class="small-margin-right" color="success">
+                Available
+              </ion-badge>
+
+              <ion-badge class="small-margin-right" color="warning">
+                Partially Booked
+              </ion-badge>
+
+              <ion-badge color="danger">
+                Booked
+              </ion-badge>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="12" size-md="7">
+          <ion-card class="ion-no-margin">
+            <ion-item-divider lines="none" color="primary" mode="md">
+              <ion-skeleton-text animated style="width: 40%; height: 15px"></ion-skeleton-text>
+            </ion-item-divider>
+
+            <ion-item *ngFor="let _ of skeleton; let isLast = last" [lines]="isLast ? 'none' : undefined">
+              <ion-label>
+                <ion-skeleton-text animated style="line-height: 15px; width: 30%;"></ion-skeleton-text>
+                <ion-skeleton-text animated style="line-height: 15px; width: 40%;"></ion-skeleton-text>
+              </ion-label>
+            </ion-item>
+          </ion-card>
+        </ion-col>
       </ng-template>
     </ion-row>
   </div>
