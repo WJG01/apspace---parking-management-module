@@ -48,6 +48,11 @@ export class ConsultationsPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (this.router.getCurrentNavigation().extras.state && this.router.getCurrentNavigation().extras.state.reload) {
+      // Reload page when new slots are created
+      this.daysConfigurations = [];
+      this.doRefresh();
+    }
     this.doRefresh();
   }
 
