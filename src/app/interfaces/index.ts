@@ -22,10 +22,12 @@ export {
   FeesTotalSummary
 } from './fees';
 export {
-  Venue,
+  AddFreeSlotBody,
+  AddFreeSlotReview,
   ConsultationHour,
   ConsultationSlot,
   MappedSlots,
+  Venue
 } from './iconsult';
 export { Graduater } from './graduater';
 export { IntakeListing } from './intake-listing';

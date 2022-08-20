@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ModalController } from '@ionic/angular';
-import { Observable, shareReplay } from 'rxjs';
+import { AlertButton, ModalController } from '@ionic/angular';
+import { Observable, shareReplay, tap } from 'rxjs';
 
 import { add, format, formatISO, parse, parseISO } from 'date-fns';
 import { CalendarComponentOptions } from 'ion2-calendar';
 
 import { DatePickerComponent } from '../../../../components/date-picker/date-picker.component';
-import { Venue } from '../../../../interfaces';
+import { AddFreeSlotBody, AddFreeSlotReview, Venue } from '../../../../interfaces';
 import { ComponentService, SettingsService, WsApiService } from '../../../../services';
+import { ReviewSlotsModalPage } from '../review-slots-modal/review-slots-modal.page';
 
 @Component({
   selector: 'app-add-free-slot',
@@ -35,15 +36,9 @@ export class AddFreeSlotPage implements OnInit {
     from: add(parseISO(this.todaysDate), { days: 2 }),
     to: add(parseISO(this.todaysDate), { days: 1, months: 12 })
   };
-  days = [
-    { name: 'Monday', value: 'Mon' },
-    { name: 'Tuesday', value: 'Tue' },
-    { name: 'Wednesday', value: 'Wed' },
-    { name: 'Thursday', value: 'Thu' },
-    { name: 'Friday', value: 'Fri' },
-    { name: 'Saturday', value: 'Sat' }
-  ];
+  days = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   venues$: Observable<Venue[]>;
+  venues: Venue[]; // Keep track of venues instead of subscribing many times
   locations = ['New Campus', 'TPM', 'Online'];
 
   constructor(
@@ -59,7 +54,10 @@ export class AddFreeSlotPage implements OnInit {
     const location = this.settings.get('defaultCampus') || 'Online';
     const venue = this.settings.get('defaultVenue') || '';
 
-    this.venues$ = this.ws.get<Venue[]>(`/iconsult/locations?venue=${location}`).pipe(shareReplay(1));
+    this.venues$ = this.ws.get<Venue[]>(`/iconsult/locations?venue=${location}`).pipe(
+      tap(v => this.venues = v),
+      shareReplay(1)
+    );
 
     this.slotsForm = this.fb.group({
       slotType: [this.consultationType[0].value, [Validators.required]],
@@ -176,21 +174,23 @@ export class AddFreeSlotPage implements OnInit {
     const venue = event.detail.value;
 
     this.venue.setValue('');
-    this.venues$ = this.ws.get<Venue[]>(`/iconsult/locations?venue=${venue}`);
+    this.venues$ = this.ws.get<Venue[]>(`/iconsult/locations?venue=${venue}`).pipe(
+      tap(v => this.venues = v)
+    );
   }
 
-  openReview() {
+  showReview() {
     if (!this.slotsForm.valid) {
       this.slotsForm.markAllAsTouched();
       return;
     }
-    const body: { location_id: number, datetime: string }[] = [];
+    const body: AddFreeSlotBody[] = [];
     let startDate: string = this.startDate.value;
     let endDate: string = this.endDate.value;
     // if else: single adding slot, else multiple adding slot.
     if (this.slotType.value === this.consultationType[0].value) {
       this.time.controls.forEach(time => {
-        const timeSlot = {
+        const timeSlot: AddFreeSlotBody = {
           location_id: this.venue.value,
           datetime: startDate + 'T' + format(parse(time.value.slotsTime, 'HH:mm', new Date(startDate)), 'HH:mm:00+0800') // 2019-11-27T17:00:00Z
         };
@@ -204,10 +204,10 @@ export class AddFreeSlotPage implements OnInit {
       }
 
       while (startDate <= endDate) {
-        const dayName = format(Date.parse(startDate), 'EEE');
+        const dayName = format(Date.parse(startDate), 'EEEE');
         if (this.repeatOn.value.includes(dayName)) {
           this.time.controls.forEach(time => {
-            const timeSlot = {
+            const timeSlot: AddFreeSlotBody = {
               location_id: this.venue.value,
               datetime: startDate + 'T' + format(parse(time.value.slotsTime, 'HH:mm', new Date(startDate)), 'HH:mm:00+0800') // 2019-11-27T17:00:00Z
             };
@@ -226,11 +226,26 @@ export class AddFreeSlotPage implements OnInit {
         return;
       }
     }
+    const venue = this.venues.find(v => v.id === this.venue.value);
+    const repeat = this.slotType.value === this.consultationType[0].value ? [] : this.repeatOn.value;
+    const times = this.time.controls.map(time => format(parse(time.value.slotsTime, 'HH:mm', new Date(startDate)), 'kk:mm'));
+    const selectedType = this.consultationType.reduce((acc, type) => ({ ...acc, [type.value]: type.name }), {})
+    const reviewData: AddFreeSlotReview = {
+      type: selectedType[this.slotType.value],
+      startDate: this.startDate.value,
+      endDate,
+      repeatWeeks: +this.noOfWeeks.value,
+      repeat,
+      times,
+      venue: venue.room_code,
+      venueId: this.venue.value,
+      location: this.location.value
+    }
 
     if (body.length > 1) {
-      console.log('Show Modal');
+      this.reviewDetails(reviewData, body);
     } else {
-      console.log('Show Alert');
+      this.showAlert();
     }
   }
 
@@ -270,5 +285,41 @@ export class AddFreeSlotPage implements OnInit {
     const schedule = this.slotsForm.get('time') as FormArray;
 
     return schedule.controls[i].get('slotsTime');
+  }
+
+  async reviewDetails(data: AddFreeSlotReview, body: AddFreeSlotBody[]) {
+    const modal = await this.modalCtrl.create({
+      component: ReviewSlotsModalPage,
+      componentProps: {
+        data,
+        body
+      },
+      breakpoints: [0, 1],
+      initialBreakpoint: 1
+    });
+    return modal.present();
+  }
+
+  showAlert() {
+    const venue = this.venues.find(v => v.id === this.venue.value);
+    const formattedTimeSlots = this.time.controls.map(time => format(parse(time.value.slotsTime, 'HH:mm', new Date(this.startDate.value)), 'kk:mm'));
+    const slotDateMessage = this.slotType.value === this.consultationType[0].value ?
+      `<p><b>Slot Date:</b> ${this.startDate.value}</p>` :
+      `<p><b>Slot Date:</b> ${this.startDate.value} until ${this.endDate.value}</p>`;
+    const repeatOnMessage = this.slotType.value !== this.consultationType[0].value ?
+      `<p><b>Slot Date:</b> ${this.repeatOn.value}</p>` :
+      '';
+    const message =
+      `Are you sure you want to <b class="glob-success-text">ADD</b> new slot(s) with the following details?<br>
+      ${slotDateMessage} ${repeatOnMessage} <p><strong>Slot Time: </strong>${formattedTimeSlots}</p> <p><strong>Slot Location: </strong> ${this.location.value}</p> <p><strong>Slot Venue: </strong> ${venue.room_code} </p>
+      `;
+    const btn: AlertButton = {
+      text: 'Yes',
+      handler: () => {
+        console.log('Processing...');
+      }
+    }
+
+    this.component.alertMessage('Adding new slot(s)', message, 'No', btn);
   }
 }

@@ -44,3 +44,20 @@ export interface MappedSlots {
   date: string;
   slots: ConsultationSlot[];
 }
+
+export interface AddFreeSlotBody {
+  location_id: number;
+  datetime: string;
+}
+
+export interface AddFreeSlotReview {
+  type: string;
+  startDate: string;
+  endDate: string;
+  repeatWeeks: number;
+  repeat: string[];
+  times: string[];
+  venue: string;
+  venueId: string;
+  location: string;
+}

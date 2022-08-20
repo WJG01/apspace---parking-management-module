@@ -98,8 +98,8 @@
             <ion-item lines="none" *ngIf="slotType.value !== consultationType[0].value">
               <ion-label position="stacked">Repeated Day(s)</ion-label>
               <ion-select placeholder="Select Day(s)" interface="popover" formControlName="repeatOn" multiple="true">
-                <ion-select-option *ngFor="let day of days" [value]="day.value">
-                  {{ day.name }}
+                <ion-select-option *ngFor="let day of days" [value]="day">
+                  {{ day }}
                 </ion-select-option>
               </ion-select>
             </ion-item>
@@ -204,8 +204,8 @@
           </form>
 
           <ion-card-content>
-            <ion-button expand="block" color="success" (click)="openReview()">
-              Review
+            <ion-button expand="block" (click)="showReview()">
+              Review Slots Selection
             </ion-button>
           </ion-card-content>
         </ion-card>

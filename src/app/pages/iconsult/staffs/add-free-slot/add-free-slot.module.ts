@@ -8,6 +8,7 @@ import { CalendarModule } from 'ion2-calendar';
 import { AddFreeSlotPageRoutingModule } from './add-free-slot-routing.module';
 import { AddFreeSlotPage } from './add-free-slot.page';
 import { ComponentsModule } from '../../../../components/components.module';
+import { ReviewSlotsModalPageModule } from '../review-slots-modal/review-slots-modal.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { ComponentsModule } from '../../../../components/components.module';
     AddFreeSlotPageRoutingModule,
     CalendarModule,
     ReactiveFormsModule,
-    ComponentsModule
+    ComponentsModule,
+    ReviewSlotsModalPageModule
   ],
   declarations: [AddFreeSlotPage]
 })
