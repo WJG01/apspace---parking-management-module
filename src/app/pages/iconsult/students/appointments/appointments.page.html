@@ -8,6 +8,10 @@
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" pullMax="400" pullMin="60" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
+  </ion-refresher>
+
   <div class="glob-container">
     <ion-row>
       <ng-container *ngIf="(bookings$ | async) as bookings; else loading">

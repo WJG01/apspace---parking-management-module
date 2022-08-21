@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { forkJoin, map, Observable } from 'rxjs';
+import { finalize, forkJoin, map, Observable } from 'rxjs';
 
 import { utcToZonedTime } from 'date-fns-tz';
 
@@ -31,7 +31,7 @@ export class AppointmentsPage implements OnInit {
     this.doRefresh();
   }
 
-  doRefresh() {
+  doRefresh(refresher?) {
     const bookings$: Observable<ConsultationHour[]> = this.ws.get<ConsultationHour[]>('/iconsult/bookings').pipe(
       map(bookingList => {
         // Check if slot is passed and modify its status to passed
@@ -50,6 +50,11 @@ export class AppointmentsPage implements OnInit {
 
           return bookings;
         });
+      }),
+      finalize(() => {
+        if (refresher) {
+          refresher.target.complete();
+        }
       }));
     const staffs$: Observable<StaffDirectory[]> = this.ws.get<StaffDirectory[]>('/staff/listing');
 
