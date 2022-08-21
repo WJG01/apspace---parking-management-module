@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { forkJoin, map, Observable } from 'rxjs';
 
 import { utcToZonedTime } from 'date-fns-tz';
@@ -19,7 +20,8 @@ export class AppointmentsPage implements OnInit {
 
   constructor(
     private ws: WsApiService,
-    private settings: SettingsService
+    private settings: SettingsService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -73,5 +75,9 @@ export class AppointmentsPage implements OnInit {
           );
           return listOfBookingWithStaffDetail;
         }));
+  }
+
+  openStaffDirectory() {
+    this.router.navigateByUrl('staffs');
   }
 }
