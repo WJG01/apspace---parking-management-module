@@ -1,3 +1,5 @@
+import { StaffDirectory } from './staff';
+
 export interface Venue {
   id: number;
   room_code: string;
@@ -21,6 +23,7 @@ export interface ConsultationHour {
   slot_room_code: string;
   slot_venue: string;
   synced_to_gims: string;
+  staff_detail?: StaffDirectory; // Used to get student appointments
 }
 
 export interface MappedSlots {

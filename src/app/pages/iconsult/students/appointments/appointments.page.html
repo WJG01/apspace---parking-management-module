@@ -1,0 +1,153 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Appointments</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="glob-container">
+    <ion-row>
+      <ng-container *ngIf="(bookings$ | async) as bookings; else loading">
+        <ng-container *ngIf="bookings.length > 4; else noBookings">
+          <ion-col class="bookings" size-xs="12" size-md="6" size-lg="4" *ngFor="let booking of bookings">
+            <ion-card class="ion-no-margin">
+              <ion-card-header class="ion-no-padding ion-padding-start ion-padding-top ion-padding-end">
+                <ion-badge *ngIf="booking.status !== 'Booked'" color="danger">
+                  {{ booking.status | titlecase }}
+                </ion-badge>
+
+                <ion-card-title class="ion-no-margin">
+                  <ion-item lines="none" class="ion-no-padding">
+                    <ion-label class="glob-text-bold">
+                      {{ booking.staff_detail.FULLNAME }}
+                    </ion-label>
+                  </ion-item>
+                </ion-card-title>
+              </ion-card-header>
+
+              <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end ion-padding-bottom">
+                <ion-item lines="none">
+                  <ion-icon color="tertiary" name="calendar" slot="start"></ion-icon>
+                  <ion-label>
+                    <h4>
+                      Appointment Date
+                    </h4>
+
+                    <ion-text color="tertiary">
+                      <p class="glob-fw-600">
+                        {{ booking.slot_start_time | dateWithTimezone: 'EEEE, dd MMMM yyyy' }}
+                      </p>
+                    </ion-text>
+                  </ion-label>
+                </ion-item>
+
+                <ion-item lines="none">
+                  <ion-icon color="tertiary" name="time" slot="start"></ion-icon>
+                  <ion-label>
+                    <h4>
+                      Appointment Time
+                    </h4>
+
+                    <ion-text color="tertiary">
+                      <p class="glob-fw-600">
+                        {{ booking.slot_start_time | dateWithTimezone: 'time' | slice: 0 :-8 }} -
+                        {{ booking.slot_end_time | dateWithTimezone: 'time' | slice: 0 :-8 }}
+                      </p>
+                    </ion-text>
+                  </ion-label>
+                </ion-item>
+
+                <ion-item lines="none">
+                  <ion-icon color="tertiary" name="pin" slot="start"></ion-icon>
+                  <ion-label>
+                    <h4>
+                      Appointment Location
+                    </h4>
+
+                    <ion-text color="tertiary">
+                      <p class="glob-fw-600">
+                        {{ booking.slot_venue }} | {{ booking.slot_room_code }}
+                      </p>
+                    </ion-text>
+                  </ion-label>
+                </ion-item>
+
+                <ion-button color="primary" expand="block">
+                  View Details
+                  <ion-icon name="list" slot="end"></ion-icon>
+                </ion-button>
+              </ion-card-content>
+
+              <ion-progress-bar value="1" *ngIf="booking.status !== 'Booked'"
+                [color]="booking.status !== 'Booked' && booking.status !== 'Passed' ? 'danger' : 'medium'">
+              </ion-progress-bar>
+            </ion-card>
+          </ion-col>
+        </ng-container>
+        <ng-template #noBookings>
+          <ion-col size-xs="12" size-md="8" class="glob-margin-auto">
+            <message-with-svg messageTitle="No Upcoming Appointments"
+              messageContent="You have no upcoming appointments. If you have any academic related question, or concerns, you can book a consultation."
+              imageUrl="assets/img/search_not_found.svg" wrapperSize="7" wrapperOffset="3" wrapperMarginTop="10px">
+            </message-with-svg>
+          </ion-col>
+        </ng-template>
+      </ng-container>
+
+      <ng-template #loading>
+        <ion-col size-xs="12" size-md="6" size-lg="4" *ngFor="let _ of skeleton">
+          <ion-card class="ion-no-margin">
+            <ion-card-header class="ion-no-padding ion-padding-start ion-padding-top ion-padding-end">
+              <ion-skeleton-text animated style="width: 50%; line-height: 20px;"></ion-skeleton-text>
+
+              <ion-skeleton-text animated style="width: 30%; line-height: 20px;"></ion-skeleton-text>
+            </ion-card-header>
+
+            <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end ion-padding-bottom">
+              <ion-item lines="none">
+                <ion-icon color="tertiary" name="calendar" slot="start"></ion-icon>
+                <ion-label>
+                  <h4>
+                    Appointment Date
+                  </h4>
+
+                  <ion-skeleton-text animated style="width: 50%; line-height: 15px;"></ion-skeleton-text>
+                </ion-label>
+              </ion-item>
+
+              <ion-item lines="none">
+                <ion-icon color="tertiary" name="time" slot="start"></ion-icon>
+                <ion-label>
+                  <h4>
+                    Appointment Time
+                  </h4>
+
+                  <ion-skeleton-text animated style="width: 40%; line-height: 15px;"></ion-skeleton-text>
+                </ion-label>
+              </ion-item>
+
+              <ion-item lines="none">
+                <ion-icon color="tertiary" name="pin" slot="start"></ion-icon>
+                <ion-label>
+                  <h4>
+                    Appointment Location
+                  </h4>
+
+                  <ion-skeleton-text animated style="width: 30%; line-height: 15px;"></ion-skeleton-text>
+                </ion-label>
+              </ion-item>
+
+              <ion-button color="primary" expand="block" disabled="true">
+                View Details
+                <ion-icon name="list" slot="end"></ion-icon>
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ng-template>
+    </ion-row>
+  </div>
+</ion-content>

@@ -113,7 +113,7 @@ export const menuItems = [
     id: 'iconsult-student' as const,
     title: 'iConsult',
     group: 'Collaboration & Information Resources',
-    url: 'iconsult/my-appointments',
+    url: 'iconsult/appointments',
     img: 'assets/img/more-icons/iconsult.png',
     role: Role.Student,
     tags: ['consultation', 'booking'],
