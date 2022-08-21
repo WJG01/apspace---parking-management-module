@@ -4,7 +4,7 @@ import { AlertButton, LoadingController, ModalController } from '@ionic/angular'
 import { utcToZonedTime } from 'date-fns-tz';
 
 import { ConsultationHour, ConsultationSlot } from '../../../interfaces';
-import { SettingsService, ComponentService, WsApiService } from '../../../services';
+import { SettingsService, ComponentService, WsApiService, AppLauncherService } from '../../../services';
 
 @Component({
   selector: 'app-slot-details-modal',
@@ -25,7 +25,8 @@ export class SlotDetailsModalPage implements OnInit {
     private modalCtrl: ModalController,
     private component: ComponentService,
     private loadingCtrl: LoadingController,
-    private ws: WsApiService
+    private ws: WsApiService,
+    private appLauncher: AppLauncherService
   ) { }
 
   ngOnInit() {
@@ -78,6 +79,24 @@ export class SlotDetailsModalPage implements OnInit {
     }
 
     this.component.alertMessage('Adding Remarks!', 'Are you sure you want to add remarks to this booking?', 'No', btn);
+  }
+
+  chatInTeams(lecturerCasId: string) {
+    const androidSchemeUrl = 'com.microsoft.teams';
+    const iosSchemeUrl = 'microsoft-teams://';
+    const webUrl = `https://teams.microsoft.com/_#/apps/a2da8768-95d5-419e-9441-3b539865b118/search?q=?${lecturerCasId}`;
+    const appStoreUrl = 'https://itunes.apple.com/us/app/microsoft-teams/id1113153706?mt=8';
+    const appViewUrl = 'https://teams.microsoft.com/l/chat/0/0?users=';
+    // tslint:disable-next-line: max-line-length
+    const playStoreUrl = `https://play.google.com/store/apps/details?id=com.microsoft.teams&hl=en&referrer=utm_source%3Dgoogle%26utm_medium%3Dorganic%26utm_term%3D'com.microsoft.teams'&pcampaignid=APPU_1_NtLTXJaHKYr9vASjs6WwAg`;
+    this.appLauncher.launchExternalApp(
+      iosSchemeUrl,
+      androidSchemeUrl,
+      appViewUrl,
+      webUrl,
+      playStoreUrl,
+      appStoreUrl,
+      `${lecturerCasId}@staffemail.apu.edu.my`);
   }
 
   dismiss() {
