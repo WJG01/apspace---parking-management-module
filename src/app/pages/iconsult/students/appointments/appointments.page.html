@@ -15,7 +15,7 @@
   <div class="glob-container">
     <ion-row>
       <ng-container *ngIf="(bookings$ | async) as bookings; else loading">
-        <ng-container *ngIf="bookings.length > 4; else noBookings">
+        <ng-container *ngIf="bookings.length > 0; else noBookings">
           <ion-col class="bookings" size-xs="12" size-md="6" size-lg="4" *ngFor="let booking of bookings">
             <ion-card class="ion-no-margin">
               <ion-card-header class="ion-no-padding ion-padding-start ion-padding-top ion-padding-end">
