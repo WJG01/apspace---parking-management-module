@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 import { finalize, forkJoin, map, Observable } from 'rxjs';
 
 import { utcToZonedTime } from 'date-fns-tz';
 
 import { ConsultationHour, StaffDirectory } from '../../../../interfaces';
 import { SettingsService, WsApiService } from '../../../../services';
+import { SlotDetailsModalPage } from '../../slot-details-modal/slot-details-modal.page';
 
 @Component({
   selector: 'app-appointments',
@@ -21,7 +23,8 @@ export class AppointmentsPage implements OnInit {
   constructor(
     private ws: WsApiService,
     private settings: SettingsService,
-    private router: Router
+    private router: Router,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit() {
@@ -80,6 +83,24 @@ export class AppointmentsPage implements OnInit {
           );
           return listOfBookingWithStaffDetail;
         }));
+  }
+
+  async slotDetails(studentBooking: ConsultationHour) {
+    const modal = await this.modalCtrl.create({
+      component: SlotDetailsModalPage,
+      componentProps: {
+        studentBooking
+      },
+      breakpoints: [0, 1],
+      initialBreakpoint: 1
+    });
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+
+    if (data?.completed) {
+      this.doRefresh(true);
+    }
   }
 
   openStaffDirectory() {

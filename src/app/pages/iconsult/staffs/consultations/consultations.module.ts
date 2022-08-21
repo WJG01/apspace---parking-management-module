@@ -12,7 +12,7 @@ import { FilterSlotsPipe } from './filter-slots/filter-slots.pipe';
 import { SharedPipesModule } from '../../../../shared/shared-pipes.module';
 import { ValidateCheckboxPipe } from './validate-checkbox/validate-checkbox.pipe';
 import { ComponentsModule } from '../../../../components/components.module';
-import { SlotDetailsModalPageModule } from '../slot-details-modal/slot-details-modal.module';
+import { SlotDetailsModalPageModule } from '../../slot-details-modal/slot-details-modal.module';
 
 @NgModule({
   imports: [

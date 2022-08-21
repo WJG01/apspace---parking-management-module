@@ -7,6 +7,7 @@ import { AppointmentsPageRoutingModule } from './appointments-routing.module';
 import { AppointmentsPage } from './appointments.page';
 import { SharedPipesModule } from '../../../../shared/shared-pipes.module';
 import { ComponentsModule } from '../../../../components/components.module';
+import { SlotDetailsModalPageModule } from '../../slot-details-modal/slot-details-modal.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { ComponentsModule } from '../../../../components/components.module';
     IonicModule,
     AppointmentsPageRoutingModule,
     SharedPipesModule,
-    ComponentsModule
+    ComponentsModule,
+    SlotDetailsModalPageModule
   ],
   declarations: [AppointmentsPage]
 })

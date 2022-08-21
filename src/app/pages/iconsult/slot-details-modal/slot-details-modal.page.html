@@ -1,0 +1,346 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Booking Details</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col>
+      <ng-template [ngIf]="staffBooking">
+        <ion-card class="ion-no-margin glob-small-margin-bottom">
+          <ion-item-divider lines="none" color="primary" mode="md">
+            <ion-label class="glob-text-bold">
+              Student Details
+            </ion-label>
+          </ion-item-divider>
+
+          <ion-item>
+            <ion-icon color="tertiary" name="person" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>Student Name</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ staffBooking.booking_detail.student_name }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon color="tertiary" name="journal" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>Student ID</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ staffBooking.booking_detail.student_sam_account_name }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+
+          <ion-item lines="none">
+            <ion-icon color="tertiary" name="mail" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>Student Email</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ staffBooking.booking_detail.student_sam_account_name + '@mail.apu.edu.my' }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+        </ion-card>
+
+        <ion-card class="ion-no-margin">
+          <ion-item-divider lines="none" color="primary" mode="md">
+            <ion-label class="glob-text-bold">
+              Appointment Details
+            </ion-label>
+          </ion-item-divider>
+
+          <ion-item>
+            <ion-icon color="tertiary" name="briefcase" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>Consultation With</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ staffBooking.booking_detail.consultation_with }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon color="tertiary" name="calendar" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>Date</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ staffBooking.start_time | dateWithTimezone: 'EEEE, dd MMMM yyyy' }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon color="tertiary" name="time" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>Time</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ staffBooking.start_time | dateWithTimezone: 'time' | slice: 0 :-8 }} -
+                  {{ staffBooking.end_time | dateWithTimezone: 'time' | slice: 0 :-8 }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon color="tertiary" name="pin" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>Location</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ staffBooking.venue }} | {{ staffBooking.room_code }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon color="tertiary" name="help-circle" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>Reason</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ staffBooking.booking_detail.reason }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+
+          <ion-item [lines]="!staffBooking.booking_detail.remark ? 'none' : undefined">
+            <ion-icon color="tertiary" name="bookmark" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>Additional Note</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ staffBooking.booking_detail.additional_note || 'N/A' }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+
+          <ion-item lines="none" *ngIf="staffBooking.booking_detail.remark">
+            <ion-icon color="tertiary" name="chatbox-ellipses" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>Remarks</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ staffBooking.booking_detail.remark }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+        </ion-card>
+
+        <ion-card class="ion-no-margin glob-small-margin-top"
+          *ngIf="showRemarks && !staffBooking.booking_detail.remark">
+          <ion-item lines="none">
+            <ion-label position="stacked">
+              Remarks
+            </ion-label>
+
+            <ion-textarea placeholder="Enter your Remarks" rows="4" [(ngModel)]="remarksText"></ion-textarea>
+          </ion-item>
+
+          <div class="ion-padding-start ion-padding-end ion-padding-bottom">
+            <ion-button expand="block" (click)="addRemarks()">
+              Add Remarks
+            </ion-button>
+          </div>
+        </ion-card>
+      </ng-template>
+
+      <ng-template [ngIf]="studentBooking">
+        <ion-card class="ion-no-margin glob-small-margin-bottom">
+          <ion-item-divider lines="none" color="primary" mode="md">
+            <ion-label class="glob-text-bold">
+              Staff Details
+            </ion-label>
+          </ion-item-divider>
+
+          <ion-item>
+            <ion-icon color="tertiary" name="person" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>Staff Name</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ studentBooking.staff_detail.FULLNAME }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+
+          <ion-item lines="none">
+            <ion-icon color="tertiary" name="mail" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>Staff Email</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ studentBooking.staff_detail.EMAIL || 'Not Available' }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+        </ion-card>
+
+        <ion-card class="ion-no-margin">
+          <ion-item-divider lines="none" color="primary" mode="md">
+            <ion-label class="glob-text-bold">
+              Appointment Details
+            </ion-label>
+          </ion-item-divider>
+
+          <ion-item>
+            <ion-icon color="tertiary" name="briefcase" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>Consultation With</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ studentBooking.consultation_with }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon color="tertiary" name="calendar" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>Date</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ studentBooking.slot_start_time | dateWithTimezone: 'EEEE, dd MMMM yyyy' }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon color="tertiary" name="time" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>Time</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ studentBooking.slot_start_time | dateWithTimezone: 'time' | slice: 0 :-8 }} -
+                  {{ studentBooking.slot_end_time | dateWithTimezone: 'time' | slice: 0 :-8 }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon color="tertiary" name="pin" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>Location</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ studentBooking.slot_venue }} | {{ studentBooking.slot_room_code }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon color="tertiary" name="help-circle" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>Reason</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ studentBooking.reason }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+
+          <ion-item [lines]="!studentBooking.remark ? 'none' : undefined">
+            <ion-icon color="tertiary" name="bookmark" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>Additional Note</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ studentBooking.additional_note || 'N/A' }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+
+          <ion-item lines="none" *ngIf="studentBooking.remark">
+            <ion-icon color="tertiary" [name]="studentBooking.status !== 'Passed' ? 'close-circle' : 'clipboard'"
+              slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <p>{{ studentBooking.status !== 'Passed' ? 'Cancellation Reason' : 'Remarks' }}</p>
+
+              <ion-text color="tertiary">
+                <p class="glob-fw-600">
+                  {{ studentBooking.remark }}
+                </p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+        </ion-card>
+      </ng-template>
+    </ion-col>
+  </ion-row>
+</ion-content>
+
+<ion-footer *ngIf="showRemarks && staffBooking">
+  <ion-toolbar color="danger">
+    <ion-title size="small">
+      This booking has passed. You can add remarks below if you haven't added yet.
+    </ion-title>
+  </ion-toolbar>
+</ion-footer>
+
+<ion-footer *ngIf="studentBooking">
+  <ion-toolbar>
+    <ion-row>
+      <ion-col size="2">
+        <ion-button expand="block" color="danger" [disabled]="!(studentBooking.status === 'Booked')">
+          <ion-icon name="close" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-col>
+
+      <ion-col size="10">
+        <ion-button expand="block" class="teams">
+          Chat In Teams
+          <ion-icon name="chatbubbles" slot="end"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>
