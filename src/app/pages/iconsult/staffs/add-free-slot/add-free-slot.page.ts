@@ -36,7 +36,7 @@ export class AddFreeSlotPage implements OnInit {
     from: add(parseISO(this.todaysDate), { days: 2 }),
     to: add(parseISO(this.todaysDate), { days: 1, months: 12 })
   };
-  days = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   venues$: Observable<Venue[]>;
   venues: Venue[]; // Keep track of venues instead of subscribing many times
   locations = ['New Campus', 'TPM', 'Online'];
@@ -242,11 +242,7 @@ export class AddFreeSlotPage implements OnInit {
       location: this.location.value
     }
 
-    if (body.length > 1) {
-      this.reviewDetails(reviewData, body);
-    } else {
-      this.showAlert();
-    }
+    this.reviewDetails(reviewData, body);
   }
 
   get slotType(): AbstractControl {
@@ -298,28 +294,5 @@ export class AddFreeSlotPage implements OnInit {
       initialBreakpoint: 1
     });
     return modal.present();
-  }
-
-  showAlert() {
-    const venue = this.venues.find(v => v.id === this.venue.value);
-    const formattedTimeSlots = this.time.controls.map(time => format(parse(time.value.slotsTime, 'HH:mm', new Date(this.startDate.value)), 'kk:mm'));
-    const slotDateMessage = this.slotType.value === this.consultationType[0].value ?
-      `<p><b>Slot Date:</b> ${this.startDate.value}</p>` :
-      `<p><b>Slot Date:</b> ${this.startDate.value} until ${this.endDate.value}</p>`;
-    const repeatOnMessage = this.slotType.value !== this.consultationType[0].value ?
-      `<p><b>Slot Date:</b> ${this.repeatOn.value}</p>` :
-      '';
-    const message =
-      `Are you sure you want to <b class="glob-success-text">ADD</b> new slot(s) with the following details?<br>
-      ${slotDateMessage} ${repeatOnMessage} <p><strong>Slot Time: </strong>${formattedTimeSlots}</p> <p><strong>Slot Location: </strong> ${this.location.value}</p> <p><strong>Slot Venue: </strong> ${venue.room_code} </p>
-      `;
-    const btn: AlertButton = {
-      text: 'Yes',
-      handler: () => {
-        console.log('Processing...');
-      }
-    }
-
-    this.component.alertMessage('Adding new slot(s)', message, 'No', btn);
   }
 }
