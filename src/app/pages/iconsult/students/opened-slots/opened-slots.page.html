@@ -154,7 +154,7 @@
                 </ion-label>
 
                 <ion-button slot="end" [color]="s.status === 'Booked' ? 'danger' : 'success'"
-                  [disabled]="s.status === 'Booked'">
+                  [disabled]="s.status === 'Booked'" (click)="openBooking(s)">
                   {{ s.status === 'Booked' ? 'Booked' : 'Book' }}
                 </ion-button>
               </ion-item>

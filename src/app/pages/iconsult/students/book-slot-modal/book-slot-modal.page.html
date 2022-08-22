@@ -1,0 +1,132 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Book New Consultation Hour</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col>
+      <ion-card class="ion-no-margin glob-small-margin-bottom">
+        <ion-item-divider lines="none" color="primary" mode="md">
+          <ion-label class="glob-text-bold">
+            Booking Details
+          </ion-label>
+        </ion-item-divider>
+
+        <ion-item>
+          <ion-label class="ion-text-wrap">
+            <p>Staff Name</p>
+
+            <ion-text color="tertiary">
+              <p class="glob-fw-600">
+                {{ staffDetails.FULLNAME }}
+              </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label class="ion-text-wrap">
+            <p>Date</p>
+
+            <ion-text color="tertiary">
+              <p class="glob-fw-600">
+                {{ slotDetails.start_time | dateWithTimezone: 'EEEE, dd MMMM yyyy' }}
+              </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label class="ion-text-wrap">
+            <p>Time</p>
+
+            <ion-text color="tertiary">
+              <p class="glob-fw-600">
+                {{ slotDetails.start_time | dateWithTimezone: 'time' | slice: 0 :-8 }}
+                -
+                {{ slotDetails.end_time | dateWithTimezone: 'time' | slice: 0 :-8 }}
+              </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+
+        <form [formGroup]="bookForm">
+          <ion-item lines="inset">
+            <ion-label position="stacked">Consultation With</ion-label>
+            <ion-select placeholder="Select one" interface="popover" formControlName="consultation_with">
+              <ion-select-option *ngFor="let c of consultationOptions" [value]="c">
+                {{ c }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <div class="error-message"
+            *ngIf="(consultationWith.dirty || consultationWith.touched) && consultationWith.errors?.required">
+            <ion-text color="danger">
+              <small>
+                Please specify who you are consulting with.
+              </small>
+            </ion-text>
+          </div>
+
+          <ion-item lines="inset" counter="true">
+            <ion-label position="stacked">Reason For Appointment</ion-label>
+            <ion-textarea placeholder="Provide your reason" [rows]="6" [maxlength]="textFieldMaxlength"
+              formControlName="reason"></ion-textarea>
+          </ion-item>
+          <div class="error-message" *ngIf="(reason.dirty || reason.touched) && reason.errors?.required">
+            <ion-text color="danger">
+              <small>
+                Please provide a reason for your booking.
+              </small>
+            </ion-text>
+          </div>
+
+          <ion-item lines="none" counter="true">
+            <ion-label position="stacked">Additional Note (Optional)</ion-label>
+            <ion-textarea placeholder="Enter your note" [rows]="2" [maxlength]="textFieldMaxlength"
+              formControlName="additional_note"></ion-textarea>
+          </ion-item>
+        </form>
+      </ion-card>
+
+      <ion-card class="ion-no-margin glob-small-margin-bottom">
+        <ion-item-divider lines="none" color="primary" mode="md">
+          <ion-label class="glob-text-bold">
+            Student Details
+          </ion-label>
+        </ion-item-divider>
+
+        <ion-item lines="none">
+          <ion-label class="ion-text-wrap">
+            <p>Student Name</p>
+
+            <ion-text color="tertiary">
+              <p class="glob-fw-600">
+                {{ studentEmail || 'Email not Found' }}
+              </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" color="success" (click)="submit()">
+          Book Now
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

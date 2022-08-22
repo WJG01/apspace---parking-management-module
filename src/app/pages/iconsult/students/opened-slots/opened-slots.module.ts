@@ -10,6 +10,7 @@ import { OpenedSlotsPage } from './opened-slots.page';
 import { DateWithTimezonePipe } from '../../../../shared/date-with-timezone/date-with-timezone.pipe';
 import { SharedPipesModule } from '../../../../shared/shared-pipes.module';
 import { ComponentsModule } from '../../../../components/components.module';
+import { BookSlotModalPageModule } from '../book-slot-modal/book-slot-modal.module';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { ComponentsModule } from '../../../../components/components.module';
     OpenedSlotsPageRoutingModule,
     CalendarModule,
     SharedPipesModule,
-    ComponentsModule
+    ComponentsModule,
+    BookSlotModalPageModule
   ],
   declarations: [OpenedSlotsPage],
   providers: [DateWithTimezonePipe]

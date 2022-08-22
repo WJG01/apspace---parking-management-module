@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 import { finalize, map, Observable, tap } from 'rxjs';
 
 import { CalendarComponentOptions, DayConfig } from 'ion2-calendar';
@@ -7,6 +8,7 @@ import { CalendarComponentOptions, DayConfig } from 'ion2-calendar';
 import { ConsultationSlot, MappedSlots, StaffDirectory } from '../../../../interfaces';
 import { WsApiService } from '../../../../services';
 import { DateWithTimezonePipe } from '../../../../shared/date-with-timezone/date-with-timezone.pipe';
+import { BookSlotModalPage } from '../book-slot-modal/book-slot-modal.page';
 
 @Component({
   selector: 'app-opened-slots',
@@ -17,6 +19,7 @@ export class OpenedSlotsPage implements OnInit {
 
   staffId: string;
   staff$: Observable<StaffDirectory>;
+  staff: StaffDirectory;
   slots$: Observable<MappedSlots[]>;
   slots: MappedSlots[] = [];
   selectedDateSlots: ConsultationSlot[] = [];
@@ -35,7 +38,8 @@ export class OpenedSlotsPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private ws: WsApiService,
-    private dateWithTimezonePipe: DateWithTimezonePipe
+    private dateWithTimezonePipe: DateWithTimezonePipe,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit() {
@@ -123,7 +127,27 @@ export class OpenedSlotsPage implements OnInit {
         staff.IMAGEURL = `https://d37plr7tnxt7lb.cloudfront.net/${staff.RefNo}.jpg`;
 
         return staff;
-      })
+      }),
+      tap(staff => this.staff = staff)
     );
+  }
+
+  async openBooking(slot: ConsultationSlot) {
+    const modal = await this.modalCtrl.create({
+      component: BookSlotModalPage,
+      componentProps: {
+        slotDetails: slot,
+        staffDetails: this.staff
+      },
+      breakpoints: [0, 1],
+      initialBreakpoint: 1
+    });
+    modal.present();
+
+    const { data } = await modal.onWillDismiss();
+
+    if (data?.completed) {
+      this.doRefresh();
+    }
   }
 }
