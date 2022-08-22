@@ -19,7 +19,8 @@
           <ion-col class="bookings" size-xs="12" size-md="6" size-lg="4" *ngFor="let booking of bookings">
             <ion-card class="ion-no-margin">
               <ion-card-header class="ion-no-padding ion-padding-start ion-padding-top ion-padding-end">
-                <ion-badge *ngIf="booking.status !== 'Booked'" color="danger">
+                <ion-badge *ngIf="booking.status !== 'Booked'"
+                  [color]="booking.status === 'Passed' ? 'medium' : 'danger'">
                   {{ booking.status | titlecase }}
                 </ion-badge>
 
