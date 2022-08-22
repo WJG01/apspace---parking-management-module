@@ -121,7 +121,8 @@ export class ConsultationsPage implements OnInit {
   }
 
   async slotDetails(staffBooking: ConsultationSlot) {
-    if (staffBooking.status === 'Available') return; // Ignore if slot is not booked
+    // Ignore if slot is not booked or delete mode is active
+    if (staffBooking.status === 'Available' || this.deleteMode) return;
 
     const modal = await this.modalCtrl.create({
       component: SlotDetailsModalPage,
