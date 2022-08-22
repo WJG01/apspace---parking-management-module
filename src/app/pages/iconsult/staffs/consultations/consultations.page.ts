@@ -148,23 +148,23 @@ export class ConsultationsPage implements OnInit {
   }
 
   getSelectedRangeSlot(dates: MappedSlots[]) {
-    this.slotsToBeCancelled = [];
+    if (!this.rangeMode) return; // Ignore if range mode is false
+
+    this.slotsToBeCancelled = []; // Ensure array is empty before pushing new items
     const startDate = new Date(this.dateRange.from);
     const endDate = new Date(this.dateRange.to);
 
-    const datesKeys = Object.keys(dates).map(date => new Date(date));
-    const filteredDates = datesKeys.filter(date => startDate <= date && date <= endDate);
-
-    filteredDates.forEach(filteredDate => {
-      const currentDateString = this.dateWithTimezonePipe.transform(filteredDate, 'yyyy-MM-dd');
-      dates[currentDateString].items.forEach(item => {
-        // only push the slots that is not a passed or within 24 hours slots.
-        if (!(new Date(this.dateWithTimezonePipe.transform(item.start_time, 'medium'))
-          <= add(new Date(), { hours: 24 }))) {
-          this.slotsToBeCancelled.push(item);
+    for (const date of dates) {
+      if (startDate <= new Date(date.date) && new Date(date.date) <= endDate) {
+        for (const slot of date.slots) {
+          // only push the slots that is not passed or within 24 hours slots.
+          if (!(new Date(this.dateWithTimezonePipe.transform(slot.start_time, 'medium'))
+            <= add(new Date(), { hours: 24 }))) {
+            this.slotsToBeCancelled.push(slot);
+          }
         }
-      });
-    });
+      }
+    }
   }
 
   getSelectedSlot(slot: ConsultationSlot) {
