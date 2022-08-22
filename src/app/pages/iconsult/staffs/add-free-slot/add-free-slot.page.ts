@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AlertButton, ModalController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { Observable, shareReplay, tap } from 'rxjs';
 
 import { add, format, formatISO, parse, parseISO } from 'date-fns';
@@ -10,6 +10,7 @@ import { DatePickerComponent } from '../../../../components/date-picker/date-pic
 import { AddFreeSlotBody, AddFreeSlotReview, Venue } from '../../../../interfaces';
 import { ComponentService, SettingsService, WsApiService } from '../../../../services';
 import { ReviewSlotsModalPage } from '../review-slots-modal/review-slots-modal.page';
+import { duplicateFromTime } from './validators';
 
 @Component({
   selector: 'app-add-free-slot',
@@ -75,7 +76,7 @@ export class AddFreeSlotPage implements OnInit {
 
   addTimeSlot() {
     const group: FormGroup = this.fb.group({
-      slotsTime: ['', [Validators.required]] // TODO: Add Duplicate Time Validator
+      slotsTime: ['', [Validators.required, duplicateFromTime]]
     });
     const array = this.slotsForm.get('time') as FormArray;
 
@@ -184,6 +185,7 @@ export class AddFreeSlotPage implements OnInit {
       this.slotsForm.markAllAsTouched();
       return;
     }
+
     const body: AddFreeSlotBody[] = [];
     let startDate: string = this.startDate.value;
     let endDate: string = this.endDate.value;

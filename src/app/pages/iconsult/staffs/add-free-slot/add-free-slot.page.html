@@ -138,10 +138,14 @@
                 </ion-item>
 
                 <div class="timeslot-error"
-                  *ngIf="(getTimeControl(i).dirty || getTimeControl(i).touched) && getTimeControl(i).errors?.required">
+                  *ngIf="(getTimeControl(i).dirty || getTimeControl(i).touched) && (getTimeControl(i).errors?.required || getTimeControl(i).errors?.isDuplicated)">
                   <ion-text color="danger">
-                    <small>
+                    <small *ngIf="getTimeControl(i).errors?.required">
                       Timeslot cannot be empty
+                    </small>
+
+                    <small *ngIf="getTimeControl(i).errors?.isDuplicated">
+                      Duplicated Time is not allowed
                     </small>
                   </ion-text>
                 </div>
