@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AlertButton, LoadingController, ModalController } from '@ionic/angular';
+import { AlertButton, AlertController, LoadingController, ModalController } from '@ionic/angular';
 
+import { formatISO } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
 
 import { ConsultationHour, ConsultationSlot } from '../../../interfaces';
@@ -26,7 +27,8 @@ export class SlotDetailsModalPage implements OnInit {
     private component: ComponentService,
     private loadingCtrl: LoadingController,
     private ws: WsApiService,
-    private appLauncher: AppLauncherService
+    private appLauncher: AppLauncherService,
+    private alertCtrl: AlertController
   ) { }
 
   ngOnInit() {
@@ -79,6 +81,63 @@ export class SlotDetailsModalPage implements OnInit {
     }
 
     this.component.alertMessage('Adding Remarks!', 'Are you sure you want to add remarks to this booking?', 'No', btn);
+  }
+
+  async cancelSlot() {
+    const startDate = formatISO(new Date(this.studentBooking.slot_start_time), { representation: 'date' });
+    // TODO: Change this to small modal
+    const alert = await this.alertCtrl.create({
+      header: `Cancelling Appointment with ${this.studentBooking.staff_detail.FULLNAME} on ${startDate}`,
+      message: `Please provide us with the cancellation reason <br /> (Max 50 Characters):`,
+      inputs: [
+        {
+          name: 'cancellationReason',
+          id: 'maxLength50',
+          type: 'text',
+          placeholder: 'Enter The Cancellation Reason'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Dismiss',
+          role: 'cancel',
+          handler: () => { }
+        }, {
+          text: 'Cancel Booking Slot',
+          handler: async (data) => {
+            if (!data.cancellationReason) {
+              this.component.toastMessage('Cancellation Reason is Required!', 'warning');
+              return;
+            }
+
+            const loading = await this.loadingCtrl.create({
+              message: 'Please wait...'
+            });
+            await loading.present();
+            const body = [{
+              booking_id: this.studentBooking.id,
+              remark: data.cancellationReason
+            }];
+
+            this.ws.put('/iconsult/booking/cancel', { body }).subscribe({
+              next: () => {
+                this.component.toastMessage('Booking has been cancelled successfully!', 'success');
+              },
+              error: (err) => {
+                loading.dismiss();
+                this.component.toastMessage(`${err.error.error}`, 'danger');
+              },
+              complete: () => {
+                loading.dismiss();
+                this.modalCtrl.dismiss({ completed: true });
+              }
+            });
+          }
+        }
+      ]
+    });
+    await alert.present();
+    document.getElementById('maxLength50').setAttribute('maxlength', '50');
   }
 
   chatInTeams(lecturerCasId: string) {
