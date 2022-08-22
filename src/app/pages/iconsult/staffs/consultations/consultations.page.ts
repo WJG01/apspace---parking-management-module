@@ -3,13 +3,14 @@ import { Router } from '@angular/router';
 import { forkJoin, map, Observable, tap, finalize } from 'rxjs';
 import { ModalController } from '@ionic/angular';
 
-import { add } from 'date-fns';
+import { add, format } from 'date-fns';
 import { CalendarComponentOptions, DayConfig } from 'ion2-calendar';
 
 import { ConsultationHour, ConsultationSlot, MappedSlots } from '../../../../interfaces';
 import { WsApiService } from '../../../../services';
 import { DateWithTimezonePipe } from '../../../../shared/date-with-timezone/date-with-timezone.pipe';
 import { SlotDetailsModalPage } from '../../slot-details-modal/slot-details-modal.page';
+import { ReviewDeletionModalPage } from '../review-deletion-modal/review-deletion-modal.page';
 
 @Component({
   selector: 'app-consultations',
@@ -193,14 +194,49 @@ export class ConsultationsPage implements OnInit {
   cancelAvailableSlot() {
     if (this.slotsToBeCancelled.length < 1) return;
 
-    if (this.slotsToBeCancelled.length > 1) {
-      console.log('Show Modal');
-    } else {
-      console.log('Show Alert');
-    }
+    const slotsPerDay = this.slotsToBeCancelled.reduce((previous: any, current: any) => {
+      const date = format(new Date(current.start_time), 'yyyy-MM-dd');
+
+      if (!previous[date]) {
+        previous[date] = [current];
+      } else {
+        previous[date].push(current);
+      }
+      return previous;
+    }, {});
+    const formattedSlots: MappedSlots[] = Object.keys(slotsPerDay).map(date => ({ date, slots: slotsPerDay[date] }));
+
+    this.reviewDelete(formattedSlots);
   }
 
   addSlots() {
     this.router.navigateByUrl('/iconsult/add-free-slot');
+  }
+
+  async reviewDelete(slots: MappedSlots[]) {
+    const modal = await this.modalCtrl.create({
+      component: ReviewDeletionModalPage,
+      componentProps: {
+        slots
+      },
+      breakpoints: [0, 1],
+      initialBreakpoint: 1
+    });
+    modal.present();
+
+    const { data } = await modal.onWillDismiss();
+
+    if (data?.completed) {
+      this.doRefresh(true);
+      this.resetPage();
+    }
+  }
+
+  resetPage() {
+    this.daysConfigurations = [];
+    this.slotsToBeCancelled = [];
+    this.selectedDate = this.dateWithTimezonePipe.transform(new Date(), 'yyyy-MM-dd');
+    this.deleteMode = false;
+    this.rangeMode = false;
   }
 }

@@ -146,14 +146,14 @@
 
                 <ion-row *ngIf="deleteMode && slotsToBeCancelled.length > 0">
                   <ion-col>
-                    <ion-button color="primary" expand="block" (click)="resetSelectedSlots(dates)">
+                    <ion-button color="medium" expand="block" (click)="resetSelectedSlots(dates)">
                       Uncheck All
                     </ion-button>
                   </ion-col>
 
                   <ion-col>
-                    <ion-button color="danger" expand="block" (click)="cancelAvailableSlot()">
-                      Cancel Slot
+                    <ion-button expand="block" (click)="cancelAvailableSlot()">
+                      Review Deletion
                     </ion-button>
                   </ion-col>
                 </ion-row>
@@ -201,14 +201,14 @@
 
                 <ion-row *ngIf="deleteMode && slotsToBeCancelled.length > 0">
                   <ion-col>
-                    <ion-button color="primary" expand="block" (click)="resetSelectedSlots(dates)">
+                    <ion-button color="medium" expand="block" (click)="resetSelectedSlots(dates)">
                       Uncheck All
                     </ion-button>
                   </ion-col>
 
                   <ion-col>
-                    <ion-button color="danger" expand="block" (click)="cancelAvailableSlot()">
-                      Cancel Slot
+                    <ion-button expand="block" (click)="cancelAvailableSlot()">
+                      Review Deletion
                     </ion-button>
                   </ion-col>
                 </ion-row>
