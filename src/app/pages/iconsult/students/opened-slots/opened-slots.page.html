@@ -1,9 +1,190 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>opened-slots</ion-title>
+    <ion-title>List of Consultations</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" pullMax="400" pullMin="60" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
+  </ion-refresher>
 
+  <div class="glob-container">
+    <ion-row>
+      <ion-col size="12" size-md="6" size-lg="5">
+        <ion-card class="ion-no-margin">
+          <ng-container *ngIf="(staff$ | async) as staff; else loadingStaff">
+            <ion-card-header>
+              <ion-avatar class="profile-image">
+                <ion-img #image [src]="staff.IMAGEURL" (ionError)="image.src = 'assets/img/no_avatar.png'"></ion-img>
+              </ion-avatar>
+            </ion-card-header>
+
+            <ion-card-content class="ion-text-center">
+              <h2 class="glob-text-bold glob-primary-text margin-bottom">{{ staff.FULLNAME }}</h2>
+              <h2 class="glob-fw-600 margin-bottom" [innerHTML]="staff.TITLE"></h2>
+              <h2 class="margin-bottom" *ngIf="staff.LOCATION">
+                <ion-text color="medium">
+                  {{ staff.LOCATION }}
+                </ion-text>
+              </h2>
+              <h2 *ngIf="staff.EMAIL">
+                <a href="mailto:{{staff.EMAIL}}">
+                  <ion-text color="primary">
+                    {{ staff.EMAIL }}
+                  </ion-text>
+                </a>
+              </h2>
+            </ion-card-content>
+
+            <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end">
+              <ion-row class="ion-align-items-center">
+                <ion-col class="details-section ion-text-center" size="6">
+                  <ion-text color="success">
+                    <h3 class="glob-text-bold">
+                      Opened Slots
+                    </h3>
+                  </ion-text>
+
+                  <ion-text color="medium">
+                    <h3 class="glob-fw-600">
+                      {{ totalOpenedSlots === -1 ? '--' : totalOpenedSlots }}
+                    </h3>
+                  </ion-text>
+                </ion-col>
+
+                <ion-col class="details-section ion-text-center" size="6">
+                  <ion-text color="danger">
+                    <h3 class="glob-text-bold">
+                      Available Slots
+                    </h3>
+                  </ion-text>
+
+                  <ion-text color="medium">
+                    <h3 class="glob-fw-600">
+                      {{ totalAvailableSlots === -1 ? '--' : totalAvailableSlots }}
+                    </h3>
+                  </ion-text>
+                </ion-col>
+              </ion-row>
+            </ion-card-content>
+          </ng-container>
+
+          <ng-template #loadingStaff>
+            <ion-card-header>
+              <ion-avatar class="profile-image" style="--border-radius: 0;">
+                <ion-skeleton-text animated style="line-height: 240px; width: 150px; margin: auto;"></ion-skeleton-text>
+              </ion-avatar>
+            </ion-card-header>
+
+            <ion-card-content>
+              <h2>
+                <ion-skeleton-text class="glob-margin-auto" animated style="line-height: 20px; width: 40%;">
+                </ion-skeleton-text>
+              </h2>
+              <h2>
+                <ion-skeleton-text class="glob-margin-auto" animated style="line-height: 20px; width: 30%;">
+                </ion-skeleton-text>
+              </h2>
+              <h2>
+                <ion-skeleton-text class="glob-margin-auto" animated style="line-height: 20px; width: 20%;">
+                </ion-skeleton-text>
+              </h2>
+            </ion-card-content>
+
+            <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end">
+              <ion-row class="ion-align-items-center">
+                <ion-col class="details-section ion-text-center" size="6">
+                  <ion-text color="success">
+                    <h3 class="glob-text-bold">
+                      Opened Slots
+                    </h3>
+                  </ion-text>
+
+                  <ion-text color="medium">
+                    <h3 class="glob-fw-600">
+                      --
+                    </h3>
+                  </ion-text>
+                </ion-col>
+
+                <ion-col class="details-section ion-text-center" size="6">
+                  <ion-text color="danger">
+                    <h3 class="glob-text-bold">
+                      Available Slots
+                    </h3>
+                  </ion-text>
+
+                  <ion-text color="medium">
+                    <h3 class="glob-fw-600">
+                      --
+                    </h3>
+                  </ion-text>
+                </ion-col>
+              </ion-row>
+            </ion-card-content>
+          </ng-template>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-md="6" size-lg="7">
+        <ion-card class="ion-no-margin">
+          <ng-container *ngIf="(slots$ | async) as slots; else loadingSlots">
+            <ng-container *ngIf="slots.length > 0; else noSlots">
+              <ion-card-content>
+                <ion-calendar class="filter-date-picker glob-calendar" [(ngModel)]="selectedDate" [options]="options"
+                  (change)="calendarOnChange($event)" [type]="'string'" [format]="'YYYY-MM-DD'">
+                </ion-calendar>
+              </ion-card-content>
+
+              <ion-item *ngFor="let s of selectedDateSlots; let isLast = last" [lines]="isLast ? 'none' : undefined">
+                <ion-label>
+                  <ion-text class="glob-fw-600" [color]="s.status === 'Booked' ? 'danger' : 'success'">
+                    {{ s.start_time | dateWithTimezone:'time' | slice: 0 :-8 }} -
+                    {{ s.end_time | dateWithTimezone:'time' | slice: 0 :-8 }}
+                  </ion-text>
+
+                  <p>
+                    <ion-icon name="pin"></ion-icon>
+                    {{ s.room_code }} | {{ s.venue }}
+                  </p>
+                </ion-label>
+
+                <ion-button slot="end" [color]="s.status === 'Booked' ? 'danger' : 'success'"
+                  [disabled]="s.status === 'Booked'">
+                  {{ s.status === 'Booked' ? 'Booked' : 'Book' }}
+                </ion-button>
+              </ion-item>
+            </ng-container>
+
+            <ng-template #noSlots>
+              <ion-card class="ion-no-margin">
+                <message-with-svg imageUrl="assets/img/search_not_found.svg" messageTitle="No Consultations Added!"
+                  wrapperSize="6" wrapperOffset="3"
+                  messageContent="This staff has not added any consultations. You can contact him/her via Email"
+                  wrapperMarginTop="20px">
+                </message-with-svg>
+              </ion-card>
+            </ng-template>
+          </ng-container>
+
+          <ng-template #loadingSlots>
+            <ion-skeleton-text class="ion-no-margin" animated style="width: 100%; line-height: 300px">
+            </ion-skeleton-text>
+
+            <ion-item *ngFor="let _ of skeleton; let isLast = last" [lines]="isLast ? 'none' : undefined">
+              <ion-label>
+                <ion-skeleton-text animated style="width: 40%; line-height: 15px"></ion-skeleton-text>
+                <ion-skeleton-text animated style="width: 20%; line-height: 10px"></ion-skeleton-text>
+              </ion-label>
+              <ion-skeleton-text animated style="width: 10%; line-height: 20px"></ion-skeleton-text>
+            </ion-item>
+          </ng-template>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </div>
 </ion-content>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { map, Observable, share } from 'rxjs';
 
 import { Storage } from '@ionic/storage-angular';
@@ -21,7 +21,8 @@ export class StaffDirectoryInfoPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private ws: WsApiService,
-    private storage: Storage
+    private storage: Storage,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -45,7 +46,7 @@ export class StaffDirectoryInfoPage implements OnInit {
   }
 
   openIConsult() {
-    console.log(this.id);
+    this.router.navigate(['staffs', this.id, 'consultations']);
   }
 
   chatInTeams() {

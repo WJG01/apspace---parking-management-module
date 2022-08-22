@@ -91,6 +91,10 @@ const routes: Routes = [
       {
         path: ':id',
         loadChildren: () => import('./pages/staff-directory/staff-directory-info/staff-directory-info.module').then(m => m.StaffDirectoryInfoPageModule)
+      },
+      {
+        path: ':id/consultations',
+        loadChildren: () => import('./pages/iconsult/students/opened-slots/opened-slots.module').then(m => m.OpenedSlotsPageModule)
       }
     ]
   },
