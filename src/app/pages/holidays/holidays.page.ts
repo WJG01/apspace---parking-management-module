@@ -17,8 +17,8 @@ export class HolidaysPage implements OnInit {
   devUrl = 'https://2o7wc015dc.execute-api.ap-southeast-1.amazonaws.com/dev';
   holidaySets$: Observable<HolidaySets[]>;
   holidays: HolidayV2[] = [];
-  skeleton = new Array(6);
-  selectedSegment: 'list' | 'calendar' = 'calendar';
+  skeleton = new Array(3);
+  selectedSegment: 'list' | 'calendar' = 'list';
   affecting = ['all', 'students', 'staffs'];
   setYears: number[] = [];
   holidayDurations = ['all', '1 day', 'many'];
