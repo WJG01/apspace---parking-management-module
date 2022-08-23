@@ -3,8 +3,9 @@ import { finalize, map, Observable, tap } from 'rxjs';
 
 import { format } from 'date-fns';
 import { CalendarComponentOptions, DayConfig } from 'ion2-calendar';
+import { Storage } from '@ionic/storage-angular';
 
-import { HolidaySets, HolidayV2 } from '../../interfaces';
+import { HolidaySets, HolidayV2, Role } from '../../interfaces';
 import { WsApiService } from '../../services';
 
 @Component({
@@ -39,10 +40,14 @@ export class HolidaysPage implements OnInit {
   selectedHoliday: HolidayV2;
 
   constructor(
-    private ws: WsApiService
+    private ws: WsApiService,
+    private storage: Storage
   ) { }
 
   ngOnInit() {
+    this.storage.get('role')
+      .then((role: Role) => this.filterObject.affecting = role === Role.Student ? 'students' : 'staffs');
+
     this.doRefresh();
   }
 
