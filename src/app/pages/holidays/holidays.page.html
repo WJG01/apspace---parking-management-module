@@ -87,91 +87,93 @@
         <ng-container *ngIf="(holidaySets$ | async) as holidays; else loading">
           <ng-container *ngIf="holidays.length > 0; else noHolidays">
             <ng-container *ngIf="holidays[0] as filteredHolidays">
-              <ion-item color="light" lines="none" class="ion-margin-bottom">
-                <ion-thumbnail>
-                  <ion-icon size="large" color="warning" name="information" class="ion-margin-top"></ion-icon>
-                </ion-thumbnail>
-                <ion-label class="ion-text-wrap">
-                  <h3 class="glob-fw-600">
-                    Note:
-                  </h3>
-                  <p>
-                    {{ filteredHolidays.remarks }}
-                  </p>
-                </ion-label>
-              </ion-item>
+              <ng-container *ngIf="filteredHolidays.holidays.length > 0; else noHolidays">
+                <ion-item color="light" lines="none" class="ion-margin-bottom">
+                  <ion-thumbnail>
+                    <ion-icon size="large" color="warning" name="information" class="ion-margin-top"></ion-icon>
+                  </ion-thumbnail>
+                  <ion-label class="ion-text-wrap">
+                    <h3 class="glob-fw-600">
+                      Note:
+                    </h3>
+                    <p>
+                      {{ filteredHolidays.remarks }}
+                    </p>
+                  </ion-label>
+                </ion-item>
 
-              <ng-container [ngSwitch]="selectedSegment">
-                <ng-container *ngSwitchCase="'list'">
-                  <ion-card class="ion-no-margin" *ngFor="let holiday of filteredHolidays.holidays; let isLast = last"
-                    [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
-                    <ion-item lines="none">
-                      <ion-icon name="calendar" class="ion-padding-end" size="large"
-                        [style.color]="holiday.holiday_start_date | monthColor:filteredHolidays.colors"></ion-icon>
-                      <ion-label>
-                        <h3 class="glob-fw-600">
-                          {{ holiday.holiday_name }}
-                        </h3>
-                        <p>
-                          {{ holiday.holiday_start_date | date: 'EEEE, dd MMMM yyyy' }}
-                          <ng-template [ngIf]="(holiday.holiday_start_date !== holiday.holiday_end_date)">
-                            -
-                            {{ holiday.holiday_end_date | date: 'EEEE, dd MMMM yyyy' }}</ng-template>
-                        </p>
+                <ng-container [ngSwitch]="selectedSegment">
+                  <ng-container *ngSwitchCase="'list'">
+                    <ion-card class="ion-no-margin" *ngFor="let holiday of filteredHolidays.holidays; let isLast = last"
+                      [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+                      <ion-item lines="none">
+                        <ion-icon name="calendar" class="ion-padding-end" size="large"
+                          [style.color]="holiday.holiday_start_date | monthColor:filteredHolidays.colors"></ion-icon>
+                        <ion-label>
+                          <h3 class="glob-fw-600">
+                            {{ holiday.holiday_name }}
+                          </h3>
+                          <p>
+                            {{ holiday.holiday_start_date | date: 'EEEE, dd MMMM yyyy' }}
+                            <ng-template [ngIf]="(holiday.holiday_start_date !== holiday.holiday_end_date)">
+                              -
+                              {{ holiday.holiday_end_date | date: 'EEEE, dd MMMM yyyy' }}</ng-template>
+                          </p>
 
-                        <ion-badge color="medium" [style.margin-top]="'5px'">
-                          {{
-                          holiday.holiday_people_affected === 'all' ? 'Students & Staff' :
-                          (holiday.holiday_people_affected | titlecase)
-                          }}
-                        </ion-badge>
-                      </ion-label>
-                    </ion-item>
-                  </ion-card>
-                </ng-container>
+                          <ion-badge color="medium" [style.margin-top]="'5px'">
+                            {{
+                            holiday.holiday_people_affected === 'all' ? 'Students & Staff' :
+                            (holiday.holiday_people_affected | titlecase)
+                            }}
+                          </ion-badge>
+                        </ion-label>
+                      </ion-item>
+                    </ion-card>
+                  </ng-container>
 
-                <ng-container *ngSwitchCase="'calendar'">
-                  <ion-card class="ion-no-margin">
-                    <ion-card-content>
-                      <ion-calendar class="glob-calendar" (change)="calendarChanged($event)" [options]="options"
-                        [type]="'string'" [format]="'YYYY-MM-DD'">
-                      </ion-calendar>
+                  <ng-container *ngSwitchCase="'calendar'">
+                    <ion-card class="ion-no-margin">
+                      <ion-card-content>
+                        <ion-calendar class="glob-calendar" (change)="calendarChanged($event)" [options]="options"
+                          [type]="'string'" [format]="'YYYY-MM-DD'">
+                        </ion-calendar>
 
-                      <ng-container *ngIf="selectedHoliday; else noHolidaySelected">
-                        <ion-item lines="none">
-                          <ion-label>
-                            <h3 class="glob-fw-600">
-                              {{ selectedHoliday.holiday_name }}
-                            </h3>
-                            <p>
-                              {{ selectedHoliday.holiday_start_date | date: 'EEEE, dd MMMM yyyy' }}
-                              <ng-template
-                                [ngIf]="(selectedHoliday.holiday_start_date !== selectedHoliday.holiday_end_date)">
-                                -
-                                {{ selectedHoliday.holiday_end_date | date: 'EEEE, dd MMMM yyyy' }}</ng-template>
-                            </p>
+                        <ng-container *ngIf="selectedHoliday; else noHolidaySelected">
+                          <ion-item lines="none">
+                            <ion-label>
+                              <h3 class="glob-fw-600">
+                                {{ selectedHoliday.holiday_name }}
+                              </h3>
+                              <p>
+                                {{ selectedHoliday.holiday_start_date | date: 'EEEE, dd MMMM yyyy' }}
+                                <ng-template
+                                  [ngIf]="(selectedHoliday.holiday_start_date !== selectedHoliday.holiday_end_date)">
+                                  -
+                                  {{ selectedHoliday.holiday_end_date | date: 'EEEE, dd MMMM yyyy' }}</ng-template>
+                              </p>
 
-                            <ion-badge [style.margin-top]="'5px'"
-                              [style.--background]="selectedHoliday.holiday_start_date | monthColor:filteredHolidays.colors">
-                              {{
-                              selectedHoliday.holiday_people_affected === 'all' ? 'Students & Staff' :
-                              (selectedHoliday.holiday_people_affected | titlecase)
-                              }}
-                            </ion-badge>
-                          </ion-label>
-                        </ion-item>
-                      </ng-container>
-                      <ng-template #noHolidaySelected>
-                        <ion-item lines="none">
-                          <ion-label class="ion-text-center ion-margin-top">
-                            <ion-text color="success">
-                              <p class="glob-fw-600">Please select a day to view more details</p>
-                            </ion-text>
-                          </ion-label>
-                        </ion-item>
-                      </ng-template>
-                    </ion-card-content>
-                  </ion-card>
+                              <ion-badge [style.margin-top]="'5px'"
+                                [style.--background]="selectedHoliday.holiday_start_date | monthColor:filteredHolidays.colors">
+                                {{
+                                selectedHoliday.holiday_people_affected === 'all' ? 'Students & Staff' :
+                                (selectedHoliday.holiday_people_affected | titlecase)
+                                }}
+                              </ion-badge>
+                            </ion-label>
+                          </ion-item>
+                        </ng-container>
+                        <ng-template #noHolidaySelected>
+                          <ion-item lines="none">
+                            <ion-label class="ion-text-center ion-margin-top">
+                              <ion-text color="success">
+                                <p class="glob-fw-600">Please select a day to view more details</p>
+                              </ion-text>
+                            </ion-label>
+                          </ion-item>
+                        </ng-template>
+                      </ion-card-content>
+                    </ion-card>
+                  </ng-container>
                 </ng-container>
               </ng-container>
             </ng-container>
@@ -181,7 +183,7 @@
             <ion-card class="ion-no-margin">
               <message-with-svg imageUrl="assets/img/search_not_found.svg" messageTitle="No Holidays Available!"
                 wrapperSize="6" wrapperOffset="3"
-                messageContent="No Holidays were added for the year {{ filterObject.year }}. Please select other available Years."
+                messageContent="No Holidays available to show. You can try changing the filter option to view other holidays"
                 wrapperMarginTop="20px">
               </message-with-svg>
             </ion-card>
