@@ -131,7 +131,47 @@
                 </ng-container>
 
                 <ng-container *ngSwitchCase="'calendar'">
-                  <h1>Calendar...</h1>
+                  <ion-card class="ion-no-margin">
+                    <ion-card-content>
+                      <ion-calendar class="glob-calendar" (change)="calendarChanged($event)" [options]="options"
+                        [type]="'string'" [format]="'YYYY-MM-DD'">
+                      </ion-calendar>
+
+                      <ng-container *ngIf="selectedHoliday; else noHolidaySelected">
+                        <ion-item lines="none">
+                          <ion-label>
+                            <h3 class="glob-fw-600">
+                              {{ selectedHoliday.holiday_name }}
+                            </h3>
+                            <p>
+                              {{ selectedHoliday.holiday_start_date | date: 'EEEE, dd MMMM yyyy' }}
+                              <ng-template
+                                [ngIf]="(selectedHoliday.holiday_start_date !== selectedHoliday.holiday_end_date)">
+                                -
+                                {{ selectedHoliday.holiday_end_date | date: 'EEEE, dd MMMM yyyy' }}</ng-template>
+                            </p>
+
+                            <ion-badge [style.margin-top]="'5px'"
+                              [style.--background]="selectedHoliday.holiday_start_date | monthColor:filteredHolidays.colors">
+                              {{
+                              selectedHoliday.holiday_people_affected === 'all' ? 'Students & Staff' :
+                              (selectedHoliday.holiday_people_affected | titlecase)
+                              }}
+                            </ion-badge>
+                          </ion-label>
+                        </ion-item>
+                      </ng-container>
+                      <ng-template #noHolidaySelected>
+                        <ion-item lines="none">
+                          <ion-label class="ion-text-center ion-margin-top">
+                            <ion-text color="success">
+                              <p class="glob-fw-600">Please select a day to view more details</p>
+                            </ion-text>
+                          </ion-label>
+                        </ion-item>
+                      </ng-template>
+                    </ion-card-content>
+                  </ion-card>
                 </ng-container>
               </ng-container>
             </ng-container>

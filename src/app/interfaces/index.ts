@@ -23,6 +23,7 @@ export {
 } from './fees';
 export {
   HolidayColor,
+  HolidayV2,
   HolidaysV2
 } from './holiday';
 export {

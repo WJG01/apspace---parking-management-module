@@ -30,7 +30,7 @@ export interface HolidayColor {
   value: string;
 }
 
-interface HolidayV2 {
+export interface HolidayV2 {
   holiday_description: string;
   holiday_end_date: Date;
   holiday_name: string;
