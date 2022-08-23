@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { CalendarModule } from 'ion2-calendar';
+import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
 
 import { HolidaysPageRoutingModule } from './holidays-routing.module';
 import { HolidaysPage } from './holidays.page';
@@ -19,6 +20,7 @@ import { ComponentsModule } from '../../components/components.module';
     CalendarModule,
     ComponentsModule
   ],
-  declarations: [HolidaysPage, MonthColorPipe]
+  declarations: [HolidaysPage, MonthColorPipe],
+  providers: [FileOpener]
 })
 export class HolidaysPageModule { }
