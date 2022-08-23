@@ -228,6 +228,12 @@ const routes: Routes = [
     data: { role: Role.Admin | Role.Lecturer },
     loadChildren: () => import('./pages/aplc-progression/aplc-progression.module').then(m => m.AplcProgressionPageModule)
   },
+  {
+    path: 'holidays',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/holidays/holidays.module').then(m => m.HolidaysPageModule)
+  },
   { // this path must always be at the end of the routes array
     path: '**',
     canActivate: [AuthGuard],

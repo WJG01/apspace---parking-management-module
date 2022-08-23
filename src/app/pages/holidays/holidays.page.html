@@ -1,0 +1,151 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Holidays</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="selectedSegment">
+      <ion-segment-button value="list">List</ion-segment-button>
+      <ion-segment-button value="calendar">Calendar</ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" pullMax="400" pullMin="60" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="glob-container">
+    <ion-row class="ion-margin-top">
+      <ion-col size-xs="12" size-md="8" class="glob-margin-auto">
+        <ion-card class="ion-no-margin ion-margin-bottom">
+          <ion-accordion-group>
+            <ion-accordion value="first">
+              <ion-item slot="header">
+                <ion-icon class="ion-padding-end" name="filter"></ion-icon>
+                <ion-label>Filters</ion-label>
+              </ion-item>
+
+              <ion-list class="ion-no-padding" slot="content">
+                <ion-item lines="inset">
+                  <ion-label position="stacked">Year</ion-label>
+                  <ion-select [disabled]="setYears.length < 1" interface="popover" placeholder="Select Year"
+                    [(ngModel)]="filterObject.year" (ngModelChange)="doRefresh()">
+                    <ion-select-option *ngFor="let y of setYears" [value]="y">
+                      {{ y }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+
+                <ion-item lines="inset">
+                  <ion-label position="stacked">Affecting</ion-label>
+                  <ion-select interface="popover" [(ngModel)]="filterObject.affecting" (ngModelChange)="doRefresh()">
+                    <ion-select-option *ngFor="let a of affecting" [value]="a">
+                      {{ a | titlecase }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+
+                <ion-item lines="inset">
+                  <ion-label position="stacked">Duration</ion-label>
+                  <ion-select interface="popover" [(ngModel)]="filterObject.duration" (ngModelChange)="doRefresh()">
+                    <ion-select-option *ngFor="let d of holidayDurations" [value]="d">
+                      {{ d | titlecase }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+
+                <ion-item lines="none">
+                  <ion-label>Upcoming Holidays</ion-label>
+                  <ion-toggle [(ngModel)]="filterObject.upcoming" (ngModelChange)="doRefresh()"></ion-toggle>
+                </ion-item>
+
+                <ion-row>
+                  <ion-col>
+                    <ion-button expand="block">
+                      Generate PDF
+                      <ion-icon slot="end" name="print"></ion-icon>
+                    </ion-button>
+                  </ion-col>
+
+                  <ion-col>
+                    <ion-button expand="block" color="danger" (click)="resetFilters()">
+                      Reset Filters
+                      <ion-icon slot="end" name="refresh"></ion-icon>
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-list>
+            </ion-accordion>
+          </ion-accordion-group>
+        </ion-card>
+
+        <ng-container *ngIf="(holidays$ | async) as holidays; else loading">
+          <ng-container *ngIf="holidays.length > 0; else noHolidays">
+            <ng-container *ngIf="holidays[0] as filteredHolidays">
+              <ion-item color="light" lines="none" class="ion-margin-bottom">
+                <ion-thumbnail>
+                  <ion-icon size="large" color="warning" name="information" class="ion-margin-top"></ion-icon>
+                </ion-thumbnail>
+                <ion-label class="ion-text-wrap">
+                  <h3 class="glob-fw-600">
+                    Note:
+                  </h3>
+                  <p>
+                    {{ filteredHolidays.remarks }}
+                  </p>
+                </ion-label>
+              </ion-item>
+
+              <ng-container [ngSwitch]="selectedSegment">
+                <ng-container *ngSwitchCase="'list'">
+                  <ion-card class="ion-no-margin" *ngFor="let holiday of filteredHolidays.holidays; let isLast = last"
+                    [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+                    <ion-item lines="none">
+                      <ion-icon name="calendar" class="ion-padding-end" size="large"
+                        [style.color]="holiday.holiday_start_date | monthColor:filteredHolidays.colors"></ion-icon>
+                      <ion-label>
+                        <h3 class="glob-fw-600">
+                          {{ holiday.holiday_name }}
+                        </h3>
+                        <p>
+                          {{ holiday.holiday_start_date | date: 'EEEE, dd MMMM yyyy' }}
+                          <ng-template [ngIf]="(holiday.holiday_start_date !== holiday.holiday_end_date)">
+                            -
+                            {{ holiday.holiday_end_date | date: 'EEEE, dd MMMM yyyy' }}</ng-template>
+                        </p>
+
+                        <ion-badge color="medium" [style.margin-top]="'5px'">
+                          {{
+                          holiday.holiday_people_affected === 'all' ? 'Students & Staff' :
+                          (holiday.holiday_people_affected | titlecase)
+                          }}
+                        </ion-badge>
+                      </ion-label>
+                    </ion-item>
+                  </ion-card>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'calendar'">
+                  <h1>Calendar...</h1>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+
+          <ng-template #noHolidays>
+            <h1>None</h1>
+          </ng-template>
+        </ng-container>
+
+        <ng-template #loading>
+          <h1>Loading...</h1>
+        </ng-template>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>

@@ -22,6 +22,10 @@ export {
   FeesTotalSummary
 } from './fees';
 export {
+  HolidayColor,
+  HolidaysV2
+} from './holiday';
+export {
   AddFreeSlotBody,
   AddFreeSlotReview,
   ConsultationHour,
