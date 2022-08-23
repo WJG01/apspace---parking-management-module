@@ -189,7 +189,51 @@
         </ng-container>
 
         <ng-template #loading>
-          <h1>Loading...</h1>
+          <ion-item color="light" lines="none" class="ion-margin-bottom">
+            <ion-thumbnail>
+              <ion-icon size="large" color="warning" name="information" class="ion-margin-top"></ion-icon>
+            </ion-thumbnail>
+            <ion-label class="ion-text-wrap">
+              <h3 class="glob-fw-600">
+                Note:
+              </h3>
+              <p>
+                <ion-skeleton-text animated style="width: 30%; line-height: 15px"></ion-skeleton-text>
+                <ion-skeleton-text animated style="width: 20%; line-height: 15px"></ion-skeleton-text>
+              </p>
+            </ion-label>
+          </ion-item>
+
+          <ng-container *ngIf="selectedSegment === 'list'; else calendarLoading">
+            <ion-card class="ion-no-margin" *ngFor="let _ of skeleton; let isLast = last"
+              [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+              <ion-item lines="none">
+                <ion-icon name="calendar" class="ion-padding-end" size="large"></ion-icon>
+                <ion-label>
+                  <ion-skeleton-text animated style="width: 30%; line-height: 15px"></ion-skeleton-text>
+                  <ion-skeleton-text animated style="width: 20%; line-height: 15px"></ion-skeleton-text>
+                  <ion-skeleton-text animated style="width: 10%; line-height: 15px"></ion-skeleton-text>
+                </ion-label>
+              </ion-item>
+            </ion-card>
+          </ng-container>
+
+          <ng-template #calendarLoading>
+            <ion-card class="ion-no-margin">
+              <ion-skeleton-text class="ion-no-margin" animated style="width: 100%; line-height: 300px">
+              </ion-skeleton-text>
+
+              <ion-card-content>
+                <ion-item lines="none">
+                  <ion-label>
+                    <ion-skeleton-text animated style="width: 30%; line-height: 15px"></ion-skeleton-text>
+                    <ion-skeleton-text animated style="width: 20%; line-height: 15px"></ion-skeleton-text>
+                    <ion-skeleton-text animated style="width: 10%; line-height: 15px"></ion-skeleton-text>
+                  </ion-label>
+                </ion-item>
+              </ion-card-content>
+            </ion-card>
+          </ng-template>
         </ng-template>
       </ion-col>
     </ion-row>
