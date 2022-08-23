@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingController } from '@ionic/angular';
+import { AlertButton, LoadingController } from '@ionic/angular';
 import { Observable, tap } from 'rxjs';
 
 import pdfMake from 'pdfmake/build/pdfmake';
@@ -95,256 +95,253 @@ export class AplcProgressionPage implements OnInit {
     );
   }
 
-  // TODO: In Progress
-  // generateReport() {
-  //   const currentDate = new Date();
-  //   const dateForFileName = `${currentDate.getFullYear()}${currentDate.getMonth()}${currentDate.getDate()}${currentDate.getHours()}${currentDate.getMinutes()}${currentDate.getSeconds()}`;
-  //   const pdfTitle = `PR--${this.classCode}--${dateForFileName}`;
+  generateReport() {
+    const currentDate = new Date();
+    const dateForFileName = `${currentDate.getFullYear()}${currentDate.getMonth()}${currentDate.getDate()}${currentDate.getHours()}${currentDate.getMinutes()}${currentDate.getSeconds()}`;
+    const pdfTitle = `PR--${this.classCode}--${dateForFileName}`;
 
-  //   const docDefinition = {
-  //     info: {
-  //       title: pdfTitle,
-  //       author: this.classDescription[0].LECTURER_NAME,
-  //       subject: 'Progress Report',
-  //       keywords: 'APLC APSpace Reports',
-  //       creator: 'APSpace',
-  //       producer: 'APSpace',
-  //       creationDate: currentDate.toDateString(),
-  //       modDate: currentDate.toDateString(),
+    const docDefinition = {
+      info: {
+        title: pdfTitle,
+        author: this.classDescription[0].LECTURER_NAME,
+        subject: 'Progress Report',
+        keywords: 'APLC APSpace Reports',
+        creator: 'APSpace',
+        producer: 'APSpace'
 
-  //     },
-  //     content: [
-  //       {
-  //         text: 'APIIT Education Group',
-  //         style: 'header',
-  //         alignment: 'center',
-  //         margin: [0, 10, 0, 0]
-  //       },
+      },
+      content: [
+        {
+          text: 'APIIT Education Group',
+          style: 'header',
+          alignment: 'center',
+          margin: [0, 10, 0, 0]
+        },
 
-  //       {
-  //         text: 'APLC Progress Report',
-  //         style: 'subheader',
-  //         alignment: 'center',
-  //         margin: [0, 10, 0, 0]
-  //       },
+        {
+          text: 'APLC Progress Report',
+          style: 'subheader',
+          alignment: 'center',
+          margin: [0, 10, 0, 0]
+        },
 
-  //       {
-  //         text: this.classCode,
-  //         style: 'subheader2bold',
-  //         alignment: 'center',
-  //         margin: [0, 10, 0, 0]
-  //       },
+        {
+          text: this.classCode,
+          style: 'subheader2bold',
+          alignment: 'center',
+          margin: [0, 10, 0, 0]
+        },
 
-  //       {
-  //         text: `${this.classDescription[0].SDATE} - ${this.classDescription[0].EDATE}`,
-  //         style: 'subheader2bold',
-  //         alignment: 'center',
-  //         margin: [0, 10, 0, 0]
-  //       },
+        {
+          text: `${this.classDescription[0].SDATE} - ${this.classDescription[0].EDATE}`,
+          style: 'subheader2bold',
+          alignment: 'center',
+          margin: [0, 10, 0, 0]
+        },
 
-  //       { text: '', margin: [5, 20, 5, 10] },
+        { text: '', margin: [5, 20, 5, 10] },
 
-  //       {
-  //         columns: [
-  //           {
-  //             width: '5%',
-  //             text: ''
-  //           },
-  //           {
-  //             width: '40%',
-  //             alignment: 'center',
-  //             text: 'Lecturer Name',
-  //             style: 'subheader2bold'
-  //           },
-  //           {
-  //             width: '10%',
-  //             text: ''
-  //           },
-  //           {
-  //             width: '40%',
-  //             alignment: 'center',
-  //             text: 'Subject Code',
-  //             style: 'subheader2bold'
-  //           },
-  //           {
-  //             width: '5%',
-  //             text: ''
-  //           },
-  //         ],
-  //         columnGap: 1
-  //       },
+        {
+          columns: [
+            {
+              width: '5%',
+              text: ''
+            },
+            {
+              width: '40%',
+              alignment: 'center',
+              text: 'Lecturer Name',
+              style: 'subheader2bold'
+            },
+            {
+              width: '10%',
+              text: ''
+            },
+            {
+              width: '40%',
+              alignment: 'center',
+              text: 'Subject Code',
+              style: 'subheader2bold'
+            },
+            {
+              width: '5%',
+              text: ''
+            },
+          ],
+          columnGap: 1
+        },
 
 
-  //       {
-  //         columns: [
-  //           {
-  //             width: '5%',
-  //             text: ''
-  //           },
-  //           {
-  //             width: '40%',
-  //             alignment: 'center',
-  //             text: this.classDescription[0].LECTURER_NAME
-  //           },
-  //           {
-  //             width: '10%',
-  //             text: ''
-  //           },
-  //           {
-  //             width: '40%',
-  //             alignment: 'center',
-  //             text: this.subjectCode
-  //           },
-  //           {
-  //             width: '5%',
-  //             text: ''
-  //           },
-  //         ],
-  //         columnGap: 1,
-  //         margin: [0, 5, 0, 0]
-  //       },
+        {
+          columns: [
+            {
+              width: '5%',
+              text: ''
+            },
+            {
+              width: '40%',
+              alignment: 'center',
+              text: this.classDescription[0].LECTURER_NAME
+            },
+            {
+              width: '10%',
+              text: ''
+            },
+            {
+              width: '40%',
+              alignment: 'center',
+              text: this.subjectCode
+            },
+            {
+              width: '5%',
+              text: ''
+            },
+          ],
+          columnGap: 1,
+          margin: [0, 5, 0, 0]
+        },
 
-  //       { text: '', margin: [5, 20, 5, 10] },
+        { text: '', margin: [5, 20, 5, 10] },
 
 
-  //       {
-  //         table: {
-  //           headerRows: 1,
-  //           widths: ['auto', 'auto', 'auto', '*'],
-  //           body: this.pdfStudentsList,
-  //           pageBreak: 'after'
-  //         }
-  //       },
+        {
+          table: {
+            headerRows: 1,
+            widths: ['auto', 'auto', 'auto', '*'],
+            body: this.pdfStudentsList,
+            pageBreak: 'after'
+          }
+        },
 
-  //       { text: 'Average Score Legend', style: 'subheader', margin: [5, 30, 5, 10] },
+        { text: 'Average Score Legend', style: 'subheader', margin: [5, 30, 5, 10] },
 
-  //       {
-  //         table: {
-  //           headerRows: 1,
-  //           widths: ['auto', '*'],
-  //           body: [
-  //             [{ text: 'Legend', bold: true, style: 'tableHeader' }, { text: 'Description', bold: true, style: 'tableHeader' }],
-  //             [{ text: '1', bold: true, alignment: 'center' }, 'A below average student. Needs improvement as student displays poor attitude or behaviour throughout the intake.'],
-  //             [{ text: '>1-2', bold: true, alignment: 'center' }, 'An average student. Has shown satisfactory or reasonable improvement throughout the intake.'],
-  //             [{ text: '>2-3', bold: true, alignment: 'center' }, 'An excellent student. Has fully shown exceptional development in every aspect throughout the intake.'],
-  //           ],
-  //           pageBreak: 'after'
-  //         }
-  //       }
+        {
+          table: {
+            headerRows: 1,
+            widths: ['auto', '*'],
+            body: [
+              [{ text: 'Legend', bold: true, style: 'tableHeader' }, { text: 'Description', bold: true, style: 'tableHeader' }],
+              [{ text: '1', bold: true, alignment: 'center' }, 'A below average student. Needs improvement as student displays poor attitude or behaviour throughout the intake.'],
+              [{ text: '>1-2', bold: true, alignment: 'center' }, 'An average student. Has shown satisfactory or reasonable improvement throughout the intake.'],
+              [{ text: '>2-3', bold: true, alignment: 'center' }, 'An excellent student. Has fully shown exceptional development in every aspect throughout the intake.'],
+            ],
+            pageBreak: 'after'
+          }
+        }
 
-  //     ],
-  //     footer: (currentPage, pageCount) => {
-  //       return {
-  //         columns: [
-  //           { width: '5%', text: '' },
-  //           {
-  //             width: '75%',
-  //             text: `Generated using APSpace (${currentDate.toDateString()})`,
-  //             alignment: 'left',
-  //             style: 'greyColor'
-  //           },
-  //           {
-  //             width: '5%',
-  //             text: ''
-  //           },
-  //           {
-  //             width: '10%',
-  //             text: currentPage.toString() + ' of ' + pageCount,
-  //             alignment: 'right',
-  //             style: 'greyColor'
-  //           },
-  //           { width: '5%', text: '' }
-  //         ]
-  //       };
-  //     },
+      ],
+      footer: (currentPage, pageCount) => {
+        return {
+          columns: [
+            { width: '5%', text: '' },
+            {
+              width: '75%',
+              text: `Generated using APSpace (${currentDate.toDateString()})`,
+              alignment: 'left',
+              style: 'greyColor'
+            },
+            {
+              width: '5%',
+              text: ''
+            },
+            {
+              width: '10%',
+              text: currentPage.toString() + ' of ' + pageCount,
+              alignment: 'right',
+              style: 'greyColor'
+            },
+            { width: '5%', text: '' }
+          ]
+        };
+      },
 
-  //     styles: {
-  //       greyColor: {
-  //         color: '#8a8a8a'
-  //       },
-  //       tableHeader: {
-  //         color: '#FFFFFF',
-  //         fillColor: '#A9A9A9'
-  //       },
-  //       header: {
-  //         fontSize: 18,
-  //         bold: true,
-  //       },
-  //       subheader: {
-  //         fontSize: 14,
-  //         bold: true,
-  //         margin: [0, 15, 0, 0]
-  //       },
-  //       subheader2bold: {
-  //         fontSize: 12,
-  //         bold: true,
-  //         margin: [0, 15, 0, 0]
-  //       },
-  //       subheader2: {
-  //         fontSize: 12,
-  //         bold: false,
-  //         margin: [0, 15, 0, 0]
-  //       },
-  //       story: {
-  //         italic: true,
-  //         alignment: 'center',
-  //         width: '50%',
-  //       }
-  //     }
-  //   };
-  //   this.pdfObj = pdfMake.createPdf(docDefinition);
-  //   this.pdfObj.download(pdfTitle + '.pdf');
+      styles: {
+        greyColor: {
+          color: '#8a8a8a'
+        },
+        tableHeader: {
+          color: '#FFFFFF',
+          fillColor: '#A9A9A9'
+        },
+        header: {
+          fontSize: 18,
+          bold: true,
+        },
+        subheader: {
+          fontSize: 14,
+          bold: true,
+          margin: [0, 15, 0, 0]
+        },
+        subheader2bold: {
+          fontSize: 12,
+          bold: true,
+          margin: [0, 15, 0, 0]
+        },
+        subheader2: {
+          fontSize: 12,
+          bold: false,
+          margin: [0, 15, 0, 0]
+        },
+        story: {
+          italic: true,
+          alignment: 'center',
+          width: '50%',
+        }
+      }
+    };
+    this.pdfObj = pdfMake.createPdf(docDefinition);
+    this.pdfObj.download(pdfTitle + '.pdf');
 
-  // }
+  }
 
-  // submit(studentBehaviors: APLCStudentBehaviour[]) {
-  //   const btn: AlertButton = {
-  //     text: 'Yes',
-  //     handler: async () => {
-  //       let formValidFalg = true;
-  //       const loading = await this.loadingCtrl.create({
-  //         message: 'Please wait...',
-  //       });
-  //       await loading.present();
-  //       studentBehaviors.forEach(studentBehavior => {
-  //         if ((studentBehavior.COMPLETING_BEH === 0 ||
-  //           studentBehavior.CONCEPT_BEH === 0 ||
-  //           studentBehavior.SOCIAL_BEH === 0 ||
-  //           studentBehavior.ACADEMIC_BEH === 0) && (
-  //             studentBehavior.COMPLETING_BEH !== 0 ||
-  //             studentBehavior.CONCEPT_BEH !== 0 ||
-  //             studentBehavior.SOCIAL_BEH !== 0 ||
-  //             studentBehavior.ACADEMIC_BEH !== 0
-  //           )) {
-  //           // user submitted part of a student behavior only
-  //           formValidFalg = false;
-  //         }
-  //       });
+  submit(studentBehaviors: APLCStudentBehaviour[]) {
+    const btn: AlertButton = {
+      text: 'Yes',
+      handler: async () => {
+        let formValidFalg = true;
+        const loading = await this.loadingCtrl.create({
+          message: 'Please wait...',
+        });
+        await loading.present();
+        studentBehaviors.forEach(studentBehavior => {
+          if ((studentBehavior.COMPLETING_BEH === 0 ||
+            studentBehavior.CONCEPT_BEH === 0 ||
+            studentBehavior.SOCIAL_BEH === 0 ||
+            studentBehavior.ACADEMIC_BEH === 0) && (
+              studentBehavior.COMPLETING_BEH !== 0 ||
+              studentBehavior.CONCEPT_BEH !== 0 ||
+              studentBehavior.SOCIAL_BEH !== 0 ||
+              studentBehavior.ACADEMIC_BEH !== 0
+            )) {
+            // user submitted part of a student behavior only
+            formValidFalg = false;
+          }
+        });
 
-  //       if (formValidFalg) {
-  //         this.ws.put<any>('/aplc/student-behavior', {
-  //           url: this.devUrl,
-  //           body: studentBehaviors
-  //         }).subscribe({
-  //           next: () => {
-  //             this.component.toastMessage('Student behaviors has been updated successfully!', 'success');
-  //           },
-  //           error: () => {
-  //             this.component.toastMessage('Something went wrong! please try again or contact us via the feedback page', 'danger');
-  //           },
-  //           complete: () => {
-  //             loading.dismiss();
-  //             this.doRefresh();
-  //             this.editMode = false;
-  //           }
-  //         });
-  //       } else {
-  //         loading.dismiss();
-  //         this.component.toastMessage('Once you start filling up the behavior for a student you must finish all his/her behaviors', 'danger');
-  //       }
-  //     }
-  //   }
+        if (formValidFalg) {
+          this.ws.put<any>('/aplc/student-behavior', {
+            url: this.devUrl,
+            body: studentBehaviors
+          }).subscribe({
+            next: () => {
+              this.component.toastMessage('Student behaviors has been updated successfully!', 'success');
+            },
+            error: () => {
+              this.component.toastMessage('Something went wrong! please try again or contact us via the feedback page', 'danger');
+            },
+            complete: () => {
+              loading.dismiss();
+              this.doRefresh();
+              this.editMode = false;
+            }
+          });
+        } else {
+          loading.dismiss();
+          this.component.toastMessage('Once you start filling up the behavior for a student you must finish all his/her behaviors', 'danger');
+        }
+      }
+    }
 
-  //   this.component.alertMessage('Confirm!', 'You are about to update the students\' behaviors. Do you want to continue?', 'Cancel', btn, 'danger-alert');
-  // }
+    this.component.alertMessage('Confirm!', 'You are about to update the students\' behaviors. Do you want to continue?', 'Cancel', btn, 'danger-alert');
+  }
 }

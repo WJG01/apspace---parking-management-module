@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { AplcProgressionPageRoutingModule } from './aplc-progression-routing.module';
 import { AplcProgressionPage } from './aplc-progression.page';
+import { SearchPipe } from './search/search.pipe';
 
 @NgModule({
   imports: [
@@ -13,6 +14,6 @@ import { AplcProgressionPage } from './aplc-progression.page';
     IonicModule,
     AplcProgressionPageRoutingModule
   ],
-  declarations: [AplcProgressionPage]
+  declarations: [AplcProgressionPage, SearchPipe]
 })
 export class AplcProgressionPageModule { }
