@@ -158,6 +158,11 @@ export class HolidaysPage implements OnInit {
   }
 
   async generatePdf() {
+    if (this.holidays.length < 1) {
+      this.component.toastMessage(`No Holidays available for the year ${this.filterObject.year}`, 'warning');
+      return;
+    }
+
     const loading = await this.loadingCtrl.create({
       message: 'Generating PDF...',
     });
