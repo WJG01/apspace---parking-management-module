@@ -85,6 +85,11 @@ export class HolidaysPage implements OnInit {
               });
             }
           }
+
+          if (this.filterObject.upcoming) {
+            holidaySet.holidays = holidaySet.holidays.filter(h => new Date(h.holiday_start_date) > this.todaysDate);
+          }
+
           return filteredHolidaySets;
         }
 
