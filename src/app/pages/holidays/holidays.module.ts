@@ -8,6 +8,7 @@ import { CalendarModule } from 'ion2-calendar';
 import { HolidaysPageRoutingModule } from './holidays-routing.module';
 import { HolidaysPage } from './holidays.page';
 import { MonthColorPipe } from './month-color/month-color.pipe';
+import { ComponentsModule } from '../../components/components.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { MonthColorPipe } from './month-color/month-color.pipe';
     FormsModule,
     IonicModule,
     HolidaysPageRoutingModule,
-    CalendarModule
+    CalendarModule,
+    ComponentsModule
   ],
   declarations: [HolidaysPage, MonthColorPipe]
 })

@@ -178,7 +178,13 @@
           </ng-container>
 
           <ng-template #noHolidays>
-            <h1>None</h1>
+            <ion-card class="ion-no-margin">
+              <message-with-svg imageUrl="assets/img/search_not_found.svg" messageTitle="No Holidays Available!"
+                wrapperSize="6" wrapperOffset="3"
+                messageContent="No Holidays were added for the year {{ filterObject.year }}. Please select other available Years."
+                wrapperMarginTop="20px">
+              </message-with-svg>
+            </ion-card>
           </ng-template>
         </ng-container>
 
