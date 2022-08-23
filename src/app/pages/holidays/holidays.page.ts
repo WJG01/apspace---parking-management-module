@@ -4,7 +4,7 @@ import { finalize, map, Observable, tap } from 'rxjs';
 import { format } from 'date-fns';
 import { CalendarComponentOptions, DayConfig } from 'ion2-calendar';
 
-import { HolidaysV2, HolidayV2 } from '../../interfaces';
+import { HolidaySets, HolidayV2 } from '../../interfaces';
 import { WsApiService } from '../../services';
 
 @Component({
@@ -15,7 +15,7 @@ import { WsApiService } from '../../services';
 export class HolidaysPage implements OnInit {
 
   devUrl = 'https://2o7wc015dc.execute-api.ap-southeast-1.amazonaws.com/dev';
-  holidays$: Observable<HolidaysV2[]>;
+  holidaySets$: Observable<HolidaySets[]>;
   holidays: HolidayV2[] = [];
   skeleton = new Array(6);
   selectedSegment: 'list' | 'calendar' = 'calendar';
@@ -49,7 +49,7 @@ export class HolidaysPage implements OnInit {
   doRefresh(refresher?) {
     this.holidays = []; // Empty array before pushing
 
-    this.holidays$ = this.ws.get<HolidaysV2[]>('/v2/transix/holiday/active', { url: this.devUrl }).pipe(
+    this.holidaySets$ = this.ws.get<HolidaySets[]>('/v2/transix/holiday/active', { url: this.devUrl }).pipe(
       tap(holidaySets => {
         for (const holidaySet of holidaySets) {
           const year = holidaySet.year;
@@ -59,36 +59,36 @@ export class HolidaysPage implements OnInit {
           }
         }
       }),
-      map(holidays => {
-        let filteredHolidays = holidays.filter(h => h.year === this.filterObject.year);
+      map(holidaySets => {
+        let filteredHolidaySets = holidaySets.filter(h => h.year === this.filterObject.year);
 
-        for (const filteredHoliday of filteredHolidays) {
-          filteredHoliday.holidays = filteredHoliday.holidays.filter(h => h.holiday_people_affected === this.filterObject.affecting);
+        for (const holidaySet of filteredHolidaySets) {
+          holidaySet.holidays = holidaySet.holidays.filter(h => h.holiday_people_affected === this.filterObject.affecting);
 
           if (this.filterObject.duration !== 'all') {
             if (this.filterObject.duration === '1 day') {
-              filteredHoliday.holidays = filteredHoliday.holidays.filter(h => {
+              holidaySet.holidays = holidaySet.holidays.filter(h => {
                 return this.getNumberOfDaysForHoliday(
                   new Date(format(new Date(h.holiday_start_date), 'yyyy-MM-dd')),
                   new Date(format(new Date(h.holiday_end_date), 'yyyy-MM-dd'))) === '1 day'
               });
             } else {
-              filteredHoliday.holidays = filteredHoliday.holidays.filter(h => {
+              holidaySet.holidays = holidaySet.holidays.filter(h => {
                 return this.getNumberOfDaysForHoliday(
                   new Date(format(new Date(h.holiday_start_date), 'yyyy-MM-dd')),
                   new Date(format(new Date(h.holiday_end_date), 'yyyy-MM-dd'))) !== '1 day'
               });
             }
           }
-          return filteredHolidays;
+          return filteredHolidaySets;
         }
 
-        return filteredHolidays;
+        return filteredHolidaySets;
       }),
-      tap(holidays => {
-        if (holidays.length < 1) return;
+      tap(holidaySets => {
+        if (holidaySets.length < 1) return;
 
-        for (const holiday of holidays[0].holidays) {
+        for (const holiday of holidaySets[0].holidays) {
           this.holidays.push(holiday);
           this.datesConfig.push({
             date: holiday.holiday_start_date,

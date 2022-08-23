@@ -17,7 +17,7 @@ enum PeopleAffected {
   Staffs = 'staffs'
 }
 
-export interface HolidaysV2 {
+export interface HolidaySets {
   active: boolean;
   colors: HolidayColor[];
   holidays: HolidayV2[];

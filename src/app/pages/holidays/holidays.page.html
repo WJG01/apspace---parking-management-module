@@ -84,7 +84,7 @@
           </ion-accordion-group>
         </ion-card>
 
-        <ng-container *ngIf="(holidays$ | async) as holidays; else loading">
+        <ng-container *ngIf="(holidaySets$ | async) as holidays; else loading">
           <ng-container *ngIf="holidays.length > 0; else noHolidays">
             <ng-container *ngIf="holidays[0] as filteredHolidays">
               <ion-item color="light" lines="none" class="ion-margin-bottom">

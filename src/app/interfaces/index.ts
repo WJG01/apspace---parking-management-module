@@ -24,7 +24,7 @@ export {
 export {
   HolidayColor,
   HolidayV2,
-  HolidaysV2
+  HolidaySets
 } from './holiday';
 export {
   AddFreeSlotBody,
