@@ -140,7 +140,7 @@
             </ion-item>
           </ion-radio-group>
 
-          <ion-item lines="inset">
+          <ion-item [lines]="!(disableShakespear$ | async) && isCapacitor ? 'inset' : 'none'">
             <ion-label>
               Disable Shake Feedback
               <p *ngIf="!isCapacitor">This feature available only on mobile app</p>
@@ -149,16 +149,9 @@
               (ngModelChange)="shakespearChanged($event)"></ion-toggle>
           </ion-item>
 
-          <ion-item lines="none">
+          <ion-item lines="none" *ngIf="!(disableShakespear$ | async) && isCapacitor">
             <ion-label>
               Shake Sensitivity
-              <p *ngIf="!(disableShakespear$ | async) && isCapacitor">
-                <small class="glob-danger-text glob-fw-600">Shake Feedback is Disabled</small>
-              </p>
-
-              <p *ngIf="!isCapacitor">
-                <small class="glob-fw-600">This feature available only on mobile app</small>
-              </p>
               <ion-range [disabled]="!isCapacitor" value="1400" color="primary" min="0" max="4" step="1" ticks="true"
                 snaps="true" pin="true" [ngModel]="shakeSensitivity$ | async"
                 (ngModelChange)="shakespearSensitivityChanged($event)">
