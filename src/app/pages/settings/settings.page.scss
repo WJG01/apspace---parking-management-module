@@ -1,3 +1,41 @@
 ion-range {
   padding: 0;
 }
+
+.radio-header {
+  margin: 7px 0;
+
+  h3 {
+    font-weight: 600;
+    font-size: 16px;
+  }
+  p {
+    font-weight: 900;
+    font-style: 15px;
+    color: var(--ion-color-primary);
+  }
+}
+
+.small-margin-bottom {
+  margin-bottom: 10px;
+}
+
+@media screen and (max-width: 768px) {
+  ion-col:last-child {
+    padding-top: 0;
+  }
+}
+
+@media screen and (max-width: 720px) {
+  ion-col {
+    padding: 0;
+  }
+
+  .small-margin-top {
+    margin-top: 5px;
+  }
+
+  ion-card {
+    border-radius: 0 !important;
+  }
+}
