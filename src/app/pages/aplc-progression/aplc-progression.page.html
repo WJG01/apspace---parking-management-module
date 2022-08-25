@@ -24,7 +24,7 @@
             <ion-item lines="full">
               <ion-label position="stacked">Subject Code</ion-label>
               <ion-select interface="popover" placeholder="Select a Subject" [disabled]="!(subjects.length > 0)"
-                [ngModel]="subjectCode" (ngModelChange)="onSubjectCodeChange()">
+                [(ngModel)]="subjectCode" (ngModelChange)="onSubjectCodeChange()">
                 <ion-select-option *ngFor="let subject of subjects" [value]="subject.SUBJECT_CODE">
                   {{ subject.SUBJECT_CODE }}
                 </ion-select-option>
@@ -35,7 +35,7 @@
               <ng-container *ngIf="(classes$ | async) as classes; else loadingClasses">
                 <ion-item lines="none">
                   <ion-label position="stacked">Class Code</ion-label>
-                  <ion-select placeholder="Select a Class Code" [ngModel]="classCode"
+                  <ion-select placeholder="Select a Class Code" [(ngModel)]="classCode"
                     (ngModelChange)="onClassCodeChange()">
                     <ion-select-option *ngFor="let class of classes" [value]="class.CLASS_CODE">
                       {{ class.CLASS_CODE }}
