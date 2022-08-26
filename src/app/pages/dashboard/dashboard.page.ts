@@ -16,12 +16,12 @@ import {
   Course, CourseDetails, DashboardCardComponentConfigurations,
   EventComponentConfigurations, ExamSchedule, FeesTotalSummary, Holiday, Holidays, LecturerTimetable,
   MoodleEvent, News, OrientationStudentDetails, Quote, Role, ShortNews,
-  StaffDirectory, StaffProfile, StudentPhoto, StudentProfile, StudentTimetable
+  StaffDirectory, StaffProfile, StudentPhoto, StudentProfile, StudentTimetable, UserVaccineInfo
 } from 'src/app/interfaces';
 import {
-   CasTicketService,NewsService,
-   NotificationService, SettingsService, StudentTimetableService,
-  WsApiService,ComponentService,
+  CasTicketService, NewsService,
+  NotificationService, SettingsService, StudentTimetableService,
+  WsApiService, ComponentService,
 } from 'src/app/services';
 import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-with-timezone.pipe';
 // import { NotifierService } from 'src/app/shared/notifier/notifier.service'; v4: this need to migrate in the future
@@ -147,51 +147,51 @@ export class DashboardPage implements OnInit, DoCheck {
 
   //ApcardChart Configs
 
-  apcardChart : {
-    options : ChartOptions,
-    data : ChartData,
-  }= {
-    options: {
-      plugins:{
-        legend: {
-        display: true,
-        position: 'top',
+  apcardChart: {
+    options: ChartOptions,
+    data: ChartData,
+  } = {
+      options: {
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+          }
+        },
+      },
+      data: {
+        labels: [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec',
+        ],
+        datasets: [
+          {
+            label: 'Monthly Credit',
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            borderColor: 'rgb(73, 181, 113, .7)',
+            backgroundColor: 'rgba(73, 181, 113, .3)',
+            fill: true,
+          },
+          {
+            label: 'Monthly Debit',
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            borderColor: 'rgb(224, 20, 57, .7)',
+            backgroundColor: 'rgb(224, 20, 57, .3)',
+            fill: true,
+          },
+        ],
       }
-    },
-    },
-    data: {
-      labels: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-      ],
-      datasets: [
-        {
-          label: 'Monthly Credit',
-          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-          borderColor: 'rgb(73, 181, 113, .7)',
-          backgroundColor: 'rgba(73, 181, 113, .3)',
-          fill: true,
-        },
-        {
-          label: 'Monthly Debit',
-          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-          borderColor: 'rgb(224, 20, 57, .7)',
-          backgroundColor: 'rgb(224, 20, 57, .3)',
-          fill: true,
-        },
-      ],
-    }
-  };
+    };
 
   // FINANCIALS
   totalOverdue$: Observable<{ value: number }>;
@@ -199,20 +199,20 @@ export class DashboardPage implements OnInit, DoCheck {
   financial$: Observable<FeesTotalSummary>;
 
   // Financials chart config
-  financialsChart : {
-    options : ChartOptions,
-    data : ChartData,
+  financialsChart: {
+    options: ChartOptions,
+    data: ChartData,
   } = {
-    options: {
-      hover: { mode:null },
-      scales: {
-        x: { stacked: true },
-        y: { stacked: true }
+      options: {
+        hover: { mode: null },
+        scales: {
+          x: { stacked: true },
+          y: { stacked: true }
+        },
+        responsive: true
       },
-      responsive: true
-    },
-    data: null
-  };
+      data: null
+    };
   financialsCardConfigurations: DashboardCardComponentConfigurations = {
     withOptionsButton: false,
     cardTitle: 'Financials',
@@ -249,7 +249,7 @@ export class DashboardPage implements OnInit, DoCheck {
 
   // CGPA
   cgpaChart: {
-    options : ChartOptions,
+    options: ChartOptions,
     data: ChartData,
   };
   cgpaPerIntake$: Observable<CgpaPerIntake>;
@@ -260,6 +260,10 @@ export class DashboardPage implements OnInit, DoCheck {
     cardTitle: 'CGPA Per Intake',
     contentPadding: true
   };
+
+  // User Vaccination Information
+  userVaccinationInfo$: Observable<UserVaccineInfo[]>;
+  userVaccinationStatus: any = {};
 
   // timezone
   enableMalaysiaTimezone;
@@ -368,6 +372,10 @@ export class DashboardPage implements OnInit, DoCheck {
     });
   }
 
+  getUserVaccinationInfo() {
+    this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo[]>('/covid19/user');
+  }
+
   // For Upcoming Trips
   ngDoCheck() {
     combineLatest([
@@ -411,6 +419,7 @@ export class DashboardPage implements OnInit, DoCheck {
     this.apcardTransaction$ = this.getTransactions(true); // no-cache for APCard transactions
     this.getBadge();
     const forkJoinArray = [this.getProfile(refresher)];
+    this.getUserVaccinationInfo();
     if (this.isStudent) {
       forkJoinArray.push(this.financial$ = this.getOverdueFee(true));
     }
@@ -993,8 +1002,8 @@ export class DashboardPage implements OnInit, DoCheck {
   getUpcomingMoodle(date: Date, refresher?: boolean): Observable<EventComponentConfigurations[]> {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
     return this.ws.get<MoodleEvent[]>('/moodle/events',
-    { auth: true, caching },
-      ).pipe(
+      { auth: true, caching },
+    ).pipe(
       map(moodleList => {
         if (moodleList) {
           return moodleList.filter(moodle => this.eventIsComing(new Date(moodle.timestart), date));
@@ -1025,7 +1034,7 @@ export class DashboardPage implements OnInit, DoCheck {
     );
   }
 
-  getSortEvents(event: EventComponentConfigurations[]): EventComponentConfigurations[]{
+  getSortEvents(event: EventComponentConfigurations[]): EventComponentConfigurations[] {
     const sortedEvents: EventComponentConfigurations[] = event.sort((a, b): number => {
       const da = new Date(a.dateOrTime);
       const db = new Date(b.dateOrTime);
@@ -1194,7 +1203,7 @@ export class DashboardPage implements OnInit, DoCheck {
                   }
                 },
                 responsive: true,
-                plugins : {
+                plugins: {
                   legend: {
                     display: false,
                   },
@@ -1326,10 +1335,10 @@ export class DashboardPage implements OnInit, DoCheck {
       text: 'Log Out',
       cssClass: 'main',
       handler: () => {
-                this.navCtrl.navigateForward('/logout');
+        this.navCtrl.navigateForward('/logout');
       }
     };
-    this.component.alertMessage('Are you sure you want to log out?','','Cancel',btn,'danger-alert');
+    this.component.alertMessage('Are you sure you want to log out?', '', 'Cancel', btn, 'danger-alert');
   }
 
   // GET DAY SHORT NAME (LIKE 'SAT' FOR SATURDAY)
