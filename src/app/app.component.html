@@ -1,4 +1,4 @@
-<!-- TODO: Change this dynamically once settings service is ready -->
-<ion-app class="purple">
+<!-- weird bug when [ngClass]="[theme$ | async, accentColor$ | async]", probably race condition -->
+<ion-app [class]="accentColor$ | async" [ngClass]="theme$ | async">
   <ion-router-outlet></ion-router-outlet>
 </ion-app>

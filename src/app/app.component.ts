@@ -2,11 +2,13 @@ import { Component } from '@angular/core';
 import { NavigationExtras } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
 import { AlertButton, NavController } from '@ionic/angular';
+import { Observable } from 'rxjs';
 
 import { Storage } from '@ionic/storage-angular';
 
 import { VersionValidator } from './interfaces';
-import { ComponentService, ConfigurationsService, WsApiService } from './services';
+import { ComponentService, ConfigurationsService, SettingsService, WsApiService } from './services';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -14,12 +16,16 @@ import { ComponentService, ConfigurationsService, WsApiService } from './service
 })
 export class AppComponent {
 
+  theme$: Observable<string>;
+  accentColor$: Observable<string>;
+
   constructor(
     private storage: Storage,
     private config: ConfigurationsService,
     private ws: WsApiService,
     private navCtrl: NavController,
-    private component: ComponentService
+    private component: ComponentService,
+    private settings: SettingsService
   ) {
     this.initialiseStorage();
     this.checkForUpdate();
@@ -27,6 +33,10 @@ export class AppComponent {
 
   async initialiseStorage() {
     await this.storage.create();
+    // Initialise Settings
+    this.settings.initSettings();
+    this.accentColor$ = this.settings.get$('accentColor');
+    this.theme$ = this.settings.get$('theme');
   }
 
   checkForUpdate() {
