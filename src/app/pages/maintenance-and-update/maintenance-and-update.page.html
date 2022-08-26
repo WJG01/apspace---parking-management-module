@@ -1,0 +1,34 @@
+<ion-content>
+  <ion-row class="full-height">
+    <ion-col size-xs="12" size-md="10" offset-md="1" class="glob-margin-auto">
+      <ion-card class="ion-no-margin">
+        <ion-card-content class="ion-margin-top ion-margin-bottom">
+          <ion-row>
+            <ion-col size-xs="12" size-md="7">
+              <ion-img [src]="forceUpdate ? 'assets/img/update.svg' : 'assets/img/maintenance.svg'"></ion-img>
+            </ion-col>
+            <ion-col class="glob-margin-auto" size-xs="12" size-md="5">
+              <h2 class="ion-text-center glob-text-bold glob-primary-text">
+                {{ forceUpdate ? 'Update Available' : 'System Under Maintenance' }}
+              </h2>
+              <p class="ion-text-center">
+                {{
+                forceUpdate ? ' New APSpace version is available. Please update the app to continue using.' :
+                'APSpace is currently undergoing scheduled maintenance. It should be back shortly. Thank you for your patience.'
+                }}
+              </p>
+              <ion-row>
+                <ion-col size="8" offset="2">
+                  <ion-button expand="block" (click)="openPage()">
+                    <ion-icon name="mail" slot="start"></ion-icon>
+                    {{ forceUpdate ? 'Update' : 'Contact Us' }}
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-content>

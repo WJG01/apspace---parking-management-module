@@ -234,6 +234,10 @@ const routes: Routes = [
     data: { role: Role.Student | Role.Admin | Role.Lecturer },
     loadChildren: () => import('./pages/holidays/holidays.module').then(m => m.HolidaysPageModule)
   },
+  {
+    path: 'maintenance-and-update',
+    loadChildren: () => import('./pages/maintenance-and-update/maintenance-and-update.module').then(m => m.MaintenanceAndUpdatePageModule)
+  },
   { // this path must always be at the end of the routes array
     path: '**',
     canActivate: [AuthGuard],
