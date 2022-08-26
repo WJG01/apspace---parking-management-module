@@ -12,6 +12,11 @@ export { BusTrip, BusTrips, APULocation, APULocations } from './bus-shuttle-serv
 export { ClassificationLegend } from './classfication-legend';
 export { CourseDetails } from './course-details';
 export { Course } from './course';
+export {
+  VaccinationStatus,
+  VaccinationType,
+  UserVaccineInfo
+} from './covid-forms';
 export { DeterminationLegend } from './determination-legend';
 export { OrientationStudentDetails } from './e-orientation';
 export { ExamSchedule } from './exam-schedule';

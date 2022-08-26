@@ -238,6 +238,30 @@ const routes: Routes = [
     path: 'maintenance-and-update',
     loadChildren: () => import('./pages/maintenance-and-update/maintenance-and-update.module').then(m => m.MaintenanceAndUpdatePageModule)
   },
+  {
+    path: 'covid-forms',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/covid-forms/covid-forms.module').then(m => m.CovidFormsPageModule)
+  },
+  {
+    path: 'covid-information-form',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/covid-forms/covid-information-form/covid-information-form.module').then(m => m.CovidInformationFormPageModule)
+  },
+  {
+    path: 'covid-rtk-form',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/covid-forms/covid-rtk-form/covid-rtk-form.module').then(m => m.CovidRtkFormPageModule)
+  },
+  {
+    path: 'covid-pcr-form',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/covid-forms/covid-pcr-form/covid-pcr-form.module').then(m => m.CovidPcrFormPageModule)
+  },
   { // this path must always be at the end of the routes array
     path: '**',
     canActivate: [AuthGuard],
