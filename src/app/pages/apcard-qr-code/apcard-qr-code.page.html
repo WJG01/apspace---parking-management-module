@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>
+      Location Update
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button color="primary" (click)="viewHistory()">
+        <ion-icon slot="icon-only" name="clipboard"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [style.--background]="'#00000000'">
+  <div class="scan-box"></div>
+</ion-content>
