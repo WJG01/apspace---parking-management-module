@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { MentorshipStudentList } from 'src/app/interfaces/mentorship';
+import { MentorshipRelationType, MentorshipStudentList } from 'src/app/interfaces/mentorship';
 import { MentorshipService } from 'src/app/services/mentorship.service';
 
 @Component({
@@ -13,6 +13,7 @@ export class MentorshipPage {
 
   loadingSkeletons = Array(4);
   students$: Observable<MentorshipStudentList[]>;
+  relationType$: Observable<MentorshipRelationType[]>;
   search = '';
   filter = '';
 
@@ -22,6 +23,6 @@ export class MentorshipPage {
 
   ionViewDidEnter() {
     this.students$ = this.mentorship.getStudents();
+    this.relationType$ = this.mentorship.getRelationType();
   }
-
 }

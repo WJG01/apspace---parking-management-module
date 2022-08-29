@@ -5,7 +5,7 @@ import { StudentProfile } from '../interfaces';
 import {
   MentorshipAttendance,
   MentorshipCourseDetail,
-  MentorshipIntake,
+  MentorshipIntake, MentorshipRelationType,
   MentorshipResult,
   MentorshipSemesterSummary,
   MentorshipStudentList,
@@ -17,12 +17,18 @@ import { WsApiService } from './ws-api.service';
 })
 export class MentorshipService {
 
+  // dev = 'https://gmywrxsd75.execute-api.ap-southeast-1.amazonaws.com/dev';
+
   constructor(
     private ws: WsApiService
   ) { }
 
   getStudents(): Observable<MentorshipStudentList[]> {
     return this.ws.get<MentorshipStudentList[]>('/mentor/student_list');
+  }
+
+  getRelationType(): Observable<MentorshipRelationType[]> {
+    return this.ws.get<MentorshipRelationType[]>('/mentor/get_relationtype');
   }
 
   getStudentRemarks(tp: string): Observable<StudentRemark[]> {
