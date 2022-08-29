@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertButton, LoadingController, NavController, Platform } from '@ionic/angular';
+import { AlertButton, LoadingController, ModalController, NavController, Platform } from '@ionic/angular';
 
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 
 import { ComponentService, WsApiService } from '../../services';
+import { DressCodeReminderModalPage } from './dress-code-reminder/dress-code-reminder-modal';
+import { VisitHistoryModalPage } from './visit-history/visit-history-modal';
 
 @Component({
   selector: 'app-apcard-qr-code',
@@ -20,7 +22,8 @@ export class ApcardQrCodePage implements OnInit {
     private loadingCtrl: LoadingController,
     private ws: WsApiService,
     private component: ComponentService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private modalCtrl: ModalController
   ) { }
 
   ngOnInit() {
@@ -101,11 +104,17 @@ export class ApcardQrCodePage implements OnInit {
     });
   }
 
-  openDressCodeReminderPage() {
-
+  async openDressCodeReminderPage() {
+    const modal = await this.modalCtrl.create({
+      component: DressCodeReminderModalPage
+    });
+    await modal.present();
   }
 
-  viewHistory() {
-
+  async viewHistory() {
+    const modal = await this.modalCtrl.create({
+      component: VisitHistoryModalPage
+    });
+    await modal.present();
   }
 }
