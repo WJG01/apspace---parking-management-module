@@ -22,7 +22,7 @@
             <ion-col size="12" size-md="3" class="glob-margin-auto">
               <ion-item *ngIf="relationType$ | async as relationTypes; else noSelect" lines="none" color="light" class="with-borders">
                 <ion-label>Filter</ion-label>
-                <ion-select  [(ngModel)]="filter" interface="popover">
+                <ion-select [(ngModel)]="filter" interface="popover">
                   <ion-select-option selected></ion-select-option>
                   <ion-select-option *ngFor="let relationType of relationTypes" [value]="relationType.VALUE">
                     {{relationType.RELATIONTYPE}}
