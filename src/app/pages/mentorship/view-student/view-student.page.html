@@ -18,10 +18,10 @@
           <ion-card *ngIf="(profile$ | async) as profile; else loadingStudentProfile" class="ion-no-padding">
             <ion-card-content>
               <ion-avatar class="avatar">
-                <ion-img [src]="
+                <ion-img #image [src]="
                               'data:image/jpg;base64,' +
                               profile[0].STUDENT_PHOTO
-                              " (ionError)="$event.target.src = 'assets/img/no_img.png'">
+                              " (ionError)="image.src = 'assets/img/no_img.png'">
                 </ion-img>
               </ion-avatar>
 

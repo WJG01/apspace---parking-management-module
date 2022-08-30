@@ -13,6 +13,7 @@ import { GenPipe } from './gen.pipe';
 import { ThedayPipe } from './theday.pipe';
 import { TheWeekPipe } from './theweek.pipe';
 import { TimeParserPipe } from './time-parser.pipe';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
     imports: [
@@ -20,7 +21,8 @@ import { TimeParserPipe } from './time-parser.pipe';
         FormsModule,
         IonicModule,
         StudentTimetablePageRoutingModule,
-        SharedPipesModule
+        SharedPipesModule,
+        ComponentsModule
     ],
     declarations: [StudentTimetablePage, ClassesPipe, GenPipe, ThedayPipe, TheWeekPipe, TimeParserPipe]
 })

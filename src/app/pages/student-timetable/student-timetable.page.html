@@ -150,7 +150,7 @@
                 </ion-segment>
               </ng-template>
               <ng-container *ngIf="selectedDate; else weekly;">
-                <app-message-with-svg imageUrl="assets/img/happy.svg"
+                <message-with-svg imageUrl="assets/img/happy.svg"
                                       messageTitle="Hooray! No classes for {{intake}} {{selectedGrouping ? '('+ selectedGrouping +')' : '' }} on {{selectedDate | date: 'EEEE, dd MM yyy'}}."
                                       messageContent="If you think there is an issue, you can try this:" wrapperSize="6"
                                       wrapperMarginTop="10px" wrapperOffset="3" [advancedMode]="true">
@@ -164,10 +164,10 @@
                     <p>Still having trouble? No worries! Just click <a [routerLink]="'/feedback'">here</a> and
                       report the issue to us.</p>
                   </div>
-                </app-message-with-svg>
+                </message-with-svg>
               </ng-container>
               <ng-template #weekly>
-                <app-message-with-svg imageUrl="assets/img/happy.svg"
+                <message-with-svg imageUrl="assets/img/happy.svg"
                                       messageTitle="Hooray! No classes for {{intake}} {{selectedGrouping ? '('+ selectedGrouping +')' : '' }} on the week that starts on {{selectedWeek | date: 'EEEE, dd MM yyy'}}."
                                       messageContent="If you think there is an issue, you can try this:" wrapperSize="6"
                                       wrapperMarginTop="10px" wrapperOffset="3" [advancedMode]="true">
@@ -180,14 +180,14 @@
                     <p>Still having trouble? No worries! Just click <a [routerLink]="'/feedback'">here</a> and
                       report the issue to us.</p>
                   </div>
-                </app-message-with-svg>
+                </message-with-svg>
               </ng-template>
             </ion-card-content>
           </ion-card>
         </ng-container>
         <ng-template #noIntakeSelected>
           <ng-container *ngIf="room; else emptyIntake">
-            <app-message-with-svg imageUrl="assets/img/search-not-found.svg"
+            <message-with-svg imageUrl="assets/img/search-not-found.svg"
                                   messageTitle="Opps! The room ({{room}}) selected does not exist or its timetable is not available."
                                   messageContent="Perhaps you can try this:" wrapperSize="6" wrapperMarginTop="10px" wrapperOffset="3"
                                   [advancedMode]="true">
@@ -199,14 +199,14 @@
                 <p>Still having trouble? No worries! Just click <a [routerLink]="'/feedback'">here</a> and
                   report the issue to us.</p>
               </div>
-            </app-message-with-svg>
+            </message-with-svg>
           </ng-container>
           <ng-template #emptyIntake>
-            <app-message-with-svg imageUrl="assets/img/search-not-found.svg"
+            <message-with-svg imageUrl="assets/img/search-not-found.svg"
                                   messageTitle="Opps! It looks like that you forgot to select an intake."
                                   messageContent="Please select an intake from the intake button on the top right of the page"
                                   wrapperSize="6" wrapperMarginTop="10px" wrapperOffset="3" [advancedMode]="true">
-            </app-message-with-svg>
+            </message-with-svg>
           </ng-template>
         </ng-template>
       </ng-template>

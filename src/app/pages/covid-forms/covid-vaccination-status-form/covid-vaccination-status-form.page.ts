@@ -210,7 +210,7 @@ export class CovidVaccinationStatusFormPage implements OnInit {
     this.boosterMaxDate = false;
   }
 
-  async nSubmit() {
+  async onSubmit() {
     const body = new FormData();
     // Vaccinated with Booster
     if (this.vaccinationStatus === this.vaccinatedWithBooster) {

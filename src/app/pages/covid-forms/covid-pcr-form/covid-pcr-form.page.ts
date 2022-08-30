@@ -16,7 +16,7 @@ import { ComponentService, WsApiService } from '../../../services';
 
 export class CovidPcrFormPage implements OnInit {
   // User Vaccine Information
-  userVaccinationInfo$: Observable<UserVaccineInfo[]>;
+  userVaccinationInfo$: Observable<UserVaccineInfo>;
 
   // Dates
   todaysDate: string;
@@ -38,7 +38,7 @@ export class CovidPcrFormPage implements OnInit {
   }
 
   getUserVaccinationInfo() {
-    this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo[]>('/covid19/user');
+    this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo>('/covid19/user');
   }
 
   // Returns date from 7 days ago

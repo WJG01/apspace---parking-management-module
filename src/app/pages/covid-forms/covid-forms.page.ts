@@ -12,7 +12,7 @@ import { WsApiService } from '../../services';
 export class CovidFormsPage implements OnInit {
 
   // User Vaccination Information
-  userVaccinationInfo$: Observable<UserVaccineInfo[]>;
+  userVaccinationInfo$: Observable<UserVaccineInfo>;
 
   constructor(private ws: WsApiService) { }
 
@@ -21,6 +21,6 @@ export class CovidFormsPage implements OnInit {
   }
 
   getUserVaccinationInfo() {
-    this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo[]>('/covid19/user');
+    this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo>('/covid19/user');
   }
 }

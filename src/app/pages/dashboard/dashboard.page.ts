@@ -117,7 +117,7 @@ export class DashboardPage implements OnInit, DoCheck {
   intakeGroup = '';
 
   // UPCOMING EVENTS
-  upcomingEvent$: Observable<EventComponentConfigurations[]> | any;
+  upcomingEvent$: Observable<EventComponentConfigurations[]>;
   upcomingEventsCardConfigurations: DashboardCardComponentConfigurations = {
     withOptionsButton: false,
     cardTitle: 'Upcoming Events',
@@ -262,7 +262,7 @@ export class DashboardPage implements OnInit, DoCheck {
   };
 
   // User Vaccination Information
-  userVaccinationInfo$: Observable<UserVaccineInfo[]>;
+  userVaccinationInfo$: Observable<UserVaccineInfo>;
   userVaccinationStatus: any = {};
 
   // timezone
@@ -373,7 +373,7 @@ export class DashboardPage implements OnInit, DoCheck {
   }
 
   getUserVaccinationInfo() {
-    this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo[]>('/covid19/user');
+    this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo>('/covid19/user');
   }
 
   // For Upcoming Trips
@@ -551,7 +551,6 @@ export class DashboardPage implements OnInit, DoCheck {
           if (res) {
             this.userProfileName$ = this.settings.get$('userProfileName').pipe(
               map(data => {
-                console.log(this.userProfileName$);
                 return data.join(' ');
               })
             );

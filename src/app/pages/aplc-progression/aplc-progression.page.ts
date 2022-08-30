@@ -22,7 +22,7 @@ export class AplcProgressionPage implements OnInit {
   classDescription$: Observable<APLCClassDescription[]>;
   studentsBehaviour$: Observable<APLCStudentBehaviour[]>;
   scoreLegend$: Observable<any>; // keys are dynamic
-  descriptionLegend$: Observable<any>; // keys are dynamic
+  descriptionLegend$: Observable<{}>; // keys are dynamic
 
   pdfStudentsList: any; // array of arrays (format required by the library)
   skeletons = new Array(6);

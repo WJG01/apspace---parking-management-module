@@ -25,10 +25,10 @@
                         <div class="virtual-card" (click)="virtualCardModal(profile, studentRole)">
                           <img src="assets/img/student_card_apu.jpg">
                           <ng-template let-photo [ngIf]="photo$ | async">
-                            <ion-img class="profile-photo virtual-card-student-img" [src]="
+                            <ion-img #image class="profile-photo virtual-card-student-img" [src]="
                                                   'data:image/jpg;base64,' +
                                                   photo?.base64_photo
-                                                  " (ionError)="$event.target.src = 'assets/img/no_img.png'">
+                                                  " (ionError)="image.src = 'assets/img/no_img.png'">
                             </ion-img>
                           </ng-template>
                           <div class="virtual-card-student-details">
@@ -146,10 +146,10 @@
                             <div class="ion-float-end virtual-card">
                               <img src="assets/img/student_card_apu.jpg">
                               <ng-template let-photo [ngIf]="photo$ | async">
-                                <ion-img class="profile-photo virtual-card-student-img" [src]="
+                                <ion-img #image class="profile-photo virtual-card-student-img" [src]="
                                                     'data:image/jpg;base64,' +
                                                     photo?.base64_photo
-                                                    " (ionError)="$event.target.src = 'assets/img/no_img.png'">
+                                                    " (ionError)="image.src = 'assets/img/no_img.png'">
                                 </ion-img>
                               </ng-template>
                               <div class="virtual-card-student-details">
@@ -542,9 +542,9 @@
                           <ion-row>
                             <ion-col size="4" size-md="3" push-md="9">
                               <ng-container *ngIf="counselorProfile$ | async as councelorProfile">
-                                <ion-img class="counsellor-profile-photo"
+                                <ion-img #image class="counsellor-profile-photo"
                                          [src]="'https://d37plr7tnxt7lb.cloudfront.net/' + councelorProfile.RefNo + '.jpg'"
-                                         (ionError)="$event.target.src = 'assets/img/no_img.png'">
+                                         (ionError)="image.src = 'assets/img/no_img.png'">
                                 </ion-img>
                               </ng-container>
                             </ion-col>
@@ -626,8 +626,8 @@
                     <ion-col size="12" size-md="5" class="ion-align-self-center virtual-card-padding">
                       <div class="staff-virtual-card" (click)="virtualCardModal(staffProfile, studentRole)">
                         <img class="staff-background" src="assets/img/staff_card_apu.jpg">
-                        <img class="staff-profile-picture" [src]="staffProfile[0]?.PHOTO"
-                             (ionError)="$event.target.src = 'assets/img/no_img.png'">
+                        <img #image class="staff-profile-picture" [src]="staffProfile[0]?.PHOTO"
+                             (ionError)="image.src = 'assets/img/no_img.png'">
                         <div class="staff-details">
                           <p>{{ staffProfile[0].FULLNAME }}</p>
                           <p>{{ staffProfile[0].TITLE }}</p>

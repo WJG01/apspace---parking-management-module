@@ -189,7 +189,7 @@ export class BusShuttleServicesPage implements OnInit {
   }
 
   // GET LOCATION NAME BY LOCATION ID
-  getLocationDisplayNameAndType(locationName: string) {
+  getLocationDisplayNameAndType(locationName: any) {
     for (const location of this.locations) {
       if (location.location_name === locationName) {
         return location.location_nice_name + '&&' + location.location_type;
@@ -198,7 +198,7 @@ export class BusShuttleServicesPage implements OnInit {
   }
 
   // GET LOCATION COLOR BY LOCATION ID
-  getLocationColor(locationName: string) {
+  getLocationColor(locationName: any) {
     for (const location of this.locations) {
       if (location.location_name === locationName) {
         return location.location_color;
