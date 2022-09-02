@@ -76,11 +76,11 @@ export class ProfilePage implements OnInit {
   }
 
   isDmuNeeded() {
-    return this.ws.get<any>('/checkDmuForm' );
+    return this.ws.get<any>('/dmu-forms/checkDmuForm');
   }
 
   getDmuRegistration() {
-    return this.ws.get<DmuFormRegistration>('/getRegistration').pipe(
+    return this.ws.get<DmuFormRegistration>('/dmu-forms/getRegistration').pipe(
       catchError(_ => {
         return NEVER;
       })
@@ -88,7 +88,7 @@ export class ProfilePage implements OnInit {
   }
 
   getDmuForm() {
-    return this.ws.get<DmuFormContent>('/getDmu');
+    return this.ws.get<DmuFormContent>('/dmu-forms/getDmu');
   }
 
   getProfile() {

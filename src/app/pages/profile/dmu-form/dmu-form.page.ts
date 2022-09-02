@@ -18,8 +18,6 @@ export class DmuFormPage implements OnInit {
   form$: Observable<DmuFormContent>;
   isAgreed = false;
 
-  devUrl = 'https://dev-api.apiit.edu.my/dmu_form';
-
   formContent: any;
   checkboxContent: any;
 
@@ -31,7 +29,7 @@ export class DmuFormPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.isDmuNeeded$ = this.ws.get<any>('/checkDmuForm').pipe(
+    this.isDmuNeeded$ = this.ws.get<any>('/dmu-forms/checkDmuForm').pipe(
       tap(res => {
         if (res.status === 'Submitted') {
           this.redirectToProfile();
@@ -39,7 +37,7 @@ export class DmuFormPage implements OnInit {
       })
     );
 
-    this.form$ = this.ws.get<DmuFormContent>('/getDmu').pipe(
+    this.form$ = this.ws.get<DmuFormContent>('/dmu-forms/getDmu').pipe(
       tap(res => {
         this.formContent = this.sanitizer.bypassSecurityTrustHtml(res.content);
         this.checkboxContent = res.checkbox_content;
@@ -48,7 +46,7 @@ export class DmuFormPage implements OnInit {
   }
 
   submitDmuForm() {
-    this.ws.post<any>('/registration').pipe(
+    this.ws.post<any>('/dmu-forms/registration').pipe(
       tap(_ => {
         this.toast('Successfully submitted form', 'success');
         this.redirectToProfile();
