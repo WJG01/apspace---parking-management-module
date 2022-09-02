@@ -46,8 +46,13 @@
   </ng-container>
 
   <ng-template #loading>
-    <div>
-      <p>loading</p>
-    </div>
+    <ion-grid>
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="12" size-lg="9">
+          <ion-skeleton-text class="glob-margin-auto" animated style="line-height: 100px; width: 100%;">
+          </ion-skeleton-text>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ng-template>
 </ion-content>
