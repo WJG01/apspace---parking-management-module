@@ -65,3 +65,4 @@ export {
     PpFilterOptions,
     PpFilterOptionsSelectable,
 } from './peoplepulse';
+export { DmuFormContent, DmuFormRegistration } from './dmu-form';

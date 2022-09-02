@@ -510,6 +510,7 @@
                   </ion-grid> -->
                     </ion-card-content>
                   </ion-card>
+
                   <ng-container *ngIf="orientationProfile.councelor_details.length > 0; else noCouncelor">
                     <ion-card class="orientation">
                       <ion-card-content>
@@ -610,6 +611,66 @@
             </ion-grid>
           </ng-template>
         </ng-template>
+        <ion-grid *ngIf="dmuNeeded$ | async as dmuStatus">
+          <ion-row class=" ion-justify-content-center">
+            <ion-col size="12" size-lg="9">
+              <ion-card>
+                <ion-card-content>
+                  <ion-grid>
+                    <ion-row class="ion-margin-bottom">
+                      <ion-col>
+                        <h2>
+                          <ion-text color="primary">
+                            APU-DMU Dual Degree Registration Form
+                          </ion-text>
+                        </h2>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col>
+                        <ion-row class="ion-align-items-center">
+                          <ng-container *ngIf="dmuStatus.status === 'Pending'">
+                            <ng-container *ngIf="form$ | async as form">
+                              <ng-container *ngIf="form.enforcement_status">
+                                <ion-icon color="danger" name="warning-outline"></ion-icon>
+                                <ion-text class="message-padding" color="danger">
+                                  You are required to submit this form by {{form.enforcement_date | date}}
+                                </ion-text>
+                              </ng-container>
+                            </ng-container>
+                          </ng-container>
+                          <ng-container *ngIf="dmuStatus.status === 'Submitted'">
+                            <ng-container *ngIf="registration$ | async as registration; else noDate">
+                              <ion-icon color="success" name="checkmark-circle-outline"></ion-icon>
+                              <ion-text class="message-padding" color="success">
+                                You have successfully submitted the registration form on {{registration.submitted_date |
+                                date}}
+                              </ion-text>
+                            </ng-container>
+                            <ng-template #noDate>
+                              <ion-icon color="success" name="checkmark-circle-outline"></ion-icon>
+                              <ion-text class="message-padding" color="success">
+                                You have successfully submitted the registration form
+                              </ion-text>
+                            </ng-template>
+                          </ng-container>
+                        </ion-row>
+                      </ion-col>
+                    </ion-row>
+                    <ion-row *ngIf="dmuStatus.status === 'Pending'">
+                      <ion-col>
+                        <ion-button (click)="openDmuFormModal()" color="primary">
+                          Registration Form
+                        </ion-button>
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
       </ng-container>
     </ng-template>
 

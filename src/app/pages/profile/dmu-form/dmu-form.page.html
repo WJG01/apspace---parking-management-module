@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-container *ngIf="isDmuNeeded$ | async as isDmuNeeded">
+    <ng-container *ngIf="isDmuNeeded.status === 'Pending'">
+      <ng-container *ngIf="form$ | async as form; else loading">
+        <ion-grid>
+          <ion-row class="ion-justify-content-center">
+            <ion-col size="12" size-lg="9">
+              <div [innerHtml]="formContent">
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <ion-footer>
+          <ion-toolbar>
+            <ion-grid>
+              <ion-row>
+                <ion-col offset-lg="2" size-lg="8" offset-xl="3" size-xl="6">
+                  <ion-item lines="none">
+                    <ion-checkbox slot="start" [(ngModel)]="isAgreed"></ion-checkbox>
+                    <ion-label class="ion-text-wrap">
+                      <div [innerHtml]="checkboxContent">
+                      </div>
+                    </ion-label>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col offset-lg="2" size-lg="8" offset-xl="3" size-xl="6">
+                  <ion-button [disabled]="!isAgreed" expand="block" (click)="submitDmuForm()">
+                    Submit
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-toolbar>
+        </ion-footer>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #loading>
+    <div>
+      <p>loading</p>
+    </div>
+  </ng-template>
+</ion-content>

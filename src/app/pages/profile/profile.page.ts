@@ -2,10 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController, ModalController, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
-import { Observable, of } from 'rxjs';
+import { NEVER, Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
-import { OrientationStudentDetails, Role, StaffDirectory, StaffProfile, StudentPhoto, StudentProfile } from '../../interfaces';
+import {
+  DmuFormContent,
+  DmuFormRegistration,
+  OrientationStudentDetails,
+  Role,
+  StaffDirectory,
+  StaffProfile,
+  StudentPhoto,
+  StudentProfile
+} from '../../interfaces';
 import { AppLauncherService, WsApiService } from '../../services';
 import { RequestChangeModalPage } from './request-update-modal/request-update-modal';
 import { VirtualCardModalPage } from './virtual-card-modal/virtual-card-modal';
@@ -34,6 +43,12 @@ export class ProfilePage implements OnInit {
   file: File;
   loading: HTMLIonLoadingElement;
 
+
+  devUrl = 'https://dev-api.apiit.edu.my/dmu_form';
+  registration$: Observable<DmuFormRegistration>;
+  form$: Observable<DmuFormContent>;
+  dmuNeeded$: Observable<boolean>;
+
   constructor(
     private alertCtrl: AlertController,
     private modalCtrl: ModalController,
@@ -42,7 +57,7 @@ export class ProfilePage implements OnInit {
     private ws: WsApiService,
     private appLauncherService: AppLauncherService,
     private toastCtrl: ToastController,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
   ) { }
 
   ngOnInit() {
@@ -56,6 +71,25 @@ export class ProfilePage implements OnInit {
     * If we do not use the indecitor, the page in the tabs (tabs/attendance) will be reloading every time we enter the tab
     */
     this.getProfile();
+    this.dmuNeeded$ = this.isDmuNeeded();
+    this.registration$ = this.getDmuRegistration();
+    this.form$ = this.getDmuForm();
+  }
+
+  isDmuNeeded() {
+    return this.ws.get<any>('/checkDmuForm', { url: this.devUrl });
+  }
+
+  getDmuRegistration() {
+    return this.ws.get<DmuFormRegistration>('/getRegistration', { url: this.devUrl }).pipe(
+      catchError(_ => {
+        return NEVER;
+      })
+    );
+  }
+
+  getDmuForm() {
+    return this.ws.get<DmuFormContent>('/getDmu', { url: this.devUrl });
   }
 
   getProfile() {
@@ -283,6 +317,10 @@ export class ProfilePage implements OnInit {
     if (this.loading) {
       return await this.loading.dismiss();
     }
+  }
+
+  openDmuFormModal() {
+    this.router.navigate(['/profile/dmu-form']);
   }
 
   async virtualCardModal(profile: StudentProfile | StaffProfile, studentRole: boolean) {

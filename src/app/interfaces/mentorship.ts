@@ -15,6 +15,11 @@ export interface MentorshipIntake {
     STUDY_MODE: string;
 }
 
+export interface MentorshipRelationType {
+    RELATIONTYPE: string;
+    VALUE: string;
+}
+
 export interface MentorshipCourseDetail {
     AVERAGE_GRADE: string;
     AVERAGE_MARKS: number;
