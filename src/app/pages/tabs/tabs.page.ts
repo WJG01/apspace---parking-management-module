@@ -231,11 +231,19 @@ export class TabsPage implements OnInit {
   @HostListener('document:keydown.?')
   @HostListener('document:keydown.shift.?')
   onKeydownHelp() {
+    if (!this.router.url.includes('tabs')) {
+      // Ignore Key Combination to prevent issues with other pages
+      return;
+    }
     this.openHelpCentre();
   }
 
   @HostListener('document:keydown.s')
   onKeydownS() {
+    if (!this.router.url.includes('tabs')) {
+      // Ignore Key Combination to prevent issues with other pages
+      return;
+    }
     // prevent key 's' propagated into search
     setTimeout(() => this.searchbar.setFocus(), 10);
   }

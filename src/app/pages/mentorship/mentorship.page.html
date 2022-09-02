@@ -20,14 +20,18 @@
               </ion-searchbar>
             </ion-col>
             <ion-col size="12" size-md="3" class="glob-margin-auto">
-              <ion-item lines="none" color="light" class="with-borders">
+              <ion-item *ngIf="relationType$ | async as relationTypes; else noSelect" lines="none" color="light" class="with-borders">
                 <ion-label>Filter</ion-label>
                 <ion-select [(ngModel)]="filter" interface="popover">
                   <ion-select-option selected></ion-select-option>
-                  <ion-select-option value="mentor">PL</ion-select-option>
-                  <ion-select-option value="pl / mentor">PL / Mentor</ion-select-option>
+                  <ion-select-option *ngFor="let relationType of relationTypes" [value]="relationType.VALUE">
+                    {{relationType.RELATIONTYPE}}
+                  </ion-select-option>
                 </ion-select>
               </ion-item>
+              <ng-template #noSelect>
+                <ion-skeleton-text style="width: 100%; line-height: 40px" animated></ion-skeleton-text>
+              </ng-template>
             </ion-col>
           </ion-row>
         </ion-grid>
