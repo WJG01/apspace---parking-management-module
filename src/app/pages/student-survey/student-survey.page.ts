@@ -32,6 +32,8 @@ export class StudentSurveyPage implements OnInit {
   skeletons = new Array(3);
   showFieldMissingError = false;
 
+  devUrl = 'https://dl4h9zf8wj.execute-api.ap-southeast-1.amazonaws.com/dev';
+
   // LISTS
   intakes: any[];
   modules: any;
@@ -138,7 +140,7 @@ export class StudentSurveyPage implements OnInit {
 
   getIntakes() {
     // tslint:disable-next-line: max-line-length
-    return this.ws.get<SurveyIntake[]>(`/survey/intakes-list`);
+    return this.ws.get<SurveyIntake[]>(`/survey/intakes-list`, {url: this.devUrl});
   }
   getModuleByClassCode(classCode: string) {
     if (!this.userComingFromResultsPage) {
@@ -180,7 +182,7 @@ export class StudentSurveyPage implements OnInit {
 
   getModules(intakeCode: string) {
     // tslint:disable-next-line: max-line-length
-    return this.ws.get<SurveyModule[]>(`/survey/modules-list?intake_code=${intakeCode}`).pipe(
+    return this.ws.get<SurveyModule[]>(`/survey/modules-list?intake_code=${intakeCode}`, {url: this.devUrl}).pipe(
       map(res => res.filter
         (item =>
           !item.COURSE_APPRAISAL // user did not do end semester
@@ -212,7 +214,7 @@ export class StudentSurveyPage implements OnInit {
 
   getSurveys(intakeCode: string) {
     const answers = [];
-    this.survey$ = this.ws.get<any>(`/survey/surveys?intake_code=${intakeCode}`)
+    this.survey$ = this.ws.get<any>(`/survey/surveys?intake_code=${intakeCode}`, {url: this.devUrl})
       .pipe(
         map(surveys => surveys.filter(survey => survey.type === this.surveyType)),
         tap(surveys => {
@@ -321,7 +323,7 @@ export class StudentSurveyPage implements OnInit {
             const notAnsweredQuestions = this.response.answers.filter(answer => answer.content === '');
             if (notAnsweredQuestions.length === 0) {
               this.presentLoading();
-              this.ws.post(endpoint, { body: this.response }).subscribe({
+              this.ws.post(endpoint, { body: this.response, url: this.devUrl }).subscribe({
                 error: (err) => {
                   if (err.status === 400) {
                     this.toast(
