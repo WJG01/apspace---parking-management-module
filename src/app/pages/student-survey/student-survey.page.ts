@@ -33,6 +33,7 @@ export class StudentSurveyPage implements OnInit {
   showFieldMissingError = false;
 
   devUrl = 'https://dl4h9zf8wj.execute-api.ap-southeast-1.amazonaws.com/dev';
+  studentDevUrl = 'https://dev-api.apiit.edu.my';
 
   // LISTS
   intakes: any[];
@@ -135,7 +136,7 @@ export class StudentSurveyPage implements OnInit {
   }
 
   getStudentProfile() {
-    return this.ws.get<StudentProfile>('/student/profile');
+    return this.ws.get<StudentProfile>('/student/profile', {url: this.studentDevUrl});
   }
 
   getIntakes() {
