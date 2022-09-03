@@ -34,6 +34,10 @@ export class DmuFormPage implements OnInit {
         if (res.status === 'Submitted') {
           this.redirectToProfile();
         }
+      }),
+      catchError(_ => {
+        this.redirectToProfile();
+        return NEVER;
       })
     );
 
