@@ -29,7 +29,7 @@ export class DmuFormPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.isDmuNeeded$ = this.ws.get<any>('/dmu-form/checkDmuForm').pipe(
+    this.isDmuNeeded$ = this.ws.get<any>('/dmu_form/checkDmuForm').pipe(
       tap(res => {
         if (res.status === 'Submitted') {
           this.redirectToProfile();
@@ -37,7 +37,7 @@ export class DmuFormPage implements OnInit {
       })
     );
 
-    this.form$ = this.ws.get<DmuFormContent>('/dmu-form/getDmu').pipe(
+    this.form$ = this.ws.get<DmuFormContent>('/dmu_form/getDmu').pipe(
       tap(res => {
         this.formContent = this.sanitizer.bypassSecurityTrustHtml(res.content);
         this.checkboxContent = res.checkbox_content;
@@ -46,7 +46,7 @@ export class DmuFormPage implements OnInit {
   }
 
   submitDmuForm() {
-    this.ws.post<any>('/dmu-form/registration').pipe(
+    this.ws.post<any>('/dmu_form/registration').pipe(
       tap(_ => {
         this.toast('Successfully submitted form', 'success');
         this.redirectToProfile();
