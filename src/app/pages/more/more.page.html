@@ -30,7 +30,7 @@
                   <ng-container *ngFor="let item of filteredFavMenu; let last=last;">
                     <ion-item (click)="!editMode ? openPage(item.url, item.attachTicket) : addToFav(item.id)" button="true" detail="false">
                       <ion-img class="item-thumbnail ion-margin-end" [src]="item.img"></ion-img>
-                      <ion-label color="medium">
+                      <ion-label color="medium" class="ion-text-wrap">
                         {{ item.title }}
                       </ion-label>
                       <ion-icon class="fav-icon" [name]="editMode ? 'star' : 'chevron-forward-outline'" slot="end"></ion-icon>
@@ -55,12 +55,12 @@
                   <ion-accordion [value]="group.key">
                     <ion-item slot="header">
                       <ion-img class="item-thumbnail ion-margin-end" [src]="keyIcon[group.key]"></ion-img>
-                      <ion-label class="item-title" color="medium">{{ group.key }}</ion-label>
+                      <ion-label class="item-title" color="medium" class="ion-text-wrap">{{ group.key }}</ion-label>
                     </ion-item>
                     <ion-list slot="content">
                       <ion-item *ngFor="let item of group.value let last=last;" [lines]="!last ? 'inset' : 'none'" button="true" detail="false" (click)="!editMode ? openPage(item.url, item.attachTicket) : addToFav(item.id)">
                         <ion-img class="item-thumbnail ion-margin-end" [src]="item.img"></ion-img>
-                        <ion-label color="medium">
+                        <ion-label color="medium" class="ion-text-wrap">
                           {{ item.title }}
                         </ion-label>
                         <ion-icon *ngIf="!editMode" class="fav-icon" name="chevron-forward-outline" slot="end"></ion-icon>
@@ -131,7 +131,7 @@
             <ion-accordion [value]="group.key">
               <ion-item class="menu-container" slot="header">
                 <ion-img class="item-thumbnail ion-margin-end" [src]="keyIcon[group.key]"></ion-img>
-                <ion-label class="item-title" color="medium">{{ group.key }}</ion-label>
+                <ion-label class="item-title" color="medium" class="ion-text-wrap">{{ group.key }}</ion-label>
               </ion-item>
               <ion-list class="menu-container" slot="content">
                 <ion-row class="ion-align-items-stretch menu-item-container">
