@@ -61,8 +61,8 @@
                   <ion-item lines="full">
                     <ion-label position="stacked">Start Time <ion-text color="tertiary">(Malaysian Time)</ion-text>
                     </ion-label>
-                    <ion-select placeholder="Start Time" interface="popover" [disabled]="!markAttendanceObject.date"
-                      [(ngModel)]="markAttendanceObject.startTime">
+                    <ion-select placeholder="Start Time" interface="popover" mode="md"
+                      [disabled]="!markAttendanceObject.date" [(ngModel)]="markAttendanceObject.startTime">
                       <ion-select-option *ngFor="let t of startTimes" [value]="t">
                         {{ t }}
                       </ion-select-option>
@@ -90,7 +90,7 @@
                   <ion-item lines="full">
                     <ion-label position="stacked">Class Type
                     </ion-label>
-                    <ion-select placeholder="Start Type" interface="popover"
+                    <ion-select placeholder="Start Type" interface="popover" mode="md"
                       [(ngModel)]="markAttendanceObject.classType">
                       <ion-select-option *ngFor="let t of classTypes" [value]="t">
                         {{ t }}
@@ -102,7 +102,7 @@
                 <ion-col size="12" size-md="6">
                   <ion-item lines="full">
                     <ion-label position="stacked">Mark All Students</ion-label>
-                    <ion-select interface="popover" [(ngModel)]="markAttendanceObject.defaultAttendance">
+                    <ion-select interface="popover" mode="md" [(ngModel)]="markAttendanceObject.defaultAttendance">
                       <ion-select-option value="N">
                         Absent
                       </ion-select-option>
@@ -180,7 +180,7 @@
               <ion-col size="12" size-md="4">
                 <ion-item lines="none">
                   <ion-label position="stacked">Duration</ion-label>
-                  <ion-select interface="popover" [(ngModel)]="attendanceHistoryObject.timeFrame">
+                  <ion-select interface="popover" mode="md" [(ngModel)]="attendanceHistoryObject.timeFrame">
                     <ion-select-option [value]="7">
                       Last 7 days
                     </ion-select-option>

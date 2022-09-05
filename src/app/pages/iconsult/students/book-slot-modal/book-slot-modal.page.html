@@ -60,7 +60,7 @@
         <form [formGroup]="bookForm">
           <ion-item lines="inset">
             <ion-label position="stacked">Consultation With</ion-label>
-            <ion-select placeholder="Select one" interface="popover" formControlName="consultation_with">
+            <ion-select placeholder="Select one" interface="popover" formControlName="consultation_with" mode="md">
               <ion-select-option *ngFor="let c of consultationOptions" [value]="c">
                 {{ c }}
               </ion-select-option>

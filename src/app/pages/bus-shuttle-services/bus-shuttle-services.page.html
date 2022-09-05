@@ -28,7 +28,8 @@
               <ion-list slot="content">
                 <ion-item lines="none">
                   <ion-label position="stacked">From</ion-label>
-                  <ion-select [(ngModel)]="filterObject.fromLocation" (ngModelChange)="doRefresh()" interface="popover">
+                  <ion-select [(ngModel)]="filterObject.fromLocation" (ngModelChange)="doRefresh()" interface="popover"
+                    mode="md">
                     <ion-select-option value="">
                       Any
                     </ion-select-option>
@@ -40,7 +41,8 @@
 
                 <ion-item lines="none">
                   <ion-label position="stacked">To</ion-label>
-                  <ion-select [(ngModel)]="filterObject.toLocation" (ngModelChange)="doRefresh()" interface="popover">
+                  <ion-select [(ngModel)]="filterObject.toLocation" (ngModelChange)="doRefresh()" interface="popover"
+                    mode="md">
                     <ion-select-option value="">
                       Any
                     </ion-select-option>
@@ -52,7 +54,8 @@
 
                 <ion-item lines="none">
                   <ion-label position="stacked">Day</ion-label>
-                  <ion-select [(ngModel)]="filterObject.tripDay" (ngModelChange)="doRefresh()" interface="popover">
+                  <ion-select [(ngModel)]="filterObject.tripDay" (ngModelChange)="doRefresh()" interface="popover"
+                    mode="md">
                     <ion-select-option value="sat">Saturday</ion-select-option>
                     <ion-select-option value="sun">Sunday</ion-select-option>
                     <ion-select-option value="mon-fri">Monday - Friday</ion-select-option>

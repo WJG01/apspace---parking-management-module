@@ -29,7 +29,7 @@
                     Location
                   </ion-label>
 
-                  <ion-select [(ngModel)]="filterObject.location" interface="popover">
+                  <ion-select [(ngModel)]="filterObject.location" interface="popover" mode="md">
                     <ion-select-option *ngFor="let l of locations" [value]="l">
                       {{ l }}
                     </ion-select-option>
@@ -41,7 +41,7 @@
                     Day
                   </ion-label>
 
-                  <ion-select [(ngModel)]="filterObject.day" interface="popover">
+                  <ion-select [(ngModel)]="filterObject.day" interface="popover" mode="md">
                     <ion-select-option *ngFor="let d of days" [value]="d.value">
                       {{ d.displayName }}
                     </ion-select-option>
@@ -67,7 +67,7 @@
                     Room Types
                   </ion-label>
 
-                  <ion-select [(ngModel)]="filterObject.types" interface="popover" multiple="true">
+                  <ion-select [(ngModel)]="filterObject.types" interface="popover" multiple="true" mode="md">
                     <ion-select-option *ngFor="let t of types" [value]="t.key">
                       {{ t.name }}
                     </ion-select-option>

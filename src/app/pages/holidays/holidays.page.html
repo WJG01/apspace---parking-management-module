@@ -33,7 +33,7 @@
               <ion-list class="ion-no-padding" slot="content">
                 <ion-item lines="inset">
                   <ion-label position="stacked">Year</ion-label>
-                  <ion-select [disabled]="setYears.length < 1" interface="popover" placeholder="Select Year"
+                  <ion-select [disabled]="setYears.length < 1" interface="popover" placeholder="Select Year" mode="md"
                     [(ngModel)]="filterObject.year" (ngModelChange)="doRefresh()">
                     <ion-select-option *ngFor="let y of setYears" [value]="y">
                       {{ y }}
@@ -43,7 +43,7 @@
 
                 <ion-item lines="inset">
                   <ion-label position="stacked">Affecting</ion-label>
-                  <ion-select interface="popover" [(ngModel)]="filterObject.affecting" (ngModelChange)="doRefresh()">
+                  <ion-select interface="popover" [(ngModel)]="filterObject.affecting" (ngModelChange)="doRefresh()" mode="md">
                     <ion-select-option *ngFor="let a of affecting" [value]="a">
                       {{ a | titlecase }}
                     </ion-select-option>
@@ -52,7 +52,7 @@
 
                 <ion-item lines="inset">
                   <ion-label position="stacked">Duration</ion-label>
-                  <ion-select interface="popover" [(ngModel)]="filterObject.duration" (ngModelChange)="doRefresh()">
+                  <ion-select interface="popover" [(ngModel)]="filterObject.duration" (ngModelChange)="doRefresh()" mode="md">
                     <ion-select-option *ngFor="let d of holidayDurations" [value]="d">
                       {{ d | titlecase }}
                     </ion-select-option>
