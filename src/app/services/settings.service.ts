@@ -101,7 +101,7 @@ export class SettingsService {
     version: '2020-05-27', // settings version
     appVersion: '1.2.3', // to be merged with synced version
     ...Object.assign({}, ...Object.entries(defaultData).map(([k, v]) =>
-      ({[k]: {epoch: 0, data: v}}))),
+      ({ [k]: { epoch: 0, data: v } }))),
   });
 
   // keep track of all requests subscriptions, one at a time for each requests key
@@ -119,7 +119,9 @@ export class SettingsService {
     public version: VersionService,
     private ws: WsApiService,
     private configuration: ConfigurationsService
-  ) {
+  ) { }
+
+  initSettings() {
     // migrate old settings
     this.readyPromise = this.storage.get('settings').then((raw: SettingsRaw | SettingsOld | null) => {
       if (raw === null) { // keep default settings
@@ -147,9 +149,9 @@ export class SettingsService {
           busShuttleServices.then(value => value?.secondLocation || defaultData.busSecondLocation),
         ]).then(items => items.map(data => ({ epoch, data })))
           .then(([
-                   modulesBlacklist, dashboardSections, menuUI, disableShakespear, shakeSensitivity,
-                   accentColor, busFirstLocation, busSecondLocation
-                 ]) => {
+            modulesBlacklist, dashboardSections, menuUI, disableShakespear, shakeSensitivity,
+            accentColor, busFirstLocation, busSecondLocation
+          ]) => {
             this.data.next({
               ...this.data.value, // built with default value
               appVersion: this.version.name,
@@ -163,9 +165,11 @@ export class SettingsService {
               busSecondLocation,
               theme: { epoch, data: '' },
               ...Object.assign({}, ...Object.entries(rest).map(([k, v]) =>
-                ({[k]: isEqual(v, defaultData[k]) || v === undefined // check if value changed
-                    ? {epoch, data: defaultData[k]} // keep default
-                    : {epoch, data: v, lastEpoch: 0, oldData: null}}))), // needs sync
+              ({
+                [k]: isEqual(v, defaultData[k]) || v === undefined // check if value changed
+                  ? { epoch, data: defaultData[k] } // keep default
+                  : { epoch, data: v, lastEpoch: 0, oldData: null }
+              }))), // needs sync
             } as SettingsRaw);
             this.storage.set('settings', this.data.value);
             this.initialSync();
@@ -206,14 +210,14 @@ export class SettingsService {
     // tslint:disable-next-line:no-bitwise
     const newEpoch = Date.now() / 1000 | 0;
     if (oldData === undefined) {
-      this.data.next({...this.data.value, [key]: {epoch: newEpoch, data: value, oldData: data, lastEpoch: epoch}});
+      this.data.next({ ...this.data.value, [key]: { epoch: newEpoch, data: value, oldData: data, lastEpoch: epoch } });
     } else if (!isEqual(oldData, value)) {
-      this.data.next({...this.data.value, [key]: {epoch: newEpoch, data: value, oldData, lastEpoch}});
+      this.data.next({ ...this.data.value, [key]: { epoch: newEpoch, data: value, oldData, lastEpoch } });
     } else {
       if (key in this.requests) { // cancel any ongoing subscription for key if any
         this.requests[key].unsubscribe();
       }
-      this.data.next({...this.data.value, [key]: {epoch: lastEpoch, data: oldData}});
+      this.data.next({ ...this.data.value, [key]: { epoch: lastEpoch, data: oldData } });
     }
     this.storage.set('settings', this.data.value);
     this.sync();
@@ -263,7 +267,7 @@ export class SettingsService {
           this.requests[k].unsubscribe();
         }
         this.requests[k] = this.ws.put<any>(`/settings-sync/${k}`, { body }).subscribe(() => {
-          this.data.next({...this.data.value, [k]: { epoch, data }});
+          this.data.next({ ...this.data.value, [k]: { epoch, data } });
           this.storage.set('settings', this.data.value);
         }, err => console.error('sync', err), () => delete this.requests[k]); // clear subscription
       });
@@ -295,7 +299,7 @@ export class SettingsService {
           .filter(k => !['version', 'appVersion'].includes(k))
           .map(k => k in defaultData
             // merge with current data according to timestamp
-            ? {[k]: data[k]?.epoch > this.data.value[k]?.epoch ? data[k] : this.data.value[k]}
+            ? { [k]: data[k]?.epoch > this.data.value[k]?.epoch ? data[k] : this.data.value[k] }
             // remove additional unused fields (not stored)
             : this.ws.delete<any>(`/settings-sync/${k}`).subscribe()
           )
@@ -307,7 +311,7 @@ export class SettingsService {
           version,
           appVersion,
           ...Object.assign({}, ...Object.entries(rest).map(([k, v]) =>
-            ({[k]: { epoch: v.epoch, data: v.data }}))) // remove extra values
+            ({ [k]: { epoch: v.epoch, data: v.data } }))) // remove extra values
         } as SettingsReq;
         if (400 <= err.status && err.status < 500) {
           return this.ws.post<any>('/settings-sync/', { body });
@@ -327,7 +331,7 @@ export class SettingsService {
       version: '2020-05-27', // settings version
       appVersion: '1.2.3', // to be merged with synced version
       ...Object.assign({}, ...Object.entries(defaultData).map(([k, v]) =>
-        ({[k]: {epoch: 0, data: v}}))),
+        ({ [k]: { epoch: 0, data: v } }))),
     });
     this.storage.set('settings', this.data.value);
     this.initialSynced = false; // allow sync after logout

@@ -64,7 +64,7 @@
               <ion-list slot="content">
                 <ion-item [disabled]="filterObject.showThisMonthOnly">
                   <ion-label position="stacked">Year</ion-label>
-                  <ion-select [(ngModel)]="filterObject.year" (ngModelChange)="doRefresh()" interface="popover">
+                  <ion-select [(ngModel)]="filterObject.year" (ngModelChange)="doRefresh()" interface="popover" mode="md">
                     <ion-select-option *ngFor="let year of transactionYears" [value]="year">{{ year }}
                     </ion-select-option>
                   </ion-select>
@@ -72,7 +72,7 @@
 
                 <ion-item>
                   <ion-label position="stacked">Type</ion-label>
-                  <ion-select [(ngModel)]="filterObject.type" (ngModelChange)="doRefresh()" interface="popover">
+                  <ion-select [(ngModel)]="filterObject.type" (ngModelChange)="doRefresh()" interface="popover" mode="md">
                     <ion-select-option value="all">All</ion-select-option>
                     <ion-select-option value="credit">Credit</ion-select-option>
                     <ion-select-option value="debit">Debit</ion-select-option>
@@ -155,7 +155,7 @@
       <ion-card class="ion-no-margin">
         <message-with-svg messageTitle="No Transactions Available!"
           messageContent="APCard is not activated or there was no transaction made."
-          imageUrl="assets/img/person_with_card.svg">
+          imageUrl="assets/img/person_with_card.svg" wrapperSize="5" wrapperOffset="4">
         </message-with-svg>
       </ion-card>
     </ng-template>

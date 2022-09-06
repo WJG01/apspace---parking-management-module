@@ -20,6 +20,12 @@ const routes: Routes = [
     loadChildren: () => import('./staffs/consultations/consultations.module').then(m => m.ConsultationsPageModule)
   },
   {
+    path: 'appointments',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student },
+    loadChildren: () => import('./students/appointments/appointments.module').then(m => m.AppointmentsPageModule)
+  },
+  {
     path: '',
     canActivate: [RedirectGuard]
   }

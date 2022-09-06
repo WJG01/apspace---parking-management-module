@@ -6,7 +6,7 @@ import { catchError, EMPTY, finalize, firstValueFrom, tap } from 'rxjs';
 import { SubscriptionResult } from 'apollo-angular';
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 
-import { ComponentService, ConfigurationsService } from '../../../services';
+import { ComponentService, SettingsService } from '../../../services';
 import { UpdateAttendanceGQL, UpdateAttendanceMutation } from '../../../../generated/graphql';
 
 @Component({
@@ -27,15 +27,14 @@ export class StudentPage implements OnInit {
     private location: Location,
     public alertCtrl: AlertController,
     public plt: Platform,
-    private config: ConfigurationsService,
-    private component: ComponentService
+    private component: ComponentService,
+    private settings: SettingsService
   ) { }
 
   ngOnInit() {
     this.isCapacitor = this.plt.is('capacitor');
     // first run and if scan is selected
-    // TODO: Remove Mock Settings
-    if (this.isCapacitor && this.config.getMockSettings().scan) {
+    if (this.isCapacitor && this.settings.get('scan')) {
       this.swapMode();
     }
   }
@@ -47,7 +46,7 @@ export class StudentPage implements OnInit {
   /** Swap mode between auto scan and manual input. */
   async swapMode() {
     this.scan = !this.scan;
-    // this.settings.set('scan', this.scan = !this.scan); // TODO: Enable this back
+    this.settings.set('scan', this.scan = !this.scan);
     if (this.scan) {
       const allowed = await this.checkPermission();
       await BarcodeScanner.prepare();

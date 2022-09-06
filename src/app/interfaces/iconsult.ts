@@ -1,3 +1,5 @@
+import { StaffDirectory } from './staff';
+
 export interface Venue {
   id: number;
   room_code: string;
@@ -21,6 +23,7 @@ export interface ConsultationHour {
   slot_room_code: string;
   slot_venue: string;
   synced_to_gims: string;
+  staff_detail?: StaffDirectory; // Used to get student appointments
 }
 
 export interface MappedSlots {
@@ -43,4 +46,21 @@ export interface ConsultationSlot {
 export interface MappedSlots {
   date: string;
   slots: ConsultationSlot[];
+}
+
+export interface AddFreeSlotBody {
+  location_id: number;
+  datetime: string;
+}
+
+export interface AddFreeSlotReview {
+  type: string;
+  startDate: string;
+  endDate: string;
+  repeatWeeks: number;
+  repeat: string[];
+  times: string[];
+  venue: string;
+  venueId: string;
+  location: string;
 }

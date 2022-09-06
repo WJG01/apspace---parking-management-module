@@ -23,7 +23,7 @@
 
           <ion-item lines="none">
             <ion-label position="stacked">Transaction Type</ion-label>
-            <ion-select placeholder="Select a type" formControlName="type" interface="popover">
+            <ion-select placeholder="Select a type" formControlName="type" interface="popover" mode="md">
               <ion-select-option *ngFor="let type of types" [value]="type">
                 {{ type | titlecase }}
               </ion-select-option>

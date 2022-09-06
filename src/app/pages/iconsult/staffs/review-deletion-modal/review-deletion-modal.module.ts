@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
-import { SlotDetailsModalPage } from './slot-details-modal.page';
+import { ReviewDeletionModalPage } from './review-deletion-modal.page';
 import { SharedPipesModule } from '../../../../shared/shared-pipes.module';
 
 @NgModule({
@@ -13,6 +13,6 @@ import { SharedPipesModule } from '../../../../shared/shared-pipes.module';
     IonicModule,
     SharedPipesModule
   ],
-  declarations: [SlotDetailsModalPage]
+  declarations: [ReviewDeletionModalPage]
 })
-export class SlotDetailsModalPageModule { }
+export class ReviewDeletionModalPageModule { }

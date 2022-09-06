@@ -91,6 +91,10 @@ const routes: Routes = [
       {
         path: ':id',
         loadChildren: () => import('./pages/staff-directory/staff-directory-info/staff-directory-info.module').then(m => m.StaffDirectoryInfoPageModule)
+      },
+      {
+        path: ':id/consultations',
+        loadChildren: () => import('./pages/iconsult/students/opened-slots/opened-slots.module').then(m => m.OpenedSlotsPageModule)
       }
     ]
   },
@@ -165,28 +169,28 @@ const routes: Routes = [
   {
     path: 'news',
     canActivate: [AuthGuard],
-    loadChildren: () => import('./pages/news/news.module').then( m => m.NewsPageModule)
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/news/news.module').then(m => m.NewsPageModule)
   },
   {
     path: 'exam-schedule-admin',
     canActivate: [AuthGuard],
-    loadChildren: () => import('./pages/exam-schedule-admin/exam-schedule-admin.module').then( m => m.ExamScheduleAdminPageModule)
-  },
-  {
-    path: 'exam-schedule-details/:examId',
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('./pages/exam-schedule-admin/exam-schedule-details/exam-schedule-details.module').then(m => m.ExamScheduleDetailsPageModule)
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./pages/exam-schedule-admin/exam-schedule-admin.module').then(m => m.ExamScheduleAdminPageModule)
+      },
+      {
+        path: ':examId',
+        loadChildren: () => import('./pages/exam-schedule-admin/exam-schedule-details/exam-schedule-details.module').then(m => m.ExamScheduleDetailsPageModule)
+      }
+    ]
   },
   {
     path: 'profile',
     canActivate: [AuthGuard],
-    children: [
-      {
-        path: '',
-        loadChildren: () => import('./pages/profile/profile.module').then( m => m.ProfilePageModule)
-      }
-    ],
+    loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfilePageModule)
   },
   {
     path: 'visa-status',
@@ -198,7 +202,7 @@ const routes: Routes = [
     path: 'mentorship',
     canActivate: [AuthGuard],
     data: { role: Role.Admin | Role.Lecturer },
-    loadChildren: () => import('./pages/mentorship/mentorship.module').then( m => m.MentorshipPageModule)
+    loadChildren: () => import('./pages/mentorship/mentorship.module').then(m => m.MentorshipPageModule)
   },
   {
     path: 'beapu',
@@ -208,13 +212,61 @@ const routes: Routes = [
   },
   {
     path: 'logout',
-    loadChildren: () => import('./pages/logout/logout.module').then( m => m.LogoutPageModule)
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/logout/logout.module').then(m => m.LogoutPageModule)
   },
   {
     path: 'graduate-verification-service',
     canActivate: [AuthGuard],
     data: { role: Role.Student | Role.Lecturer | Role.Admin },
-    loadChildren: () => import('./pages/graduate-verification-service/graduate-verification-service.module').then( m => m.GraduateVerificationServicePageModule)
+    loadChildren: () => import('./pages/graduate-verification-service/graduate-verification-service.module').then(m => m.GraduateVerificationServicePageModule)
+  },
+  {
+    path: 'aplc-progress-report',
+    canActivate: [AuthGuard],
+    data: { role: Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/aplc-progression/aplc-progression.module').then(m => m.AplcProgressionPageModule)
+  },
+  {
+    path: 'holidays',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/holidays/holidays.module').then(m => m.HolidaysPageModule)
+  },
+  {
+    path: 'maintenance-and-update',
+    loadChildren: () => import('./pages/maintenance-and-update/maintenance-and-update.module').then(m => m.MaintenanceAndUpdatePageModule)
+  },
+  {
+    path: 'covid-forms',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/covid-forms/covid-forms.module').then(m => m.CovidFormsPageModule)
+  },
+  {
+    path: 'covid-information-form',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/covid-forms/covid-information-form/covid-information-form.module').then(m => m.CovidInformationFormPageModule)
+  },
+  {
+    path: 'covid-rtk-form',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/covid-forms/covid-rtk-form/covid-rtk-form.module').then(m => m.CovidRtkFormPageModule)
+  },
+  {
+    path: 'covid-pcr-form',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/covid-forms/covid-pcr-form/covid-pcr-form.module').then(m => m.CovidPcrFormPageModule)
+  },
+  {
+    path: 'apcard-qr-code',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Lecturer | Role.Admin },
+    loadChildren: () => import('./pages/apcard-qr-code/apcard-qr-code.module').then(m => m.ApcardQrCodePageModule)
   },
   { // this path must always be at the end of the routes array
     path: '**',

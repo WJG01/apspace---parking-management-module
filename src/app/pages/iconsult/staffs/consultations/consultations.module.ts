@@ -12,7 +12,8 @@ import { FilterSlotsPipe } from './filter-slots/filter-slots.pipe';
 import { SharedPipesModule } from '../../../../shared/shared-pipes.module';
 import { ValidateCheckboxPipe } from './validate-checkbox/validate-checkbox.pipe';
 import { ComponentsModule } from '../../../../components/components.module';
-import { SlotDetailsModalPageModule } from '../slot-details-modal/slot-details-modal.module';
+import { SlotDetailsModalPageModule } from '../../slot-details-modal/slot-details-modal.module';
+import { ReviewDeletionModalPageModule } from '../review-deletion-modal/review-deletion-modal.module';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { SlotDetailsModalPageModule } from '../slot-details-modal/slot-details-m
     CalendarModule,
     SharedPipesModule,
     ComponentsModule,
-    SlotDetailsModalPageModule
+    SlotDetailsModalPageModule,
+    ReviewDeletionModalPageModule
   ],
   providers: [DateWithTimezonePipe],
   declarations: [

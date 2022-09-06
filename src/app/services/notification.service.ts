@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Platform } from '@ionic/angular';
 import { catchError, from, map, NEVER, Observable, of, switchMap, tap, throwError } from 'rxjs';
 
-import { FCM } from '@capacitor-community/fcm';
 import { Storage } from '@ionic/storage-angular';
 import { Badge } from '@awesome-cordova-plugins/badge/ngx';
 
@@ -43,9 +42,9 @@ export class NotificationService {
     if (this.config.connectionStatus) {
       let token = '';
       if (this.platform.is('capacitor')) {
-        return from(FCM.getToken()).pipe(
+        return from('mytoken').pipe(
           switchMap(responseToken => {
-            token = responseToken.token;
+            token = responseToken;
             return this.cas.getST(this.serviceUrl);
           }),
           switchMap(st => {

@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { forkJoin, map, Observable, tap, finalize } from 'rxjs';
 import { ModalController } from '@ionic/angular';
 
-import { add } from 'date-fns';
+import { add, format } from 'date-fns';
 import { CalendarComponentOptions, DayConfig } from 'ion2-calendar';
 
 import { ConsultationHour, ConsultationSlot, MappedSlots } from '../../../../interfaces';
 import { WsApiService } from '../../../../services';
 import { DateWithTimezonePipe } from '../../../../shared/date-with-timezone/date-with-timezone.pipe';
-import { SlotDetailsModalPage } from '../slot-details-modal/slot-details-modal.page';
+import { SlotDetailsModalPage } from '../../slot-details-modal/slot-details-modal.page';
+import { ReviewDeletionModalPage } from '../review-deletion-modal/review-deletion-modal.page';
 
 @Component({
   selector: 'app-consultations',
@@ -26,7 +28,7 @@ export class ConsultationsPage implements OnInit {
     daysConfig: this.daysConfigurations
   };
   selectedDate = this.dateWithTimezonePipe.transform(new Date(), 'yyyy-MM-dd'); // Default to todays date
-  skeleton = new Array(5);
+  skeleton = new Array(3);
   // for select multiple slots to cancel
   dateRange: { from: string; to: string; };
   optionsRange: CalendarComponentOptions = {
@@ -42,10 +44,16 @@ export class ConsultationsPage implements OnInit {
   constructor(
     private ws: WsApiService,
     private dateWithTimezonePipe: DateWithTimezonePipe,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private router: Router
   ) { }
 
   ngOnInit() {
+    if (this.router.getCurrentNavigation().extras.state && this.router.getCurrentNavigation().extras.state.reload) {
+      // Reload page when new slots are created
+      this.daysConfigurations = [];
+      this.doRefresh();
+    }
     this.doRefresh();
   }
 
@@ -112,13 +120,14 @@ export class ConsultationsPage implements OnInit {
       );
   }
 
-  async slotDetails(slot: ConsultationSlot) {
-    if (slot.status === 'Available') return; // Ignore if slot is not booked
+  async slotDetails(staffBooking: ConsultationSlot) {
+    // Ignore if slot is not booked or delete mode is active
+    if (staffBooking.status === 'Available' || this.deleteMode) return;
 
     const modal = await this.modalCtrl.create({
       component: SlotDetailsModalPage,
       componentProps: {
-        slot
+        staffBooking
       },
       breakpoints: [0, 1],
       initialBreakpoint: 1
@@ -141,23 +150,23 @@ export class ConsultationsPage implements OnInit {
   }
 
   getSelectedRangeSlot(dates: MappedSlots[]) {
-    this.slotsToBeCancelled = [];
+    if (!this.rangeMode) return; // Ignore if range mode is false
+
+    this.slotsToBeCancelled = []; // Ensure array is empty before pushing new items
     const startDate = new Date(this.dateRange.from);
     const endDate = new Date(this.dateRange.to);
 
-    const datesKeys = Object.keys(dates).map(date => new Date(date));
-    const filteredDates = datesKeys.filter(date => startDate <= date && date <= endDate);
-
-    filteredDates.forEach(filteredDate => {
-      const currentDateString = this.dateWithTimezonePipe.transform(filteredDate, 'yyyy-MM-dd');
-      dates[currentDateString].items.forEach(item => {
-        // only push the slots that is not a passed or within 24 hours slots.
-        if (!(new Date(this.dateWithTimezonePipe.transform(item.start_time, 'medium'))
-          <= add(new Date(), { hours: 24 }))) {
-          this.slotsToBeCancelled.push(item);
+    for (const date of dates) {
+      if (startDate <= new Date(date.date) && new Date(date.date) <= endDate) {
+        for (const slot of date.slots) {
+          // only push the slots that is not passed or within 24 hours slots.
+          if (!(new Date(this.dateWithTimezonePipe.transform(slot.start_time, 'medium'))
+            <= add(new Date(), { hours: 24 }))) {
+            this.slotsToBeCancelled.push(slot);
+          }
         }
-      });
-    });
+      }
+    }
   }
 
   getSelectedSlot(slot: ConsultationSlot) {
@@ -186,10 +195,49 @@ export class ConsultationsPage implements OnInit {
   cancelAvailableSlot() {
     if (this.slotsToBeCancelled.length < 1) return;
 
-    if (this.slotsToBeCancelled.length > 1) {
-      console.log('Show Modal');
-    } else {
-      console.log('Show Alert');
+    const slotsPerDay = this.slotsToBeCancelled.reduce((previous: any, current: any) => {
+      const date = format(new Date(current.start_time), 'yyyy-MM-dd');
+
+      if (!previous[date]) {
+        previous[date] = [current];
+      } else {
+        previous[date].push(current);
+      }
+      return previous;
+    }, {});
+    const formattedSlots: MappedSlots[] = Object.keys(slotsPerDay).map(date => ({ date, slots: slotsPerDay[date] }));
+
+    this.reviewDelete(formattedSlots);
+  }
+
+  addSlots() {
+    this.router.navigateByUrl('/iconsult/add-free-slot');
+  }
+
+  async reviewDelete(slots: MappedSlots[]) {
+    const modal = await this.modalCtrl.create({
+      component: ReviewDeletionModalPage,
+      componentProps: {
+        slots
+      },
+      breakpoints: [0, 1],
+      initialBreakpoint: 1
+    });
+    modal.present();
+
+    const { data } = await modal.onWillDismiss();
+
+    if (data?.completed) {
+      this.doRefresh(true);
+      this.resetPage();
     }
+  }
+
+  resetPage() {
+    this.daysConfigurations = [];
+    this.slotsToBeCancelled = [];
+    this.selectedDate = this.dateWithTimezonePipe.transform(new Date(), 'yyyy-MM-dd');
+    this.deleteMode = false;
+    this.rangeMode = false;
   }
 }

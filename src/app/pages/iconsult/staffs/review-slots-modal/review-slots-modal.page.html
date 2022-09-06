@@ -1,0 +1,118 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Review Add Free Slot(s)</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col>
+      <ion-card class="ion-no-margin">
+        <ion-item>
+          <ion-label class="ion-text-wrap">
+            <p>Slot Type</p>
+
+            <ion-text color="tertiary">
+              <p class="glob-fw-600">
+                {{ data.type }}
+              </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+
+        <ion-item *ngIf="data.repeat.length > 0">
+          <ion-label class="ion-text-wrap">
+            <p>Repeating Day(s)</p>
+
+            <ion-text color="tertiary">
+              <p class="glob-fw-600">
+                <span *ngFor="let d of data.repeat; let isLast = last">
+                  {{ d }}<span *ngIf="!isLast">,</span>
+                </span>
+              </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label class="ion-text-wrap">
+            <p>Slot Time(s)</p>
+
+            <ion-text color="tertiary">
+              <p class="glob-fw-600">
+                <span *ngFor="let t of data.times; let isLast = last">
+                  {{ t }}<span *ngIf="!isLast">,</span>
+                </span>
+              </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+
+        <ion-item *ngIf="data.repeatWeeks > 0">
+          <ion-label class="ion-text-wrap">
+            <p>Weeks Repeating</p>
+
+            <ion-text color="tertiary">
+              <p class="glob-fw-600">
+                {{ data.repeatWeeks }}
+              </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label class="ion-text-wrap">
+            <p>{{ data.repeatWeeks > 0 ? 'Start Date' : 'Date' }}</p>
+
+            <ion-text color="tertiary">
+              <p class="glob-fw-600">
+                {{ data.startDate | dateWithTimezone: 'dd MMMM yyyy' }}
+              </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+
+        <ion-item *ngIf="data.endDate">
+          <ion-label class="ion-text-wrap">
+            <p>End Date</p>
+
+            <ion-text color="tertiary">
+              <p class="glob-fw-600">
+                {{ data.endDate | dateWithTimezone: 'dd MMMM yyyy' }}
+              </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+
+        <ion-item lines="none">
+          <ion-label class="ion-text-wrap">
+            <p>Venue</p>
+
+            <ion-text color="tertiary">
+              <p class="glob-fw-600">
+                {{ data.venue }}
+              </p>
+            </ion-text>
+          </ion-label>
+        </ion-item>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" color="success" (click)="submit()">
+          Submit
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

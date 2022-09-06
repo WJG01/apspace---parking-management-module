@@ -1,11 +1,22 @@
 export { AnonymousFeedbackSummary, AnonymousFeedback, FeedbackCategory, AnonymousFeedbackComment } from './anonymous-feedback';
 export { Apcard } from './apcard';
+export {
+  APLCClassDescription,
+  APLCStudentBehaviour,
+  APLCSubject,
+  APLCClass
+} from './aplc';
 export { Attendance, AttendanceDetails, AttendanceLegend, MappedAttendance } from './attendance';
 export { AttendixClass, AttendanceSummary, AttendanceIntegrityClasses, Classcode, Classcodev1, FlatClasscode } from './attendix';
 export { BusTrip, BusTrips, APULocation, APULocations } from './bus-shuttle-services';
 export { ClassificationLegend } from './classfication-legend';
 export { CourseDetails } from './course-details';
 export { Course } from './course';
+export {
+  VaccinationStatus,
+  VaccinationType,
+  UserVaccineInfo
+} from './covid-forms';
 export { DeterminationLegend } from './determination-legend';
 export { OrientationStudentDetails } from './e-orientation';
 export { ExamSchedule } from './exam-schedule';
@@ -16,10 +27,17 @@ export {
   FeesTotalSummary
 } from './fees';
 export {
-  Venue,
+  HolidayColor,
+  HolidayV2,
+  HolidaySets
+} from './holiday';
+export {
+  AddFreeSlotBody,
+  AddFreeSlotReview,
   ConsultationHour,
   ConsultationSlot,
   MappedSlots,
+  Venue
 } from './iconsult';
 export { Graduater } from './graduater';
 export { IntakeListing } from './intake-listing';
@@ -56,4 +74,5 @@ export { EventComponentConfigurations } from './event-component-configurations';
 export { Holidays, Holiday } from './holiday';
 export { MoodleEvent } from './moodle-event';
 export { News, ShortNews } from './news';
+export { VersionValidator } from './version-validator';
 export { Quote } from './quote';

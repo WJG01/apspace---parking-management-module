@@ -274,7 +274,7 @@ export class ProfilePage implements OnInit {
     }
   }
 
-  async virtualCardModal(profile: StudentProfile | StaffProfile, studentRole: boolean) {
+  async virtualCardModal(profile: any, studentRole: boolean) {
     const modal = await this.modalCtrl.create({
       component: VirtualCardModalPage,
       cssClass: 'virtual-card-modal',

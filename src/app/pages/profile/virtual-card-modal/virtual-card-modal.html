@@ -7,10 +7,10 @@
       <div class="card-front">
         <img src="assets/img/student_card_apu.jpg">
         <ng-template let-photo [ngIf]="photo$ | async">
-          <ion-img class="profile-photo student-virtual-card-img" [src]="
+          <ion-img #image class="profile-photo student-virtual-card-img" [src]="
                                 'data:image/jpg;base64,' +
                                 photo?.base64_photo
-                                " (ionError)="$event.target.src = 'assets/img/no_img.png'">
+                                " (ionError)="image.src= 'assets/img/no_img.png'">
           </ion-img>
         </ng-template>
         <div class="student-virtual-card-details">
@@ -38,8 +38,8 @@
     <div class="virtual-card-wrapper">
       <div class="card-front">
         <img class="staff-background" src="assets/img/staff_card_apu.jpg">
-        <img class="staff-profile-picture" [src]="profile[0]?.PHOTO"
-          (ionError)="$event.target.src = 'assets/img/no_img.png'">
+        <img #image class="staff-profile-picture" [src]="profile[0]?.PHOTO"
+          (ionError)="image.src = 'assets/img/no_img.png'">
         <div class="staff-details">
           <p>{{ profile[0].FULLNAME }}</p>
           <p>{{ profile[0].TITLE }}</p>

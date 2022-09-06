@@ -17,6 +17,11 @@ export class ComponentService {
     private config: ConfigurationsService
   ) { }
 
+  /**
+   * Present Toast Message
+   * @param message message content
+   * @param color color of toast (ex. success, warning, danger, medium)
+   */
   async toastMessage(message: string, color: 'success' | 'warning' | 'danger' | 'medium') {
     const toast = await this.toastCtrl.create({
       message,
@@ -34,6 +39,14 @@ export class ComponentService {
     await toast.present();
   }
 
+  /**
+   * Present Alert Message
+   * @param header alert header title
+   * @param message alert message content
+   * @param cancelText cancel button text (Default is Dismiss)
+   * @param button extra action button
+   * @param cssClass alert css class
+   */
   async alertMessage(header: string, message: string, cancelText?: string, button?: AlertButton, cssClass?: string) {
     const buttons: AlertButton[] = [{
       text: cancelText ? cancelText : 'Dismiss',
@@ -49,11 +62,15 @@ export class ComponentService {
       header,
       message,
       buttons,
-      cssClass : cssClass ? cssClass : '',
+      cssClass: cssClass ? cssClass : '',
     });
     await alert.present();
   }
 
+  /**
+   * Open external links using In-App Browser
+   * @param url link to open with IAP
+   */
   async openLink(url: string) {
     if (!this.config.connectionStatus) {
       return this.toastMessage('External links cannot be opened in offline mode. Please ensure you have a network connection and try again.', 'danger');
@@ -61,10 +78,12 @@ export class ComponentService {
     await Browser.open({ url });
   }
 
+  /** A haptic feedback type to indicate a task has completed successfully */
   successHaptic() {
     Haptics.notification({ type: NotificationType.Success });
   }
 
+  /** A haptic feedback type to indicate a task has failed */
   errorHaptic() {
     Haptics.notification({ type: NotificationType.Error });
   }

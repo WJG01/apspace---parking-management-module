@@ -1,0 +1,9 @@
+.bookings {
+  display: flex; // Ensure card height stays the same
+}
+
+@media (max-width: 768px) {
+  .bookings {
+    display: block;
+  }
+}

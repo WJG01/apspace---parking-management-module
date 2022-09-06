@@ -16,6 +16,7 @@ export interface ExamScheduleAdmin {
   TIME: string;
   TIMESTAMP: string;
   VENUE: string;
+  isChecked?: boolean;
 }
 
 export interface IntakeExamSchedule {
@@ -25,6 +26,7 @@ export interface IntakeExamSchedule {
   RESULT_DATE: string;
   TYPE: string;
   VENUE: string;
+  isChecked?: boolean;
 }
 
 export interface ResitExamSchedule {

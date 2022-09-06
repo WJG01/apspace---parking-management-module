@@ -1,0 +1,21 @@
+.profile-image {
+  width: 123px;
+  height: 170px;
+  margin: auto;
+}
+
+ion-img {
+  border-radius: 10px;
+}
+
+.margin-bottom {
+  margin-bottom: 10px;
+}
+
+.details-section {
+  margin-bottom: 20px;
+}
+
+.details-section:not(:last-child) {
+  border-right: solid 1.5px;
+}

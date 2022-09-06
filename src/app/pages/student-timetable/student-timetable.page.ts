@@ -298,7 +298,7 @@ export class StudentTimetablePage implements OnInit {
   }
 
   /** Refresh timetable, forcefully if refresher is passed. */
-  doRefresh(refresher?: IonRefresher) {
+  doRefresh(refresher?) {
     if (this.role) {
       const timetable$ = this.tt.get(true).pipe( // force refersh for now
         finalize(() => refresher && refresher.complete())

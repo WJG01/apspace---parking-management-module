@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Review Slots Cancellation</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col>
+      <ion-card class="ion-no-margin">
+        <ion-accordion-group value="1">
+          <ion-accordion *ngFor="let d of slots; let i = index" [value]="i + 1">
+            <ion-item slot="header" color="light">
+              <ion-label>{{ d.date | dateWithTimezone: 'EEEE, dd MMMM yyyy' }}</ion-label>
+            </ion-item>
+
+            <div slot="content">
+              <ion-item *ngFor="let slot of d.slots; let isLast = last" [lines]="isLast ? 'none' : undefined">
+                <ion-label>
+                  <ion-text class="glob-fw-600"
+                    [color]="slot.status === 'Booked' ? 'danger' : slot.status === 'Available' ? 'success' : 'medium'">
+                    {{ slot.start_time | dateWithTimezone:'time' | slice: 0 :-8 }} -
+                    {{ slot.end_time | dateWithTimezone:'time' | slice: 0 :-8 }}
+                  </ion-text>
+
+                  <p>
+                    <ion-icon name="pin"></ion-icon>
+                    {{ slot.room_code }} | {{ slot.venue }}
+                  </p>
+                </ion-label>
+              </ion-item>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" color="danger" (click)="deleteSlots()">
+          Cancel Slot(s)
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

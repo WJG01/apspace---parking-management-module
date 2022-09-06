@@ -265,7 +265,7 @@
                 placeholder="Search by Student ID or Name" [(ngModel)]="filterObject.term"></ion-searchbar>
               <ion-item lines="none" style="padding: 0 8px 8px 8px;" mode="md">
                 <ion-label position="floating">Status</ion-label>
-                <ion-select interface="popover" [(ngModel)]="filterObject.type">
+                <ion-select interface="popover" mode="md" [(ngModel)]="filterObject.type">
                   <ion-select-option value="">
                     All
                   </ion-select-option>

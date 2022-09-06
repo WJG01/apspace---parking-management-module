@@ -17,7 +17,7 @@
           <ion-item lines="inset">
             <ion-label position="stacked">Category <ion-text color="danger">*</ion-text>
             </ion-label>
-            <ion-select placeholder="Select a Category" interface="popover"
+            <ion-select placeholder="Select a Category" interface="popover" mode="md"
               *ngIf="(categories$ | async) as categories; else loading" formControlName="category">
               <ion-select-option *ngFor="let c of categories" [value]="c.id">
                 {{ c.name }}

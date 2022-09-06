@@ -15,16 +15,20 @@ export class DatePickerComponent {
   @Input() maxDate?: string;
   @Input() selected?: string;
   @Input() hourValues?: string[];
+  @Input() hourCycle?: 'h12' | 'h23' = 'h12';
+  @Input() minuteValues?: string[];
 
   constructor(private modalCtrl: ModalController) { }
 
-  dateChanged(selectDate: string) {
-    if (this.presentationMode === 'month-year') {
-      this.modalCtrl.dismiss({ month: format(new Date(selectDate), 'MMMM yyyy') });
-    } else if (this.presentationMode === 'date') {
-      this.modalCtrl.dismiss({ date: format(new Date(selectDate), 'yyyy-MM-dd') });
-    } else if (this.presentationMode === 'time') {
-      this.modalCtrl.dismiss({ selected: this.selected, time: format(new Date(selectDate), 'HH:mm') });
+  dateChanged(selectDate: string | string[]) {
+    if (typeof selectDate === 'string') {
+      if (this.presentationMode === 'month-year') {
+        this.modalCtrl.dismiss({ month: format(new Date(selectDate), 'MMMM yyyy') });
+      } else if (this.presentationMode === 'date') {
+        this.modalCtrl.dismiss({ date: format(new Date(selectDate), 'yyyy-MM-dd') });
+      } else if (this.presentationMode === 'time') {
+        this.modalCtrl.dismiss({ selected: this.selected, time: format(new Date(selectDate), 'HH:mm') });
+      }
     }
   }
 

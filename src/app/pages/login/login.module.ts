@@ -10,6 +10,7 @@ import { SwiperModule } from 'swiper/angular';
 import { OperationHoursFilterPipe } from './operation-hours-filter/operation-hours-filter.pipe';
 import { TimeFormatterPipe } from './time-formatter/time-formatter.pipe';
 import { SharedPipesModule } from '../../shared/shared-pipes.module';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
     imports: [
@@ -20,6 +21,7 @@ import { SharedPipesModule } from '../../shared/shared-pipes.module';
         ReactiveFormsModule,
         SwiperModule,
         SharedPipesModule,
+        ComponentsModule
     ],
     exports: [
         NoticeBoardComponent

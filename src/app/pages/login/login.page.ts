@@ -37,6 +37,7 @@ export class LoginPage implements OnInit {
   userAuthenticated = false;
   userUnauthenticated = false;
   currentYear = new Date().getFullYear();
+  isCapacitor: boolean;
 
   constructor(
     public alertCtrl: AlertController,
@@ -56,6 +57,7 @@ export class LoginPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.isCapacitor = this.platform.is('capacitor');
     this.news$ = this.news.get(true, true, false).pipe(
       map(newsList => {
         return newsList.map(item => {

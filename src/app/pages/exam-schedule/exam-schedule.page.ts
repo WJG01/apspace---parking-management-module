@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { Router } from '@angular/router';
 import { finalize, map, Observable } from 'rxjs';
 
 import { Storage } from '@ionic/storage-angular';
 import { formatDistanceStrict } from 'date-fns';
 
 import { ExamSchedule, Role, StudentProfile } from '../../interfaces';
-import { ApiService, ComponentService, WsApiService } from '../../services';
+import { ApiService, ComponentService, SettingsService, WsApiService } from '../../services';
 import { SearchModalComponent } from '../../components/search-modal/search-modal.component';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-exam-schedule',
@@ -28,12 +28,15 @@ export class ExamSchedulePage implements OnInit {
     private storage: Storage,
     private component: ComponentService,
     private modalCtrl: ModalController,
-    private router: Router
+    private router: Router,
+    private settings: SettingsService
   ) { }
 
   ngOnInit() {
-    // const intake = this.settings.get('examIntake'); TODO: Renable This
-    if (this.intake) {
+    const intake = this.settings.get('examIntake');
+
+    if (intake !== undefined && intake !== null) {
+      this.intake = intake;
       this.doRefresh();
     } else {
       this.storage.get('role').then((role: Role) => {
@@ -95,6 +98,13 @@ export class ExamSchedulePage implements OnInit {
     }
   }
 
+  changeIntake(intake: string) {
+    if (intake !== this.intake) {
+      this.settings.set('examIntake', this.intake = intake);
+      this.doRefresh();
+    }
+  }
+
   openFeedback() {
     this.router.navigateByUrl('/feedback');
   }
@@ -116,11 +126,7 @@ export class ExamSchedulePage implements OnInit {
 
     const { data: { item: intake } = { item: this.intake } } = await modal.onDidDismiss();
     if (intake) {
-      if (intake !== this.intake) {
-        // TODO: Set Local Storage
-        this.intake = intake;
-        this.doRefresh();
-      }
+      this.changeIntake(intake);
     }
   }
 }

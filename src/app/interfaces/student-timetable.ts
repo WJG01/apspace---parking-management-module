@@ -15,4 +15,5 @@ export interface StudentTimetable {
   TIME_TO: string;
   TIME_FROM_ISO?: string;
   TIME_TO_ISO?: string;
+  COLOR?: string;
 }
