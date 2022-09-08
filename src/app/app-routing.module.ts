@@ -279,9 +279,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { role: Role.Student | Role.Lecturer | Role.Admin },
     loadChildren: () => import('./pages/not-found/not-found.module').then(m => m.NotFoundPageModule)
-  },
-
-
+  }
 ];
 
 @NgModule({
