@@ -190,23 +190,23 @@
           </ion-card-header>
           <ion-card-content>
             <ion-row class="quick-access-container ion-justify-content-between">
-              <ion-col *ngIf="isCapacitor" class="quick-access-item glob-border-radius quick-access-location"
+              <ion-col *ngIf="isCapacitor" class="quick-access-item border-radius quick-access-location"
                 size-lg="5.8" size-md="12" size-xs="5.8" [routerLink]="['/apcard-qr-code']">
                 <p>Update Location</p>
               </ion-col>
-              <ion-col *ngIf="isStudent" class="quick-access-item glob-border-radius quick-access-attendance"
+              <ion-col *ngIf="isStudent" class="quick-access-item border-radius quick-access-attendance"
                 size-lg="5.8" size-md="12" size-xs="5.8" [routerLink]="['/attendix/update']">
                 <p>Sign Attendance</p>
               </ion-col>
-              <ion-col *ngIf="isLecturer" class="quick-access-item glob-border-radius quick-access-attendance"
+              <ion-col *ngIf="isLecturer" class="quick-access-item border-radius quick-access-attendance"
                 size-lg="5.8" size-md="12" size-xs="5.8" [routerLink]="['/attendix/classes']">
                 <p>Mark Attendance</p>
               </ion-col>
-              <ion-col *ngIf="!isStudent" class="quick-access-item glob-border-radius quick-access-hr" size-lg="5.8"
+              <ion-col *ngIf="!isStudent" class="quick-access-item border-radius quick-access-hr" size-lg="5.8"
                 size-md="12" size-xs="5.8" [routerLink]="['/hr']">
                 <p>Human Resources</p>
               </ion-col>
-              <ion-col class="quick-access-item glob-border-radius quick-access-moodle" size-lg="5.8" size-md="12"
+              <ion-col class="quick-access-item border-radius quick-access-moodle" size-lg="5.8" size-md="12"
                 size-xs="5.8" (click)="openMoodle()">
                 <p>Moodle</p>
               </ion-col>
