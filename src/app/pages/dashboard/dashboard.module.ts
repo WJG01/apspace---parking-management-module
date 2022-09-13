@@ -22,9 +22,6 @@ import { TimeParserPipe } from './time-parser.pipe';
     DashboardPageRoutingModule,
     SwiperModule
   ],
-  exports:[
-    // NoticeBoardComponent,
-  ],
   declarations: [DashboardPage, TimeParserPipe]
 })
 export class DashboardPageModule { }
