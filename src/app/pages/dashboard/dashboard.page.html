@@ -484,12 +484,8 @@
         <!-- Slide shows -->
         <section class="image-slider ion-margin-bottom" *ngIf="activeDashboardSections.includes('noticeBoard')">
           <app-notice-board></app-notice-board>
-          <!-- <ng-template #noNoticeBoardItems>
-            <message-with-svg wrapperSize="6" wrapperOffset="3" imageUrl="assets/img/empty.svg"
-              messageTitle="Nothing to show yet!" messageContent="Try to come later :)">
-            </message-with-svg>
-          </ng-template> -->
         </section>
+        
         <!-- News -->
         <ion-card class="ion-no-margin ion-margin-bottom no-border-rad"
           *ngIf="activeDashboardSections.includes('news')">

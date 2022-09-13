@@ -5,7 +5,6 @@ import { IonicModule } from '@ionic/angular';
 
 import { LoginPageRoutingModule } from './login-routing.module';
 import { LoginPage } from './login.page';
-import { NoticeBoardComponent } from '../../components/notice-board/notice-board.component';
 import { SwiperModule } from 'swiper/angular';
 import { OperationHoursFilterPipe } from './operation-hours-filter/operation-hours-filter.pipe';
 import { TimeFormatterPipe } from './time-formatter/time-formatter.pipe';
@@ -23,9 +22,7 @@ import { ComponentsModule } from 'src/app/components/components.module';
         SharedPipesModule,
         ComponentsModule
     ],
-    exports: [
-        NoticeBoardComponent
-    ],
-    declarations: [LoginPage, NoticeBoardComponent, OperationHoursFilterPipe, TimeFormatterPipe]
+    exports: [],
+    declarations: [LoginPage, OperationHoursFilterPipe, TimeFormatterPipe]
 })
 export class LoginPageModule { }
