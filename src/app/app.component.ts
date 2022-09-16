@@ -8,6 +8,7 @@ import { Storage } from '@ionic/storage-angular';
 
 import { VersionValidator } from './interfaces';
 import { ComponentService, ConfigurationsService, SettingsService, WsApiService } from './services';
+import { FcmService } from './services/fcm.service';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,7 @@ export class AppComponent {
 
   theme$: Observable<string>;
   accentColor$: Observable<string>;
+  pushInit: boolean;
 
   constructor(
     private storage: Storage,
@@ -25,10 +27,12 @@ export class AppComponent {
     private ws: WsApiService,
     private navCtrl: NavController,
     private component: ComponentService,
-    private settings: SettingsService
+    private settings: SettingsService,
+    private fcm: FcmService
   ) {
     this.initialiseStorage();
     this.checkForUpdate();
+    this.initPushNotification();
   }
 
   async initialiseStorage() {
@@ -72,6 +76,13 @@ export class AppComponent {
           }
         }
       });
+  }
+
+  initPushNotification() {
+    if (!this.pushInit) {
+      this.pushInit = true;
+      this.fcm.updatePushPermission();
+    }
   }
 
   showUpdateAlert(url: string) {
