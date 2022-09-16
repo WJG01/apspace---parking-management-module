@@ -21,7 +21,7 @@ import {
 import {
   CasTicketService, NewsService,
   NotificationService, SettingsService, StudentTimetableService,
-  WsApiService, ComponentService,
+  WsApiService, ComponentService, FcmService
 } from 'src/app/services';
 import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-with-timezone.pipe';
 // import { NotifierService } from 'src/app/shared/notifier/notifier.service'; v4: this need to migrate in the future
@@ -280,6 +280,8 @@ export class DashboardPage implements OnInit, DoCheck {
   // For upcoming trips loading skeleton
   items = [0, 1];
 
+  pushInit: boolean;
+
   constructor(
     private component: ComponentService,
     private ws: WsApiService,
@@ -296,11 +298,12 @@ export class DashboardPage implements OnInit, DoCheck {
     private storage: Storage,
     // private notifierService: NotifierService,
     private dateWithTimezonePipe: DateWithTimezonePipe,
+    private fcm: FcmService
     // private joyrideService: JoyrideService
   ) {
     // getting the main accent color to color the chart.js (Temp until removing chart.js)
     // TODO handle value change
-
+    this.initPushNotification();
     // Check if the accent color in user's storage exists in new accent-color.ts.
     // If it doesn't then rollback to standard blue
     this.getAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor'));
@@ -1367,6 +1370,13 @@ export class DashboardPage implements OnInit, DoCheck {
     this.cas.getST(url).subscribe(() => {
       this.component.openLink(`${courseUrl}?id=${courseId}&`);
     });
+  }
+
+  initPushNotification() {
+    if (!this.pushInit) {
+      this.pushInit = true;
+      this.fcm.updatePushPermission();
+    }
   }
 
   // async welcomeTourGuide() {
