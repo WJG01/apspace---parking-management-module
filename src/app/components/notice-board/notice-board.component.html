@@ -1,4 +1,4 @@
-<swiper class="mySwiper" [pagination]="{ dynamicBullets: true }" [autoplay]="true" [loop]="true">
+<swiper (swiper)="setSwiperInstance($event)" class="mySwiper" [pagination]="{ dynamicBullets: true }">
   <ng-container *ngIf="noticeBoardItems$ | async as noticeBoardItems else slideLoader">
     <ng-template *ngFor="let noticeBoardItem of noticeBoardItems" swiperSlide>
       <div class="slider-container" (click)="openSlideLink(noticeBoardItem['post-meta-fields']['slideshow_url'] && noticeBoardItem['post-meta-fields']['slideshow_url'][0] ? noticeBoardItem['post-meta-fields']['slideshow_url'][0] : noticeBoardItem.link)">
