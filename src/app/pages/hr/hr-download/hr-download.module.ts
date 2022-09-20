@@ -14,6 +14,7 @@ import { GetDatePipe } from './get-date.pipe';
 
 import { ComponentsModule } from '../../../components/components.module';
 import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
+import { SearchedFilesDisplayComponent } from './searched-files-display/searched-files-display.component';
 
 
 
@@ -25,7 +26,7 @@ import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
     HrDownloadPageRoutingModule,
     ComponentsModule,
   ],
-  declarations: [HrDownloadPage, FilterPipe, GenerateMonthImgPipe, GetDatePipe],
+  declarations: [HrDownloadPage, FilterPipe, GenerateMonthImgPipe, GetDatePipe, SearchedFilesDisplayComponent],
   providers:[FileOpener]
 })
 export class HrDownloadPageModule {}
