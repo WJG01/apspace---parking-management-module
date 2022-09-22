@@ -4,7 +4,7 @@ import { AlertController, LoadingController, MenuController, ToastController } f
 import { Observable } from 'rxjs';
 import { map, shareReplay, tap } from 'rxjs/operators';
 
-import { StudentProfile, SurveyIntake, SurveyModule } from 'src/app/interfaces';
+import { MCQType, StudentProfile, SurveyIntake, SurveyModule } from 'src/app/interfaces';
 import { WsApiService } from 'src/app/services';
 
 @Component({
@@ -36,13 +36,6 @@ export class StudentSurveyPage implements OnInit {
   // LISTS
   intakes: any[];
   modules: any;
-  msqAnswers = [
-    { id: '5', content: 'Strongly Agree' },
-    { id: '4', content: 'Agree' },
-    { id: '3', content: 'Neither' },
-    { id: '2', content: 'Disagree' },
-    { id: '1', content: 'Strongly Disagree' },
-  ];
   response = {
     class_code: '',
     intake_code: '',
@@ -58,6 +51,7 @@ export class StudentSurveyPage implements OnInit {
   survey$: Observable<any[]>;
   COURSE_CODE$: Observable<SurveyIntake[]>;
   COURSE_MODULES$: Observable<SurveyModule[]>;
+  mcqAnswers$: Observable<MCQType[]>;
   navParams: any;
   currentIntake: string;
 
@@ -139,7 +133,7 @@ export class StudentSurveyPage implements OnInit {
 
   getIntakes() {
     // tslint:disable-next-line: max-line-length
-    return this.ws.get<SurveyIntake[]>(`/survey/intakes-list`);
+    return this.ws.get<SurveyIntake[]>(`/survey/intakes-list`, {url: this.devApi});
   }
   getModuleByClassCode(classCode: string) {
     if (!this.userComingFromResultsPage) {
@@ -181,7 +175,7 @@ export class StudentSurveyPage implements OnInit {
 
   getModules(intakeCode: string) {
     // tslint:disable-next-line: max-line-length
-    return this.ws.get<SurveyModule[]>(`/survey/modules-list?intake_code=${intakeCode}`).pipe(
+    return this.ws.get<SurveyModule[]>(`/survey/modules-list?intake_code=${intakeCode}`, { url: this.devApi }).pipe(
       map(res => res.filter
         (item =>
           !item.COURSE_APPRAISAL // user did not do end semester
@@ -213,7 +207,7 @@ export class StudentSurveyPage implements OnInit {
 
   getSurveys(intakeCode: string) {
     const answers = [];
-    this.survey$ = this.ws.get<any>(`/survey/surveys?intake_code=${intakeCode}`)
+    this.survey$ = this.ws.get<any>(`/survey/surveys?intake_code=${intakeCode}`, {url: this.devApi})
       .pipe(
         map(surveys => surveys.filter(survey => survey.type === this.surveyType)),
         tap(surveys => {
@@ -233,6 +227,7 @@ export class StudentSurveyPage implements OnInit {
           };
         }),
       );
+    this.mcqAnswers$ = this.ws.get<MCQType[]>('/survey/mcq', { url: this.devApi });
   }
 
   getSurveyType(classCode: string) {
