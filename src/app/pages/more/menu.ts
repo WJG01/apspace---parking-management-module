@@ -810,4 +810,5 @@ export const menuItems = [
 /* tslint:enable:no-bitwise */
 
 export const menu: MenuItem[] = menuItems;
+export const menusWithoutParent = menuItems.filter(m => m.parents.length === 0);
 export const menusTitle = menu.reduce((acc, menu) => ({ ...acc, [menu.id]: menu.title }), {});
