@@ -22,7 +22,7 @@
         </ion-item-divider>
 
         <ng-container *ngIf="(COURSE_CODE$ | async) as intakeCourseCode; else loadingIntakes">
-          <ion-item lines="full">
+          <ion-item lines="full" mode="md">
             <ion-label position="stacked">Intake</ion-label>
             <ion-select [(ngModel)]="selectedIntake" (ngModelChange)="onIntakeCodeChanged()" interface="popover"
               placeholder="Select an Intake">
@@ -39,7 +39,8 @@
         </ng-template>
 
         <ng-container *ngIf="(COURSE_MODULES$ | async) as intakeModules; else loadingModules">
-          <ion-item lines="none" [disabled]="surveyType === 'Programme Evaluation' || intakeModules.length <= 0">
+          <ion-item lines="none" [disabled]="surveyType === 'Programme Evaluation' || intakeModules.length <= 0"
+            mode="md">
             <ion-label position="stacked">Module</ion-label>
             <ion-select [(ngModel)]="classCode" (ngModelChange)="onClassCodeChanged()" interface="popover"
               placeholder="Select a Module">
