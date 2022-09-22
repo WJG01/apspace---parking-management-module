@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingController, NavController, Platform } from "@ionic/angular";
+import { LoadingController, NavController, Platform } from '@ionic/angular';
+import { tap } from 'rxjs';
 
-// import { NotificationService, SettingsService } from "../../services";
-// import { DataCollectorService } from "../../services/data-collector.service";
+import { Storage } from '@ionic/storage-angular';
+
+import { DataCollectorService, NotificationService, SettingsService } from '../../services';
 
 @Component({
   selector: 'app-logout',
@@ -12,49 +14,43 @@ import { LoadingController, NavController, Platform } from "@ionic/angular";
 export class LogoutPage implements OnInit {
 
   constructor(
-    public navCtrl: NavController,
-    public loadingCtrl: LoadingController,
-    public storage: Storage,
-    // private settings: SettingsService,
-    // private notification: NotificationService,
-    // private platform: Platform,
-    // private dc: DataCollectorService
+    private navCtrl: NavController,
+    private loadingCtrl: LoadingController,
+    private storage: Storage,
+    private settings: SettingsService,
+    private notification: NotificationService,
+    private plt: Platform,
+    private dc: DataCollectorService
   ) { }
 
-  ngOnInit() {
-    // this.loadingCtrl.create({
-    //   spinner: 'dots',
-    //   message: 'Please wait...',
-    //   translucent: true,
-    // }).then(loading => {
-    //   loading.present;
-    //   if (this.platform.is('capacitor')) {
-    //     this.notification.sendTokenOnLogout().pipe(
-    //       tap(async _ => await this.dc.logout())
-    //     ).
-    //       subscribe(
-    //       {
-    //         complete: () => {
-    //           this.settings.clear();
-    //           this.storage.clear();
-    //           this.navCtrl.navigateRoot('/login', { replaceUrl: true });
-    //         },
-    //         error: err => {
-    //           console.error(err);
-    //           this.settings.clear();
-    //           this.storage.clear();
-    //           this.navCtrl.navigateRoot('/login', { replaceUrl: true });
-    //         }
-    //       }
-    //     );
-    //   } else {
-    //     this.settings.clear();
-    //     this.storage.clear();
-    //     this.navCtrl.navigateRoot('/login', { replaceUrl: true });
-    //   }
-    //   // destroy all cached/active views which angular router does not
-    //   loading.dismiss();
-    // });
-  }
+  async ngOnInit() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Please wait...'
+    });
+    await loading.present();
 
+    if (this.plt.is('capacitor')) {
+      this.notification.sendTokenOnLogout().pipe(
+        tap(async () => await this.dc.logout())
+      ).subscribe({
+        error: (err) => {
+          console.error(err);
+          this.settings.clear();
+          this.storage.clear();
+          this.navCtrl.navigateRoot('/login', { replaceUrl: true });
+        },
+        complete: () => {
+          this.settings.clear();
+          this.storage.clear();
+          this.navCtrl.navigateRoot('/login', { replaceUrl: true });
+        }
+      });
+    } else {
+      this.settings.clear();
+      this.storage.clear();
+      this.navCtrl.navigateRoot('/login', { replaceUrl: true });
+    }
+    // Dismiss all loading
+    loading.dismiss();
+  }
 }
