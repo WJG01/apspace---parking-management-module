@@ -280,19 +280,21 @@
                       {{ surveyQuestion.content }}</ion-text>
                   </p>
                   <div>
-                    <ng-template [ngIf]="surveyQuestion.type === 'MCQ'" [ngIfElse]="showTextArea">
-                      <ion-list class="ion-no-padding">
+                    <ng-template [ngIf]="surveyQuestion.type.includes('MCQ')" [ngIfElse]="showTextArea">
+                      <ion-list class="ion-no-padding" *ngIf="(mcqAnswers$ | async) as mcqAnswers; else loadingMCQ">
                         <ion-radio-group
                           [(ngModel)]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content">
-                          <ion-item lines="none" class="d-block d-lg-inline rdBtn"
-                            [class.rdBtn-with-na]="!surveyQuestion.applicable" *ngFor="let mcqAnswer of msqAnswers">
-                            <ion-radio color="success" slot="start" [value]="mcqAnswer.id">
-                            </ion-radio>
-                            <ion-label
-                              [color]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content === mcqAnswer.id ? 'success' : ''">
-                              {{mcqAnswer.content}}
-                            </ion-label>
-                          </ion-item>
+                          <ng-container *ngFor="let mcqType of mcqAnswers">
+                            <ion-item lines="none" class="d-block d-lg-inline rdBtn"
+                                      [class.rdBtn-with-na]="!surveyQuestion.applicable" *ngFor="let mcqAnswer of mcqType[surveyQuestion.type]">
+                              <ion-radio color="success" slot="start" [value]="mcqAnswer.ID">
+                              </ion-radio>
+                              <ion-label
+                                [color]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content === mcqAnswer.ID ? 'success' : ''">
+                                {{ mcqAnswer.VALUE }}
+                              </ion-label>
+                            </ion-item>
+                          </ng-container>
                           <ion-item lines="none" *ngIf="!surveyQuestion.applicable" class="d-block d-lg-inline na">
                             <ion-radio value="0">
                             </ion-radio>
@@ -302,6 +304,11 @@
                           </ion-item>
                         </ion-radio-group>
                       </ion-list>
+                      <ng-template #loadingMCQ>
+                        <ion-item>
+                          <ion-skeleton-text animated style="line-height: 30px; width: 100%"></ion-skeleton-text>
+                        </ion-item>
+                      </ng-template>
                     </ng-template>
                   </div>
                   <ng-template #showTextArea>

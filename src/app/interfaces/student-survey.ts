@@ -30,3 +30,13 @@ export interface SurveyModule {
     SUBJECT_DESCRIPTION: string;
     TYPE_OF_COURSE: string;
 }
+
+export interface MCQType {
+  MCQ: MCQ[];
+  MCQ_TYPE: string;
+}
+
+export interface MCQ {
+  ID: string;
+  VALUE: string;
+}
