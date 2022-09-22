@@ -217,9 +217,8 @@ const routes: Routes = [
     loadChildren: () => import('./pages/logout/logout.module').then(m => m.LogoutPageModule)
   },
   {
+    // Don't need AuthGuard as this page can be accessible from Login
     path: 'graduate-verification-service',
-    canActivate: [AuthGuard],
-    data: { role: Role.Student | Role.Lecturer | Role.Admin },
     loadChildren: () => import('./pages/graduate-verification-service/graduate-verification-service.module').then(m => m.GraduateVerificationServicePageModule)
   },
   {
