@@ -44,7 +44,6 @@ export class ProfilePage implements OnInit {
   loading: HTMLIonLoadingElement;
 
 
-  devUrl = 'https://dev-api.apiit.edu.my/dmu_form';
   registration$: Observable<DmuFormRegistration>;
   form$: Observable<DmuFormContent>;
   dmuNeeded$: Observable<boolean>;
@@ -77,11 +76,11 @@ export class ProfilePage implements OnInit {
   }
 
   isDmuNeeded() {
-    return this.ws.get<any>('/checkDmuForm', { url: this.devUrl });
+    return this.ws.get<any>('/dmu_form/checkDmuForm');
   }
 
   getDmuRegistration() {
-    return this.ws.get<DmuFormRegistration>('/getRegistration', { url: this.devUrl }).pipe(
+    return this.ws.get<DmuFormRegistration>('/dmu_form/getRegistration').pipe(
       catchError(_ => {
         return NEVER;
       })
@@ -89,7 +88,7 @@ export class ProfilePage implements OnInit {
   }
 
   getDmuForm() {
-    return this.ws.get<DmuFormContent>('/getDmu', { url: this.devUrl });
+    return this.ws.get<DmuFormContent>('/dmu_form/getDmu');
   }
 
   getProfile() {
