@@ -74,7 +74,6 @@ export class StudentSurveyPage implements OnInit {
       }
     });
     this.getStudentProfile().subscribe(studentProfile => this.currentIntake = studentProfile.INTAKE);
-
     this.onInitData();
   }
 
