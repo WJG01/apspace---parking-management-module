@@ -33,7 +33,6 @@ export interface SurveyModule {
 
 export interface MCQType {
   MCQ: MCQ[];
-  MCQ_TYPE: string;
 }
 
 export interface MCQ {
