@@ -53,7 +53,7 @@ export { Settings, SettingsOld } from './settings';
 export { StaffProfile } from './staff-profile'
 export { StudentProfile } from './student-profile'
 export { StaffDirectory } from './staff';
-export { SurveyIntake, SurveyModule } from './student-survey';
+export { SurveyIntake, SurveyModule, MCQType } from './student-survey';
 export { VisaDetails, StatusHistory } from './visa-status';
 export { Name, CountryData } from './country-data';
 export { BeAPUStudentDetails, StudentPhoto, StudentSearch } from './student';
