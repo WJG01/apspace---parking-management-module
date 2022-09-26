@@ -49,7 +49,7 @@ export { NotificationHistory, NotificationBody } from './notification-history';
 export { VersionValidator } from './version-validator';
 export { Quote } from './quote';
 export { LeaveHistory, LeaveBalance, PendingApproval, OnLeaveOnMyCluster } from './hr';
-export { SurveyIntake, SurveyModule } from './student-survey';
+export { SurveyIntake, SurveyModule, MCQType } from './student-survey';
 export { StudentSearch } from './student-search';
 export { OrientationStudentDetails, OrientationStudentsList } from './e-orientation';
 export { Role } from './role';

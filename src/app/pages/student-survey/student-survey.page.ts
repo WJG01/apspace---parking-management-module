@@ -4,7 +4,7 @@ import { AlertController, LoadingController, MenuController, ToastController } f
 import { Observable } from 'rxjs';
 import { map, shareReplay, tap } from 'rxjs/operators';
 
-import { StudentProfile, SurveyIntake, SurveyModule } from 'src/app/interfaces';
+import { MCQType, StudentProfile, SurveyIntake, SurveyModule } from 'src/app/interfaces';
 import { WsApiService } from 'src/app/services';
 
 @Component({
@@ -14,6 +14,7 @@ import { WsApiService } from 'src/app/services';
 })
 export class StudentSurveyPage implements OnInit {
   // TEMP VARIABLES
+  // devApi = 'https://dl4h9zf8wj.execute-api.ap-southeast-1.amazonaws.com/dev';
   todaysDate = new Date();
   lecturerName = '';
 
@@ -35,13 +36,6 @@ export class StudentSurveyPage implements OnInit {
   // LISTS
   intakes: any[];
   modules: any;
-  msqAnswers = [
-    { id: '5', content: 'Strongly Agree' },
-    { id: '4', content: 'Agree' },
-    { id: '3', content: 'Neither' },
-    { id: '2', content: 'Disagree' },
-    { id: '1', content: 'Strongly Disagree' },
-  ];
   response = {
     class_code: '',
     intake_code: '',
@@ -57,6 +51,7 @@ export class StudentSurveyPage implements OnInit {
   survey$: Observable<any[]>;
   COURSE_CODE$: Observable<SurveyIntake[]>;
   COURSE_MODULES$: Observable<SurveyModule[]>;
+  mcqAnswers$: Observable<MCQType[]>;
   navParams: any;
   currentIntake: string;
 
@@ -232,6 +227,7 @@ export class StudentSurveyPage implements OnInit {
           };
         }),
       );
+    this.mcqAnswers$ = this.ws.get<MCQType[]>('/survey/mcq');
   }
 
   getSurveyType(classCode: string) {
