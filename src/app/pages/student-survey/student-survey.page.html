@@ -269,9 +269,9 @@
               <ion-card-content class="ion-no-padding">
                 <div *ngIf="surveySection.questions.length > 0; else noQuestionsUnderThisSection">
                   <div class="survey-question"
-                       [class.border-success]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content"
-                       [class.border-danger]="!response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content && showFieldMissingError"
-                       *ngFor="let surveyQuestion of surveySection.questions; index as questionIndex">
+                    [class.border-success]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content"
+                    [class.border-danger]="!response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content && showFieldMissingError"
+                    *ngFor="let surveyQuestion of surveySection.questions; index as questionIndex">
                     <p class="questionTitle ion-padding-start ion-padding-end">
                       <ion-text
                         *ngIf="!response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content && showFieldMissingError"
@@ -282,12 +282,13 @@
                     </p>
                     <div>
                       <ng-template [ngIf]="surveyQuestion.type.includes('MCQ')" [ngIfElse]="showTextArea">
-                        <ion-list class="ion-no-padding" *ngIf="(mcqAnswers$ | async) as mcqAnswers; else loadingMCQ">
+                        <ion-list class="ion-no-padding">
                           <ion-radio-group
                             [(ngModel)]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content">
                             <ng-container *ngFor="let mcqType of mcqAnswers">
                               <ion-item lines="none" class="d-block d-lg-inline rdBtn"
-                                        [class.rdBtn-with-na]="!surveyQuestion.applicable" *ngFor="let mcqAnswer of mcqType[surveyQuestion.type]">
+                                [class.rdBtn-with-na]="!surveyQuestion.applicable"
+                                *ngFor="let mcqAnswer of mcqType[surveyQuestion.type]">
                                 <ion-radio color="success" slot="start" [value]="mcqAnswer.ID">
                                 </ion-radio>
                                 <ion-label
@@ -310,8 +311,9 @@
                     </div>
                     <ng-template #showTextArea>
                       <ion-textarea rows="2" autoGrow="true"
-                                    [(ngModel)]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content"
-                                    type="text" name="note" class="with-padding" placeholder="Enter your answer here" maxlength="400">
+                        [(ngModel)]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content"
+                        type="text" name="note" class="with-padding" placeholder="Enter your answer here"
+                        maxlength="400">
                       </ion-textarea>
                     </ng-template>
                   </div>
