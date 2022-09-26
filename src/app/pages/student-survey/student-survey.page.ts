@@ -14,7 +14,7 @@ import { WsApiService } from 'src/app/services';
 })
 export class StudentSurveyPage implements OnInit {
   // TEMP VARIABLES
-  devApi = 'https://dl4h9zf8wj.execute-api.ap-southeast-1.amazonaws.com/dev';
+  // devApi = 'https://dl4h9zf8wj.execute-api.ap-southeast-1.amazonaws.com/dev';
   todaysDate = new Date();
   lecturerName = '';
 
@@ -133,7 +133,7 @@ export class StudentSurveyPage implements OnInit {
 
   getIntakes() {
     // tslint:disable-next-line: max-line-length
-    return this.ws.get<SurveyIntake[]>(`/survey/intakes-list`, {url: this.devApi});
+    return this.ws.get<SurveyIntake[]>(`/survey/intakes-list`);
   }
   getModuleByClassCode(classCode: string) {
     if (!this.userComingFromResultsPage) {
@@ -175,7 +175,7 @@ export class StudentSurveyPage implements OnInit {
 
   getModules(intakeCode: string) {
     // tslint:disable-next-line: max-line-length
-    return this.ws.get<SurveyModule[]>(`/survey/modules-list?intake_code=${intakeCode}`, { url: this.devApi }).pipe(
+    return this.ws.get<SurveyModule[]>(`/survey/modules-list?intake_code=${intakeCode}`).pipe(
       map(res => res.filter
         (item =>
           !item.COURSE_APPRAISAL // user did not do end semester
@@ -207,7 +207,7 @@ export class StudentSurveyPage implements OnInit {
 
   getSurveys(intakeCode: string) {
     const answers = [];
-    this.survey$ = this.ws.get<any>(`/survey/surveys?intake_code=${intakeCode}`, {url: this.devApi})
+    this.survey$ = this.ws.get<any>(`/survey/surveys?intake_code=${intakeCode}`)
       .pipe(
         map(surveys => surveys.filter(survey => survey.type === this.surveyType)),
         tap(surveys => {
@@ -227,7 +227,7 @@ export class StudentSurveyPage implements OnInit {
           };
         }),
       );
-    this.mcqAnswers$ = this.ws.get<MCQType[]>('/survey/mcq', { url: this.devApi });
+    this.mcqAnswers$ = this.ws.get<MCQType[]>('/survey/mcq');
   }
 
   getSurveyType(classCode: string) {
