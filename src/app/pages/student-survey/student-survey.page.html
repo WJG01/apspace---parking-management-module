@@ -255,8 +255,8 @@
 
 <ng-template #surveyContent>
   <ng-container *ngIf="(survey$ | async) as surveys; else loadingsurvey">
-    <div class="survey-wrapper" *ngFor="let survey of surveys">
-      <div *ngIf="(mcqAnswers$ | async) as mcqAnswers; else loadingMCQ">
+    <ng-container *ngIf="(mcqAnswers$ | async) as mcqAnswers; else loadingMCQ">
+      <div class="survey-wrapper" *ngFor="let survey of surveys">
         <div class="survey-sections" *ngIf="survey.sections.length > 0; else noSectionsAddedMsg">
           <div class="survey-section" *ngFor="let surveySection of survey.sections; index as i; let isLast = last">
             <ion-card [ngClass]="isLast ? 'ion-no-margin' : 'ion-no-margin ion-margin-bottom'">
@@ -282,7 +282,7 @@
                     </p>
                     <div>
                       <ng-template [ngIf]="surveyQuestion.type.includes('MCQ')" [ngIfElse]="showTextArea">
-                        <ion-list class="ion-no-padding">
+                        <ion-list class="ion-no-padding" *ngIf="(mcqAnswers$ | async) as mcqAnswers; else loadingMCQ">
                           <ion-radio-group
                             [(ngModel)]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content">
                             <ng-container *ngFor="let mcqType of mcqAnswers">
@@ -327,20 +327,20 @@
             </ion-card>
           </div>
         </div>
+        <ng-template #noSectionsAddedMsg>
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <p class="normaltext text-center">
+                  There are no sections added to this survey yet.
+                </p>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ng-template>
       </div>
+    </ng-container>
 
-      <ng-template #noSectionsAddedMsg>
-        <ion-grid>
-          <ion-row>
-            <ion-col>
-              <p class="normaltext text-center">
-                There are no sections added to this survey yet.
-              </p>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ng-template>
-    </div>
   </ng-container>
   <ng-template #loadingsurvey>
     <ion-card *ngFor="let _ of skeletons" class="ion-no-margin">
