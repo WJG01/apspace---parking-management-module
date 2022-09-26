@@ -18,7 +18,7 @@ import { WsApiService } from './ws-api.service';
 export class NotificationService {
 
   serviceUrl = 'http://sns-admin.s3-website-ap-southeast-1.amazonaws.com/';
-  apiUrl = 'https://api.apiit.edu.my/dingdong'; // Prod URL
+  apiUrl = 'https://dev-api.apiit.edu.my/dingdong'; // Prod URL
   apiVersion = 'v2';
   headers = new HttpHeaders().set('version', 'v2');
   constructor(
