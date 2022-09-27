@@ -10,6 +10,7 @@ import { NotificationHistory, NotificationStatus, NotificationSubStatus } from '
 import { ConfigurationsService } from './configurations.service';
 import { CasTicketService } from './cas-ticket.service';
 import { ComponentService } from './component.service';
+import { FcmService } from './fcm.service';
 
 // Local Storage Key
 const NOTIFICATION_KEY = 'notifications-cache';
@@ -28,11 +29,11 @@ export class NotificationService {
     private config: ConfigurationsService,
     private platform: Platform,
     private cas: CasTicketService,
-    // public firebaseX: FirebaseX,
     private storage: Storage,
     private http: HttpClient,
     private component: ComponentService,
     private badge: Badge,
+    private fcm: FcmService
   ) { }
 
   /**
@@ -42,10 +43,12 @@ export class NotificationService {
     if (this.config.connectionStatus) {
       let token = '';
       if (this.platform.is('capacitor')) {
-        return from('mytoken').pipe(
+        return this.fcm.getToken().pipe(
           switchMap(responseToken => {
-            token = responseToken;
-            return this.cas.getST(this.serviceUrl);
+            if (responseToken) {
+              token = responseToken;
+              return this.cas.getST(this.serviceUrl);
+            }
           }),
           switchMap(st => {
             const url = `${this.apiUrl}/client/login?ticket=${st}&device_token=${token}`
@@ -175,7 +178,7 @@ export class NotificationService {
           return this.http.get(url).pipe(
             catchError(err => {
               if (400 <= err.status && err.status < 500) {
-                this.component.toastMessage('Something happened while we get the message details.','danger');
+                this.component.toastMessage('Something happened while we get the message details.', 'danger');
                 return throwError(err.message);
               } else {
                 console.error('Unknown notification error', err);
