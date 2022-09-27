@@ -240,7 +240,6 @@
                   Section {{ i + 1 }}: {{ surveySection.name }}
                 </ion-label>
               </ion-item-divider>
-
               <div *ngIf="surveySection.questions.length > 0; else noQuestionsUnderThisSection">
                 <div class="survey-question"
                      [class.border-success]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content"
@@ -256,7 +255,7 @@
                   </p>
                   <div>
                     <ng-template [ngIf]="surveyQuestion.type === 'MCQ'" [ngIfElse]="showTextArea">
-                      <ion-list class="ion-no-padding" *ngIf="(mcqAnswers$ | async) as mcqAnswers; else loadingMCQ">
+                      <ion-list class="ion-no-padding">
                         <ion-radio-group
                           [(ngModel)]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content">
                           <ng-container *ngFor="let mcqType of mcqAnswers">
