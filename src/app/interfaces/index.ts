@@ -73,7 +73,7 @@ export { DashboardCardComponentConfigurations } from './dashboard-card-component
 export { EventComponentConfigurations } from './event-component-configurations';
 export { Holidays, Holiday } from './holiday';
 export { MoodleEvent } from './moodle-event';
-export { News, ShortNews } from './news';
+export { News, ShortNews, ImageSource } from './news';
 export { VersionValidator } from './version-validator';
 export { Quote } from './quote';
 export { LeaveHistory, LeaveBalance, PendingApproval, OnLeaveOnMyCluster } from './hr';

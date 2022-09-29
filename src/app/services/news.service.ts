@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { from, map, Observable, switchMap, tap } from 'rxjs';
+
 import { Storage } from '@ionic/storage-angular';
-import { ImageSource, News } from '../interfaces/news';
+
+import { ImageSource, News } from '../interfaces';
 import { ConfigurationsService } from './configurations.service';
 
 @Injectable({
@@ -17,7 +19,11 @@ export class NewsService {
   allNewsUrl = 'https://api.apiit.edu.my/apspace/'; // json output, news and slideshow
   mediaUrl = 'https://api.apiit.edu.my/apspace/media';
 
-  constructor(public http: HttpClient, private network: ConfigurationsService, private storage: Storage) { }
+  constructor(
+    private http: HttpClient,
+    private network: ConfigurationsService,
+    private storage: Storage
+  ) { }
 
   /**
    * GET: Request news feed
@@ -27,23 +33,19 @@ export class NewsService {
    * Role based news will return news without slideshow (eg. if (isStudent) {return news only}
    * @param refresh - force refresh (default: false)
    * @param isStudent? - true if student (optional)
-   * @param isLecturer? - true if staff (optional)
+   * @param isStaff? - true if staff (optional)
    */
-  get(refresh: boolean = true, isStudent?: boolean, isLecturer?: boolean): Observable<News[]> {
-    if (this.network.connectionStatus) {
-      if (refresh) { // get from backend
-        if (isStudent) {
-          return this.getNewsWithImages(refresh, this.studentNewsUrl);
-        } else if (isLecturer) {
-          return this.getNewsWithImages(refresh, this.staffNewsUrl);
-        } else {
-          return this.getNewsWithImages(refresh, this.allNewsUrl);
-        }
-      } else { // get from local storage
-        return from(this.storage.get('news-cache'));
-      }
-    } else {
+  get(refresh: boolean = true, isStudent?: boolean, isStaff?: boolean): Observable<News[]> {
+    if (!this.network.connectionStatus || !refresh) {
       return from(this.storage.get('news-cache'));
+    }
+
+    if (isStudent) {
+      return this.getNewsWithImages(refresh, this.studentNewsUrl);
+    } else if (isStaff) {
+      return this.getNewsWithImages(refresh, this.staffNewsUrl);
+    } else {
+      return this.getNewsWithImages(refresh, this.allNewsUrl);
     }
   }
 
@@ -51,7 +53,7 @@ export class NewsService {
     let images: ImageSource[];
 
     return this.getNewsImages().pipe(
-      switchMap( res => {
+      switchMap(res => {
         images = res;
         return this.http.get<News[]>(url) as Observable<News[]>;
       }),

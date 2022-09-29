@@ -15,7 +15,7 @@ import {
   Apcard, BusTrips, CgpaPerIntake, ConsultationHour, ConsultationSlot,
   Course, CourseDetails, DashboardCardComponentConfigurations,
   EventComponentConfigurations, ExamSchedule, FeesTotalSummary, Holiday, Holidays, LecturerTimetable,
-  MoodleEvent, News, OrientationStudentDetails, Quote, Role, ShortNews,
+  MoodleEvent, OrientationStudentDetails, Quote, Role, ShortNews,
   StaffDirectory, StaffProfile, StudentPhoto, StudentProfile, StudentTimetable, UserVaccineInfo
 } from 'src/app/interfaces';
 import {
@@ -25,13 +25,13 @@ import {
 } from 'src/app/services';
 import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-with-timezone.pipe';
 // import { NotifierService } from 'src/app/shared/notifier/notifier.service'; v4: this need to migrate in the future
-import { NewsModalPage } from '../news/news-modal';
 // import { NotificationModalPage } from '../notifications/notification-modal'; v4: this need to migrate in the future
 import { ChartData, ChartOptions } from 'chart.js';
 import SwiperCore, { Autoplay, Lazy, Navigation } from 'swiper';
 
 //install swiper modules
 SwiperCore.use([Autoplay, Lazy, Navigation]);
+import { NewsDetailsModalPage } from '../news/news-details-modal/news-details-modal.page';
 
 @Component({
   selector: 'app-dashboard',
@@ -575,26 +575,16 @@ export class DashboardPage implements OnInit, DoCheck {
     );
   }
 
-
-
-
-  // NEWS
-  async openModal(newsItem: ShortNews) {
+  async newsDetails(newsItem: ShortNews) {
     const modal = await this.modalCtrl.create({
-      component: NewsModalPage,
-      componentProps: { newsItem },
+      component: NewsDetailsModalPage,
+      componentProps: {
+        newsItem
+      },
+      breakpoints: [0, 1],
+      initialBreakpoint: 1
     });
-    await modal.present();
-    await modal.onDidDismiss();
-  }
-
-  async openNewsModal(item: News) {
-    const modal = await this.modalCtrl.create({
-      component: NewsModalPage,
-      componentProps: { item, notFound: 'No news Selected' },
-    });
-    await modal.present();
-    await modal.onDidDismiss();
+    modal.present();
   }
 
   // TODAYS SCHEDULE FUNCTIONS

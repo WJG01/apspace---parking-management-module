@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title [innerHTML]="newsItem.title"></ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-img [src]="newsItem.url"></ion-img>
+
+  <div class="ion-padding">
+    <h3 *ngIf="newsItem.title" class="glob-primary-text ion-margin-top ion-margin-bottom ion-padding-start"
+      [innerHTML]="newsItem.title">
+    </h3>
+
+    <article *ngIf="newsItem.body" class="ion-padding-start"
+      [innerHTML]="newsItem.body | safe: 'sanitizeHtml'">
+    </article>
+  </div>
+</ion-content>
