@@ -269,6 +269,10 @@ export class DashboardPage implements OnInit, DoCheck {
     contentPadding: true
   };
 
+  // User Vaccination Information
+  userVaccinationInfo$: Observable<UserVaccineInfo>;
+  userVaccinationStatus: any = {};
+
   // timezone
   enableMalaysiaTimezone;
 
@@ -284,6 +288,8 @@ export class DashboardPage implements OnInit, DoCheck {
   // For upcoming trips loading skeleton
   items = [0, 1];
 
+  pushInit: boolean;
+
   constructor(
     private component: ComponentService,
     private ws: WsApiService,
@@ -293,13 +299,14 @@ export class DashboardPage implements OnInit, DoCheck {
     private news: NewsService,
     private modalCtrl: ModalController,
     private cas: CasTicketService,
-    // private appLauncherService: AppLauncherService,
+    private appLauncherService: AppLauncherService,
     private platform: Platform,
     // private firebaseX: FirebaseX, //v4: this need to migrate in the future
     private settings: SettingsService,
     private storage: Storage,
     // private notifierService: NotifierService,
     private dateWithTimezonePipe: DateWithTimezonePipe,
+    private fcm: FcmService
     // private joyrideService: JoyrideService
   ) {
     // getting the main accent color to color the chart.js (Temp until removing chart.js)
@@ -374,6 +381,10 @@ export class DashboardPage implements OnInit, DoCheck {
       this.settings.initialSync();
       this.doRefresh();
     });
+  }
+
+  getUserVaccinationInfo() {
+    this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo>('/covid19/user');
   }
 
   // For Upcoming Trips
@@ -704,7 +715,7 @@ export class DashboardPage implements OnInit, DoCheck {
   }
 
   chatTeams(staffID: string) {
-    this.appLauncher.chatInTeams(staffID);
+    this.appLauncherService.chatInTeams(staffID);
   }
 
   // FUNCTION POSSIBLE TO MERGE? M01
