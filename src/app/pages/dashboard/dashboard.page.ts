@@ -19,9 +19,9 @@ import {
   StaffDirectory, StaffProfile, StudentPhoto, StudentProfile, StudentTimetable, UserVaccineInfo
 } from 'src/app/interfaces';
 import {
-   CasTicketService,NewsService,
-   NotificationService, SettingsService, StudentTimetableService,
-  WsApiService,ComponentService,
+  CasTicketService, NewsService,
+  NotificationService, SettingsService, StudentTimetableService,
+  WsApiService, ComponentService, AppLauncherService, FcmService
 } from 'src/app/services';
 import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-with-timezone.pipe';
 // import { NotifierService } from 'src/app/shared/notifier/notifier.service'; v4: this need to migrate in the future
