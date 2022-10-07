@@ -5,7 +5,7 @@ import { map, Observable, share } from 'rxjs';
 import { Storage } from '@ionic/storage-angular';
 
 import { Role, StaffDirectory } from '../../../interfaces';
-import { WsApiService } from '../../../services';
+import { WsApiService, AppLauncherService } from '../../../services';
 
 @Component({
   selector: 'app-staff-directory-info',
@@ -21,6 +21,7 @@ export class StaffDirectoryInfoPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private ws: WsApiService,
+    private appLauncher: AppLauncherService,
     private storage: Storage,
     private router: Router
   ) { }
@@ -49,7 +50,7 @@ export class StaffDirectoryInfoPage implements OnInit {
     this.router.navigate(['staffs', this.id, 'consultations']);
   }
 
-  chatInTeams() {
-    console.log(this.id);
+  chatTeams(staffID: string) {
+    this.appLauncher.chatInTeams(staffID);
   }
 }

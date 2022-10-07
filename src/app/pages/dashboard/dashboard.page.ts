@@ -19,9 +19,9 @@ import {
   StaffDirectory, StaffProfile, StudentPhoto, StudentProfile, StudentTimetable, UserVaccineInfo
 } from 'src/app/interfaces';
 import {
-  CasTicketService, NewsService,
-  NotificationService, SettingsService, StudentTimetableService,
-  WsApiService, ComponentService, FcmService
+   CasTicketService,NewsService,
+   NotificationService, SettingsService, StudentTimetableService,
+  WsApiService,ComponentService,
 } from 'src/app/services';
 import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-with-timezone.pipe';
 // import { NotifierService } from 'src/app/shared/notifier/notifier.service'; v4: this need to migrate in the future
@@ -269,10 +269,6 @@ export class DashboardPage implements OnInit, DoCheck {
     contentPadding: true
   };
 
-  // User Vaccination Information
-  userVaccinationInfo$: Observable<UserVaccineInfo>;
-  userVaccinationStatus: any = {};
-
   // timezone
   enableMalaysiaTimezone;
 
@@ -287,8 +283,6 @@ export class DashboardPage implements OnInit, DoCheck {
 
   // For upcoming trips loading skeleton
   items = [0, 1];
-
-  pushInit: boolean;
 
   constructor(
     private component: ComponentService,
@@ -306,7 +300,6 @@ export class DashboardPage implements OnInit, DoCheck {
     private storage: Storage,
     // private notifierService: NotifierService,
     private dateWithTimezonePipe: DateWithTimezonePipe,
-    private fcm: FcmService
     // private joyrideService: JoyrideService
   ) {
     // getting the main accent color to color the chart.js (Temp until removing chart.js)
@@ -381,10 +374,6 @@ export class DashboardPage implements OnInit, DoCheck {
       this.settings.initialSync();
       this.doRefresh();
     });
-  }
-
-  getUserVaccinationInfo() {
-    this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo>('/covid19/user');
   }
 
   // For Upcoming Trips
@@ -714,39 +703,8 @@ export class DashboardPage implements OnInit, DoCheck {
     );
   }
 
-
-  chatInTeams(lecturerCasId: string) {
-
-    const androidSchemeUrl = 'com.microsoft.teams';
-
-    const iosSchemeUrl = 'microsoft-teams://';
-
-    const webUrl = `https://teams.microsoft.com/l/chat/0/0?users=${lecturerCasId}@staffemail.apu.edu.my`;
-
-    const appStoreUrl = 'https://itunes.apple.com/us/app/microsoft-teams/id1113153706?mt=8';
-
-    const appViewUrl = 'https://teams.microsoft.com/l/chat/0/0?users=';
-
-    // tslint:disable-next-line: max-line-length
-
-    const playStoreUrl = `https://play.google.com/store/apps/details?id=com.microsoft.teams&hl=en&referrer=utm_source%3Dgoogle%26utm_medium%3Dorganic%26utm_term%3D'com.microsoft.teams'&pcampaignid=APPU_1_NtLTXJaHKYr9vASjs6WwAg`;
-    // To be migrated in the future
-    // this.appLauncherService.launchExternalApp(
-
-    //   iosSchemeUrl,
-
-    //   androidSchemeUrl,
-
-    //   appViewUrl,
-
-    //   webUrl,
-
-    //   playStoreUrl,
-
-    //   appStoreUrl,
-
-    //   `${lecturerCasId}@staffemail.apu.edu.my`);
-
+  chatTeams(staffID: string) {
+    this.appLauncher.chatInTeams(staffID);
   }
 
   // FUNCTION POSSIBLE TO MERGE? M01

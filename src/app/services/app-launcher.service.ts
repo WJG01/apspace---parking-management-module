@@ -66,4 +66,39 @@ export class AppLauncherService {
     );
   }
 
+  chatInTeams(personID: string) {
+    let webUrl: string;
+    let username: string;
+    const androidSchemeUrl = 'com.microsoft.teams';
+    const iosSchemeUrl = 'microsoft-teams://';
+
+    if (personID.startsWith('TP')) {
+      webUrl = `https://teams.microsoft.com/l/chat/0/0?users=${personID}@mail.apu.edu.my`;
+    }
+    else {
+      webUrl = `https://teams.microsoft.com/l/chat/0/0?users=${personID}@staffemail.apu.edu.my`;
+    }
+
+    const appStoreUrl = 'https://itunes.apple.com/us/app/microsoft-teams/id1113153706?mt=8';
+    const appViewUrl = 'https://teams.microsoft.com/l/chat/0/0?users=';
+    // tslint:disable-next-line: max-line-length
+    const playStoreUrl = `https://play.google.com/store/apps/details?id=com.microsoft.teams&hl=en&referrer=utm_source%3Dgoogle%26utm_medium%3Dorganic%26utm_term%3D'com.microsoft.teams'&pcampaignid=APPU_1_NtLTXJaHKYr9vASjs6WwAg`;
+
+    if (personID.startsWith('TP')) {
+      username = '${personID}@mail.apu.edu.my';
+    }
+    else {
+      username = '${personID}@staffemail.apu.edu.my';
+    }
+
+    this.launchExternalApp(
+      iosSchemeUrl,
+      androidSchemeUrl,
+      appViewUrl,
+      webUrl,
+      appStoreUrl,
+      playStoreUrl,
+      username
+    );
+  }
 }
