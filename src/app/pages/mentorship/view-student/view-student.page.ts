@@ -160,8 +160,8 @@ export class ViewStudentPage {
     return await modal.present();
   }
 
-  chatTeams(studentID: string) {
-    this.appLauncherService.chatInTeams(studentID);
+  chatTeams(studentId: string) {
+    this.appLauncherService.chatInTeams(studentId);
   }
 
   async presentEditRemarks(studentID: string, remarks: string, staffID: string, remarksDate: string) {

@@ -50,7 +50,7 @@ export class StaffDirectoryInfoPage implements OnInit {
     this.router.navigate(['staffs', this.id, 'consultations']);
   }
 
-  chatTeams(staffID: string) {
-    this.appLauncher.chatInTeams(staffID);
+  chatTeams(staffId: string) {
+    this.appLauncher.chatInTeams(staffId);
   }
 }

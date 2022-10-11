@@ -36,11 +36,9 @@ export class AppLauncherService {
   launchExternalApp(
     iosSchemaName: string,
     androidPackageName: string,
-    appViewUrl: string,
-    httpUrl: string,
+    webUrl: string,
     playStoreUrl: string,
     appStoreUrl: string,
-    username: string
   ) {
     // window.location.href = 'msteams://'
     let app: string;
@@ -49,12 +47,12 @@ export class AppLauncherService {
     } else if (this.getPlatform() === 'Android') {
       app = androidPackageName;
     } else { // WEB
-      this.component.openLink(httpUrl);
+      this.component.openLink(webUrl);
       return;
     }
     this.appAvailability.check(app).then(
       () => { // APP INSTALLED
-        window.location.href = `${appViewUrl + username}`;
+        window.location.href = `${webUrl}`;
       },
       () => { // APP IS NOT INSTALLED
         if (this.getPlatform() === 'Android') {
@@ -66,31 +64,28 @@ export class AppLauncherService {
     );
   }
 
-  chatInTeams(personID: string) {
+  chatInTeams(userId: string) {
     let email: string;
     const androidSchemeUrl = 'com.microsoft.teams';
     const iosSchemeUrl = 'microsoft-teams://';
 
-    if (personID.startsWith('TP')) {
-      email = `${personID}@mail.apu.edu.my`;
+    if (userId.startsWith('TP')) {
+      email = `${userId}@mail.apu.edu.my`;
     }
     else {
-      email = `${personID}@staffemail.apu.edu.my`;
+      email = `${userId}@staffemail.apu.edu.my`;
     }
 
     const webUrl= `https://teams.microsoft.com/l/chat/0/0?users=${email}`;
     const appStoreUrl = 'https://itunes.apple.com/us/app/microsoft-teams/id1113153706?mt=8';
-    const appViewUrl = 'https://teams.microsoft.com/l/chat/0/0?users=';
     const playStoreUrl = `https://play.google.com/store/apps/details?id=com.microsoft.teams`;
 
     this.launchExternalApp(
       iosSchemeUrl,
       androidSchemeUrl,
-      appViewUrl,
       webUrl,
       appStoreUrl,
       playStoreUrl,
-      email
     );
   }
 }
