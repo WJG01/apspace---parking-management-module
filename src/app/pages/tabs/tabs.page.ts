@@ -109,11 +109,11 @@ export class TabsPage implements OnInit {
     this.theme$ = this.settings.get$('theme').pipe(
       tap(theme => {
         const autoDark = theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        // change logo to white text logo
         if (autoDark || theme.includes('dark')) {
+          // Change to white text logo
           this.logo = 'assets/icon/apspace-white.svg';
-          // change logo to black text logo
         } else {
+          //Change to black text logo
           this.logo = 'assets/icon/apspace-black.svg';
         }
       }),
