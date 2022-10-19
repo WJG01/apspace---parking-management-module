@@ -76,3 +76,4 @@ export { MoodleEvent } from './moodle-event';
 export { News, ShortNews } from './news';
 export { VersionValidator } from './version-validator';
 export { Quote } from './quote';
+export { LeaveHistory, LeaveBalance, PendingApproval, OnLeaveOnMyCluster } from './hr';

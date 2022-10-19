@@ -28,6 +28,10 @@ import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-wit
 import { NewsModalPage } from '../news/news-modal';
 // import { NotificationModalPage } from '../notifications/notification-modal'; v4: this need to migrate in the future
 import { ChartData, ChartOptions } from 'chart.js';
+import SwiperCore, { Autoplay, Lazy, Navigation } from 'swiper';
+
+//install swiper modules
+SwiperCore.use([Autoplay, Lazy, Navigation]);
 
 @Component({
   selector: 'app-dashboard',
@@ -180,6 +184,8 @@ export class DashboardPage implements OnInit, DoCheck {
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             borderColor: 'rgb(73, 181, 113, .7)',
             backgroundColor: 'rgba(73, 181, 113, .3)',
+            pointBackgroundColor: 'rgba(73, 181, 113, .3)',
+            pointBorderColor: 'rgb(73, 181, 113, .7)',
             fill: true,
           },
           {
@@ -187,6 +193,8 @@ export class DashboardPage implements OnInit, DoCheck {
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             borderColor: 'rgb(224, 20, 57, .7)',
             backgroundColor: 'rgb(224, 20, 57, .3)',
+            pointBackgroundColor: 'rgb(224, 20, 57, .3)',
+            pointBorderColor: 'rgb(224, 20, 57, .7)',
             fill: true,
           },
         ],
@@ -1200,7 +1208,6 @@ export class DashboardPage implements OnInit, DoCheck {
                         style: "normal",
                         weight: 'bolder',
                       },
-                      padding: 10
                     },
                   }
                 },

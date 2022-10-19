@@ -13,6 +13,8 @@ import { StaffDirectoryComponent } from './staff-directory/staff-directory.compo
 import { SharedPipesModule } from '../shared/shared-pipes.module';
 import { FormatByDayPipe } from './lecturer-timetable/format-by-day/format-by-day.pipe';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
+import { NoticeBoardComponent } from './notice-board/notice-board.component';
+import { SwiperModule } from 'swiper/angular';
 
 @NgModule({
   declarations: [
@@ -24,14 +26,16 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
     SearchModalComponent,
     StaffDirectoryComponent,
     LoadingSpinnerComponent,
-    FormatByDayPipe
+    NoticeBoardComponent,
+    FormatByDayPipe,
   ],
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     ReactiveFormsModule,
-    SharedPipesModule
+    SharedPipesModule,
+    SwiperModule
   ],
   exports: [
     DatePickerComponent,
@@ -41,7 +45,8 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
     NotFoundCardComponent,
     SearchModalComponent,
     StaffDirectoryComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    NoticeBoardComponent
   ]
 })
 export class ComponentsModule { }

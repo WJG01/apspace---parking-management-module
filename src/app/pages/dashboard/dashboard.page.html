@@ -190,23 +190,23 @@
           </ion-card-header>
           <ion-card-content>
             <ion-row class="quick-access-container ion-justify-content-between">
-              <ion-col *ngIf="isCapacitor" class="quick-access-item glob-border-radius quick-access-location"
+              <ion-col *ngIf="isCapacitor" class="quick-access-item border-radius quick-access-location"
                 size-lg="5.8" size-md="12" size-xs="5.8" [routerLink]="['/apcard-qr-code']">
                 <p>Update Location</p>
               </ion-col>
-              <ion-col *ngIf="isStudent" class="quick-access-item glob-border-radius quick-access-attendance"
+              <ion-col *ngIf="isStudent" class="quick-access-item border-radius quick-access-attendance"
                 size-lg="5.8" size-md="12" size-xs="5.8" [routerLink]="['/attendix/update']">
                 <p>Sign Attendance</p>
               </ion-col>
-              <ion-col *ngIf="isLecturer" class="quick-access-item glob-border-radius quick-access-attendance"
+              <ion-col *ngIf="isLecturer" class="quick-access-item border-radius quick-access-attendance"
                 size-lg="5.8" size-md="12" size-xs="5.8" [routerLink]="['/attendix/classes']">
                 <p>Mark Attendance</p>
               </ion-col>
-              <ion-col *ngIf="!isStudent" class="quick-access-item glob-border-radius quick-access-hr" size-lg="5.8"
+              <ion-col *ngIf="!isStudent" class="quick-access-item border-radius quick-access-hr" size-lg="5.8"
                 size-md="12" size-xs="5.8" [routerLink]="['/hr']">
                 <p>Human Resources</p>
               </ion-col>
-              <ion-col class="quick-access-item glob-border-radius quick-access-moodle" size-lg="5.8" size-md="12"
+              <ion-col class="quick-access-item border-radius quick-access-moodle" size-lg="5.8" size-md="12"
                 size-xs="5.8" (click)="openMoodle()">
                 <p>Moodle</p>
               </ion-col>
@@ -483,31 +483,9 @@
         class="dash-padding dash-padding-bottom">
         <!-- Slide shows -->
         <section class="image-slider ion-margin-bottom" *ngIf="activeDashboardSections.includes('noticeBoard')">
-          <ion-slides #imageSliderSlides pager="true" [options]="imageSliderOpts">
-            <ng-container *ngIf="noticeBoardItems$ | async as noticeBoardItems; else loadingNoticeBoard">
-              <ng-container *ngIf="noticeBoardItems.length > 0; else noNoticeBoardItems">
-                <ion-slide *ngFor="let noticeBoardItem of noticeBoardItems">
-                  <div class="picture">
-                    <a href="{{ noticeBoardItem['post-meta-fields']['slideshow_url'] && noticeBoardItem['post-meta-fields']['slideshow_url'][0] ? noticeBoardItem['post-meta-fields']['slideshow_url'][0] : noticeBoardItem.link }}"
-                      target="_blank"> <img
-                        src="{{ noticeBoardItem.featured_image_src ? noticeBoardItem.featured_image_src : 'assets/img/placeholder.png' }}"
-                        alt="" />
-                    </a>
-                  </div>
-                </ion-slide>
-              </ng-container>
-            </ng-container>
-          </ion-slides>
-          <ng-template #loadingNoticeBoard>
-            <ion-skeleton-text animated style="height: 150px"></ion-skeleton-text>
-          </ng-template>
-          <ng-template #noNoticeBoardItems>
-            <message-with-svg wrapperSize="6" wrapperOffset="3" imageUrl="assets/img/empty.svg"
-              messageTitle="Nothing to show yet!" messageContent="Try to come later :)">
-            </message-with-svg>
-          </ng-template>
+          <app-notice-board></app-notice-board>
         </section>
-
+        
         <!-- News -->
         <ion-card class="ion-no-margin ion-margin-bottom no-border-rad"
           *ngIf="activeDashboardSections.includes('news')">

@@ -268,6 +268,12 @@ const routes: Routes = [
     data: { role: Role.Student | Role.Lecturer | Role.Admin },
     loadChildren: () => import('./pages/apcard-qr-code/apcard-qr-code.module').then(m => m.ApcardQrCodePageModule)
   },
+  {
+    path: 'hr',
+    canActivate: [AuthGuard],
+    data: { role: Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/hr/hr.module').then( m => m.HrPageModule)
+  },
   { // this path must always be at the end of the routes array
     path: '**',
     canActivate: [AuthGuard],

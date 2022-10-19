@@ -4,9 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { DashboardPageRoutingModule } from './dashboard-routing.module';
 import { NgChartsModule } from 'ng2-charts';
-
-
-
+import { SwiperModule } from 'swiper/angular';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { SharedPipesModule } from '../../shared/shared-pipes.module';
 import { DashboardPage } from './dashboard.page';
@@ -21,7 +19,8 @@ import { TimeParserPipe } from './time-parser.pipe';
     SharedPipesModule,
     NgChartsModule,
     ReactiveFormsModule,
-    DashboardPageRoutingModule
+    DashboardPageRoutingModule,
+    SwiperModule
   ],
   declarations: [DashboardPage, TimeParserPipe]
 })

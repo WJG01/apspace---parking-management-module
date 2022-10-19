@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import SwiperCore, { Autoplay, Pagination } from 'swiper';
+import SwiperCore, { Autoplay, Pagination, Swiper } from 'swiper';
 import { Observable } from 'rxjs';
 import { News } from '../../interfaces/news';
 import { NewsService } from '../../services/news.service';
@@ -29,4 +29,29 @@ export class NoticeBoardComponent implements OnInit {
     this.component.openLink(link);
   }
 
+  setSwiperInstance(swiper: Swiper) {
+    let isEnd=false;
+    let isDragged=false;
+    setInterval(() => {
+      if(!isDragged){
+        swiper.slideNext()
+      }
+      if(isEnd){
+        swiper.slideToLoop(0)
+        isEnd=false;
+      }
+    }, 3000);
+
+    swiper.on('touchEnd',function(){
+      isDragged=false
+    })
+
+    swiper.on('sliderFirstMove',function(){
+      isDragged=true
+    })
+
+    swiper.on('reachEnd', function(){
+      isEnd=true;
+    });
+  }
 }
