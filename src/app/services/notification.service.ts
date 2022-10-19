@@ -91,8 +91,7 @@ export class NotificationService {
   sendTokenOnLogout() {
     let token = '';
     if (this.platform.is('capacitor')) {
-      // TODO: Get token from FCM after PR #393
-      return from('token').pipe(
+      return from(this.fcm.getToken()).pipe(
         switchMap(
           responseToken => {
             token = responseToken;
