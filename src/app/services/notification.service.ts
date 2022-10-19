@@ -86,32 +86,31 @@ export class NotificationService {
   }
 
   /**
-   * Get the list of categories
+   * POST: send token and service ticket on Log out
    */
-  // sendTokenOnLogout() {
-  //   let token = '';
-  //   if (this.platform.is('capacitor')) {
-  //     return from (
-  //       this.firebaseX.getToken()
-  //     ).pipe(
-  //       switchMap(
-  //         responseToken => {
-  //           token = responseToken;
-  //           return this.cas.getST(this.serviceUrl);
-  //         },
-  //       ),
-  //       switchMap(
-  //         st => {
-  //           const body = {
-  //             device_token: token,
-  //           };
-  //           const url = `${this.apiUrl}/client/logout?ticket=${st}`;
-  //           return this.http.post(url, body, { headers: this.headers });
-  //         },
-  //       ),
-  //     );
-  //   }
-  // }
+  sendTokenOnLogout() {
+    let token = '';
+    if (this.platform.is('capacitor')) {
+      // TODO: Get token from FCM after PR #393
+      return from('token').pipe(
+        switchMap(
+          responseToken => {
+            token = responseToken;
+            return this.cas.getST(this.serviceUrl);
+          },
+        ),
+        switchMap(
+          st => {
+            const body = {
+              device_token: token,
+            };
+            const url = `${this.apiUrl}/client/logout?ticket=${st}`;
+            return this.http.post(url, body, { headers: this.headers });
+          },
+        ),
+      );
+    }
+  }
 
 
   getCategories() {

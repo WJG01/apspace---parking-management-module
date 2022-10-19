@@ -39,6 +39,7 @@ ion-input {
 }
 
 .mobile {
+  margin-top: var(--ion-safe-area-top);
 
   ion-item {
     // always light theme

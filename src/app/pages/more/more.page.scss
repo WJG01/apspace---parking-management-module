@@ -84,11 +84,11 @@ responsive-container-sm {
   }
 }
 
-.col-padding > :nth-child(4n+1) {
+.col-padding> :nth-child(4n+1) {
   padding-left: 0;
 }
 
-.col-padding > :nth-child(4n+4) {
+.col-padding> :nth-child(4n+4) {
   padding-right: 0;
 }
 

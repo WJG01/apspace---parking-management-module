@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuID, MenuItem } from './menu.interface';
+import { AlertButton, AlertController, NavController } from '@ionic/angular';
+import { map, Observable } from 'rxjs';
+
 import { Storage } from '@ionic/storage-angular';
-import { menu } from './menu';
-import { Network } from '@capacitor/network';
-import { Observable } from 'rxjs';
+
+import { menu, menusWithoutParent } from './menu';
 import { Role } from '../../interfaces';
 import { CasTicketService, SettingsService } from '../../services';
-import { AlertButton, AlertController, NavController, Platform} from '@ionic/angular';
+import { MenuID, MenuItem } from './menu.interface';
 import { ComponentService } from '../../services';
-import { map } from 'rxjs/operators';
 
-interface KeyIconMap { [key: string]: string; }
+const ICONS_PATH = 'assets/img/more-icons'; // Main Icons Path
 
 @Component({
   selector: 'app-more',
@@ -19,69 +19,59 @@ interface KeyIconMap { [key: string]: string; }
 })
 
 export class MorePage implements OnInit {
-  keyList = [];
-  keyIcon: KeyIconMap = {
-    ['Finance']: 'assets/img/more-icons/finance.png',
-    ['Collaboration & Information Resources']: 'assets/img/more-icons/collab-info.png',
-    ['Campus Life']: 'assets/img/more-icons/campus-life.png',
-    ['Corporate']: 'assets/img/more-icons/corporate.png',
-    ['Academic Operation']: 'assets/img/more-icons/academic-op.png',
-    ['Academic & Enrollment']: 'assets/img/more-icons/academic-enroll.png',
-    ['Career Centre & Corporate Training']: 'assets/img/more-icons/career-training.png',
-    ['Others']: 'assets/img/more-icons/others.png'
+
+  keyIcon: { [key: string]: string; } = {
+    ['Finance']: `${ICONS_PATH}/finance.png`,
+    ['Collaboration & Information Resources']: `${ICONS_PATH}/collab-info.png`,
+    ['Campus Life']: `${ICONS_PATH}/campus-life.png`,
+    ['Corporate']: `${ICONS_PATH}/corporate.png`,
+    ['Academic Operation']: `${ICONS_PATH}/academic-op.png`,
+    ['Academic & Enrollment']: `${ICONS_PATH}/academic-enroll.png`,
+    ['Career Centre & Corporate Training']: `${ICONS_PATH}/career-training.png`,
+    ['Others']: `${ICONS_PATH}/others.png`
   };
 
   view$: Observable<'list' | 'cards'>;
   fav$: Observable<MenuItem[]>; // favourite items
-  term: '';
   editMode = false;
-
-  menuItems: MenuItem[] = menu;
-  filteredMenu = [] as MenuItem[];
-
-  isMobile = this.platform.is('capacitor');
+  filteredMenu: MenuItem[] = [];
 
   constructor(
     private cas: CasTicketService,
     public alertCtrl: AlertController,
     private storage: Storage,
     public navCtrl: NavController,
-    private platform: Platform,
     private settings: SettingsService,
     public component: ComponentService
   ) { }
 
   ngOnInit() {
     // assert no duplicate id (probably not able to be done during compile time)
-    this.menuItems.forEach((menu, _i, arr) => {
+    menu.forEach((menu, _i, arr) => {
       if (arr.find(item => item.id === menu.id) !== menu) {
         console.warn(`duplicate '${menu.id}' in menuFull`);
       }
     });
+
+    // Get more page view ui
     this.view$ = this.settings.get$('menuUI');
 
+    // Resolves both promises at once
     Promise.all([
       this.storage.get('role'),
       this.storage.get('canAccessResults')
     ]).then(([role, canAccessResults = false]: [Role, boolean]) => {
       if (role & Role.Student) {
-        this.filteredMenu = this.menuItems.filter(
-          menu => {
-            return (menu.role & role) && menu.parents.length === 0;
-          }
-        );
+        this.filteredMenu = menusWithoutParent.filter(menu => menu.role & role);
       } else {
-        this.filteredMenu = this.menuItems.filter(
-          menu => {
-            return menu.parents.length === 0
-              && ((menu.role & role) && ((menu.canAccess && menu.canAccess === canAccessResults) || !menu.canAccess));
-          }
+        this.filteredMenu = menu.filter(menu =>
+          ((menu.role & role) && ((menu.canAccess && menu.canAccess === canAccessResults) || !menu.canAccess))
         );
       }
 
       this.fav$ = this.settings.get$('favoriteItems').pipe(
         // tslint:disable-next-line:no-bitwise
-        map(favs => favs.map(fav => this.menuItems.find(menu => menu.id === fav && menu.role & role))
+        map(favs => favs.map(fav => menu.find(menu => menu.id === fav && menu.role & role))
           .filter(menu => menu !== undefined)),
       );
     });
@@ -107,31 +97,24 @@ export class MorePage implements OnInit {
     return 0;
   }
 
-  async openInAppBrowser(url: string) {
-    await this.component.openLink(url);
-  }
+  async openPage(url: string, attachTicket = false, menuId: MenuID) {
+    // If Edit Mode is enabled then add the item to Favourites
+    if (this.editMode) {
+      this.addToFav(menuId);
+      return;
+    };
 
-  /** Open page, manually check for third party pages. */
-  async openPage(url: string, attachTicket = false) {
-    if (!this.editMode) {
-      // external pages does not use relative or absolute link
-      if (url.startsWith('http://') || url.startsWith('https://')) {
-        // Manually exclude sites that do not need services ticket
-        if (!attachTicket) {
-          await this.openInAppBrowser(url);
-        } else {
-          const networkStatus = await Network.getStatus();
-          if (networkStatus.connected) {
-            this.cas.getST(url).subscribe(st => {
-              this.openInAppBrowser(`${url}?ticket=${st}`);
-            });
-          } else {
-            await this.component.toastMessage('External links cannot be opened in offline mode. Please ensure you have a network connection and try again', 'danger');
-          }
-        }
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      // Manually exclude sites that do not need services ticket
+      if (!attachTicket) {
+        this.component.openLink(url);
       } else {
-        url !== 'logout' ? this.navCtrl.navigateForward([url]) : this.logout();
+        this.cas.getST(url).subscribe(st => {
+          this.component.openLink(`${url}?ticket=${st}`);
+        });
       }
+    } else {
+      url !== 'logout' ? this.navCtrl.navigateForward([url]) : this.logout();
     }
   }
 

@@ -34,7 +34,7 @@ export class StudentPage implements OnInit {
   ngOnInit() {
     this.isCapacitor = this.plt.is('capacitor');
     // first run and if scan is selected
-    if (this.isCapacitor && this.settings.get('scan')) {
+    if (this.isCapacitor && this.settings.get('scan') !== false) {
       this.swapMode();
     }
   }
@@ -46,7 +46,7 @@ export class StudentPage implements OnInit {
   /** Swap mode between auto scan and manual input. */
   async swapMode() {
     this.scan = !this.scan;
-    this.settings.set('scan', this.scan = !this.scan);
+    this.settings.set('scan', this.scan);
     if (this.scan) {
       const allowed = await this.checkPermission();
       await BarcodeScanner.prepare();

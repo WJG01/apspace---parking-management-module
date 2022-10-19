@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { MenuItem } from './menu.interface';
+import { MenuItem } from '../menu.interface';
 
 /**
  * Regroup menu items.
@@ -22,5 +22,4 @@ export class ByGroupPipe implements PipeTransform {
       return acc;
     }, new Map());
   }
-
 }
