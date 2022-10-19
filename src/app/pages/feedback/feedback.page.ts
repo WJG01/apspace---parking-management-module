@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { LoadingController, Platform, ToastController } from '@ionic/angular';
 
-import { FeedbackService, VersionService } from '../../services';
+import { CasTicketService, FeedbackService, VersionService } from '../../services';
 
 @Component({
   selector: 'app-feedback',
@@ -13,7 +13,7 @@ export class FeedbackPage implements OnInit {
   phoneNumberValidationPattern = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4,5})$/;
   phoneNumberValid = false;
 
-  onlineFeedbackSystemURL = 'https://erp.apiit.edu.my/easymoo/web/en/user/feedback/feedbackusersend';
+  onlineFeedbackSystemURL = 'https://feedback.sites.apiit.edu.my/';
 
   contactNo = '';
   message = '';
@@ -30,7 +30,8 @@ export class FeedbackPage implements OnInit {
     private toastCtrl: ToastController,
     private version: VersionService,
     private iab: InAppBrowser,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
+    private cas: CasTicketService
   ) { }
 
   submitFeedback() {
@@ -94,7 +95,9 @@ export class FeedbackPage implements OnInit {
   }
 
   openOnlineFeedbackSystem() {
-    this.iab.create(this.onlineFeedbackSystemURL, '_system', 'location=true');
+    this.cas.getST(this.onlineFeedbackSystemURL).subscribe(st => {
+      this.iab.create(`${this.onlineFeedbackSystemURL}?ticket=${st}`, '_system', 'location=true');
+    })
   }
 
   async presentLoading() {
