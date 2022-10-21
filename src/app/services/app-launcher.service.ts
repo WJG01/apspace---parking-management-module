@@ -73,7 +73,7 @@ export class AppLauncherService {
       email = `${userId}@mail.apu.edu.my`;
     }
     else {
-      email = `${userId}@staffemail.apu.edu.my`;
+      email = `${userId}@apu.edu.my`;
     }
 
     const webUrl= `https://teams.microsoft.com/l/chat/0/0?users=${email}`;
