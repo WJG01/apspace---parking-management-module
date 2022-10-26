@@ -36,6 +36,12 @@ const routes: Routes = [
         loadChildren: () => import('../attendance/attendance.module').then(m => m.AttendancePageModule)
       },
       {
+        path: 'profile',
+        canActivate: [AuthGuard],
+        data: { role: Role.Lecturer | Role.Admin },
+        loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule)
+      },
+      {
         path: 'apcard',
         canActivate: [AuthGuard],
         data: { role: Role.Student | Role.Lecturer | Role.Admin },

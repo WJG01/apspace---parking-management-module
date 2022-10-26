@@ -21,7 +21,7 @@ import {
 import {
   CasTicketService, NewsService,
   NotificationService, SettingsService, StudentTimetableService,
-  WsApiService, ComponentService, FcmService
+  WsApiService, ComponentService, AppLauncherService, FcmService
 } from 'src/app/services';
 import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-with-timezone.pipe';
 // import { NotifierService } from 'src/app/shared/notifier/notifier.service'; v4: this need to migrate in the future
@@ -299,7 +299,7 @@ export class DashboardPage implements OnInit, DoCheck {
     private news: NewsService,
     private modalCtrl: ModalController,
     private cas: CasTicketService,
-    // private appLauncherService: AppLauncherService,
+    private appLauncherService: AppLauncherService,
     private platform: Platform,
     // private firebaseX: FirebaseX, //v4: this need to migrate in the future
     private settings: SettingsService,
@@ -714,39 +714,8 @@ export class DashboardPage implements OnInit, DoCheck {
     );
   }
 
-
-  chatInTeams(lecturerCasId: string) {
-
-    const androidSchemeUrl = 'com.microsoft.teams';
-
-    const iosSchemeUrl = 'microsoft-teams://';
-
-    const webUrl = `https://teams.microsoft.com/l/chat/0/0?users=${lecturerCasId}@staffemail.apu.edu.my`;
-
-    const appStoreUrl = 'https://itunes.apple.com/us/app/microsoft-teams/id1113153706?mt=8';
-
-    const appViewUrl = 'https://teams.microsoft.com/l/chat/0/0?users=';
-
-    // tslint:disable-next-line: max-line-length
-
-    const playStoreUrl = `https://play.google.com/store/apps/details?id=com.microsoft.teams&hl=en&referrer=utm_source%3Dgoogle%26utm_medium%3Dorganic%26utm_term%3D'com.microsoft.teams'&pcampaignid=APPU_1_NtLTXJaHKYr9vASjs6WwAg`;
-    // To be migrated in the future
-    // this.appLauncherService.launchExternalApp(
-
-    //   iosSchemeUrl,
-
-    //   androidSchemeUrl,
-
-    //   appViewUrl,
-
-    //   webUrl,
-
-    //   playStoreUrl,
-
-    //   appStoreUrl,
-
-    //   `${lecturerCasId}@staffemail.apu.edu.my`);
-
+  chatTeams(staffEmail: string) {
+    this.appLauncherService.chatInTeams(staffEmail);
   }
 
   // FUNCTION POSSIBLE TO MERGE? M01

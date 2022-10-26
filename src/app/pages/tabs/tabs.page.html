@@ -2,7 +2,9 @@
   <ion-toolbar>
     <!--Logo-->
     <ion-title mode="md" class="tab-icon ion-text-left logo-container">
-      <img class="logo-img" alt="APSpace Logo" [src]="logo" />
+      <ng-container *ngIf="theme$ | async as theme">
+        <img class="logo-img" alt="APSpace Logo" [src]="logo" />
+      </ng-container>
     </ion-title>
     <ion-buttons slot="end">
       <ion-button color="primary" (click)="openSearch()">
@@ -22,8 +24,10 @@
       <ion-row class="tab-bar-content-left">
         <!--Logo-->
         <ion-col>
-          <img [src]="logo" class="large-screen-logo" alt="APSpace Logo" width="110"
-            [routerLink]="['/tabs/dashboard']" />
+          <ng-container *ngIf="theme$ | async as theme">
+            <img [src]="logo" class="large-screen-logo" alt="APSpace Logo" width="110"
+                 [routerLink]="['/tabs/dashboard']" />
+          </ng-container>
         </ion-col>
         <!--Search Bar-->
         <ion-col class="ion-no-padding">

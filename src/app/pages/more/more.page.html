@@ -2,6 +2,14 @@
   <div class="glob-container">
     <ion-card *ngIf="editMode">
       <ion-card-title class="ion-padding edit-mode-card">Edit Mode</ion-card-title>
+      <ion-card-content class="ion-hide-md-down">
+        <ul class="ion-no-margin ion-padding-horizontal">
+          <li class="ion-padding-bottom">Add or remove favorites by clicking a menu item</li>
+          <li class="ion-padding-bottom">Filled Star: Added to Favorite</li>
+          <li class="ion-padding-bottom">Outlined Star: Not added to Favorite</li>
+          <li>Tap save to save favorites and exit edit mode</li>
+        </ul>
+      </ion-card-content>
     </ion-card>
 
     <!--LIST ITEMS-->

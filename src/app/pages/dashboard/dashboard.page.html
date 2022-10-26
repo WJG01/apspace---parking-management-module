@@ -88,7 +88,7 @@
         <ng-container *ngIf="orientationStudentDetails$ | async as announcement">
           <ng-container *ngIf="showAnnouncement">
             <img class="orientation-image" src="assets/img/e-orientation.jpg" button [routerLink]="['/', 'profile']"
-              router-direction="forward" />
+                 router-direction="forward" />
           </ng-container>
         </ng-container>
       </ion-card>
@@ -485,7 +485,7 @@
         <section class="image-slider ion-margin-bottom" *ngIf="activeDashboardSections.includes('noticeBoard')">
           <app-notice-board></app-notice-board>
         </section>
-        
+
         <!-- News -->
         <ion-card class="ion-no-margin ion-margin-bottom no-border-rad"
           *ngIf="activeDashboardSections.includes('news')">
@@ -656,7 +656,7 @@
               <ng-container *ngIf="lecturerContacts$ | async as lecturerContacts; else loadingContacts">
                 <ng-container *ngIf="lecturerContacts.length > 0; else noContacts">
                   <ion-row class="contacts-row ion-padding" *ngFor="let contact of lecturerContacts"
-                    (click)="chatInTeams(contact.SAMACCOUNTNAME)">
+                    (click)="chatTeams(contact.EMAIL)">
                     <ion-col size="1.4" size-xl="1" class="ion-align-self-center">
                       <ion-icon class="contacts-icon" name="people-circle-outline"></ion-icon>
                     </ion-col>

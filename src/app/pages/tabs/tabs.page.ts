@@ -7,9 +7,10 @@ import { Storage } from '@ionic/storage-angular';
 
 import { TabItems } from '../../constants';
 import { Role } from '../../interfaces';
-import { ComponentService, ConfigurationsService } from '../../services';
+import { ComponentService, ConfigurationsService, SettingsService } from '../../services';
 import { SearchMenusModalPage } from './search-menus-modal/search-menus-modal.page';
 import { TabItem } from './tab-item';
+import { Observable, tap } from 'rxjs';
 
 @Component({
   selector: 'app-tabs',
@@ -24,6 +25,7 @@ export class TabsPage implements OnInit {
   @ViewChild(IonTabs) tabs: IonTabs;
   smallScreen: boolean;
   logo: string;
+  theme$: Observable<string>;
 
   constructor(
     private storage: Storage,
@@ -31,11 +33,12 @@ export class TabsPage implements OnInit {
     private modalCtrl: ModalController,
     private plt: Platform,
     private component: ComponentService,
+    private settings: SettingsService,
     private router: Router
   ) { }
 
   ngOnInit() {
-    this.logo = this.config.logoType;
+    this.checkLogoType();
 
     this.storage.get('role').then((role: Role) => {
       if (!role) {
@@ -100,5 +103,20 @@ export class TabsPage implements OnInit {
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.smallScreen = window.innerWidth <= 720;
+  }
+
+  checkLogoType(){
+    this.theme$ = this.settings.get$('theme').pipe(
+      tap(theme => {
+        const autoDark = theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (autoDark || theme.includes('dark')) {
+          // Change to white text logo
+          this.logo = 'assets/icon/apspace-white.svg';
+        } else {
+          //Change to black text logo
+          this.logo = 'assets/icon/apspace-black.svg';
+        }
+      }),
+    );
   }
 }

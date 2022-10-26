@@ -36,11 +36,9 @@ export class AppLauncherService {
   launchExternalApp(
     iosSchemaName: string,
     androidPackageName: string,
-    appViewUrl: string,
-    httpUrl: string,
+    webUrl: string,
     playStoreUrl: string,
     appStoreUrl: string,
-    username: string
   ) {
     // window.location.href = 'msteams://'
     let app: string;
@@ -49,12 +47,12 @@ export class AppLauncherService {
     } else if (this.getPlatform() === 'Android') {
       app = androidPackageName;
     } else { // WEB
-      this.component.openLink(httpUrl);
+      this.component.openLink(webUrl);
       return;
     }
     this.appAvailability.check(app).then(
       () => { // APP INSTALLED
-        window.location.href = `${appViewUrl + username}`;
+        window.location.href = `${webUrl}`;
       },
       () => { // APP IS NOT INSTALLED
         if (this.getPlatform() === 'Android') {
@@ -66,4 +64,19 @@ export class AppLauncherService {
     );
   }
 
+  chatInTeams(userEmail: string) {
+    const androidSchemeUrl = 'com.microsoft.teams';
+    const iosSchemeUrl = 'microsoft-teams://';
+    const webUrl= `https://teams.microsoft.com/l/chat/0/0?users=${userEmail}`;
+    const appStoreUrl = 'https://itunes.apple.com/us/app/microsoft-teams/id1113153706?mt=8';
+    const playStoreUrl = `https://play.google.com/store/apps/details?id=com.microsoft.teams`;
+
+    this.launchExternalApp(
+      iosSchemeUrl,
+      androidSchemeUrl,
+      webUrl,
+      appStoreUrl,
+      playStoreUrl,
+    );
+  }
 }

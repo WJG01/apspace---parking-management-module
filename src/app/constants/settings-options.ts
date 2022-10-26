@@ -37,7 +37,7 @@ export const StaffDashboardSection = [
 export const TimeFormats = ['12', '24'];
 
 export const Themes = [
-  { title: 'Auto (Default)', value: '' },
+  { title: 'Auto (Default)', value: 'auto' },
   { title: 'Light', value: 'light' },
   { title: 'Dark', value: 'dark' }
 ];
