@@ -72,7 +72,7 @@ export const menuItems = [
     id: 'new-feedback' as const,
     title: 'Feedback',
     group: 'Collaboration & Information Resources',
-    url: 'new-feedback',
+    url: 'http://feedback.sites.apiit.edu.my/',
     img: 'assets/img/more-icons/new-feedback.png',
     role: Role.Student | Role.Lecturer | Role.Admin,
     tags: ['anonymous', 'feedback', 'complain', 'issue'],
