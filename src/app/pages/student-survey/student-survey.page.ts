@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertButton, LoadingController } from '@ionic/angular';
 import { map, Observable, shareReplay, tap } from 'rxjs';
 
-import { StudentProfile, SurveyIntake, SurveyModule } from '../../interfaces';
+import { MCQType, StudentProfile, SurveyIntake, SurveyModule } from '../../interfaces';
 import { ComponentService, WsApiService } from '../../services';
 
 @Component({
@@ -14,12 +14,14 @@ import { ComponentService, WsApiService } from '../../services';
 export class StudentSurveyPage implements OnInit {
 
   // TEMP VARIABLES
+  // devApi = 'https://dl4h9zf8wj.execute-api.ap-southeast-1.amazonaws.com/dev';
   todaysDate = new Date();
   lecturerName = '';
 
   COURSE_CODE$: Observable<SurveyIntake[]>;
   COURSE_MODULES$: Observable<SurveyModule[]>;
   survey$: Observable<any[]>;
+  mcqAnswers$: Observable<MCQType[]>;
   // IF USER IS COMING FROM RESULTS PAGE
   fromResultsPage = false;
 
@@ -44,13 +46,6 @@ export class StudentSurveyPage implements OnInit {
   };
   showFieldMissingError = false;
   skeletons = new Array(3);
-  msqAnswers = [
-    { id: '5', content: 'Strongly Agree' },
-    { id: '4', content: 'Agree' },
-    { id: '3', content: 'Neither' },
-    { id: '2', content: 'Disagree' },
-    { id: '1', content: 'Strongly Disagree' },
-  ];
 
   constructor(
     private ws: WsApiService,
@@ -260,6 +255,7 @@ export class StudentSurveyPage implements OnInit {
         };
       }),
     );
+    this.mcqAnswers$ = this.ws.get<MCQType[]>('/survey/mcq');
   }
 
   getSurveyType(classCode: string) {

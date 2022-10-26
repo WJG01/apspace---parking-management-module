@@ -23,6 +23,13 @@ const routes: Routes = [
         loadChildren: () => import('../student-timetable/student-timetable.module').then(m => m.StudentTimetablePageModule)
       },
       {
+        path: 'profile',
+        canActivate: [AuthGuard],
+        // tslint:disable-next-line:no-bitwise
+        data: { role: Role.Lecturer | Role.Admin },
+        loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule)
+      },
+      {
         path: 'attendance',
         canActivate: [AuthGuard],
         data: { role: Role.Student },
