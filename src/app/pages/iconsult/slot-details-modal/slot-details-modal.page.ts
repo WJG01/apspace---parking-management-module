@@ -140,8 +140,8 @@ export class SlotDetailsModalPage implements OnInit {
     document.getElementById('maxLength50').setAttribute('maxlength', '50');
   }
 
-  chatTeams(staffId: string) {
-    this.appLauncher.chatInTeams(staffId);
+  chatTeams(staffEmail: string) {
+    this.appLauncher.chatInTeams(staffEmail);
   }
 
   dismiss() {

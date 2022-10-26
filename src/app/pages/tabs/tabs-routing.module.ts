@@ -36,6 +36,13 @@ const routes: Routes = [
         loadChildren: () => import('../attendance/attendance.module').then(m => m.AttendancePageModule)
       },
       {
+        canActivate: [AuthGuard],
+        // tslint:disable-next-line:no-bitwise
+        data: { role: Role.Lecturer | Role.Admin },
+        path: 'profile',
+        loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule)
+      },
+      {
         path: 'apcard',
         canActivate: [AuthGuard],
         data: { role: Role.Student | Role.Lecturer | Role.Admin },

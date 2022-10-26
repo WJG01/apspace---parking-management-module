@@ -207,8 +207,8 @@ export class ProfilePage implements OnInit {
     await modal.onDidDismiss();
   }
 
-  chatTeams(staffId: string) {
-    this.appLauncher.chatInTeams(staffId);
+  chatTeams(staffEmail: string) {
+    this.appLauncher.chatInTeams(staffEmail);
   }
 
   changeListener($event): void {

@@ -714,8 +714,8 @@ export class DashboardPage implements OnInit, DoCheck {
     );
   }
 
-  chatTeams(staffID: string) {
-    this.appLauncherService.chatInTeams(staffID);
+  chatTeams(staffEmail: string) {
+    this.appLauncherService.chatInTeams(staffEmail);
   }
 
   // FUNCTION POSSIBLE TO MERGE? M01
