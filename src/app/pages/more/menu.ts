@@ -504,16 +504,16 @@ export const menuItems = [
     tags: [],
     parents: [],
   },
-  {
-    id: 'fyp-bank' as const,
-    title: 'FYP Bank Homepage',
-    group: 'Academic & Enrollment',
-    url: 'https://fypbank.apiit.edu.my/', // no ticket
-    img: 'assets/img/more-icons/fyp.png',
-    role: Role.Student | Role.Lecturer | Role.Admin,
-    tags: ['fyp', 'bank', 'final project', 'project'],
-    parents: [],
-  },
+  // {
+  //   id: 'fyp-bank' as const,
+  //   title: 'FYP Bank Homepage',
+  //   group: 'Academic & Enrollment',
+  //   url: 'https://fypbank.apiit.edu.my/', // no ticket
+  //   img: 'assets/img/more-icons/fyp.png',
+  //   role: Role.Student | Role.Lecturer | Role.Admin,
+  //   tags: ['fyp', 'bank', 'final project', 'project'],
+  //   parents: [],
+  // },
   {
     id: 'intake-calendar' as const,
     title: 'Intake Calendar',
