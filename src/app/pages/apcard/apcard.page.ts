@@ -80,7 +80,7 @@ export class ApcardPage implements OnInit {
         }
 
         if (this.filterObject.type !== 'all') {
-          return filteredtransactions =
+          filteredtransactions =
             filteredtransactions.filter(t =>
               this.filterObject.type === 'credit' ? t.SpendVal >= 0 : t.SpendVal < 0);
         }
