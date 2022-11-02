@@ -82,7 +82,7 @@ export class SearchModalComponent implements OnInit {
     // start filter on input but accept EMPTY input too
     const filteredItems = term.length !== 0
       ? items.filter(item => item.indexOf(term) !== -1)
-      : items;
+      : [];
     return filteredItems;
   }
 
