@@ -79,7 +79,7 @@
             <ion-item *ngIf="slotType.value === consultationType[1].value" lines="inset">
               <ion-label position="stacked">Number of Weeks</ion-label>
 
-              <ion-input placeholder="Enter a number" formControlName="noOfWeeks"></ion-input>
+              <ion-input type="number" placeholder="Enter a number" formControlName="noOfWeeks"></ion-input>
             </ion-item>
 
             <div class="error-message"
@@ -185,7 +185,7 @@
                   <ion-label position="stacked">Venue</ion-label>
 
                   <ng-container *ngIf="(venues$ | async) as venues; else loadVenues">
-                    <ion-select placeholder="Select a Venue" interface="popover" formControlName="venue" mode="md">
+                    <ion-select placeholder="Select a Venue" formControlName="venue" mode="md">
                       <ion-select-option *ngFor="let v of venues" [value]="v.id">
                         {{ v.room_code }}
                       </ion-select-option>

@@ -105,7 +105,6 @@ export class AddFreeSlotPage implements OnInit {
       this.repeatOn.updateValueAndValidity();
       // add validation when type is single slot
       this.noOfWeeks.setValidators(Validators.required);
-      this.noOfWeeks.setValidators(Validators.pattern(/^([1-9][0-9]{1,3}){1}?$/));
       this.noOfWeeks.updateValueAndValidity();
       // remove validation from end date when type is weekly repeatd
       this.endDate.setValidators(null);
