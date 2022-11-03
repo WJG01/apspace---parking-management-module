@@ -66,7 +66,7 @@ export class AppLauncherService {
 
   chatInTeams(userEmail: string) {
     const androidSchemeUrl = 'com.microsoft.teams';
-    const iosSchemeUrl = 'microsoft-teams://';
+    const iosSchemeUrl = 'msteams://';
     const webUrl= `https://teams.microsoft.com/l/chat/0/0?users=${userEmail}`;
     const appStoreUrl = 'https://itunes.apple.com/us/app/microsoft-teams/id1113153706?mt=8';
     const playStoreUrl = `https://play.google.com/store/apps/details?id=com.microsoft.teams`;
