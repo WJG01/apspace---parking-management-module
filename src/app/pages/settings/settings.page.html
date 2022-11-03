@@ -278,7 +278,7 @@
                 <ion-label position="stacked">
                   Venue
                 </ion-label>
-                <ion-select interface="popover" placeholder="Select a Venue" [(ngModel)]="defaultVenue"
+                <ion-select placeholder="Select a Venue" [(ngModel)]="defaultVenue"
                   (ngModelChange)="updateDefaultLocation('venue')">
                   <ion-select-option *ngFor="let v of venues" [value]="v.id">
                     {{ v.room_code }}
