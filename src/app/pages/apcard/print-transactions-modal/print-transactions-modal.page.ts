@@ -81,7 +81,10 @@ export class PrintTransactionsModalPage implements OnInit {
     });
     await loading.present();
 
-    const yearMonthDate = new Date(this.month.value);
+    // const news = new Formatt
+    const formattedDate = `01 ${this.month.value}`; // On iOS the date is not converted properly
+    const yearMonthDate = new Date(formattedDate);
+
     let numberOfItems = 0, totalSpent = 0, totalTopup = 0;
     this.tableBody = [ // empty the list whenever there is an update
       [
