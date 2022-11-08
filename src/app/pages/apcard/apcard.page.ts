@@ -23,7 +23,7 @@ export class ApcardPage implements OnInit {
   currentYear = new Date().getFullYear();
   timeFormatChangeFlag: boolean;
   notification: Subscription;
-  transactionYears = [];
+  transactionYears = [this.currentYear]; // Prevent array showing empty option on first load
   filterObject = {
     year: this.currentYear,
     type: 'all',
