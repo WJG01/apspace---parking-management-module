@@ -1,12 +1,13 @@
-<swiper (swiper)="setSwiperInstance($event)" class="mySwiper" [pagination]="{ dynamicBullets: true }">
-  <ng-container *ngIf="noticeBoardItems$ | async as noticeBoardItems else slideLoader">
+<ng-container *ngIf="(noticeBoardItems$ | async) as noticeBoardItems; else slideLoader">
+  <swiper (swiper)="setSwiperInstance($event)" [config]="swiperConfig">
     <ng-template *ngFor="let noticeBoardItem of noticeBoardItems" swiperSlide>
-      <div class="slider-container" (click)="openSlideLink(noticeBoardItem['post-meta-fields']['slideshow_url'] && noticeBoardItem['post-meta-fields']['slideshow_url'][0] ? noticeBoardItem['post-meta-fields']['slideshow_url'][0] : noticeBoardItem.link)">
-        <img [src]="noticeBoardItem.featured_image_src ? noticeBoardItem.featured_image_src : 'assets/img/placeholder.png'" alt="" />
+      <div class="slider-container" (click)="openSlideLink(noticeBoardItem)">
+        <img
+          [src]="noticeBoardItem.featured_image_src ? noticeBoardItem.featured_image_src : 'assets/img/placeholder.png'" />
       </div>
     </ng-template>
-  </ng-container>
-</swiper>
+  </swiper>
+</ng-container>
 <!--Slide loading skeleton-->
 <ng-template #slideLoader>
   <ion-row class="slider-loader">
