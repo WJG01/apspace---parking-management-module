@@ -10,7 +10,9 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "postinstall": "jetifier"
+    "postinstall": "jetifier",
+    "build:android": "ionic build --prod --release && ionic cap sync android && ionic cap open android",
+    "build:ios": "ionic build --prod --release && ionic cap sync ios && ionic cap open ios"
   },
   "private": true,
   "dependencies": {
