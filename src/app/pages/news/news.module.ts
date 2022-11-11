@@ -10,6 +10,7 @@ import { NewsPage } from './news.page';
 import { SharedPipesModule } from '../../shared/shared-pipes.module';
 import { LoginPageModule } from '../login/login.module';
 import { ComponentsModule } from '../../components/components.module';
+import { NewsDetailsModalPageModule } from './news-details-modal/news-details-modal.module';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { ComponentsModule } from '../../components/components.module';
     NewsPageRoutingModule,
     SharedPipesModule,
     ComponentsModule,
-    LoginPageModule
+    LoginPageModule,
+    NewsDetailsModalPageModule
   ],
   declarations: [NewsPage]
 })

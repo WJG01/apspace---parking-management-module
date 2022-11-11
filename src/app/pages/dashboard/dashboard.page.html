@@ -502,7 +502,7 @@
               <ng-container *ngIf="news.length > 0; else noNews">
                 <ion-row class="ion-align-items-center">
                   <ion-col *ngFor="let newsItem of news">
-                    <ion-item detail="true" button="true" lines="none" (click)="openModal(newsItem)">
+                    <ion-item detail="true" button="true" lines="none" (click)="newsDetails(newsItem)">
                       <ion-thumbnail slot="start">
                         <img src="{{ newsItem.url }}" />
                       </ion-thumbnail>

@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ShortNews } from '../../interfaces/news';
-import { finalize, map, Observable } from 'rxjs';
-import { Role } from '../../interfaces';
 import { ModalController } from '@ionic/angular';
-import { NewsService } from '../../services/news.service';
-import { NewsModalPage } from './news-modal';
+import { finalize, map, Observable } from 'rxjs';
+
 import { Storage } from '@ionic/storage-angular';
+
+import { ShortNews } from '../../interfaces/news';
+import { Role } from '../../interfaces';
+import { NewsService } from '../../services/news.service';
+import { NewsDetailsModalPage } from './news-details-modal/news-details-modal.page';
 
 @Component({
   selector: 'app-news',
@@ -13,14 +15,12 @@ import { Storage } from '@ionic/storage-angular';
   styleUrls: ['./news.page.scss'],
 })
 export class NewsPage implements OnInit {
+
   news$: Observable<ShortNews[]>;
+  skeletons = new Array(6);
   role: Role;
   isStudent: boolean;
-  isLecturer: boolean;
-
-  skeletonSettings = {
-    numberOfSkeltons: new Array(6),
-  };
+  isStaff: boolean;
 
   constructor(
     private news: NewsService,
@@ -28,8 +28,22 @@ export class NewsPage implements OnInit {
     private storage: Storage
   ) { }
 
+  ngOnInit() {
+    this.storage.get('role').then((role: Role) => {
+      this.role = role;
+      // tslint:disable-next-line: no-bitwise
+      this.isStudent = Boolean(role & Role.Student);
+      // tslint:disable-next-line: no-bitwise
+      this.isStaff = Boolean((role & Role.Lecturer) || (role & Role.Admin));
+    });
+  }
+
+  ionViewDidEnter() {
+    this.doRefresh();
+  }
+
   doRefresh(refresher?) {
-    this.news$ = this.news.get(refresher, this.isStudent, this.isLecturer).pipe(
+    this.news$ = this.news.get(refresher, this.isStudent, this.isStaff).pipe(
       map(newsList => {
         return newsList.map(item => {
           if (item && item.featured_image_src.length > 0) {
@@ -46,28 +60,15 @@ export class NewsPage implements OnInit {
     );
   }
 
-  ngOnInit() {
-    this.storage.get('role').then((role: Role) => {
-        this.role = role;
-        // tslint:disable-next-line: no-bitwise
-        this.isStudent = Boolean(role & Role.Student);
-        // tslint:disable-next-line: no-bitwise
-        this.isLecturer = Boolean((role & Role.Lecturer) || (role & Role.Admin));
-      }
-    );
-  }
-
-  ionViewDidEnter() {
-    this.doRefresh();
-  }
-
-  async openModal(newsItem: ShortNews) {
+  async newsDetails(newsItem: ShortNews) {
     const modal = await this.modalCtrl.create({
-      component: NewsModalPage,
-      componentProps: { newsItem },
+      component: NewsDetailsModalPage,
+      componentProps: {
+        newsItem
+      },
+      breakpoints: [0, 1],
+      initialBreakpoint: 1
     });
-    await modal.present();
-    await modal.onDidDismiss();
+    modal.present();
   }
-
 }
