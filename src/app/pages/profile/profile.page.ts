@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {
+  DmuFormContent,
+  DmuFormRegistration,
   OrientationStudentDetails,
   Role,
   StaffDirectory,
@@ -7,7 +9,7 @@ import {
   StudentPhoto,
   StudentProfile
 } from '../../interfaces';
-import { catchError, map, Observable, of, tap, timeout } from 'rxjs';
+import { NEVER, catchError, map, Observable, of, tap, timeout } from 'rxjs';
 import { ComponentService, AppLauncherService, WsApiService } from '../../services';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController, ModalController } from '@ionic/angular';
@@ -39,6 +41,11 @@ export class ProfilePage implements OnInit {
   file: File;
   loading: HTMLIonLoadingElement;
 
+
+  registration$: Observable<DmuFormRegistration>;
+  form$: Observable<DmuFormContent>;
+  dmuNeeded$: Observable<boolean>;
+
   constructor(
     private storage: Storage,
     private modalCtrl: ModalController,
@@ -61,6 +68,23 @@ export class ProfilePage implements OnInit {
     * If we do not use the indecitor, the page in the tabs (tabs/attendance) will be reloading every time we enter the tab
     */
     this.getProfile();
+    this.dmuNeeded$ = this.isDmuNeeded();
+    this.registration$ = this.getDmuRegistration();
+    this.form$ = this.getDmuForm();
+  }
+
+  isDmuNeeded() {
+    return this.ws.get<any>('/dmu_form/checkDmuForm');
+  }
+
+  getDmuRegistration() {
+    return this.ws.get<DmuFormRegistration>('/dmu_form/getRegistration').pipe(
+      catchError(_ => NEVER)
+    );
+  }
+
+  getDmuForm() {
+    return this.ws.get<DmuFormContent>('/dmu_form/getDmu');
   }
 
   getProfile() {
@@ -258,6 +282,10 @@ export class ProfilePage implements OnInit {
     if (this.loading) {
       return await this.loading.dismiss();
     }
+  }
+
+  openDmuFormModal() {
+    this.router.navigate(['/profile/dmu-form']);
   }
 
   async virtualCardModal(profile: any, studentRole: boolean) {
