@@ -41,45 +41,18 @@ export class NotificationService {
    */
   getMessages(): Observable<NotificationHistory> {
     if (this.config.connectionStatus) {
-      let token = '';
-      if (this.platform.is('capacitor')) {
-        return this.fcm.getToken().pipe(
-          switchMap(responseToken => {
-            if (responseToken) {
-              token = responseToken;
-              return this.cas.getST(this.serviceUrl);
-            }
-          }),
-          switchMap(st => {
-            const url = `${this.apiUrl}/client/login?ticket=${st}&device_token=${token}`
-            return this.http.get<NotificationHistory>(url, { headers: this.headers }).pipe(
-              tap(notifications => this.storage.set(NOTIFICATION_KEY, notifications))
-            );
-          }),
-          catchError(err => {
-            if (400 <= err.status && err.status < 500) {
-              this.component.toastMessage('Something happened while we get your messages.', 'danger');
-              return throwError(() => new Error(err.message));
-            } else {
-              console.error('Unknown notification error', err);
-              return NEVER;
-            }
-          })
-        );
-      } else {
-        return from(of(1)).pipe(
-          switchMap(() => {
-            return this.cas.getST(this.serviceUrl);
-          }),
-          switchMap(st => {
-            const url = `${this.apiUrl}/client/login?ticket=${st}`;
+      return from(of(1)).pipe(
+        switchMap(() => {
+          return this.cas.getST(this.serviceUrl);
+        }),
+        switchMap(st => {
+          const url = `${this.apiUrl}/client/login?ticket=${st}`;
 
-            return this.http.get<NotificationHistory>(url, { headers: this.headers }).pipe(
-              tap(notifications => this.storage.set(NOTIFICATION_KEY, notifications))
-            );
-          })
-        )
-      }
+          return this.http.get<NotificationHistory>(url, { headers: this.headers }).pipe(
+            tap(notifications => this.storage.set(NOTIFICATION_KEY, notifications))
+          );
+        })
+      );
     } else {
       return from(this.storage.get(NOTIFICATION_KEY));
     }

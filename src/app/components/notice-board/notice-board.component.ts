@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import SwiperCore, { Autoplay, Pagination, Swiper } from 'swiper';
 import { Observable } from 'rxjs';
+
+import SwiperCore, { Autoplay, Pagination, Swiper, SwiperOptions } from 'swiper';
+
 import { News } from '../../interfaces/news';
 import { NewsService } from '../../services/news.service';
 import { ComponentService } from '../../services';
@@ -14,7 +16,14 @@ SwiperCore.use([Autoplay, Pagination]);
   styleUrls: ['./notice-board.component.scss'],
 })
 export class NoticeBoardComponent implements OnInit {
+
   noticeBoardItems$: Observable<News[]>;
+  swiperConfig: SwiperOptions = {
+    pagination: {
+      dynamicBullets: true
+    },
+    spaceBetween: 10
+  }
 
   constructor(
     private news: NewsService,
@@ -25,33 +34,37 @@ export class NoticeBoardComponent implements OnInit {
     this.noticeBoardItems$ = this.news.getSlideshow(true, true, false);
   }
 
-  openSlideLink(link: string) {
-    this.component.openLink(link);
+  openSlideLink(news: News) {
+    if (news['post-meta-fields']['slideshow_url'] && news['post-meta-fields']['slideshow_url'][0]) {
+      this.component.openLink(news['post-meta-fields']['slideshow_url'][0]);
+    } else {
+      this.component.openLink(news.link);
+    }
   }
 
   setSwiperInstance(swiper: Swiper) {
-    let isEnd=false;
-    let isDragged=false;
+    let isEnd = false;
+    let isDragged = false;
     setInterval(() => {
-      if(!isDragged){
-        swiper.slideNext()
+      if (!isDragged) {
+        swiper.slideNext();
       }
-      if(isEnd){
-        swiper.slideToLoop(0)
-        isEnd=false;
+      if (isEnd) {
+        swiper.slideToLoop(0);
+        isEnd = false;
       }
     }, 3000);
 
-    swiper.on('touchEnd',function(){
-      isDragged=false
+    swiper.on('touchEnd', function () {
+      isDragged = false;
     })
 
-    swiper.on('sliderFirstMove',function(){
-      isDragged=true
+    swiper.on('sliderFirstMove', function () {
+      isDragged = true;
     })
 
-    swiper.on('reachEnd', function(){
-      isEnd=true;
+    swiper.on('reachEnd', function () {
+      isEnd = true;
     });
   }
 }
