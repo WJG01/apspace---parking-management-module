@@ -285,16 +285,16 @@ export const menuItems = [
   // END Campus Life
 
   // START OF Academic Operations
-  {
-    id: 'apix-erp-legacy' as const,
-    title: 'APiX / ERP (Legacy)',
-    group: 'Academic Operation',
-    url: 'https://erp.apiit.edu.my/easymoo/web/en/auth/security/login',
-    img: 'assets/img/more-icons/apix.png',
-    role: Role.Student | Role.Lecturer | Role.Admin,
-    tags: ['exception', 'feedback', 'legacy', 'old'],
-    parents: [],
-  },
+  // {
+  //   id: 'apix-erp-legacy' as const,
+  //   title: 'APiX / ERP (Legacy)',
+  //   group: 'Academic Operation',
+  //   url: 'https://erp.apiit.edu.my/easymoo/web/en/auth/security/login',
+  //   img: 'assets/img/more-icons/apix.png',
+  //   role: Role.Student | Role.Lecturer | Role.Admin,
+  //   tags: ['exception', 'feedback', 'legacy', 'old'],
+  //   parents: [],
+  // },
   {
     id: 'aplc-progress-report' as const,
     title: 'APLC Progress Report',
@@ -363,16 +363,6 @@ export const menuItems = [
     url: 'https://examscheduling.apu.edu.my/epaperschedule/login_page.asp', // no ticket
     img: 'assets/img/more-icons/exam-scheduling.png',
     role: Role.Lecturer | Role.Admin,
-    tags: [],
-    parents: [],
-  },
-  {
-    id: 'graduation-verification-service' as const,
-    title: 'Graduation Verification Service',
-    group: 'Academic Operation',
-    url: 'graduate-verification-service',
-    img: 'assets/img/more-icons/graduate-verification-service.png',
-    role: Role.Student | Role.Lecturer | Role.Admin,
     tags: [],
     parents: [],
   },
@@ -514,6 +504,16 @@ export const menuItems = [
   //   tags: ['fyp', 'bank', 'final project', 'project'],
   //   parents: [],
   // },
+  {
+    id: 'graduation-verification-service' as const,
+    title: 'Graduation Verification Service',
+    group: 'Academic & Enrollment',
+    url: 'graduate-verification-service',
+    img: 'assets/img/more-icons/graduate-verification-service.png',
+    role: Role.Student | Role.Lecturer | Role.Admin,
+    tags: [],
+    parents: [],
+  },
   {
     id: 'intake-calendar' as const,
     title: 'Intake Calendar',
