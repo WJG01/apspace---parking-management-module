@@ -396,14 +396,16 @@
                 </ion-card-content>
 
                 <ion-card-content class="ion-text-center">
-                  <ion-button size="small" color="primary" fill="outline" (click)="openSurvey()">
-                    Survey
-                    <ion-icon name="newspaper" slot="end"></ion-icon>
-                  </ion-button> <br>
-                  <ion-button size="small" color="danger" fill="outline" (click)="generateInterimPDF()">
-                    Interim Transcript
-                    <ion-icon name="document" slot="end"></ion-icon>
-                  </ion-button>
+                  <ion-buttons>
+                    <ion-button class="ion-no-margin glob-margin-auto" size="small" color="primary" fill="outline" (click)="openSurvey()">
+                      Survey
+                      <ion-icon name="newspaper" slot="end"></ion-icon>
+                    </ion-button> <br>
+                    <ion-button class="ion-no-margin glob-margin-auto" size="small" color="danger" fill="outline" (click)="generateInterimPDF()">
+                      Interim Transcript
+                      <ion-icon name="document" slot="end"></ion-icon>
+                    </ion-button>
+                  </ion-buttons>
                 </ion-card-content>
               </ion-card>
             </ion-col>
