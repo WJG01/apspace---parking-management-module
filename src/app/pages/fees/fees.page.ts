@@ -142,8 +142,6 @@ export class FeesPage implements OnInit {
             chartData.others.total += b.TOTAL_COLLECTED;
           }
         }
-        // Filter to show only data that is more then 0
-        filteredChart = filteredChart.filter(d => d.total > 0);
 
         this.showPieChart(filteredChart);
       })
