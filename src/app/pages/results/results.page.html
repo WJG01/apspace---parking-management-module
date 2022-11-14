@@ -418,13 +418,26 @@
                     <ion-accordion [value]="i + 1">
                       <ion-item slot="header" lines="none">
                         <ion-label>
-                          <h3 class="glob-text-bold">Semester {{ semesterResult.semester }}</h3>
-                          <p class="glob-fw-600">
-                            <ion-text color="medium">
-                              {{ semesterResult.summary[0]?.TOTAL_MODULES_PASSED ||
-                              'N/A' }} Passed Modules | {{ semesterResult.summary[0]?.GPA || 'N/A' }} GPA
-                            </ion-text>
-                          </p>
+                          <ion-row>
+                            <h3 class="glob-text-bold">Semester {{ semesterResult.semester }}</h3>
+                          </ion-row>
+                          <ion-row>
+                            <ion-col>
+                              <p class="glob-fw-600">
+                                <ion-text color="medium">
+                                  Modules Passed: {{ semesterResult.summary[0]?.TOTAL_MODULES_PASSED ||
+                                  'N/A' }}
+                                </ion-text>
+                              </p>
+                            </ion-col>
+                            <ion-col>
+                              <p class="glob-fw-600">
+                                <ion-text color="medium">
+                                  GPA: {{ semesterResult.summary[0]?.GPA || 'N/A' }}
+                                </ion-text>
+                              </p>
+                            </ion-col>
+                          </ion-row>
                         </ion-label>
                       </ion-item>
 
