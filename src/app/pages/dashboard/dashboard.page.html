@@ -1,7 +1,8 @@
 <ion-content class="dashboard-page">
-  <ion-refresher *ngIf="!editableList" slot="fixed" pullMax="400" pullMin="60 " (ionRefresh)="doRefresh($event)">
+  <ion-refresher slot="fixed" pullMax="400" pullMin="60 " (ionRefresh)="doRefresh($event)">
     <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
   </ion-refresher>
+
   <div class="glob-container">
     <ion-grid class="ion-no-padding">
       <ion-card class="no-border-rad profile-card">
@@ -88,7 +89,7 @@
         <ng-container *ngIf="orientationStudentDetails$ | async as announcement">
           <ng-container *ngIf="showAnnouncement">
             <img class="orientation-image" src="assets/img/e-orientation.jpg" button [routerLink]="['/', 'profile']"
-                 router-direction="forward" />
+              router-direction="forward" />
           </ng-container>
         </ng-container>
       </ion-card>
@@ -190,16 +191,16 @@
           </ion-card-header>
           <ion-card-content>
             <ion-row class="quick-access-container ion-justify-content-between">
-              <ion-col *ngIf="isCapacitor" class="quick-access-item border-radius quick-access-location"
-                size-lg="5.8" size-md="12" size-xs="5.8" [routerLink]="['/apcard-qr-code']">
+              <ion-col *ngIf="isCapacitor" class="quick-access-item border-radius quick-access-location" size-lg="5.8"
+                size-md="12" size-xs="5.8" [routerLink]="['/apcard-qr-code']">
                 <p>Update Location</p>
               </ion-col>
-              <ion-col *ngIf="isStudent" class="quick-access-item border-radius quick-access-attendance"
-                size-lg="5.8" size-md="12" size-xs="5.8" [routerLink]="['/attendix/update']">
+              <ion-col *ngIf="isStudent" class="quick-access-item border-radius quick-access-attendance" size-lg="5.8"
+                size-md="12" size-xs="5.8" [routerLink]="['/attendix/update']">
                 <p>Sign Attendance</p>
               </ion-col>
-              <ion-col *ngIf="isLecturer" class="quick-access-item border-radius quick-access-attendance"
-                size-lg="5.8" size-md="12" size-xs="5.8" [routerLink]="['/attendix/classes']">
+              <ion-col *ngIf="isLecturer" class="quick-access-item border-radius quick-access-attendance" size-lg="5.8"
+                size-md="12" size-xs="5.8" [routerLink]="['/attendix/classes']">
                 <p>Mark Attendance</p>
               </ion-col>
               <ion-col *ngIf="!isStudent" class="quick-access-item border-radius quick-access-hr" size-lg="5.8"

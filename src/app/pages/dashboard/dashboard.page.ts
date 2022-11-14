@@ -1,6 +1,6 @@
-import { Component, DoCheck, OnInit, ViewChild } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 // import { FirebaseX } from '@ionic-native/firebase-x/ngx'; v4: this need to migrate in the future
-import { AlertButton, IonSlides, ModalController, NavController, Platform } from '@ionic/angular';
+import { AlertButton, ModalController, NavController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { format, parse, parseISO } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
@@ -13,7 +13,7 @@ import { accentColors } from 'src/app/constants';
 import {
   APULocation, APULocations,
   Apcard, BusTrips, CgpaPerIntake, ConsultationHour, ConsultationSlot,
-  Course, CourseDetails, DashboardCardComponentConfigurations,
+  Course, CourseDetails,
   EventComponentConfigurations, ExamSchedule, FeesTotalSummary, Holiday, Holidays, LecturerTimetable,
   MoodleEvent, OrientationStudentDetails, Quote, Role, ShortNews,
   StaffDirectory, StaffProfile, StudentPhoto, StudentProfile, StudentTimetable, UserVaccineInfo
@@ -40,28 +40,6 @@ import { NewsDetailsModalPage } from '../news/news-details-modal/news-details-mo
   providers: [DateWithTimezonePipe]
 })
 export class DashboardPage implements OnInit, DoCheck {
-  // USER SETTINGS
-
-  @ViewChild('imageSliderSlides') sliderSlides: IonSlides;
-  imageSliderOpts = {
-    initialSlide: 0,
-    slidesPerView: 1,
-    spaceBetween: 10,
-    autoplay: true,
-    centeredContent: true,
-    speed: 400,
-    loop: true,
-    autoplayDisableOnInteraction: true,
-    pagination: {
-      el: '.swiper-pagination',
-      clickable: true,
-      renderBullet: (_, className) => {
-        return '<span style="width: 10px; height: 10px; background-color: #E50565 !important;" class="' + className + '"></span>';
-      }
-    }
-  };
-
-
 
   role: Role;
   isStudent: boolean;
@@ -76,18 +54,13 @@ export class DashboardPage implements OnInit, DoCheck {
 
   scheduleSegment: 'today' | 'upcoming' = 'today';
 
+  activeDashboardSections: string[] = []; // Get User Dashboard Sections
 
-  // shownDashboardSections get the data from local storage and hide/show elements based on that
-  activeDashboardSections: string[] = [];
-
-  hideProfilePicture;
+  hideProfilePicture: boolean;
   userProfileName$: Observable<string>;
   changedName: boolean;
 
   activeAccentColor = '';
-  lowAttendanceChart: any;
-  editableList = null;
-  busShuttleServiceSettings: any;
   secondLocation: string;
   firstLocation: string;
 
@@ -101,53 +74,30 @@ export class DashboardPage implements OnInit, DoCheck {
   // PROFILE
   staffProfile$: Observable<StaffProfile>;
   photo$: Observable<StudentPhoto>;
-  greetingMessage = '';
   orientationStudentDetails$: Observable<OrientationStudentDetails>;
   councelorProfile$: Observable<StaffDirectory>;
   // attendance default intake can be different from timetable default intake
   // attendanceDefaultIntake = '';
   timetableDefaultIntake = '';
   userProfile: any = {};
-  block = false;
   numberOfUnreadMsgs: number;
   showAnnouncement = false;
 
   // TODAY'S SCHEDULE
   todaysSchedule$: Observable<EventComponentConfigurations[] | any>;
-  todaysScheduleCardConfigurations: DashboardCardComponentConfigurations = {
-    withOptionsButton: false,
-    cardTitle: 'Today\'s Schedule',
-  };
+
   intakeGroup = '';
 
   // UPCOMING EVENTS
   upcomingEvent$: Observable<EventComponentConfigurations[]>;
-  upcomingEventsCardConfigurations: DashboardCardComponentConfigurations = {
-    withOptionsButton: false,
-    cardTitle: 'Upcoming Events',
-    cardSubtitle: 'Today: ' + format(new Date(), 'dd MMMM yyyy')
-  };
 
-  // ATTENDANCE
-  // modulesWithLowAttendance$: Observable<Attendance[]>;
-  // overallAttendancePercent$: Observable<{ value: number }>;
-  subject: string;
-  lowAttendanceCardConfigurations: DashboardCardComponentConfigurations = {
-    withOptionsButton: false,
-    cardTitle: 'Attendance Summary',
-    contentPadding: true
-  };
 
   // APCARD
-  balance$: Observable<{ value: number }>;
+  // balance$: Observable<{ value: number }>;
   apcardTransaction$: Observable<Apcard[]>;
   monthlyData: any;
   currentBalance: number;
-  apcardTransactionsCardConfigurations: DashboardCardComponentConfigurations = {
-    withOptionsButton: false,
-    cardTitle: 'APCard Transactions',
-    contentPadding: true
-  };
+
 
   //ApcardChart Configs
 
@@ -221,39 +171,18 @@ export class DashboardPage implements OnInit, DoCheck {
       },
       data: null
     };
-  financialsCardConfigurations: DashboardCardComponentConfigurations = {
-    withOptionsButton: false,
-    cardTitle: 'Financials',
-    contentPadding: true
-  };
 
   // UPCOMING TRIPS
   upcomingTrips$: Observable<any>;
   showSetLocationsSettings = false;
   locations: APULocation[];
-  busCardConfigurations: DashboardCardComponentConfigurations = {
-    cardTitle: 'Upcoming Trips',
-    contentPadding: false,
-    withOptionsButton: false
-  };
 
   // CONTACTS
   lecturerContacts$: Observable<any>;
 
   // NEWS
   news$: Observable<ShortNews[]>;
-  newsCardConfigurations: DashboardCardComponentConfigurations = {
-    cardTitle: 'Latest News',
-    contentPadding: false,
-    withOptionsButton: false
-  };
   newsIndexToShow = 0; // open the first news section by default
-  noticeBoardCardConfigurations: DashboardCardComponentConfigurations = {
-    cardTitle: 'Notice Board',
-    contentPadding: false,
-    withOptionsButton: false
-  };
-  noticeBoardItems$: Observable<any[]>;
 
   // CGPA
   cgpaChart: {
@@ -263,11 +192,6 @@ export class DashboardPage implements OnInit, DoCheck {
   cgpaPerIntake$: Observable<CgpaPerIntake>;
   barChartData: any;
   overallCgpa = 0;
-  cgpaCardConfigurations: DashboardCardComponentConfigurations = {
-    withOptionsButton: false,
-    cardTitle: 'CGPA Per Intake',
-    contentPadding: true
-  };
 
   // User Vaccination Information
   userVaccinationInfo$: Observable<UserVaccineInfo>;
@@ -420,8 +344,6 @@ export class DashboardPage implements OnInit, DoCheck {
 
     this.quote$ = this.ws.get<Quote>('/apspacequote', { auth: false });
     this.holidays$ = this.getHolidays(true);
-    // tslint:disable-next-line: no-bitwise
-    this.noticeBoardItems$ = this.news.getSlideshow(refresher, this.isStudent, this.isLecturer || Boolean(this.role & Role.Admin));
     this.upcomingTrips$ = this.getUpcomingTrips(this.firstLocation, this.secondLocation);
     this.photo$ = this.ws.get<StudentPhoto>('/student/photo');  // no-cache for student photo
     if (!this.isStudent) {
@@ -518,14 +440,8 @@ export class DashboardPage implements OnInit, DoCheck {
   getProfile(refresher: boolean) {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
     return this.isStudent ? this.ws.get<StudentProfile>('/student/profile', { caching }).pipe(
-      tap(studentProfile => {
-        if (studentProfile.BLOCK === true) {
-          this.block = false;
-          this.cgpaPerIntake$ = this.getCgpaPerIntakeData(true); // no-cache for results
-        } else {
-          this.block = true;
-        }
-      }),
+      // no-cache for results
+      tap(() => { this.cgpaPerIntake$ = this.getCgpaPerIntakeData(true); }),
       tap(p => {
         this.orientationStudentDetails$ = this.ws.get<OrientationStudentDetails>(`/orientation/student_details?id=${p.STUDENT_NUMBER}`,
         ).pipe(
@@ -1016,17 +932,17 @@ export class DashboardPage implements OnInit, DoCheck {
   getTransactions(refresher) {
     return this.ws.get<Apcard[]>('/apcard/', refresher).pipe(
       tap(transactions => this.analyzeTransactions(transactions)),
-      tap(transactions => this.getCurrentApcardBalance(transactions))
+      // tap(transactions => this.getCurrentApcardBalance(transactions))
     );
   }
 
-  getCurrentApcardBalance(transactions) {
-    if (transactions.length > 0) {
-      this.balance$ = of({ value: transactions[0].Balance });
-    } else {
-      this.balance$ = of({ value: -1 });
-    }
-  }
+  // getCurrentApcardBalance(transactions) {
+  //   if (transactions.length > 0) {
+  //     this.balance$ = of({ value: transactions[0].Balance });
+  //   } else {
+  //     this.balance$ = of({ value: -1 });
+  //   }
+  // }
 
   analyzeTransactions(transactions: Apcard[]) {
     // stop analyzing if transactions is empty
@@ -1288,11 +1204,11 @@ export class DashboardPage implements OnInit, DoCheck {
     return (endDate.getTime() - startDate.getTime()) / 1000;
   }
 
-  secondsToHrsAndMins(seconds: number): string {
-    const hours = Math.floor(seconds / 3600);
-    const mins = Math.floor(seconds % 3600 / 60);
-    return hours + ' hr' + (hours > 1 ? 's' : '') + ' ' + mins + ' min' + (mins > 1 ? 's' : '');
-  }
+  // secondsToHrsAndMins(seconds: number): string {
+  //   const hours = Math.floor(seconds / 3600);
+  //   const mins = Math.floor(seconds % 3600 / 60);
+  //   return hours + ' hr' + (hours > 1 ? 's' : '') + ' ' + mins + ' min' + (mins > 1 ? 's' : '');
+  // }
 
   navigateToPage(pageName: string) {
     this.navCtrl.navigateForward(pageName);
@@ -1320,15 +1236,6 @@ export class DashboardPage implements OnInit, DoCheck {
     } else {
       return 'sat';
     }
-  }
-
-  // SLIDER
-  prevSlide() {
-    this.sliderSlides.slidePrev();
-  }
-
-  nextSlide() {
-    this.sliderSlides.slideNext();
   }
 
   openMoodleEvent(courseId: number) {

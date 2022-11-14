@@ -69,7 +69,6 @@ export {
   MentorshipSubcourse, StudentRemark
 } from './mentorship';
 export { CgpaPerIntake } from './cgpa-per-intake';
-export { DashboardCardComponentConfigurations } from './dashboard-card-component-configurations';
 export { EventComponentConfigurations } from './event-component-configurations';
 export { Holidays, Holiday } from './holiday';
 export { MoodleEvent } from './moodle-event';
