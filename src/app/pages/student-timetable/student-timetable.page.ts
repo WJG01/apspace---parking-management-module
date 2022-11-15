@@ -1,17 +1,22 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActionSheetController, IonRefresher, ModalController } from '@ionic/angular';
+import { ActionSheetController, ModalController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Browser } from '@capacitor/browser';
-import { formatISO } from 'date-fns';
+import { format, formatISO } from 'date-fns';
 import { Observable, Subscription, combineLatest } from 'rxjs';
 import { finalize, map, tap } from 'rxjs/operators';
+import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
+
+import * as ics from 'ics';
+import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
 
 import { SearchModalComponent } from '../../components/search-modal/search-modal.component';
 import { Role, StudentProfile, StudentTimetable } from '../../interfaces';
-import { SettingsService, StudentTimetableService, WsApiService, NotifierService, ConfigurationsService } from '../../services';
+import { SettingsService, StudentTimetableService, WsApiService, NotifierService, ConfigurationsService, ComponentService } from '../../services';
 import { ClassesPipe } from './classes.pipe';
+import { TheWeekPipe } from './theweek.pipe';
 
 @Component({
   selector: 'app-student-timetable',
@@ -100,6 +105,9 @@ export class StudentTimetablePage implements OnInit {
 
 
   hideHeader: boolean;
+  // ICS Timetable Generate Variables
+  downloadTimetable: string;
+  filename: string;
 
   constructor(
     private actionSheetCtrl: ActionSheetController,
@@ -113,6 +121,9 @@ export class StudentTimetablePage implements OnInit {
     private tt: StudentTimetableService,
     private ws: WsApiService,
     private notifierService: NotifierService,
+    private fileOpener: FileOpener,
+    private component: ComponentService,
+    private plt: Platform
   ) {
     this.hideHeader = this.config.comingFromTabs;
   }
@@ -402,6 +413,63 @@ export class StudentTimetablePage implements OnInit {
     // printUrl?Week=2019-11-18&Intake=APTDF1805DSM(VFX)&print_request=print_tt
     // For lecturer timetable:
     // printUrl?LectID=ARW&Submit=Submit&Week=2019-11-18&print_request=print
-    await Browser.open({url: `${this.printUrl}?Week=${week}&Intake=${this.intake}&Intake_Group=${this.selectedGrouping}&print_request=print_tt`, windowName: '_system'});
+    await Browser.open({ url: `${this.printUrl}?Week=${week}&Intake=${this.intake}&Intake_Group=${this.selectedGrouping}&print_request=print_tt`, windowName: '_system' });
+  }
+
+  generateCalendar() {
+    this.timetable$.pipe(
+      tap(async res => {
+        const studentTimetable = new ClassesPipe().transform(res, this.intake, this.room, this.selectedGrouping);
+        const selectedWeekTimetable = new TheWeekPipe().transform(studentTimetable, this.selectedWeek);
+        const timetableArray = [];
+
+        for (const tt of selectedWeekTimetable) {
+          const startDate = new Date(tt.TIME_FROM_ISO);
+          const endDate = new Date(tt.TIME_TO_ISO);
+
+
+          const start = format(startDate, 'yyyy-M-d-H-m').split('-').map(s => +s);
+          const end = format(endDate, 'yyyy-M-d-H-m').split('-').map(s => +s);
+
+          const response = {
+            start,
+            end,
+            title: tt.MODID
+          }
+
+          timetableArray.push(response);
+        }
+
+        const { error, value } = ics.createEvents(timetableArray);
+        const fileName = `${this.intake.toLowerCase()}-${this.selectedWeek.getTime()}-schedule`
+
+        if (error) {
+          this.component.toastMessage('Error Generating Timetable. Please try again later.', 'danger');
+          return;
+        }
+
+        if (this.plt.is('capacitor')) {
+          try {
+            const path = `apspace/timetable/${fileName}`;
+            const result = await Filesystem.writeFile({
+              path,
+              data: value,
+              directory: Directory.Documents,
+              recursive: true,
+              encoding: Encoding.UTF8
+            });
+
+            this.fileOpener.open(result.uri, 'text/calendar');
+          } catch (error) {
+            this.component.toastMessage('Error Opening Timetable. Please try again later.', 'danger');
+            console.log(error);
+          }
+        } else {
+          const blobTT = new Blob([value], { type: 'text/calendar' })
+          this.downloadTimetable = window.URL.createObjectURL(blobTT);
+          this.filename = fileName;
+        }
+      })
+    ).subscribe();
   }
 }

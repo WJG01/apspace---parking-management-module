@@ -35,7 +35,7 @@
         </ion-col>
         <ion-col size="auto" *ngIf="intake && availableGrouping.length > 0">
           <ion-button fill="outline" color="primary" (click)="chooseGrouping()"
-                      [disabled]="availableGrouping.length <= 2">
+            [disabled]="availableGrouping.length <= 2">
             <!-- ALL, T1 -->
             {{ selectedGrouping || 'Grouping' }}
             <ion-icon name="chevron-down-outline" slot="end"></ion-icon>
@@ -52,18 +52,24 @@
             <ion-icon slot="icon-only" name="print"></ion-icon>
           </ion-button>
         </ion-col>
+        <ion-col size="auto">
+          <ion-button color="primary" fill="outline" (click)="generateCalendar()" [download]="filename"
+            [href]="downloadTimetable">
+            <ion-icon slot="icon-only" name="calendar"></ion-icon>
+          </ion-button>
+        </ion-col>
       </ion-row>
     </ion-card>
     <ng-container *ngIf="(timetable$ | async) as timetables; else loading">
       <ng-template let-timetables
-                   [ngIf]="!viewWeek ? (timetables | classes:intake:room:selectedGrouping | theday:selectedDate | gen:freeTime) : (timetables | classes:intake:room:selectedGrouping | theweek:selectedWeek | gen:freeTime)"
-                   [ngIfElse]="loading">
+        [ngIf]="!viewWeek ? (timetables | classes:intake:room:selectedGrouping | theday:selectedDate | gen:freeTime) : (timetables | classes:intake:room:selectedGrouping | theweek:selectedWeek | gen:freeTime)"
+        [ngIfElse]="loading">
         <ng-container *ngIf="timetables!.length; else empty">
           <ion-card class="no-border-rad">
 
             <ng-template [ngIf]="!viewWeek && availableWeek!.length > 0">
               <ion-segment [ngModel]="selectedDate | dateWithTimezone:'E' | uppercase" color="primary"
-                           (ngModelChange)="selectedDate = availableDate[availableDays.indexOf($event)]" scrollable>
+                (ngModelChange)="selectedDate = availableDate[availableDays.indexOf($event)]" scrollable>
                 <ion-segment-button *ngFor="let day of availableDays" [value]="day">
                   {{ day }}
                 </ion-segment-button>
@@ -86,8 +92,8 @@
               </ng-container>
 
               <ion-card lines="full" class="table-item no-border-rad"
-                        [style.borderLeft]="'0.7rem solid ' + (timetable.MODID | strToColor)"
-                        [class.freeTime]='timetable.MODID === "FREE"'>
+                [style.borderLeft]="'0.7rem solid ' + (timetable.MODID | strToColor)"
+                [class.freeTime]='timetable.MODID === "FREE"'>
                 <ion-label class="glob-white-space-normal">
                   <ion-grid class="ion-no-padding">
                     <ion-row class="ion-no-padding">
@@ -143,7 +149,7 @@
             <ion-card-content class="ion-no-padding ion-padding-bottom">
               <ng-template [ngIf]="!viewWeek && availableWeek!.length > 0">
                 <ion-segment [ngModel]="selectedDate | dateWithTimezone:'E' | uppercase" color="primary"
-                             (ngModelChange)="selectedDate = availableDate[availableDays.indexOf($event)]" scrollable>
+                  (ngModelChange)="selectedDate = availableDate[availableDays.indexOf($event)]" scrollable>
                   <ion-segment-button *ngFor="let day of availableDays" [value]="day">
                     {{ day }}
                   </ion-segment-button>
@@ -151,9 +157,9 @@
               </ng-template>
               <ng-container *ngIf="selectedDate; else weekly;">
                 <message-with-svg imageUrl="assets/img/happy.svg"
-                                      messageTitle="Hooray! No classes for {{intake}} {{selectedGrouping ? '('+ selectedGrouping +')' : '' }} on {{selectedDate | date: 'EEEE, dd MM yyy'}}."
-                                      messageContent="If you think there is an issue, you can try this:" wrapperSize="6"
-                                      wrapperMarginTop="10px" wrapperOffset="3" [advancedMode]="true">
+                  messageTitle="Hooray! No classes for {{intake}} {{selectedGrouping ? '('+ selectedGrouping +')' : '' }} on {{selectedDate | date: 'EEEE, dd MM yyy'}}."
+                  messageContent="If you think there is an issue, you can try this:" wrapperSize="6"
+                  wrapperMarginTop="10px" wrapperOffset="3" [advancedMode]="true">
                   <div class="flex-container">
                     <ul class="list-txt-color">
                       <li>Make sure you selected the right intake</li>
@@ -168,9 +174,9 @@
               </ng-container>
               <ng-template #weekly>
                 <message-with-svg imageUrl="assets/img/happy.svg"
-                                      messageTitle="Hooray! No classes for {{intake}} {{selectedGrouping ? '('+ selectedGrouping +')' : '' }} on the week that starts on {{selectedWeek | date: 'EEEE, dd MM yyy'}}."
-                                      messageContent="If you think there is an issue, you can try this:" wrapperSize="6"
-                                      wrapperMarginTop="10px" wrapperOffset="3" [advancedMode]="true">
+                  messageTitle="Hooray! No classes for {{intake}} {{selectedGrouping ? '('+ selectedGrouping +')' : '' }} on the week that starts on {{selectedWeek | date: 'EEEE, dd MM yyy'}}."
+                  messageContent="If you think there is an issue, you can try this:" wrapperSize="6"
+                  wrapperMarginTop="10px" wrapperOffset="3" [advancedMode]="true">
                   <div class="flex-container">
                     <ul class="list-txt-color">
                       <li>Make sure you selected the right intake</li>
@@ -188,9 +194,9 @@
         <ng-template #noIntakeSelected>
           <ng-container *ngIf="room; else emptyIntake">
             <message-with-svg imageUrl="assets/img/search-not-found.svg"
-                                  messageTitle="Opps! The room ({{room}}) selected does not exist or its timetable is not available."
-                                  messageContent="Perhaps you can try this:" wrapperSize="6" wrapperMarginTop="10px" wrapperOffset="3"
-                                  [advancedMode]="true">
+              messageTitle="Opps! The room ({{room}}) selected does not exist or its timetable is not available."
+              messageContent="Perhaps you can try this:" wrapperSize="6" wrapperMarginTop="10px" wrapperOffset="3"
+              [advancedMode]="true">
               <div class="flex-container">
                 <ul class="list-txt-color">
                   <li>Make sure the room selected exist</li>
@@ -203,9 +209,9 @@
           </ng-container>
           <ng-template #emptyIntake>
             <message-with-svg imageUrl="assets/img/search-not-found.svg"
-                                  messageTitle="Opps! It looks like that you forgot to select an intake."
-                                  messageContent="Please select an intake from the intake button on the top right of the page"
-                                  wrapperSize="6" wrapperMarginTop="10px" wrapperOffset="3" [advancedMode]="true">
+              messageTitle="Opps! It looks like that you forgot to select an intake."
+              messageContent="Please select an intake from the intake button on the top right of the page"
+              wrapperSize="6" wrapperMarginTop="10px" wrapperOffset="3" [advancedMode]="true">
             </message-with-svg>
           </ng-template>
         </ng-template>
@@ -245,7 +251,7 @@
                 <p>
                   <ion-text color="danger">
                     - All times in timetable page are displayed in <span class="glob-text-bold">{{enableMalaysiaTimezone
-                    ? "Local Timezone" : "Malaysia Time Zone (GMT+8)"}}</span> (You can change that from the settings)
+                      ? "Local Timezone" : "Malaysia Time Zone (GMT+8)"}}</span> (You can change that from the settings)
                   </ion-text>
                 </p>
                 <p>
