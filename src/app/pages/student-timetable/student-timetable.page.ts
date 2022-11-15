@@ -441,7 +441,7 @@ export class StudentTimetablePage implements OnInit {
         }
 
         const { error, value } = ics.createEvents(timetableArray);
-        const fileName = `${this.intake.toLowerCase()}-${this.selectedWeek.getTime()}-schedule`
+        const fileName = `${this.intake.toLowerCase()}-${this.selectedWeek.getTime()}-schedule`;
 
         if (error) {
           this.component.toastMessage('Error Generating Timetable. Please try again later.', 'danger');
@@ -465,7 +465,7 @@ export class StudentTimetablePage implements OnInit {
             console.log(error);
           }
         } else {
-          const blobTT = new Blob([value], { type: 'text/calendar' })
+          const blobTT = new Blob([value], { type: 'text/calendar' });
           this.downloadTimetable = window.URL.createObjectURL(blobTT);
           this.filename = fileName;
         }
