@@ -60,7 +60,7 @@ export class StudentPage implements OnInit {
           } else if (result.content.length === this.digits.length) {
             this.sendOtp(result.content);
           } else {
-            this.component.alertMessage('Invalid OTP', `Invalid OTP. Code should only be ${this.digits.length} digits`);
+            this.component.alertMessage('Invalid OTP', `Invalid OTP. Code should only be ${this.digits.length} digits`, 'danger');
           }
         }
       }
@@ -112,13 +112,13 @@ export class StudentPage implements OnInit {
     this.sending = true;
     return firstValueFrom(this.updateAttendance.mutate({ otp }).pipe(
       tap(d => {
-        this.component.alertMessage('Attendance Updated', 'Sucessfully updated your attendance.');
+        this.component.alertMessage('Attendance Updated', 'Sucessfully updated your attendance.', 'success');
         this.component.successHaptic();
         this.location.back();
         console.log(d);
       }),
       catchError(err => {
-        this.component.alertMessage('Attendance Failed', `Failed to update attendance. ${err.message.replace('GraphQL error: ', '')}`);
+        this.component.alertMessage('Attendance Failed', `Failed to update attendance. ${err.message.replace('GraphQL error: ', '')}`, 'danger');
         this.component.errorHaptic();
         console.error(err);
         return EMPTY;
@@ -146,12 +146,13 @@ export class StudentPage implements OnInit {
       } else if (status.denied) {
         const btn: AlertButton = {
           text: 'Open Settings',
+          cssClass: 'danger',
           handler: () => {
             BarcodeScanner.openAppSettings();
           }
         };
 
-        this.component.alertMessage('Permission Denied', 'You denied access to your camera. To scan the Attendance Code, you will need to grant access to camera.', 'Cancel', btn);
+        this.component.alertMessage('Permission Denied', 'You denied access to your camera. To scan the Attendance Code, you will need to grant access to camera.', 'danger', 'Cancel', btn);
       } else {
         resolve(false);
       }

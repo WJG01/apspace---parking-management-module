@@ -75,6 +75,7 @@ export class BookSlotModalPage implements OnInit {
       `;
     const btn: AlertButton = {
       text: 'Yes',
+      cssClass: 'success',
       handler: async () => {
         const loading = await this.loadingCtrl.create({
           message: 'Please wait...'
@@ -97,7 +98,7 @@ export class BookSlotModalPage implements OnInit {
       }
     }
 
-    this.component.alertMessage('Confirm Booking', message, 'No', btn);
+    this.component.alertMessage('Confirm Booking', message, 'success', 'No', btn);
   }
 
   dismiss() {

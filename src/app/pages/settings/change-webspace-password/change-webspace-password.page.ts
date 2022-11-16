@@ -70,7 +70,7 @@ export class ChangeWebspacePasswordPage implements OnInit {
       }
     }
 
-    this.component.alertMessage('Webspace Password', 'After clicking "Continue", your Webspace password will be changed with the new password.', 'Cancel', btn);
+    this.component.alertMessage('Webspace Password', 'After clicking "Continue", your Webspace password will be changed with the new password.', 'danger', 'Cancel', btn);
   }
 
   get currentPassword(): AbstractControl {

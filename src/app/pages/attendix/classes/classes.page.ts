@@ -341,11 +341,12 @@ export class ClassesPage implements OnInit {
       const overlap = classes.find(klass => this.markAttendanceObject.date === klass.DATE
         && startTimeMins < parseTime(klass.TIME_TO) && endTimeMins > parseTime(klass.TIME_FROM));
       if (overlap) {
-        this.component.alertMessage('Failed to Mark!', `Sorry! There is another record (${this.datePipe.transform(overlap.DATE, 'EEE, dd MMM yyy')} ${overlap.TIME_FROM} - ${overlap.TIME_TO}) in the attendance history, that overlaps with this class which you are trying to mark attendance (${this.datePipe.transform(this.markAttendanceObject.date, 'EEE, dd MMM yyy')} ${this.markAttendanceObject.startTime} - ${this.markAttendanceObject.endTime}). Please check the details you have entered carefully`);
+        this.component.alertMessage('Failed to Mark', `Sorry! There is another record (${this.datePipe.transform(overlap.DATE, 'EEE, dd MMM yyy')} ${overlap.TIME_FROM} - ${overlap.TIME_TO}) in the attendance history, that overlaps with this class which you are trying to mark attendance (${this.datePipe.transform(this.markAttendanceObject.date, 'EEE, dd MMM yyy')} ${this.markAttendanceObject.startTime} - ${this.markAttendanceObject.endTime}). Please check the details you have entered carefully`, 'danger');
         return;
       }
       const btn: AlertButton = {
         text: 'Continue',
+        cssClass: 'danger',
         handler: () => {
           this.router.navigate(['/attendix/mark-attendance', {
             classcode: this.markAttendanceObject.classcode,
@@ -358,7 +359,7 @@ export class ClassesPage implements OnInit {
         }
       }
 
-      this.component.alertMessage('Warning!', `By clicking on <span class="text-bold">'Continue'</span>, all students will be marked as ${this.markAttendanceObject.defaultAttendance === 'Y' ? 'Present' : 'Absent'} by default! ${this.markAttendanceObject.defaultAttendance === 'Y' ? '<br><br> <span class="text-bold">**Since you chose to mark all as Present by default, there will be no QR code displayed.</span>' : '.'}`, 'Cancel', btn);
+      this.component.alertMessage('Warning', `By clicking on <span class="text-bold">'Continue'</span>, all students will be marked as ${this.markAttendanceObject.defaultAttendance === 'Y' ? 'Present' : 'Absent'} by default! ${this.markAttendanceObject.defaultAttendance === 'Y' ? '<br><br> <span class="text-bold">**Since you chose to mark all as Present by default, there will be no QR code displayed.</span>' : '.'}`, 'danger', 'Cancel', btn);
     });
   }
 
@@ -407,7 +408,7 @@ export class ClassesPage implements OnInit {
       }
     }
 
-    this.component.alertMessage('Delete Attendance Record!', `Are you sure that you want to <span class="glob-danger-text glob-text-bold">Permanently Delete</span> the selected attendance record?<br><br> <span class="glob-text-bold">Class Code:</span> ${classcode}<br> <span class="glob-text-bold">Class Date:</span> ${this.datePipe.transform(date, 'EEE, dd MMM yyy')}<br> <span class="glob-text-bold">Class Time:</span> ${startTime} - ${endTime}<br> <span class="glob-text-bold">Class Type:</span> ${classType}`, 'Cancel', btn);
+    this.component.alertMessage('Delete Attendance Record!', `Are you sure that you want to <span class="glob-danger-text glob-text-bold">Permanently Delete</span> the selected attendance record?<br><br> <span class="glob-text-bold">Class Code:</span> ${classcode}<br> <span class="glob-text-bold">Class Date:</span> ${this.datePipe.transform(date, 'EEE, dd MMM yyy')}<br> <span class="glob-text-bold">Class Time:</span> ${startTime} - ${endTime}<br> <span class="glob-text-bold">Class Type:</span> ${classType}`, 'danger', 'Cancel', btn);
   }
 
   /* one last step modal that will open automatically when user uses quick attendnace button */

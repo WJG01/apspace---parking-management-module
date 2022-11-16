@@ -333,7 +333,7 @@ export class MarkAttendancePage implements OnInit {
       }
     }
 
-    this.component.alertMessage('Reset All To Absent!', 'Are you sure that you want to <span class="glob-danger-text glob-text-bold">Reset</span> the attendance for all students to \'Absent\'?', 'Cancel', btn);
+    this.component.alertMessage('Reset All To Absent!', 'Are you sure that you want to <span class="glob-danger-text glob-text-bold">Reset</span> the attendance for all students to \'Absent\'?', 'danger', 'Cancel', btn);
   }
 
   /** Delete attendance, double confirm */
@@ -357,7 +357,7 @@ export class MarkAttendancePage implements OnInit {
       }
     }
 
-    this.component.alertMessage('Delete Attendance Record!', `Are you sure that you want to <span class="glob-danger-text glob-text-bold">Permanently Delete</span> the selected attendance record?<br><br> <span class="glob-text-bold">Class Code:</span> ${this.schedule.classcode}<br> <span class="glob-text-bold">Class Date:</span> ${this.datePipe.transform(this.schedule.date, 'EEEE, MMMM d, y')}<br> <span class="glob-text-bold">Class Time:</span> ${this.schedule.startTime} - ${this.schedule.endTime}<br> <span class="glob-text-bold">Class Type:</span> ${this.schedule.classType}`, 'Cancel', btn);
+    this.component.alertMessage('Delete Attendance Record!', `Are you sure that you want to <span class="glob-danger-text glob-text-bold">Permanently Delete</span> the selected attendance record?<br><br> <span class="glob-text-bold">Class Code:</span> ${this.schedule.classcode}<br> <span class="glob-text-bold">Class Date:</span> ${this.datePipe.transform(this.schedule.date, 'EEEE, MMMM d, y')}<br> <span class="glob-text-bold">Class Time:</span> ${this.schedule.startTime} - ${this.schedule.endTime}<br> <span class="glob-text-bold">Class Type:</span> ${this.schedule.classType}`, 'danger', 'Cancel', btn);
   }
 
   /** Save lecture update notes. */

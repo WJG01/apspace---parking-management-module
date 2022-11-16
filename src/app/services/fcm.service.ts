@@ -30,14 +30,14 @@ export class FcmService {
     // When app is Open
     PushNotifications.addListener('pushNotificationReceived', (notification: PushNotificationSchema) => {
       // TODO: Used for Testing. Need to remove before prod
-      this.component.alertMessage('Push Response Received', JSON.stringify(notification));
+      this.component.alertMessage('Push Response Received', JSON.stringify(notification), 'danger');
     });
 
     // Listens to when a notification is clicked
     PushNotifications.addListener('pushNotificationActionPerformed', (notification: ActionPerformed) => {
       if (notification.notification.data) {
         // TODO: Used for Testing. Need to remove before prod
-        this.component.alertMessage('Push Response Action Performed', JSON.stringify(notification.notification));
+        this.component.alertMessage('Push Response Action Performed', JSON.stringify(notification.notification), 'danger');
       }
     });
   }
@@ -58,7 +58,7 @@ export class FcmService {
         if (request.receive === 'granted') {
           this.registerDevice();
         } else {
-          this.component.alertMessage('Push Notifications', 'Unknown Error Occured. Please try again later!');
+          this.component.alertMessage('Push Notifications', 'Unknown Error Occured. Please try again later!', 'danger');
         }
 
       case 'granted':
@@ -70,6 +70,7 @@ export class FcmService {
       case 'denied':
         const btn: AlertButton = {
           text: 'Enable Notifications',
+          cssClass: 'danger',
           handler: () => {
             NativeSettings.open({
               optionAndroid: AndroidSettings.ApplicationDetails,
@@ -77,7 +78,7 @@ export class FcmService {
             });
           }
         };
-        this.component.alertMessage('Push Notifications', 'You denied access to receive Push Notifications. To use these feature, please ensure that you enable Push Notifications under your device Settings.', '', btn);
+        this.component.alertMessage('Push Notifications', 'You denied access to receive Push Notifications. To use these feature, please ensure that you enable Push Notifications under your device Settings.', 'danger', '', btn);
         break;
 
       default:
@@ -95,7 +96,7 @@ export class FcmService {
     });
 
     PushNotifications.addListener('registrationError', (err: RegistrationError) => {
-      this.component.alertMessage('Push Notifications', `Error Registering Push Notification. Error: ${err.error}`);
+      this.component.alertMessage('Push Notifications', `Error Registering Push Notification. Error: ${err.error}`, 'danger');
     });
   }
 

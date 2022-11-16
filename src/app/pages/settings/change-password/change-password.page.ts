@@ -129,7 +129,7 @@ export class ChangePasswordPage implements OnInit {
       }
     }
 
-    this.component.alertMessage('Reset Password', 'You are about to update your APKey Password. After clicking "Continue", you will be automatically logged out from the application for security reasons. Therefore, we advise you to log out and log in again to all other applications that require APKey authentication', 'Cancel', btn);
+    this.component.alertMessage('Reset Password', 'You are about to update your APKey Password. After clicking "Continue", you will be automatically logged out from the application for security reasons. Therefore, we advise you to log out and log in again to all other applications that require APKey authentication', 'danger', 'Cancel', btn);
   }
 
   get currentPassword(): AbstractControl {

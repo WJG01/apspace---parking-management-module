@@ -27,6 +27,7 @@ export class ReviewSlotsModalPage {
   async submit() {
     const btn: AlertButton = {
       text: 'Confirm',
+      cssClass: 'success',
       handler: async () => {
         const loading = await this.loadingCtrl.create({
           message: 'Please wait...'
@@ -63,19 +64,20 @@ export class ReviewSlotsModalPage {
           });
       }
     }
-    this.component.alertMessage('Confirm Submission', 'These slot(s) will be added into the database. Do you want to proceed?', '', btn);
+    this.component.alertMessage('Confirm Submission', 'These slot(s) will be added into the database. Do you want to proceed?', 'success', '', btn);
   }
 
   showDefaultLocationWarningAlert(newCampus: string, newVenue: string) {
     const btn: AlertButton = {
       text: 'Yes',
+      cssClass: 'success',
       handler: () => {
         this.settings.set('defaultCampus', newCampus);
         this.settings.set('defaultVenue', newVenue);
       }
     }
 
-    this.component.alertMessage('Updating Your Default Location', 'We noticed that you have entered a new location for your consultation hour. Do you want to use the new location as your default iConsult location?', 'No', btn);
+    this.component.alertMessage('Updating Your Default Location', 'We noticed that you have entered a new location for your consultation hour. Do you want to use the new location as your default iConsult location?', 'success', 'No', btn);
   }
 
   dismiss() {

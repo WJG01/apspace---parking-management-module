@@ -145,7 +145,7 @@ export class StudentSurveyPage implements OnInit {
         const incompleteQuestions = this.response.answers.filter(answer => !answer.content);
         if (incompleteQuestions.length > 0) {
           this.showFieldMissingError = true;
-          this.component.alertMessage('Missing Answers', 'Please ensure you answer all the required questions.');
+          this.component.alertMessage('Missing Answers', 'Please ensure you answer all the required questions.', 'danger');
           return;
         }
         const loading = await this.loadingCtrl.create({
@@ -169,7 +169,7 @@ export class StudentSurveyPage implements OnInit {
         });
       }
     }
-    this.component.alertMessage('Submit Survey', message, '', btn);
+    this.component.alertMessage('Submit Survey', message, 'success', '', btn);
   }
 
   getIntakes(): Observable<SurveyIntake[]> {

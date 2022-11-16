@@ -79,7 +79,7 @@ export class AttendanceIntegrityModalPage {
       }
     }
 
-    this.component.alertMessage('Delete Attendance Record(s)!', `Are you sure that you want to <span class="danger-text text-bold">Permanently Delete</span> all ${recordsToDelete.length} attendance record(s)?`, 'Cancel', btn);
+    this.component.alertMessage('Delete Attendance Record(s)', `Are you sure that you want to <span class="danger-text text-bold">Permanently Delete</span> all ${recordsToDelete.length} attendance record(s)?`, 'danger', 'Cancel', btn);
   }
 
   deleteRecord(record: AttendanceIntegrityClasses, cb) {

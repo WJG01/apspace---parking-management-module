@@ -71,7 +71,7 @@ export class ApcardQrCodePage implements OnInit {
         },
         () => {
           loading.dismiss();
-          this.component.alertMessage('QR Code Scanned', 'You have successfully scanned the QR code.');
+          this.component.alertMessage('QR Code Scanned', 'You have successfully scanned the QR code.', 'success');
           this.sending = false;
           BarcodeScanner.stopScan();
           this.navCtrl.back();
@@ -92,12 +92,13 @@ export class ApcardQrCodePage implements OnInit {
       } else if (status.denied) {
         const btn: AlertButton = {
           text: 'Open Settings',
+          cssClass: 'danger',
           handler: () => {
             BarcodeScanner.openAppSettings();
           }
         };
 
-        this.component.alertMessage('Permission Denied', 'You denied access to your camera. To scan the Attendance Code, you will need to grant access to camera.', 'Cancel', btn);
+        this.component.alertMessage('Permission Denied', 'You denied access to your camera. To scan the Attendance Code, you will need to grant access to camera.', 'danger', 'Cancel', btn);
       } else {
         resolve(false);
       }

@@ -85,7 +85,7 @@ export class MorePage implements OnInit {
         this.navCtrl.navigateForward('/logout');
       }
     }
-    this.component.alertMessage('Warning', 'Are you sure you want to log out?', 'Cancel', btn);
+    this.component.alertMessage('Warning', 'Are you sure you want to log out?', 'danger', 'Cancel', btn);
   }
 
   toggleEdit() {
