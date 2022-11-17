@@ -9,9 +9,9 @@ import { CasTicketService, ComponentService, ConfigurationsService, SettingsServ
 import { Browser } from '@capacitor/browser';
 import { ShortNews } from '../../interfaces/news';
 import { QuixCustomer, Role } from '../../interfaces';
-import { NewsModalPage } from '../news/news-modal';
 import { DataCollectorService } from '../../services/data-collector.service';
 import { NewsService } from '../../services/news.service';
+import { NewsDetailsModalPage } from '../news/news-details-modal/news-details-modal.page';
 
 // install Swiper modules
 SwiperCore.use([Autoplay, Lazy, Navigation]);
@@ -60,6 +60,7 @@ export class LoginPage implements OnInit {
     this.isCapacitor = this.platform.is('capacitor');
     this.news$ = this.news.get(true, true, false).pipe(
       map(newsList => {
+        console.log(newsList)
         return newsList.map(item => {
           if (item && item.featured_image_src.length > 0) {
             return {
@@ -366,13 +367,15 @@ export class LoginPage implements OnInit {
     await Browser.open({ url: url });
   }
 
-  // NEWS MODAL
-  async openNewsModal(newsItem: ShortNews) {
+  async newsDetails(newsItem: ShortNews) {
     const modal = await this.modalCtrl.create({
-      component: NewsModalPage,
-      componentProps: { newsItem },
+      component: NewsDetailsModalPage,
+      componentProps: {
+        newsItem
+      },
+      breakpoints: [0, 1],
+      initialBreakpoint: 1
     });
-    await modal.present();
-    await modal.onDidDismiss();
+    modal.present();
   }
 }

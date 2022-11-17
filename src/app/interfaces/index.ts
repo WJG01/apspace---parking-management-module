@@ -50,8 +50,8 @@ export { SecurityQuestionsAndAnswers } from './security-questions-and-answers';
 export { Role } from './role';
 export { StudentTimetable } from './student-timetable';
 export { Settings, SettingsOld } from './settings';
-export { StaffProfile } from './staff-profile'
-export { StudentProfile } from './student-profile'
+export { StaffProfile } from './staff-profile';
+export { StudentProfile } from './student-profile';
 export { StaffDirectory } from './staff';
 export { SurveyIntake, SurveyModule, MCQType } from './student-survey';
 export { VisaDetails, StatusHistory } from './visa-status';
@@ -73,7 +73,8 @@ export { DashboardCardComponentConfigurations } from './dashboard-card-component
 export { EventComponentConfigurations } from './event-component-configurations';
 export { Holidays, Holiday } from './holiday';
 export { MoodleEvent } from './moodle-event';
-export { News, ShortNews } from './news';
+export { News, ShortNews, ImageSource } from './news';
 export { VersionValidator } from './version-validator';
 export { Quote } from './quote';
 export { LeaveHistory, LeaveBalance, PendingApproval, OnLeaveOnMyCluster } from './hr';
+export { DmuFormContent, DmuFormRegistration } from './dmu-form';
