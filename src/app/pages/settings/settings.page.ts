@@ -4,6 +4,9 @@ import { firstValueFrom, Observable, pluck } from 'rxjs';
 
 import { Storage } from '@ionic/storage-angular';
 
+import { Capacitor } from '@capacitor/core';
+import { StatusBar, Style } from '@capacitor/status-bar';
+
 import { SearchModalComponent } from '../../components/search-modal/search-modal.component';
 import {
   AccentColors,
@@ -84,8 +87,17 @@ export class SettingsPage implements OnInit {
     }
   }
 
-  themeChanged(theme: string) {
+  async themeChanged(theme: string) {
     this.settings.set('theme', theme);
+
+    if (!(Capacitor.getPlatform() === 'web')) {
+      if (theme === 'dark') {
+        await StatusBar.setStyle({ style: Style.Dark });
+      }
+      if (theme === 'light') {
+        await StatusBar.setStyle({ style: Style.Light });
+      }
+    }
   }
 
   accentChanged(accent: string) {

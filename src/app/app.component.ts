@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { NavigationExtras } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
 import { AlertButton, NavController } from '@ionic/angular';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 import { Storage } from '@ionic/storage-angular';
 
 import { VersionValidator } from './interfaces';
 import { ComponentService, ConfigurationsService, SettingsService, WsApiService } from './services';
+import { StatusBar, Style } from '@capacitor/status-bar';
 
 @Component({
   selector: 'app-root',
@@ -36,7 +37,18 @@ export class AppComponent {
     // Initialise Settings
     this.settings.initSettings();
     this.accentColor$ = this.settings.get$('accentColor');
-    this.theme$ = this.settings.get$('theme');
+    this.theme$ = this.settings.get$('theme').pipe(
+      tap(async theme => {
+        if (!(Capacitor.getPlatform() === 'web')) {
+          if (theme === 'dark') {
+            await StatusBar.setStyle({ style: Style.Dark });
+          }
+          if (theme === 'light') {
+            await StatusBar.setStyle({ style: Style.Light });
+          }
+        }
+      })
+    );
   }
 
   checkForUpdate() {
