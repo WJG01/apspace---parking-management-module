@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 
 import { format, formatISO } from 'date-fns';
@@ -30,7 +31,8 @@ export class LecturerTimetableComponent implements OnInit {
   constructor(
     private config: ConfigurationsService,
     private api: ApiService,
-    private component: ComponentService
+    private component: ComponentService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -42,8 +44,7 @@ export class LecturerTimetableComponent implements OnInit {
   }
 
   openStudentTimetable(intake: string) {
-    // TODO: Route to Student Timetable and pass the intake
-    console.log(intake);
+    this.router.navigate(['/student-timetable', intake]);
   }
 
   formatDate(date: Date): string {
