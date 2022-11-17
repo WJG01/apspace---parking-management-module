@@ -42,6 +42,7 @@ export {
 export { Graduater } from './graduater';
 export { IntakeListing } from './intake-listing';
 export { InterimLegend } from './interim-legend';
+export { Checkouts, History, Fine, LatestAdditions } from './koha';
 export { FormattedDaysLecturerTimetable, FormattedLecturerTimetable, LecturerTimetable, MappedLecturerTimetable } from './lecturer-timetable';
 export { MPULegend } from './mpu-legend';
 export { NotificationBody, NotificationHistory, NotificationStatus, NotificationSubStatus } from './notification';
@@ -67,7 +68,6 @@ export {
   MentorshipStudentList,
   MentorshipSubcourse, StudentRemark
 } from './mentorship';
-
 export { CgpaPerIntake } from './cgpa-per-intake';
 export { DashboardCardComponentConfigurations } from './dashboard-card-component-configurations';
 export { EventComponentConfigurations } from './event-component-configurations';
