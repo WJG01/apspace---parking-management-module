@@ -27,6 +27,7 @@ import { TheWeekPipe } from './theweek.pipe';
 export class StudentTimetablePage implements OnInit, OnDestroy {
   printUrl = 'https://api.apiit.edu.my/timetable-print/index.php';
   wday = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+  showBanner = false;
 
   legends = [
     {
@@ -132,6 +133,15 @@ export class StudentTimetablePage implements OnInit, OnDestroy {
         this.changeDetectorRef.detectChanges();
       }
     });
+
+    // Show voting banner based on the dates !!REMOVE AFTER VOTING ENDS
+    const todaysDate = new Date();
+    const startDate = new Date('11/14/22');
+    const endDate = new Date('11/25/22');
+
+    if (todaysDate > startDate && todaysDate < endDate) {
+      this.showBanner = true;
+    }
 
     this.settings.get$('enableMalaysiaTimezone').subscribe(data =>
       this.enableMalaysiaTimezone = data

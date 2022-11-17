@@ -17,6 +17,23 @@
 
   <!-- do not add filter pipe here as it affects loading -->
   <div class="glob-container">
+    <ion-card *ngIf="showBanner">
+      <ion-row class="ion-align-items-center">
+        <ion-col size="6" size-xl="6" size-lg="6" size-xs="12"><img src="assets/img/vote-banner.jpg"></ion-col>
+        <ion-col size="6" size-xl="6" size-lg="6" size-xs="12">
+          <p>
+            Dear Students,
+          </p>
+          <p>
+            The Ministry of Higher Education has issued a circular directing that no classes be held on 17th, 18th and 21st November 2022 to facilitate students in exercising their right to vote during the 15th General Elections to be held on 19th November 2022.
+          </p>
+          <p>
+            While no classes will be held during the above dates, campus facilities and support services will be available for students as usual. The published timetable published is to provide an indication of what lectures were to be held on the affected days. Lecturers will be allowed the flexibility to determine if replacement classes are to be conducted. If needed, replacement classes can be conducted during the buffer week and/or during the semester break.
+          </p>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
     <!--Buttons-->
     <ion-grid>
       <ion-row class="ion-justify-content-end">
