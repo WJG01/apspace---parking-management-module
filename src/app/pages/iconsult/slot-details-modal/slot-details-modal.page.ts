@@ -60,6 +60,7 @@ export class SlotDetailsModalPage implements OnInit {
     };
     const btn: AlertButton = {
       text: 'Yes',
+      cssClass: 'success',
       handler: async () => {
         const loading = await this.loadingCtrl.create({
           message: 'Please wait...'
@@ -80,7 +81,7 @@ export class SlotDetailsModalPage implements OnInit {
       }
     }
 
-    this.component.alertMessage('Adding Remarks!', 'Are you sure you want to add remarks to this booking?', 'No', btn);
+    this.component.alertMessage('Adding Remarks!', 'Are you sure you want to add remarks to this booking?', 'success', 'No', btn);
   }
 
   async cancelSlot() {

@@ -9,21 +9,67 @@
   }
 }
 
-.alert-wrapper {
-  .alert-button-group {
-    .cancel {
-      color: var(--ion-color-medium);
+.danger-alert {
+  .alert-wrapper {
+    .alert-head {
+      border-bottom: 1px solid var(--ion-color-danger);
     }
 
-    .success {
-      color: var(--ion-color-success);
+    .alert-message {
+      padding-top: 10px !important;
+      padding-bottom: 0 !important;
     }
 
-    .danger {
-      color: var(--ion-color-danger);
+    .alert-button-group {
+      .cancel {
+        color: var(--ion-color-medium);
+      }
+
+      .danger {
+        color: var(--ion-color-danger);
+      }
     }
   }
 }
+
+.success-alert {
+  .alert-wrapper {
+    .alert-head {
+      border-bottom: 1px solid var(--ion-color-success);
+    }
+
+    .alert-message {
+      padding-top: 10px !important;
+      padding-bottom: 0 !important;
+    }
+
+    .alert-button-group {
+      .cancel {
+        color: var(--ion-color-medium);
+      }
+
+      .success {
+        color: var(--ion-color-success);
+      }
+    }
+  }
+}
+
+// .alert-wrapper {
+//   .alert-button-group {
+//     .cancel {
+//       color: var(--ion-color-medium);
+//     }
+
+//     .success {
+//       color: var(--ion-color-success);
+//     }
+
+//     .danger {
+//       color: var(--ion-color-danger);
+//     }
+//   }
+// }
 
 .mark-all .action-sheet-button {
   &.Y {
@@ -42,26 +88,27 @@
   }
 }
 
-.danger-alert {
-  .alert-wrapper {
-    .alert-head {
-      background-color: var(--ion-color-danger);
+// .danger-alert {
+//   .alert-wrapper {
+//     .alert-head {
+//       border-bottom: 2px solid red;
+//       // background-color: var(--ion-color-danger);
 
-      .alert-title,
-      .alert-sub-title {
-        color: #FFFFFF !important;
-      }
-    }
+//       .alert-title,
+//       .alert-sub-title {
+//         // color: #FFFFFF !important;
+//       }
+//     }
 
-    .alert-message {
-      padding-top: 10px !important;
-      padding-bottom: 0 !important;
-    }
+//     .alert-message {
+//       padding-top: 10px !important;
+//       padding-bottom: 0 !important;
+//     }
 
-    .alert-button-group {
-      .main {
-        color: var(--ion-color-danger);
-      }
-    }
-  }
-}
+//     .alert-button-group {
+//       .main {
+//         color: var(--ion-color-danger);
+//       }
+//     }
+//   }
+// }

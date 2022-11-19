@@ -78,7 +78,7 @@ export class ResetWebspacePasswordPage implements OnInit {
       }
     }
 
-    this.component.alertMessage('Webspace Password', `After clicking "Continue", your Webspace ID's password will be reset.`, 'Cancel', btn);
+    this.component.alertMessage('Webspace Password', 'After clicking "Continue", your Webspace ID\'s password will be reset.', 'danger', 'Cancel', btn);
   }
 
   get icOrPassport(): AbstractControl {

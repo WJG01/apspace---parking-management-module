@@ -297,6 +297,7 @@ export class AplcProgressionPage implements OnInit {
   submit(studentBehaviors: APLCStudentBehaviour[]) {
     const btn: AlertButton = {
       text: 'Yes',
+      cssClass: 'danger',
       handler: async () => {
         let formValidFalg = true;
         const loading = await this.loadingCtrl.create({
@@ -342,6 +343,6 @@ export class AplcProgressionPage implements OnInit {
       }
     }
 
-    this.component.alertMessage('Confirm!', 'You are about to update the students\' behaviors. Do you want to continue?', 'Cancel', btn, 'danger-alert');
+    this.component.alertMessage('Confirmation', 'You are about to update the students\' behaviors. Do you want to continue?', 'danger', 'Cancel', btn);
   }
 }

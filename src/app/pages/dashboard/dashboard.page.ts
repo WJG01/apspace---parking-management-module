@@ -1300,13 +1300,14 @@ export class DashboardPage implements OnInit, DoCheck {
 
   logout() {
     const btn: AlertButton = {
-      text: 'Log Out',
-      cssClass: 'main',
+      text: 'Logout',
+      cssClass: 'danger',
       handler: () => {
         this.navCtrl.navigateForward('/logout');
       }
     };
-    this.component.alertMessage('Are you sure you want to log out?', '', 'Cancel', btn, 'danger-alert');
+
+    this.component.alertMessage('Warning', 'Are you sure you want to log out?', 'danger', 'Cancel', btn);
   }
 
   // GET DAY SHORT NAME (LIKE 'SAT' FOR SATURDAY)

@@ -89,11 +89,12 @@ export class AppComponent {
   showUpdateAlert(url: string) {
     const btn: AlertButton = {
       text: 'Update',
+      cssClass: 'success',
       handler: () => {
         this.component.openLink(url);
       }
     }
 
-    this.component.alertMessage('Update Available', 'A new version of APSpace is available. Updating the app will ensure you get the latest features.', '', btn);
+    this.component.alertMessage('Update Available', 'A new version of APSpace is available. Updating the app will ensure you get the latest features.', 'success', '', btn);
   }
 }

@@ -43,11 +43,14 @@ export class ComponentService {
    * Present Alert Message
    * @param header alert header title
    * @param message alert message content
+   * @param cssClass alert css class
    * @param cancelText cancel button text (Default is Dismiss)
    * @param button extra action button
-   * @param cssClass alert css class
    */
-  async alertMessage(header: string, message: string, cancelText?: string, button?: AlertButton, cssClass?: string) {
+  async alertMessage(header: string, message: string, cssClass: 'danger' | 'success', cancelText?: string, button?: AlertButton) {
+    // How class name is named in native-elements.scss
+    const formattedCssClass = `${cssClass}-alert`;
+    // Add Cancel as Default button
     const buttons: AlertButton[] = [{
       text: cancelText ? cancelText : 'Dismiss',
       role: 'cancel',
@@ -62,7 +65,7 @@ export class ComponentService {
       header,
       message,
       buttons,
-      cssClass: cssClass ? cssClass : '',
+      cssClass: formattedCssClass,
     });
     await alert.present();
   }

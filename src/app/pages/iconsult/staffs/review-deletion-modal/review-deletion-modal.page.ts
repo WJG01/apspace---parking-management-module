@@ -39,6 +39,7 @@ export class ReviewDeletionModalPage {
     if (bookedSlots.length > 0) {
       const btn: AlertButton = {
         text: 'Yes',
+        cssClass: 'danger',
         handler: async () => {
           // TODO: Change this to small modal
           const alert = await this.alertCtrl.create({
@@ -115,12 +116,13 @@ export class ReviewDeletionModalPage {
         }
       }
 
-      this.component.alertMessage('Warning', 'You have booked slots that you\'re about to cancel. Do you want to continue?', 'No', btn);
+      this.component.alertMessage('Warning', 'You have booked slots that you\'re about to cancel. Do you want to continue?', 'danger', 'No', btn);
       return;
     }
 
     const btn: AlertButton = {
       text: 'Confirm',
+      cssClass: 'danger',
       handler: async () => {
         const loading = await this.loadingCtrl.create({
           message: 'Please wait...'
@@ -151,7 +153,7 @@ export class ReviewDeletionModalPage {
       }
     }
 
-    this.component.alertMessage('Cancelling Open slots', 'Are you sure you want to delete these selected slots? This action cannot be undone. Do you want to proceed?', '', btn);
+    this.component.alertMessage('Cancelling Open slots', 'Are you sure you want to delete these selected slots? This action cannot be undone. Do you want to proceed?', 'danger', '', btn);
   }
 
   sendCancelSlotRequest(slotsId: number[]) {

@@ -72,7 +72,7 @@ export class SetSecurityQuestionsPage implements OnInit {
       }
     }
 
-    this.component.alertMessage('Update Security Questions', 'You are about to update your security questions and your secondary email which are used to recover your password in case you forget it. Do you want to continue?', 'Cancel', btn);
+    this.component.alertMessage('Update Security Questions', 'You are about to update your security questions and your secondary email which are used to recover your password in case you forget it. Do you want to continue?', 'danger', 'Cancel', btn);
   }
 
   get q1(): AbstractControl {
