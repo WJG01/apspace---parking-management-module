@@ -271,7 +271,19 @@ const routes: Routes = [
     path: 'hr',
     canActivate: [AuthGuard],
     data: { role: Role.Admin | Role.Lecturer },
-    loadChildren: () => import('./pages/hr/hr.module').then( m => m.HrPageModule)
+    loadChildren: () => import('./pages/hr/hr.module').then(m => m.HrPageModule)
+  },
+  {
+    path: 'library',
+    canActivate: [AuthGuard],
+    data: { role: Role.Student | Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/library/library.module').then(m => m.LibraryPageModule)
+  },
+  {
+    path: 'orientation-student-portal',
+    canActivate: [AuthGuard],
+    data: { role: Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/orientation-student-portal/orientation-student-portal.module').then(m => m.OrientationStudentPortalPageModule)
   },
   { // this path must always be at the end of the routes array
     path: '**',
