@@ -1,3 +1,38 @@
+h2 {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.controlled-list {
+  margin-top: 0px;
+  padding-bottom: 20px;
+  padding-top: 0px;
+}
+
+.day-schedule {
+  margin-bottom: 16px;
+}
+
 .table-item {
   padding: 10px;
+}
+
+.marker {
+  font-weight: bold;
+}
+
+.table-top {
+  display: none;
+  visibility: hidden;
+}
+
+@media (min-width: 600px) {
+  .marker {
+    display: none;
+  }
+
+  .table-top {
+    display: block;
+    visibility: visible;
+  }
 }

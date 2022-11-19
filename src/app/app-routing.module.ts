@@ -285,6 +285,13 @@ const routes: Routes = [
     data: { role: Role.Admin | Role.Lecturer },
     loadChildren: () => import('./pages/orientation-student-portal/orientation-student-portal.module').then(m => m.OrientationStudentPortalPageModule)
   },
+  {
+    // only available via URL. No Menu item created for this
+    path: 'igraduate',
+    canActivate: [AuthGuard],
+    data: { role: Role.Admin | Role.Lecturer },
+    loadChildren: () => import('./pages/igraduate/igraduate.module').then(m => m.IgraduatePageModule)
+  },
   { // this path must always be at the end of the routes array
     path: '**',
     canActivate: [AuthGuard],

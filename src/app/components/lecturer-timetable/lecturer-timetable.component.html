@@ -6,54 +6,71 @@
           <ion-label>Week:
             <span class="glob-text-bold">{{ t.week | date: 'MMMM d, y' }}</span>
           </ion-label>
-        </ion-item>
-
-        <ion-list slot="content" class="ion-no-padding">
           <div class="ion-text-end">
             <ion-button size="small" class="ion-margin" (click)="printSelectedWeek(t.week)">
               <ion-icon name="print"></ion-icon>
               Print
             </ion-button>
           </div>
+        </ion-item>
 
-          <ng-container *ngFor="let s of (t.timetables | formatByDay)">
-            <ion-item-divider lines="none" color="light" mode="md">
-              <ion-label class="glob-text-bold">
-                {{ s.day }}
-              </ion-label>
-            </ion-item-divider>
+        <ion-list slot="content" class="controlled-list ion-padding">
+          <ion-grid class="table-top ion-no-margin ion-no-padding">
+            <ion-row class="ion-no-margin">
+              <ion-col size="12" size-sm="2">
+                <h2>Day</h2>
+              </ion-col>
+              <ion-col size="12" size-sm="2">
+                <h2>Time</h2>
+              </ion-col>
+              <ion-col size="12" size-sm="2">
+                <h2>Module</h2>
+              </ion-col>
+              <ion-col size="12" size-sm="3">
+                <h2 >Location</h2>
+              </ion-col>
+              <ion-col size="12" size-sm="3">
+                <h2>Intakes</h2>
+              </ion-col>
 
-            <ion-card-content class="ion-no-padding" *ngFor="let tt of s.schedule">
-              <ion-card lines="full" class="table-item" style="box-shadow: none;">
-                <ion-label class="glob-white-space-normal">
-                  <ion-grid class="ion-no-padding">
-                    <ion-row class="ion-no-padding">
-                      <ion-col size="12">
-                        <ion-text color="danger">
-                          <h3 class="ion-text-uppercase">
-                            {{ tt.module }}
-                          </h3>
-                        </ion-text>
-                        <ion-text color="medium">
-                          <h3 class="glob-text-bold">
-                            {{ tt.start | date: 'h:mm a' }} - {{ tt.end | date: 'h:mm a' }}
-                          </h3>
-                        </ion-text>
-                      </ion-col>
-                    </ion-row>
-                  </ion-grid>
-                  <p>{{ tt.location }}</p>
-                  <p>
-                    Intakes:
-                    <span *ngFor="let intake of tt.intakes; last as last">
-                      <a tappable (click)="openStudentTimetable(intake)">{{ intake }}</a>
-                      <span *ngIf="!last"> , </span>
-                    </span>
-                  </p>
-                </ion-label>
-              </ion-card>
-            </ion-card-content>
+              <hr class="marker hr-custom" />
+            </ion-row>
+          </ion-grid>
+
+          <ion-grid *ngFor="let s of t.timetables" class="ion-no-padding ion-no-margin">
+            <ion-row class="day-schedule">
+              <ion-col size="12" size-sm="2">
+                <span class="marker">Day: </span>
+                {{ s.start | dateWithTimezone:'EEE, dd MMM' }}
+              </ion-col>
+
+              <ion-col size="12" size-sm="2">
+                <span class="marker">Time: </span>
+                {{ s.start | dateWithTimezone:'time' }} - {{ s.end | dateWithTimezone:'time' }}
+              </ion-col>
+
+              <ion-col size="12" size-sm="2">
+                <span class="marker">Module: </span>
+                {{ s.module }}
+              </ion-col>
+
+              <ion-col size="12" size-sm="3">
+                <span class="marker">Location: </span>
+                {{ s.location }}
+              </ion-col>
+
+              <ion-col size="12" size-sm="3">
+                <span class="marker">Intakes: </span>
+                <ng-container *ngFor="let intake of s.intakes; last as last">
+                  <a class="colored-text" tappable (click)="openStudentTimetable(intake)">{{ intake }}</a>
+                  <ng-container *ngIf="!last">, </ng-container>
           </ng-container>
+              </ion-col>
+
+              <!-- mobile separator -->
+              <hr class="marker hr-custom">
+            </ion-row>
+          </ion-grid>
         </ion-list>
       </ion-accordion>
     </ion-accordion-group>
@@ -75,3 +92,4 @@
     </ion-item>
   </ion-accordion>
 </ng-template>
+

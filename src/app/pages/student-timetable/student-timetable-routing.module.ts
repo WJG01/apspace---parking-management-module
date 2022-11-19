@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: StudentTimetablePage
+  },
+  {
+    path: ':intake',
+    component: StudentTimetablePage
   }
 ];
 
