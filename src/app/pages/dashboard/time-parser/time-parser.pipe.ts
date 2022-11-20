@@ -1,18 +1,5 @@
-// import { Pipe, PipeTransform } from '@angular/core';
-
-// @Pipe({
-//   name: 'timeParser'
-// })
-// export class TimeParserPipe implements PipeTransform {
-
-//   transform(value: unknown, ...args: unknown[]): unknown {
-//     return null;
-//   }
-
-// }
-
-
 import { Pipe, PipeTransform } from '@angular/core';
+
 import { parse } from 'date-fns';
 
 import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-with-timezone.pipe';

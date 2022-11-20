@@ -8,7 +8,7 @@ import { SwiperModule } from 'swiper/angular';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { SharedPipesModule } from '../../shared/shared-pipes.module';
 import { DashboardPage } from './dashboard.page';
-import { TimeParserPipe } from './time-parser.pipe';
+import { TimeParserPipe } from './time-parser/time-parser.pipe';
 
 @NgModule({
   imports: [

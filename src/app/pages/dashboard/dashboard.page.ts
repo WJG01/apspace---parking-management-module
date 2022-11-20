@@ -1,13 +1,12 @@
 import { Component, DoCheck, OnInit } from '@angular/core';
-// import { FirebaseX } from '@ionic-native/firebase-x/ngx'; v4: this need to migrate in the future
 import { AlertButton, ModalController, NavController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
+import { Observable, Subscription, combineLatest, forkJoin, of, zip, map, finalize, catchError, concatMap, mergeMap, shareReplay, switchMap, tap, toArray } from 'rxjs';
+
 import { format, parse, parseISO } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
-// import { JoyrideService } from 'ngx-joyride';
-// import { JoyrideOptions } from 'ngx-joyride/lib/models/joyride-options.class';
-import { Observable, Subscription, combineLatest, forkJoin, of, zip } from 'rxjs';
-import { catchError, concatMap, finalize, map, mergeMap, shareReplay, switchMap, tap, toArray } from 'rxjs/operators';
+import { ChartData, ChartOptions } from 'chart.js';
+import SwiperCore, { Autoplay, Lazy, Navigation } from 'swiper';
 
 import { accentColors } from 'src/app/constants';
 import {
@@ -24,14 +23,12 @@ import {
   WsApiService, ComponentService, AppLauncherService, FcmService
 } from 'src/app/services';
 import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-with-timezone.pipe';
+import { NewsDetailsModalPage } from '../news/news-details-modal/news-details-modal.page';
 // import { NotifierService } from 'src/app/shared/notifier/notifier.service'; v4: this need to migrate in the future
 // import { NotificationModalPage } from '../notifications/notification-modal'; v4: this need to migrate in the future
-import { ChartData, ChartOptions } from 'chart.js';
-import SwiperCore, { Autoplay, Lazy, Navigation } from 'swiper';
 
 //install swiper modules
 SwiperCore.use([Autoplay, Lazy, Navigation]);
-import { NewsDetailsModalPage } from '../news/news-details-modal/news-details-modal.page';
 
 @Component({
   selector: 'app-dashboard',
@@ -40,67 +37,27 @@ import { NewsDetailsModalPage } from '../news/news-details-modal/news-details-mo
   providers: [DateWithTimezonePipe]
 })
 export class DashboardPage implements OnInit, DoCheck {
-
-  role: Role;
+  // Roles Variables
   isStudent: boolean;
   isLecturer: boolean;
   isAdmin: boolean;
-  isCapacitor: boolean;
-  skeletons = new Array(5);
-
-  timeFormatChangeFlag: boolean;
-  notification: Subscription;
-
-
-  scheduleSegment: 'today' | 'upcoming' = 'today';
-
-  activeDashboardSections: string[] = []; // Get User Dashboard Sections
-
-  hideProfilePicture: boolean;
-  userProfileName$: Observable<string>;
-  changedName: boolean;
-
-  activeAccentColor = '';
-  secondLocation: string;
-  firstLocation: string;
-
-
-  // QUOTE
+  // Observable Variable
   quote$: Observable<Quote>;
-
-  // HOLIDAYS
   holidays$: Observable<Holiday[]>;
-
-  // PROFILE
   staffProfile$: Observable<StaffProfile>;
-  photo$: Observable<StudentPhoto>;
+  photo$: Observable<string>;
   orientationStudentDetails$: Observable<OrientationStudentDetails>;
-  councelorProfile$: Observable<StaffDirectory>;
-  // attendance default intake can be different from timetable default intake
-  // attendanceDefaultIntake = '';
-  timetableDefaultIntake = '';
-  userProfile: any = {};
-  numberOfUnreadMsgs: number;
-  showAnnouncement = false;
-
-  // TODAY'S SCHEDULE
-  todaysSchedule$: Observable<EventComponentConfigurations[] | any>;
-
-  intakeGroup = '';
-
-  // UPCOMING EVENTS
+  todaysSchedule$: Observable<EventComponentConfigurations[]>;
+  userProfileName$: Observable<string>;
   upcomingEvent$: Observable<EventComponentConfigurations[]>;
-
-
-  // APCARD
-  // balance$: Observable<{ value: number }>;
   apcardTransaction$: Observable<Apcard[]>;
-  monthlyData: any;
-  currentBalance: number;
-
-
-  //ApcardChart Configs
-
+  financial$: Observable<FeesTotalSummary>;
+  userVaccinationInfo$: Observable<UserVaccineInfo>;
+  lecturerContacts$: Observable<any>;
+  upcomingTrips$: Observable<any>;
+  cgpaPerIntake$: Observable<CgpaPerIntake>;
+  news$: Observable<ShortNews[]>;
+  // Chart Variables
   apcardChart: {
     options: ChartOptions,
     data: ChartData,
@@ -150,13 +107,6 @@ export class DashboardPage implements OnInit, DoCheck {
         ],
       }
     };
-
-  // FINANCIALS
-  totalOverdue$: Observable<{ value: number }>;
-  hasOutstanding: boolean;
-  financial$: Observable<FeesTotalSummary>;
-
-  // Financials chart config
   financialsChart: {
     options: ChartOptions,
     data: ChartData,
@@ -171,48 +121,33 @@ export class DashboardPage implements OnInit, DoCheck {
       },
       data: null
     };
-
-  // UPCOMING TRIPS
-  upcomingTrips$: Observable<any>;
-  showSetLocationsSettings = false;
-  locations: APULocation[];
-
-  // CONTACTS
-  lecturerContacts$: Observable<any>;
-
-  // NEWS
-  news$: Observable<ShortNews[]>;
-  newsIndexToShow = 0; // open the first news section by default
-
-  // CGPA
   cgpaChart: {
     options: ChartOptions,
     data: ChartData,
   };
-  cgpaPerIntake$: Observable<CgpaPerIntake>;
-  barChartData: any;
-  overallCgpa = 0;
-
-  // User Vaccination Information
-  userVaccinationInfo$: Observable<UserVaccineInfo>;
-  userVaccinationStatus: any = {};
-
-  // timezone
-  enableMalaysiaTimezone;
-
-  // APTour Guide
-  tourGuideStep = [
-    'Apart from seeing your beautiful face 💃, you can also tap your Profile Picture to view your Profile.',
-    'You can refer to your TP Number & Intake Code from this section 👀'
-  ];
-  tourGuideShown: boolean;
-
-  getAccentColor: any;
-
-  // For upcoming trips loading skeleton
-  items = [0, 1];
-
-  // pushInit: boolean;
+  // TransiX Variables
+  secondLocation: string;
+  firstLocation: string;
+  showSetLocationsSettings = false;
+  locations: APULocation[];
+  transixSkeleton = new Array(2);
+  // Other Variables
+  isCapacitor: boolean;
+  skeletons = new Array(5);
+  currentBalance: number; // Show APCard current Balance
+  scheduleSegment: 'today' | 'upcoming' = 'today'; // "My Schedule" Segment
+  activeDashboardSections: string[] = []; // Get User Dashboard Sections
+  hideProfilePicture: boolean; // User Selected Setting
+  enableMalaysiaTimezone: boolean;
+  pushInit: boolean; // Initialise Push Notification
+  timeFormatChangeFlag: boolean;
+  notification: Subscription;
+  activeAccentColor = '';
+  timetableDefaultIntake: string;
+  userProfile: any = {};
+  numberOfUnreadMsgs: number;
+  showAnnouncement = false; // E-Orientation Announcement Image
+  intakeGroup: string;
 
   constructor(
     private component: ComponentService,
@@ -225,26 +160,23 @@ export class DashboardPage implements OnInit, DoCheck {
     private cas: CasTicketService,
     private appLauncherService: AppLauncherService,
     private platform: Platform,
-    // private firebaseX: FirebaseX, //v4: this need to migrate in the future
     private settings: SettingsService,
     private storage: Storage,
     // private notifierService: NotifierService,
     private dateWithTimezonePipe: DateWithTimezonePipe,
-    // private fcm: FcmService
-    // private joyrideService: JoyrideService
+    private fcm: FcmService
   ) {
     // getting the main accent color to color the chart.js (Temp until removing chart.js)
     // TODO handle value change
     // this.initPushNotification();
     // Check if the accent color in user's storage exists in new accent-color.ts.
     // If it doesn't then rollback to standard blue
-    this.getAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor'));
-    if (typeof this.getAccentColor === 'undefined') {
-      this.getAccentColor = accentColors.find(ac => ac.name === 'blue').name;
+    const getAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor'));
+
+    if (typeof getAccentColor === 'undefined') {
       this.activeAccentColor = accentColors.find(ac => ac.name === 'blue').rgba;
-      this.settings.set('accentColor', this.getAccentColor);
-    }
-    else {
+      this.settings.set('accentColor', accentColors.find(ac => ac.name === 'blue').name);
+    } else {
       this.activeAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor')).rgba;
     }
   }
@@ -258,7 +190,7 @@ export class DashboardPage implements OnInit, DoCheck {
     // });
 
     this.storage.get('role').then((role: Role) => {
-      this.role = role;
+      // this.role = role;
       // tslint:disable-next-line: no-bitwise
       this.isStudent = Boolean(role & Role.Student);
       // tslint:disable-next-line: no-bitwise
@@ -291,17 +223,6 @@ export class DashboardPage implements OnInit, DoCheck {
       //   this.runCodeOnReceivingNotification(); // notifications
       // }
 
-      // // Get Tour Guide status
-      // this.settings.get$('tourGuideSeen').
-      // subscribe(data => this.tourGuideShown = data);
-      // if (!this.tourGuideShown) {
-      //   this.welcomeTourGuide();
-      // }
-      //
-      // // Overwrite the tour guide message for staff
-      // if (!this.isStudent) {
-      //   this.tourGuideStep[1] = 'You can check your Job Title from this section 💼';
-      // }
       this.settings.initialSync();
       this.doRefresh();
     });
@@ -327,7 +248,7 @@ export class DashboardPage implements OnInit, DoCheck {
   doRefresh(refresher?) {
     this.getLocations(refresher);
     // tslint:disable-next-line:no-bitwise
-    this.news$ = this.news.get(refresher, this.isStudent, this.isLecturer || Boolean(this.role & Role.Admin)).pipe(
+    this.news$ = this.news.get(refresher, this.isStudent, this.isLecturer || this.isAdmin).pipe(
       map(newsList => {
         return newsList.map(item => {
           if (item && item.featured_media_source.length > 0 && item.featured_media_source[0].source_url) {
@@ -345,12 +266,17 @@ export class DashboardPage implements OnInit, DoCheck {
     this.quote$ = this.ws.get<Quote>('/apspacequote', { auth: false });
     this.holidays$ = this.getHolidays(true);
     this.upcomingTrips$ = this.getUpcomingTrips(this.firstLocation, this.secondLocation);
-    this.photo$ = this.ws.get<StudentPhoto>('/student/photo');  // no-cache for student photo
+    this.photo$ = this.ws.get<StudentPhoto>('/student/photo')
+      .pipe(map(image => image.base64_photo = `data:image/jpg;base64,${image?.base64_photo}`));  // no-cache for student photo
+
     if (!this.isStudent) {
       this.getUpcomingEvents();
     }
+
     this.apcardTransaction$ = this.getTransactions(true); // no-cache for APCard transactions
+
     this.getBadge();
+
     const forkJoinArray = [this.getProfile(refresher)];
     this.getUserVaccinationInfo();
     if (this.isStudent) {
@@ -452,13 +378,6 @@ export class DashboardPage implements OnInit, DoCheck {
             if (response.status === 200) {
               if (response.councelor_details.length > 0) {
                 this.showAnnouncement = true;
-                this.councelorProfile$ = this.ws.get<StaffDirectory[]>('/staff/listing', { caching: 'cache-only' }).pipe(
-                  map(res =>
-                    res.find(staff =>
-                      staff.ID.toLowerCase() === response.councelor_details[0].SAMACCOUNTNAME.toLowerCase()
-                    )
-                  )
-                );
               }
             }
           })
@@ -469,8 +388,6 @@ export class DashboardPage implements OnInit, DoCheck {
       tap(studentProfile => this.lecturerContacts$ = this.getLecturersContact(studentProfile.INTAKE, refresher)),
       tap(studentProfile => this.getTodaysSchedule(studentProfile.INTAKE, refresher)),
       tap(studentProfile => this.getUpcomingEvents(studentProfile.INTAKE, refresher)), // INTAKE NEEDED FOR EXAMS
-      // tap(studentProfile => this.getAttendance(studentProfile.INTAKE, true)), // no-cache for attendance
-      // tap(studentProfile => this.getUpcomingExam(studentProfile.INTAKE)),
     ) : this.staffProfile$ = this.ws.get<StaffProfile>('/staff/profile', { caching }).pipe(
       tap(staffProfile => this.userProfile = staffProfile[0]),
       tap(_ => {
@@ -954,7 +871,7 @@ export class DashboardPage implements OnInit, DoCheck {
 
     const now = new Date();
     const a = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    this.monthlyData = transactions.reduce(
+    const monthlyData = transactions.reduce(
       (tt, t) => {
         const c = t.SpendVal < 0 ? 'dr' : 'cr'; // classify spent type
         const d = new Date(t.SpendDate);
@@ -971,8 +888,8 @@ export class DashboardPage implements OnInit, DoCheck {
       }
     );
     // plot graph
-    this.apcardChart.data.datasets[0].data = this.monthlyData.cr[now.getFullYear()];
-    this.apcardChart.data.datasets[1].data = this.monthlyData.dr[now.getFullYear()];
+    this.apcardChart.data.datasets[0].data = monthlyData.cr[now.getFullYear()];
+    this.apcardChart.data.datasets[1].data = monthlyData.dr[now.getFullYear()];
   }
 
   // FINANCIALS FUNCTIONS
@@ -982,19 +899,6 @@ export class DashboardPage implements OnInit, DoCheck {
       '/student/summary_overall_fee',
       { caching }
     ).pipe(
-      tap((overdueSummary) => {
-        // GET THE VALUE OF THE TOTAL OVERALL USED IN THE QUICK ACCESS ITEM
-        this.totalOverdue$ = of({ value: overdueSummary[0].TOTAL_OVERDUE });
-      }),
-      tap((overdueSummary) => {
-        // Basically checking the Student's financial data to identify if there's any outstanding
-        // tslint:disable-next-line: max-line-length
-        if (overdueSummary[0].FINE !== 0 || overdueSummary[0].TOTAL_PAID !== overdueSummary[0].TOTAL_PAYABLE || overdueSummary[0].TOTAL_OUTSTANDING !== 0 || overdueSummary[0].TOTAL_OVERDUE !== 0) {
-          this.hasOutstanding = true;
-        } else {
-          this.hasOutstanding = false;
-        }
-      }),
       tap(overdueSummary => {
         this.financialsChart.data = {
           labels: ['Financial Status'],
@@ -1016,10 +920,6 @@ export class DashboardPage implements OnInit, DoCheck {
             }
           ]
         };
-      }),
-      catchError(err => {
-        this.totalOverdue$ = of({ value: -1 });
-        return err;
       })
     );
   }
@@ -1045,7 +945,6 @@ export class DashboardPage implements OnInit, DoCheck {
           );
         }),
         toArray(),
-        tap(_ => this.overallCgpa = 0),
         tap(
           d => {
             const data = Array.from(
@@ -1059,10 +958,6 @@ export class DashboardPage implements OnInit, DoCheck {
             const filteredData = data.reverse().filter((res: any) => res.gpa[res.gpa.length - 2]).reverse();
             const labels = filteredData.map((i: any) => i.intakeCode);
             const gpa = filteredData.map((i: any) => i.gpa[i.gpa.length - 2].IMMIGRATION_GPA);
-            gpa.forEach(intakeGpa => {
-              this.overallCgpa += +intakeGpa;
-            });
-            this.overallCgpa = this.overallCgpa / gpa.length;
             this.cgpaChart = {
               options: {
                 indexAxis: 'y',
