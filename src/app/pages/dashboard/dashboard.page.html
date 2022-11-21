@@ -543,19 +543,27 @@
                         style="border-radius: 5px 0 0 5px">
                         <div class="ion-padding bus-timing-container">
                           <h3 class="locations glob-text-bold">
-                            <span class="ion-padding-end">{{trip.trip_from}}</span>
+                            <span class="ion-padding-end">
+                              {{ trip.trip_from }}
+                            </span>
                             <ion-icon name="caret-forward-outline" class="ion-padding-end"></ion-icon>
-                            <span>{{trip.trip_to}}</span>
+                            <span>
+                              {{ trip.trip_to }}
+                            </span>
                           </h3>
                           <p class="timings">
-                            <span class="ion-padding-end current-timing glob-text-bold"
-                              *ngIf="trip.times[0]">{{trip.times[0].slice(0, -8)}}</span>
-                            <span class="ion-padding-end timing glob-text-bold"
-                              *ngIf="trip.times[1]">{{trip.times[1].slice(0, -8)}}</span>
-                            <span class="ion-padding-end timing glob-text-bold"
-                              *ngIf="trip.times[2]">{{trip.times[2].slice(0, -8)}}</span>
-                            <span class="ion-padding-end timing glob-text-bold"
-                              *ngIf="trip.times[3]">{{trip.times[3].slice(0, -8)}}</span>
+                            <span class="ion-padding-end current-timing glob-text-bold" *ngIf="trip.times[0]">
+                              {{ trip.times[0] }}
+                            </span>
+                            <span class="ion-padding-end timing glob-text-bold" *ngIf="trip.times[1]">
+                              {{ trip.times[1] }}
+                            </span>
+                            <span class="ion-padding-end timing glob-text-bold" *ngIf="trip.times[2]">
+                              {{trip.times[2]}}
+                            </span>
+                            <span class="ion-padding-end timing glob-text-bold" *ngIf="trip.times[3]">
+                              {{ trip.times[3] }}
+                            </span>
                           </p>
                         </div>
                       </ion-col>

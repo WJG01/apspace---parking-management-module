@@ -1,21 +1,20 @@
-import { Component, DoCheck, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AlertButton, ModalController, NavController, Platform } from '@ionic/angular';
-import { Storage } from '@ionic/storage-angular';
 import { Observable, Subscription, combineLatest, forkJoin, of, zip, map, finalize, catchError, concatMap, mergeMap, shareReplay, switchMap, tap, toArray } from 'rxjs';
 
 import { format, parse, parseISO } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
 import { ChartData, ChartOptions } from 'chart.js';
 import SwiperCore, { Autoplay, Lazy, Navigation } from 'swiper';
+import { Storage } from '@ionic/storage-angular';
 
 import { accentColors } from 'src/app/constants';
 import {
-  APULocation, APULocations,
-  Apcard, BusTrips, CgpaPerIntake, ConsultationHour, ConsultationSlot,
+  Apcard, CgpaPerIntake, ConsultationHour, ConsultationSlot,
   Course, CourseDetails,
   EventComponentConfigurations, ExamSchedule, FeesTotalSummary, Holiday, Holidays, LecturerTimetable,
   MoodleEvent, OrientationStudentDetails, Quote, Role, ShortNews,
-  StaffDirectory, StaffProfile, StudentPhoto, StudentProfile, StudentTimetable, UserVaccineInfo
+  StaffDirectory, StaffProfile, StudentPhoto, StudentProfile, StudentTimetable, UserVaccineInfo, TransixScheduleSet, TransixDashboardTiming
 } from 'src/app/interfaces';
 import {
   CasTicketService, NewsService,
@@ -36,7 +35,7 @@ SwiperCore.use([Autoplay, Lazy, Navigation]);
   styleUrls: ['./dashboard.page.scss'],
   providers: [DateWithTimezonePipe]
 })
-export class DashboardPage implements OnInit, DoCheck {
+export class DashboardPage implements OnInit {
   // Roles Variables
   isStudent: boolean;
   isLecturer: boolean;
@@ -54,7 +53,7 @@ export class DashboardPage implements OnInit, DoCheck {
   financial$: Observable<FeesTotalSummary>;
   userVaccinationInfo$: Observable<UserVaccineInfo>;
   lecturerContacts$: Observable<any>;
-  upcomingTrips$: Observable<any>;
+  upcomingTrips$: Observable<TransixDashboardTiming[]>;
   cgpaPerIntake$: Observable<CgpaPerIntake>;
   news$: Observable<ShortNews[]>;
   // Chart Variables
@@ -129,7 +128,6 @@ export class DashboardPage implements OnInit, DoCheck {
   secondLocation: string;
   firstLocation: string;
   showSetLocationsSettings = false;
-  locations: APULocation[];
   transixSkeleton = new Array(2);
   // Other Variables
   isCapacitor: boolean;
@@ -148,6 +146,7 @@ export class DashboardPage implements OnInit, DoCheck {
   numberOfUnreadMsgs: number;
   showAnnouncement = false; // E-Orientation Announcement Image
   intakeGroup: string;
+  transixDevUrl = 'https://2o7wc015dc.execute-api.ap-southeast-1.amazonaws.com/dev';
 
   constructor(
     private component: ComponentService,
@@ -232,8 +231,8 @@ export class DashboardPage implements OnInit, DoCheck {
     this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo>('/covid19/user');
   }
 
-  // For Upcoming Trips
-  ngDoCheck() {
+  doRefresh(refresher?) {
+    // Get TransiX Trips
     combineLatest([
       this.settings.get$('busFirstLocation'),
       this.settings.get$('busSecondLocation'),
@@ -243,10 +242,7 @@ export class DashboardPage implements OnInit, DoCheck {
         this.upcomingTrips$ = this.getUpcomingTrips(busFirstLocation, busSecondLocation);
       }
     });
-  }
 
-  doRefresh(refresher?) {
-    this.getLocations(refresher);
     // tslint:disable-next-line:no-bitwise
     this.news$ = this.news.get(refresher, this.isStudent, this.isLecturer || this.isAdmin).pipe(
       map(newsList => {
@@ -362,7 +358,6 @@ export class DashboardPage implements OnInit, DoCheck {
   //   await modal.onDidDismiss();
   // }
 
-  // PROFILE AND GREETING MESSAGE FUNCTIONS
   getProfile(refresher: boolean) {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
     return this.isStudent ? this.ws.get<StudentProfile>('/student/profile', { caching }).pipe(
@@ -383,7 +378,6 @@ export class DashboardPage implements OnInit, DoCheck {
           })
         );
       }),
-      // tap(studentProfile => this.attendanceDefaultIntake = studentProfile.INTAKE),
       tap(studentProfile => this.userProfile = studentProfile),
       tap(studentProfile => this.lecturerContacts$ = this.getLecturersContact(studentProfile.INTAKE, refresher)),
       tap(studentProfile => this.getTodaysSchedule(studentProfile.INTAKE, refresher)),
@@ -1016,71 +1010,41 @@ export class DashboardPage implements OnInit, DoCheck {
       );
   }
 
-  // UPCOMING TRIPS
-  getLocationColor(locationName: string) {
-    for (const location of this.locations) {
-      if (location.location_name === locationName) {
-        return location.location_color;
-      }
-    }
-  }
-
-  getLocations(refresher: boolean) {
-    const caching = refresher ? 'network-or-cache' : 'cache-only';
-    this.ws.get<APULocations>(`/transix/locations`, { auth: false, caching }).pipe(
-      map((res: APULocations) => res.locations),
-      tap(locations => this.locations = locations)
-    ).subscribe();
-  }
-
   getUpcomingTrips(firstLocation: string, secondLocation: string) {
     if (!firstLocation || !secondLocation) {
       this.showSetLocationsSettings = true;
-      return of({});
+      return of([]);
     }
     this.showSetLocationsSettings = false;
     const currentDate = new Date();
-    return this.ws.get<BusTrips>('/transix/trips/applicable', { auth: false }).pipe(
-      map(res => res.trips),
+
+    return this.ws.get<TransixScheduleSet[]>('/v2/transix/schedule/active', { url: this.transixDevUrl }).pipe(
+      map(res => res[0].trips),
       map(trips => {
         return trips.filter(trip => {
-          const dateObject = new Date(trip.trip_time);
-          return dateObject >= currentDate
-            && trip.trip_day === this.getTodayDay(currentDate)
-            && ((trip.trip_from === firstLocation && trip.trip_to === secondLocation)
-              || (trip.trip_from === secondLocation && trip.trip_to === firstLocation));
+          return trip.day === this.getTodayDay(currentDate)
+            && ((trip.trip_from.name === firstLocation && trip.trip_to.name === secondLocation)
+              || (trip.trip_from.name === secondLocation && trip.trip_to.name === firstLocation));
         });
       }),
       map(trips => {
         return trips.reduce(
           (prev, curr) => {
-            prev[curr.trip_from + curr.trip_to] = prev[curr.trip_from + curr.trip_to] || {
-              trip_from: curr.trip_from_display_name,
-              trip_from_color: this.getLocationColor(curr.trip_from),
-              trip_to: curr.trip_to_display_name,
-              trip_to_color: this.getLocationColor(curr.trip_to),
+            prev[curr.trip_from.name + curr.trip_to.name] = prev[curr.trip_from.name + curr.trip_to.name] || {
+              trip_from: curr.trip_from.name,
+              trip_from_color: curr.trip_from.color,
+              trip_to: curr.trip_to.name,
+              trip_to_color: curr.trip_to.color,
               times: []
             };
-            // Convert to dateObject for time format
-            // const localToUtcOffset = (currentDate.getTimezoneOffset());
-            // const localParsedDate = Date.parse(currentDate.toString());
-            //
-            // const utcDate = new Date(localParsedDate + (localToUtcOffset * 60000));
-            // const utcParsedDate = Date.parse(utcDate.toUTCString());
-            //
-            // const d = new Date(utcParsedDate + (480 * 60000));
-            curr.trip_time = this.dateWithTimezonePipe.transform(curr.trip_time, 'bus');
-            prev[curr.trip_from + curr.trip_to].times.push(curr.trip_time);
+
+            prev[curr.trip_from.name + curr.trip_to.name].times.push(curr.time);
             return prev;
           },
           {}
         );
       }),
-      map(trips => {
-        return Object.keys(trips).map(
-          key => trips[key]
-        );
-      })
+      map(trips => Object.keys(trips).map(key => trips[key]))
     );
   }
 
@@ -1146,63 +1110,6 @@ export class DashboardPage implements OnInit, DoCheck {
   //     this.pushInit = true;
   //     this.fcm.updatePushPermission();
   //   }
-  // }
-
-  // async welcomeTourGuide() {
-  //   const alert = await this.alertCtrl.create({
-  //     header: 'Welcome to APSpace, your digital university companion!',
-  //     message: 'Please take a tour with us to get familiarized with APSpace.',
-  //     buttons: [{
-  //       text: 'Start Tour',
-  //       handler: () => {
-  //         this.startTour();
-  //       }
-  //     }]
-  //   });
-  //   await alert.present();
-  // }
-  //
-  // startTour() {
-  //   let tourSteps;
-  //   const x = window.matchMedia('(max-width: 720px)');
-  //
-  //   // Students and Lecturers are using the same array steps
-  //   // Admins are using different ones
-  //   // If roles are both admin and lecturer then assign them to the lecturer tour guide
-  //   // For mobile devices an additional step is added for all the roles
-  //
-  //   // For small screen
-  //   if (x.matches) {
-  //     // For students, lecturer, & lecturer + admin
-  //     if (!this.isAdmin || this.isLecturer && this.isAdmin) {
-  //       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs',
-  //         'step8@/tabs', 'step9@/tabs'];
-  //     }
-  //     // For admin
-  //     if (!this.isLecturer && this.isAdmin) {
-  //       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs',
-  //         'step8@/tabs'];
-  //     }
-  //   }
-  //   // For large screen
-  //   if (!x.matches) {
-  //     // For admin
-  //     if (!this.isLecturer && this.isAdmin) {
-  //       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs'];
-  //     }
-  //     // For students, lecturer, & lecturer + admin
-  //     if (!this.isAdmin || this.isLecturer && this.isAdmin) {
-  //       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs', 'step8@/tabs'];
-  //     }
-  //   }
-  //
-  //   const options: JoyrideOptions = {
-  //     steps: tourSteps,
-  //     themeColor: '#000000'
-  //   };
-  //
-  //   this.joyrideService.startTour(options);
-  //   this.settings.set('tourGuideSeen', true);
   // }
 }
 
