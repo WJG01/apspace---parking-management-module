@@ -14,7 +14,7 @@ import {
   Course, CourseDetails,
   EventComponentConfigurations, ExamSchedule, FeesTotalSummary, LecturerTimetable,
   MoodleEvent, OrientationStudentDetails, Quote, Role, ShortNews,
-  StaffDirectory, StaffProfile, StudentPhoto, StudentProfile, StudentTimetable, UserVaccineInfo, TransixScheduleSet, TransixDashboardTiming, HolidaySets, HolidayV2
+  StaffDirectory, StaffProfile, StudentPhoto, StudentProfile, StudentTimetable, UserVaccineInfo, TransixScheduleSet, TransixDashboardTiming, TransixHolidaySet, TransixHoliday
 } from 'src/app/interfaces';
 import {
   CasTicketService, NewsService,
@@ -42,7 +42,7 @@ export class DashboardPage implements OnInit {
   isAdmin: boolean;
   // Observable Variable
   quote$: Observable<Quote>;
-  holidays$: Observable<HolidaySets>;
+  holidays$: Observable<TransixHolidaySet>;
   staffProfile$: Observable<StaffProfile>;
   photo$: Observable<string>;
   orientationStudentDetails$: Observable<OrientationStudentDetails>;
@@ -295,7 +295,7 @@ export class DashboardPage implements OnInit {
   getHolidays(refresher: boolean): Observable<any> {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
 
-    return this.ws.get<HolidaySets[]>('/v2/transix/holiday/active', { url: this.transixDevUrl, caching }).pipe(
+    return this.ws.get<TransixHolidaySet[]>('/v2/transix/holiday/active', { url: this.transixDevUrl, caching }).pipe(
       // Auto Refresh if Holidays Not Found
       switchMap(sets => {
         const currentYear = new Date().getFullYear();
@@ -757,16 +757,16 @@ export class DashboardPage implements OnInit {
   getUpcomingHoliday(date: Date, refresher?: boolean): Observable<EventComponentConfigurations[]> {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
 
-    return this.ws.get<HolidaySets[]>('/v2/transix/holiday/active', { url: this.transixDevUrl, caching }).pipe(
+    return this.ws.get<TransixHolidaySet[]>('/v2/transix/holiday/active', { url: this.transixDevUrl, caching }).pipe(
       map(sets => sets[0].holidays),
       map(holidays => {
         const studentHoliday = holidays
           .filter(h => h.holiday_people_affected === 'students' || h.holiday_people_affected === 'all')
-          .find(h => date < new Date(h.holiday_start_date)) || {} as HolidayV2;
+          .find(h => date < new Date(h.holiday_start_date)) || {} as TransixHoliday;
 
         const staffHoliday = holidays
           .filter(h => h.holiday_people_affected === 'staffs' || h.holiday_people_affected === 'all')
-          .find(h => date < new Date(h.holiday_start_date)) || {} as HolidayV2;
+          .find(h => date < new Date(h.holiday_start_date)) || {} as TransixHoliday;
 
         const holiday = this.isStudent ? studentHoliday : staffHoliday;
         const examsListEventMode: EventComponentConfigurations[] = [];

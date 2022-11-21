@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { HolidayColor } from '../../../interfaces';
+import { TransixHolidayColor } from '../../../interfaces';
 
 @Pipe({
   name: 'monthColor'
@@ -12,7 +12,7 @@ export class MonthColorPipe implements PipeTransform {
    * @param colors Array of colors for the year
    * @returns Colors value
    */
-  transform(startDate: Date, colors: HolidayColor[]): string {
+  transform(startDate: Date, colors: TransixHolidayColor[]): string {
     const daysMonth = colors[new Date(startDate).getMonth()];
     // Fallback to primary color
     return daysMonth?.value || 'var(--ion-color-primary)';

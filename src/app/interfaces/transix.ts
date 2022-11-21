@@ -38,3 +38,30 @@ export interface TransixDashboardTiming {
   trip_to: string;
   trip_to_color: string;
 }
+
+enum PeopleAffected {
+  All = 'all',
+  Students = 'students',
+  Staffs = 'staffs'
+}
+
+export interface TransixHolidaySet {
+  active: boolean;
+  colors: TransixHolidayColor[];
+  holidays: TransixHoliday[];
+  remarks: string;
+  year: number;
+}
+
+export interface TransixHolidayColor {
+  month: string;
+  value: string;
+}
+
+export interface TransixHoliday {
+  holiday_description: string;
+  holiday_end_date: Date;
+  holiday_name: string;
+  holiday_people_affected: PeopleAffected;
+  holiday_start_date: Date;
+}

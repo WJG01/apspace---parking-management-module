@@ -27,11 +27,6 @@ export {
   FeesTotalSummary
 } from './fees';
 export {
-  HolidayColor,
-  HolidayV2,
-  HolidaySets
-} from './holiday';
-export {
   AddFreeSlotBody,
   AddFreeSlotReview,
   ConsultationHour,
@@ -70,10 +65,9 @@ export {
 } from './mentorship';
 export { CgpaPerIntake } from './cgpa-per-intake';
 export { EventComponentConfigurations } from './event-component-configurations';
-export { Holidays, Holiday } from './holiday';
 export { MoodleEvent } from './moodle-event';
 export { News, ShortNews, ImageSource } from './news';
-export { TransixScheduleSet, TransixScheduleTrip, TransixLocation, TransixDashboardTiming } from './transix';
+export { TransixScheduleSet, TransixScheduleTrip, TransixLocation, TransixDashboardTiming, TransixHolidaySet, TransixHolidayColor, TransixHoliday } from './transix';
 export { VersionValidator } from './version-validator';
 export { Quote } from './quote';
 export { LeaveHistory, LeaveBalance, PendingApproval, OnLeaveOnMyCluster } from './hr';
