@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertButton, ModalController, NavController, Platform } from '@ionic/angular';
 import { Observable, Subscription, combineLatest, forkJoin, of, zip, map, finalize, catchError, concatMap, mergeMap, shareReplay, switchMap, tap, toArray } from 'rxjs';
 
-import { format, parse, parseISO } from 'date-fns';
+import { differenceInDays, format, parse } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
 import { ChartData, ChartOptions } from 'chart.js';
 import SwiperCore, { Autoplay, Lazy, Navigation } from 'swiper';
@@ -12,9 +12,9 @@ import { accentColors } from 'src/app/constants';
 import {
   Apcard, CgpaPerIntake, ConsultationHour, ConsultationSlot,
   Course, CourseDetails,
-  EventComponentConfigurations, ExamSchedule, FeesTotalSummary, Holiday, Holidays, LecturerTimetable,
+  EventComponentConfigurations, ExamSchedule, FeesTotalSummary, LecturerTimetable,
   MoodleEvent, OrientationStudentDetails, Quote, Role, ShortNews,
-  StaffDirectory, StaffProfile, StudentPhoto, StudentProfile, StudentTimetable, UserVaccineInfo, TransixScheduleSet, TransixDashboardTiming
+  StaffDirectory, StaffProfile, StudentPhoto, StudentProfile, StudentTimetable, UserVaccineInfo, TransixScheduleSet, TransixDashboardTiming, HolidaySets, HolidayV2
 } from 'src/app/interfaces';
 import {
   CasTicketService, NewsService,
@@ -42,7 +42,7 @@ export class DashboardPage implements OnInit {
   isAdmin: boolean;
   // Observable Variable
   quote$: Observable<Quote>;
-  holidays$: Observable<Holiday[]>;
+  holidays$: Observable<HolidaySets>;
   staffProfile$: Observable<StaffProfile>;
   photo$: Observable<string>;
   orientationStudentDetails$: Observable<OrientationStudentDetails>;
@@ -208,8 +208,6 @@ export class DashboardPage implements OnInit {
         this.enableMalaysiaTimezone = data
       );
 
-      this.holidays$ = this.getHolidays(false);
-
       combineLatest([
         this.settings.get$('busFirstLocation'),
         this.settings.get$('busSecondLocation'),
@@ -258,10 +256,13 @@ export class DashboardPage implements OnInit {
         }).slice(0, 6);
       }),
     );
-
+    // Get Quotes
     this.quote$ = this.ws.get<Quote>('/apspacequote', { auth: false });
+    // Get Holiday TransiX
     this.holidays$ = this.getHolidays(true);
+    // Get Upcoming Trips
     this.upcomingTrips$ = this.getUpcomingTrips(this.firstLocation, this.secondLocation);
+    // Get Student Photo
     this.photo$ = this.ws.get<StudentPhoto>('/student/photo')
       .pipe(map(image => image.base64_photo = `data:image/jpg;base64,${image?.base64_photo}`));  // no-cache for student photo
 
@@ -291,20 +292,17 @@ export class DashboardPage implements OnInit {
     });
   }
 
-  // GET DETAILS FOR HOLIDAYS
-  // holidays$ REQUIRED FOR $upcomingTrips
-  getHolidays(refresher: boolean): Observable<Holiday[]> {
+  getHolidays(refresher: boolean): Observable<any> {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
-    return this.ws.get<Holidays>('/transix/holidays/filtered/staff', { auth: false, caching }).pipe(
-      map(res => res.holidays),
-      // AUTO REFRESH IF HOLIDAY NOT FOUND
-      switchMap(holidays => {
-        const date = new Date();
-        return refresher || holidays.find(h => date < new Date(h.holiday_start_date))
-          ? of(holidays)
-          : this.getHolidays(true);
+
+    return this.ws.get<HolidaySets[]>('/v2/transix/holiday/active', { url: this.transixDevUrl, caching }).pipe(
+      // Auto Refresh if Holidays Not Found
+      switchMap(sets => {
+        const currentYear = new Date().getFullYear();
+
+        return refresher || sets.find(s => s.year === currentYear) ? of(sets.find(s => s.year === currentYear)) : this.getHolidays(true);
       }),
-      shareReplay(1),
+      shareReplay(1)
     );
   }
   // v4: this will need to mirgate in the future
@@ -548,13 +546,9 @@ export class DashboardPage implements OnInit {
       switchMap(timetables => timetables.length !== 0
         ? of(timetables)
         : this.holidays$.pipe(
-          // XXX: ONLY START DAY IS BEING MATCHED
-          switchMap(holidays => holidays.find(holiday => date === holiday.holiday_start_date)
-            ? of(timetables)
-            : this.ws.get<LecturerTimetable[]>(endpoint, { auth: false, caching: 'network-or-cache' }).pipe(
-              map(timetable => timetable.filter(tt => this.eventIsToday(new Date(tt.time), d))),
-            )
-          ),
+          switchMap(holidays => holidays.holidays.find(holiday => date === holiday.holiday_start_date.toString()) ? of(timetables) : this.ws.get<LecturerTimetable[]>(endpoint, { auth: false, caching: 'network-or-cache' }).pipe(
+            map(timetable => timetable.filter(tt => this.eventIsToday(new Date(tt.time), d))),
+          ))
         )
       ),
       // CONVERT TIMETABLE OBJECT TO THE OBJECT EXPECTED IN THE EVENT COMPONENT
@@ -762,21 +756,25 @@ export class DashboardPage implements OnInit {
 
   getUpcomingHoliday(date: Date, refresher?: boolean): Observable<EventComponentConfigurations[]> {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
-    return forkJoin([
-      this.ws.get<Holidays>('/transix/holidays/filtered/students', { auth: false, caching }),
-      this.holidays$
-    ]).pipe(
-      map(([studentHolidays, staffHolidays]) => {
-        const holiday = this.isStudent ? studentHolidays.holidays.find(h => date < new Date(h.holiday_start_date)) || {} as Holiday
-          : staffHolidays.find(h => date < new Date(h.holiday_start_date)) || {} as Holiday;
 
+    return this.ws.get<HolidaySets[]>('/v2/transix/holiday/active', { url: this.transixDevUrl, caching }).pipe(
+      map(sets => sets[0].holidays),
+      map(holidays => {
+        const studentHoliday = holidays
+          .filter(h => h.holiday_people_affected === 'students' || h.holiday_people_affected === 'all')
+          .find(h => date < new Date(h.holiday_start_date)) || {} as HolidayV2;
+
+        const staffHoliday = holidays
+          .filter(h => h.holiday_people_affected === 'staffs' || h.holiday_people_affected === 'all')
+          .find(h => date < new Date(h.holiday_start_date)) || {} as HolidayV2;
+
+        const holiday = this.isStudent ? studentHoliday : staffHoliday;
         const examsListEventMode: EventComponentConfigurations[] = [];
-        const formattedStartDate = format(parseISO(holiday.holiday_start_date), 'dd MMM yyyy');
+        const formattedStartDate = format(new Date(holiday.holiday_start_date), 'dd MMM yyyy');
+
         examsListEventMode.push({
           title: holiday.holiday_name,
-          firstDescription: this.getNumberOfDaysForHoliday(
-            parseISO(holiday.holiday_start_date),
-            parseISO(holiday.holiday_end_date)),
+          firstDescription: this.getNumberOfDaysForHoliday(holiday.holiday_start_date, holiday.holiday_end_date),
           color: '#273160',
           pass: false,
           passColor: '#d7dee3',
@@ -784,15 +782,16 @@ export class DashboardPage implements OnInit {
           type: 'holiday',
           dateOrTime: formattedStartDate
         });
-        return examsListEventMode;
+
+        return examsListEventMode
       })
     );
   }
 
   getNumberOfDaysForHoliday(startDate: Date, endDate: Date): string {
-    const secondsDiff = this.getSecondsDifferenceBetweenTwoDates(startDate, endDate);
-    const daysDiff = Math.floor(secondsDiff / (3600 * 24));
-    return (daysDiff + 1) + ' day' + (daysDiff === 0 ? '' : 's');
+    const difference = differenceInDays(new Date(startDate), new Date(endDate));
+
+    return `${difference + 1} day${difference === 0 ? '' : 's'}`;
   }
 
   getUpcomingMoodle(date: Date, refresher?: boolean): Observable<EventComponentConfigurations[]> {
@@ -1018,8 +1017,8 @@ export class DashboardPage implements OnInit {
     this.showSetLocationsSettings = false;
     const currentDate = new Date();
 
-    return this.ws.get<TransixScheduleSet[]>('/v2/transix/schedule/active', { url: this.transixDevUrl }).pipe(
-      map(res => res[0].trips),
+    return this.ws.get<TransixScheduleSet>('/v2/transix/schedule/active', { url: this.transixDevUrl }).pipe(
+      map(res => res.trips),
       map(trips => {
         return trips.filter(trip => {
           return trip.day === this.getTodayDay(currentDate)
@@ -1055,19 +1054,6 @@ export class DashboardPage implements OnInit {
       this.component.openLink(`${url}?ticket=${st}`);
     });
   }
-
-  // GENERAL FUNCTIONS
-  getSecondsDifferenceBetweenTwoDates(startDate: Date, endDate: Date): number {
-    // PARAMETERS MUST BE STRING. FORMAT IS ('HH:mm A')
-    // RETURN TYPE IS STRING. FORMAT: 'HH hrs mm min'
-    return (endDate.getTime() - startDate.getTime()) / 1000;
-  }
-
-  // secondsToHrsAndMins(seconds: number): string {
-  //   const hours = Math.floor(seconds / 3600);
-  //   const mins = Math.floor(seconds % 3600 / 60);
-  //   return hours + ' hr' + (hours > 1 ? 's' : '') + ' ' + mins + ' min' + (mins > 1 ? 's' : '');
-  // }
 
   navigateToPage(pageName: string) {
     this.navCtrl.navigateForward(pageName);
