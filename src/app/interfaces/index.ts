@@ -67,7 +67,7 @@ export { CgpaPerIntake } from './cgpa-per-intake';
 export { EventComponentConfigurations } from './event-component-configurations';
 export { MoodleEvent } from './moodle-event';
 export { News, ShortNews, ImageSource } from './news';
-export { TransixScheduleSet, TransixScheduleTrip, TransixLocation, TransixDashboardTiming, TransixHolidaySet, TransixHolidayColor, TransixHoliday } from './transix';
+export { TransixScheduleSet, TransixScheduleTrip, TransixLocation, TransixDashboardTiming, TransixHolidaySet, TransixHolidayColor, TransixHoliday, Trips } from './transix';
 export { VersionValidator } from './version-validator';
 export { Quote } from './quote';
 export { LeaveHistory, LeaveBalance, PendingApproval, OnLeaveOnMyCluster } from './hr';

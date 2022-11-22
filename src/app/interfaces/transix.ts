@@ -65,3 +65,14 @@ export interface TransixHoliday {
   holiday_people_affected: PeopleAffected;
   holiday_start_date: Date;
 }
+
+// Interface used for Bus Schedule Page
+export interface Trips {
+  trip_from: string;
+  trips: FormattedTrip[];
+}
+
+interface FormattedTrip {
+  trip_to: string;
+  trips: TransixScheduleTrip[];
+}
