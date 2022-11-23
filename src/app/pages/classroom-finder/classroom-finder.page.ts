@@ -65,7 +65,8 @@ export class ClassroomFinderPage implements OnInit {
       componentProps: {
         presentationMode: 'time',
         selected: type,
-        hourValues
+        hourValues,
+        hourCycle: 'h23' // TODO: Probably show hour format based on user settings
       },
       cssClass: 'date-picker-modal'
     });
