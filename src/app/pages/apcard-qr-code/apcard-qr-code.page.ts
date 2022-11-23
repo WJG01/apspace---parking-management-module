@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AlertButton, LoadingController, ModalController, NavController, Platform } from '@ionic/angular';
 
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
@@ -12,7 +12,7 @@ import { VisitHistoryModalPage } from './visit-history/visit-history-modal';
   templateUrl: './apcard-qr-code.page.html',
   styleUrls: ['./apcard-qr-code.page.scss'],
 })
-export class ApcardQrCodePage implements OnInit {
+export class ApcardQrCodePage implements OnInit, OnDestroy {
 
   isCapacitor: boolean;
   sending = false;
@@ -117,5 +117,10 @@ export class ApcardQrCodePage implements OnInit {
       component: VisitHistoryModalPage
     });
     await modal.present();
+  }
+
+  ngOnDestroy(): void {
+    // Prevent issue on Android where scanner is still present in the background
+    BarcodeScanner.stopScan();
   }
 }
