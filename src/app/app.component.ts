@@ -3,12 +3,13 @@ import { NavigationExtras } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
 import { AlertButton, NavController } from '@ionic/angular';
 import { Observable, tap } from 'rxjs';
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { Network } from '@capacitor/network';
 
 import { Storage } from '@ionic/storage-angular';
 
 import { VersionValidator } from './interfaces';
 import { ComponentService, ConfigurationsService, SettingsService, WsApiService } from './services';
-import { StatusBar, Style } from '@capacitor/status-bar';
 
 @Component({
   selector: 'app-root',
@@ -51,7 +52,11 @@ export class AppComponent {
     );
   }
 
-  checkForUpdate() {
+  async checkForUpdate() {
+    const networkConnection = await Network.getStatus();
+
+    if (!networkConnection.connected) return;
+
     this.ws.get<VersionValidator>('/apspace_mandatory_update.json', { url: 'https://d370klgwtx3ftb.cloudfront.net', auth: false })
       .subscribe(res => {
         let navigationExtras: NavigationExtras;

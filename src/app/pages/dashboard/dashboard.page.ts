@@ -288,7 +288,7 @@ export class DashboardPage implements OnInit, DoCheck {
   // For upcoming trips loading skeleton
   items = [0, 1];
 
-  pushInit: boolean;
+  // pushInit: boolean;
 
   constructor(
     private component: ComponentService,
@@ -306,12 +306,12 @@ export class DashboardPage implements OnInit, DoCheck {
     private storage: Storage,
     // private notifierService: NotifierService,
     private dateWithTimezonePipe: DateWithTimezonePipe,
-    private fcm: FcmService
+    // private fcm: FcmService
     // private joyrideService: JoyrideService
   ) {
     // getting the main accent color to color the chart.js (Temp until removing chart.js)
     // TODO handle value change
-    this.initPushNotification();
+    // this.initPushNotification();
     // Check if the accent color in user's storage exists in new accent-color.ts.
     // If it doesn't then rollback to standard blue
     this.getAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor'));
@@ -1339,12 +1339,12 @@ export class DashboardPage implements OnInit, DoCheck {
     });
   }
 
-  initPushNotification() {
-    if (!this.pushInit) {
-      this.pushInit = true;
-      this.fcm.updatePushPermission();
-    }
-  }
+  // initPushNotification() {
+  //   if (!this.pushInit) {
+  //     this.pushInit = true;
+  //     this.fcm.updatePushPermission();
+  //   }
+  // }
 
   // async welcomeTourGuide() {
   //   const alert = await this.alertCtrl.create({
