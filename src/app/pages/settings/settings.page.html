@@ -179,8 +179,8 @@
               </ion-label>
               <ion-select interface="popover" [ngModel]="busShuttleServiceSettings$.firstLocation | async"
                 (ngModelChange)="busShuttleServicesChanged($event, 'first')">
-                <ion-select-option *ngFor="let l of locations" [value]="l.location_name">
-                  {{ l.location_nice_name }}
+                <ion-select-option *ngFor="let l of locations" [value]="l.name">
+                  {{ l.name }}
                 </ion-select-option>
               </ion-select>
             </ion-item>
@@ -191,8 +191,8 @@
               </ion-label>
               <ion-select interface="popover" [ngModel]="busShuttleServiceSettings$.secondLocation | async"
                 (ngModelChange)="busShuttleServicesChanged($event, 'second')">
-                <ion-select-option *ngFor="let l of locations" [value]="l.location_name">
-                  {{ l.location_nice_name }}
+                <ion-select-option *ngFor="let l of locations" [value]="l.name">
+                  {{ l.name }}
                 </ion-select-option>
               </ion-select>
             </ion-item>
