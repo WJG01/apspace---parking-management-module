@@ -137,91 +137,105 @@
             </ion-label>
           </ion-item>
 
-          <ion-card class="ion-no-margin" *ngFor="let t of trips; let isLast = last"
-            [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
-            <ion-card-header color="light">
-              <ion-card-subtitle class="glob-text-bold">
-                {{ t.trip_from | uppercase }}
+          <ng-container *ngIf="trips.length > 0; else noTrips">
+            <ion-card class="ion-no-margin" *ngFor="let t of trips; let isLast = last"
+              [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+              <ion-card-header color="light">
+                <ion-card-subtitle class="glob-text-bold">
+                  {{ t.trip_from | uppercase }}
 
-                <small *ngIf="t.trip_from.toLowerCase() === 'mosque'">
-                  (Friday Only)
-                </small>
-              </ion-card-subtitle>
-            </ion-card-header>
-            <ion-progress-bar value="1" [style.--progress-background]="getLocationColor(t.trip_from)">
-            </ion-progress-bar>
+                  <small *ngIf="t.trip_from.toLowerCase() === 'mosque'">
+                    (Friday Only)
+                  </small>
+                </ion-card-subtitle>
+              </ion-card-header>
+              <ion-progress-bar value="1" [style.--progress-background]="getLocationColor(t.trip_from)">
+              </ion-progress-bar>
 
-            <ion-card-content class="ion-no-padding ion-padding-bottom ion-padding-start ion-padding-end">
-              <ion-grid *ngFor="let toTrips of t.trips">
-                <ion-col>
-                  <ion-row>
-                    <ion-item class="ion-no-padding">
-                      <ion-label>
-                        <p>trip to</p>
-                        <h3 class="glob-text-bold primary-color">
-                          {{ toTrips.trip_to | uppercase }}
-                          <small *ngIf="t.trip_from.toLowerCase() === 'mosque'">
-                            (Friday Only)
-                          </small>
-                        </h3>
-                      </ion-label>
-                    </ion-item>
-                  </ion-row>
-                  <ion-row>
-                    <ng-container *ngIf="detailedView; else simpleView">
-                      <ng-container *ngFor="let tripData of toTrips.trips">
-                        <ion-col [class.passed]="tripData.time | checkPassedTime"
-                          [class.primary-color]="!(tripData.time | checkPassedTime)"
-                          class="ion-text-center glob-text-bold trips" size-xl="3" size-lg="4" size-md="3" size-xs="6">
-                          {{ tripData.time.slice(0, -8) }}
-                        </ion-col>
+              <ion-card-content class="ion-no-padding ion-padding-bottom ion-padding-start ion-padding-end">
+                <ion-grid *ngFor="let toTrips of t.trips">
+                  <ion-col>
+                    <ion-row>
+                      <ion-item class="ion-no-padding">
+                        <ion-label>
+                          <p>trip to</p>
+                          <h3 class="glob-text-bold primary-color">
+                            {{ toTrips.trip_to | uppercase }}
+                            <small *ngIf="t.trip_from.toLowerCase() === 'mosque'">
+                              (Friday Only)
+                            </small>
+                          </h3>
+                        </ion-label>
+                      </ion-item>
+                    </ion-row>
+                    <ion-row>
+                      <ng-container *ngIf="detailedView; else simpleView">
+                        <ng-container *ngFor="let tripData of toTrips.trips">
+                          <ion-col [class.passed]="tripData.time | checkPassedTime"
+                            [class.primary-color]="!(tripData.time | checkPassedTime)"
+                            class="ion-text-center glob-text-bold trips" size-xl="3" size-lg="4" size-md="3"
+                            size-xs="6">
+                            {{ tripData.time.slice(0, -8) }}
+                          </ion-col>
+                        </ng-container>
                       </ng-container>
-                    </ng-container>
 
-                    <ng-template #simpleView>
-                      <ion-col *ngIf="toTrips.trips.slice(0, 4); let tripData">
-                        <ion-row class="ion-align-items-center">
-                          <ion-col class="trip-section ion-text-center" size-md="3" size-sm="6">
-                            <h3 class="simple-view-trip-first">{{ tripData[0].time.slice(0, -8) }}</h3>
-                            <h3 class="simple-view-trip-duration-first">
-                              {{ tripData[0].time.slice(0, -8) | minutesLeft }}
-                            </h3>
-                          </ion-col>
+                      <ng-template #simpleView>
+                        <ion-col *ngIf="toTrips.trips.slice(0, 4); let tripData">
+                          <ion-row class="ion-align-items-center">
+                            <ion-col class="trip-section ion-text-center" size-md="3" size-sm="6">
+                              <h3 class="simple-view-trip-first">{{ tripData[0].time.slice(0, -8) }}</h3>
+                              <h3 class="simple-view-trip-duration-first">
+                                {{ tripData[0].time.slice(0, -8) | minutesLeft }}
+                              </h3>
+                            </ion-col>
 
-                          <ion-col *ngIf="tripData[1]" class="trip-section ion-text-center" size-md="3" size-xs="6">
-                            <h3 class="simple-view-trip" *ngIf="tripData[1]">
-                              {{ tripData[1].time.slice(0, -8) }}
-                            </h3>
-                            <h3 class="simple-view-trip-duration">
-                              {{ tripData[1].time.slice(0, -8) | minutesLeft }}
-                            </h3>
-                          </ion-col>
+                            <ion-col *ngIf="tripData[1]" class="trip-section ion-text-center" size-md="3" size-xs="6">
+                              <h3 class="simple-view-trip" *ngIf="tripData[1]">
+                                {{ tripData[1].time.slice(0, -8) }}
+                              </h3>
+                              <h3 class="simple-view-trip-duration">
+                                {{ tripData[1].time.slice(0, -8) | minutesLeft }}
+                              </h3>
+                            </ion-col>
 
-                          <ion-col *ngIf="tripData[2]" class="trip-section ion-text-center" size-md="3" size-xs="6">
-                            <h3 class="simple-view-trip">
-                              {{ tripData[2].time.slice(0, -8) }}
-                            </h3>
-                            <h3 class="simple-view-trip-duration">
-                              {{ tripData[2].time.slice(0, -8) | minutesLeft }}
-                            </h3>
-                          </ion-col>
+                            <ion-col *ngIf="tripData[2]" class="trip-section ion-text-center" size-md="3" size-xs="6">
+                              <h3 class="simple-view-trip">
+                                {{ tripData[2].time.slice(0, -8) }}
+                              </h3>
+                              <h3 class="simple-view-trip-duration">
+                                {{ tripData[2].time.slice(0, -8) | minutesLeft }}
+                              </h3>
+                            </ion-col>
 
-                          <ion-col *ngIf="tripData[3]" class="trip-section ion-text-center" size-md="3" size-xs="6">
-                            <h3 class="simple-view-trip">
-                              {{ tripData[3].time.slice(0, -8) }}
-                            </h3>
-                            <h3 class="simple-view-trip-duration">
-                              {{ tripData[3].time.slice(0, -8) | minutesLeft }}
-                            </h3>
-                          </ion-col>
-                        </ion-row>
-                      </ion-col>
-                    </ng-template>
-                  </ion-row>
-                </ion-col>
-              </ion-grid>
-            </ion-card-content>
-          </ion-card>
+                            <ion-col *ngIf="tripData[3]" class="trip-section ion-text-center" size-md="3" size-xs="6">
+                              <h3 class="simple-view-trip">
+                                {{ tripData[3].time.slice(0, -8) }}
+                              </h3>
+                              <h3 class="simple-view-trip-duration">
+                                {{ tripData[3].time.slice(0, -8) | minutesLeft }}
+                              </h3>
+                            </ion-col>
+                          </ion-row>
+                        </ion-col>
+                      </ng-template>
+                    </ion-row>
+                  </ion-col>
+                </ion-grid>
+              </ion-card-content>
+            </ion-card>
+          </ng-container>
+
+          <ng-template #noTrips>
+            <ion-card class="ion-no-margin">
+              <div class="ion-margin-top">
+                <message-with-svg messageTitle="No {{ !detailedView ? 'Upcoming': '' }} Trips Available!"
+                  messageContent="{{ !detailedView ? 'Bus trips has completed for today. Toggle Show All to view all trips.': 'No trips schedule available for today!' }}"
+                  imageUrl="assets/img/empty2.svg" wrapperSize="5" wrapperOffset="4">
+                </message-with-svg>
+              </div>
+            </ion-card>
+          </ng-template>
         </ng-container>
 
         <ng-template #loadTrips>
