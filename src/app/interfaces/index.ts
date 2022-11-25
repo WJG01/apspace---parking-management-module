@@ -8,7 +8,6 @@ export {
 } from './aplc';
 export { Attendance, AttendanceDetails, AttendanceLegend, MappedAttendance } from './attendance';
 export { AttendixClass, AttendanceSummary, AttendanceIntegrityClasses, Classcode, Classcodev1, FlatClasscode } from './attendix';
-export { BusTrip, BusTrips, APULocation, APULocations } from './bus-shuttle-services';
 export { ClassificationLegend } from './classfication-legend';
 export { CourseDetails } from './course-details';
 export { Course } from './course';
