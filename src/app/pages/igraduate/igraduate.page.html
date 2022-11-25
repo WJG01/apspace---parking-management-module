@@ -152,10 +152,9 @@
           <ion-col>
             <ion-item lines="none">
               <ion-input class="form-input" type="text" placeholder="Student ID" (keyup.enter)="addException()"
-                [(ngModel)]="studentIDException">
-                <ion-button class="success-border success-text" style="position: absolute;right: 5px;" expand="block"
-                  fill="outline" slot="end" (click)="addException()">add</ion-button>
-              </ion-input>
+                [(ngModel)]="studentIDException"></ion-input>
+              <ion-button class="success-border success-text ion-padding-horizontal" expand="block"
+                fill="outline" slot="end" (click)="addException()">add</ion-button>
             </ion-item>
           </ion-col>
           <ion-col class="ion-no-padding" size="12" size-md="12">
