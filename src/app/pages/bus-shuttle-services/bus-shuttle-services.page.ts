@@ -15,9 +15,10 @@ import { DateWithTimezonePipe } from '../../shared/date-with-timezone/date-with-
 export class BusShuttleServicesPage implements OnInit {
 
   trips$: Observable<Trips[]>;
+  setDetails: TransixScheduleSet;
   locations$: Observable<TransixLocation[]>;
+  locations: TransixLocation[];
   todaysDate = new Date();
-  latestUpdate: string;
   detailedView = false;
   filterObject = {
     toLocation: '',
@@ -40,6 +41,7 @@ export class BusShuttleServicesPage implements OnInit {
     if (this.settings.get('tripFrom')) {
       this.filterObject.fromLocation = this.settings.get('tripFrom');
     }
+
     if (this.settings.get('tripTo')) {
       this.filterObject.toLocation = this.settings.get('tripTo');
     }
@@ -59,19 +61,50 @@ export class BusShuttleServicesPage implements OnInit {
     }
 
     this.locations$ = this.ws.get<TransixLocation[]>('/v2/transix/locations', { url: this.devUrl, caching }).pipe(
+      tap(locations => this.locations = locations),
       finalize(() => refresher && refresher.target.complete())
     );
 
     this.trips$ = this.ws.get<TransixScheduleSet>('/v2/transix/schedule/active', { url: this.devUrl, caching })
       .pipe(
+        // Get Information about the Set
+        tap(set => this.setDetails = set),
+        tap(set => console.log('Set: ', set)),
         map(set => set.trips),
         map(trips => {
-          // Map Trip Time into proper Date format
+          // Map Trip Time into proper Date format. TransiX by default uses 12 hours format
           trips
-            .map(trip => trip.time = this.dateWithTimezonePipe.transform(parse(trip.time, 'HH:mm', new Date()), 'bus'));
+            .map(trip => trip.time = this.dateWithTimezonePipe.transform(parse(trip.time, 'hh:mm aa', new Date()), 'bus'));
           // Sort based on Time
           return trips
             .sort((a, b) => a.time.localeCompare(b.time));
+        }),
+        map(trips => {
+          let filteredTrips = trips.filter(trip => trip.day === 'mon-fri' || trip.day === 'fri');
+
+          if (this.filterObject.tripDay !== 'mon-fri') {
+            filteredTrips = filteredTrips.filter(trip => trip.day === this.filterObject.tripDay);
+          }
+
+          if (!this.detailedView) {
+            filteredTrips = filteredTrips.filter(trip => {
+              const timeFilter = this.settings.get('timeFormat') === '24' ?
+                parse(trip.time.replace(' (GMT+8)', ''), 'HH:mm', new Date()) >= this.todaysDate :
+                parse(trip.time.replace(' (GMT+8)', ''), 'hh:mm aa', new Date()) >= this.todaysDate;
+
+              return timeFilter;
+            });
+          }
+
+          if (this.filterObject.fromLocation !== '') {
+            filteredTrips = filteredTrips.filter(trip => trip.trip_from.name.toLowerCase() === this.filterObject.fromLocation.toLowerCase());
+          }
+
+          if (this.filterObject.toLocation !== '') {
+            filteredTrips = filteredTrips.filter(trip => trip.trip_to.name.toLowerCase() === this.filterObject.toLocation.toLowerCase());
+          }
+
+          return filteredTrips;
         }),
         map(trips => {
           // Format to From Location -> { APU: TransixScheduleTrip[], LRT: TransixScheduleTrip[]... }
@@ -109,7 +142,11 @@ export class BusShuttleServicesPage implements OnInit {
 
           return formattedResponse;
         }),
-        tap(r => console.log(r))
+        tap(_ => {
+          this.settings.set('tripFrom', this.filterObject.fromLocation);
+          this.settings.set('tripTo', this.filterObject.toLocation);
+        }),
+        finalize(() => refresher && refresher.target.complete())
       );
   }
 
@@ -143,5 +180,13 @@ export class BusShuttleServicesPage implements OnInit {
     } else {
       return 'sat';
     }
+  }
+
+  getLocationColor(location: string) {
+    if (this.locations && this.locations.length < 1) return; // Ignore if Location data is not available
+
+    const locationColor = this.locations.reduce((acc, location) => ({ ...acc, [location.name]: location.color }));
+
+    return locationColor[location] || 'var(--ion-color-primary)'; // Fallback if location name does not exists
   }
 }
