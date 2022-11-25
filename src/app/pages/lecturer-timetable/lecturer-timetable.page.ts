@@ -8,7 +8,7 @@ import { catchError, finalize, switchMap, tap} from 'rxjs/operators';
 
 import { NotifierService } from 'src/app/shared/notifier/notifier.service';
 import { LecturerTimetable, StaffProfile } from '../../interfaces';
-import { ComponentService, SettingsService, WsApiService } from '../../services';
+import { ComponentService, ConfigurationsService, SettingsService, WsApiService } from '../../services';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,6 +31,7 @@ export class LecturerTimetablePage implements OnInit {
   availableDays: string[]; // wday[d.getDay()] for availableDate
   timeFormatChangeFlag: boolean;
   notification: Subscription;
+  hideHeader: boolean;
 
 
   viewWeek: boolean; // weekly or daily display
@@ -47,12 +48,14 @@ export class LecturerTimetablePage implements OnInit {
     private component: ComponentService,
     private router: Router,
     private settings: SettingsService,
+    private config: ConfigurationsService,
     private ws: WsApiService,
     private datePipe: DatePipe,
     private notifierService: NotifierService,
   ) { }
 
   ngOnInit() {
+    this.hideHeader = this.config.comingFromTabs;
     // select current day by default
     this.selectedDate = new Date();
     this.selectedDate.setHours(0, 0, 0, 0);

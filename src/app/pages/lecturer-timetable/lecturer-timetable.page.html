@@ -1,5 +1,5 @@
-<ion-header [hidden]='comingFromTabs'>
-  <ion-toolbar mode="md">
+<ion-header *ngIf="!hideHeader">
+  <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
