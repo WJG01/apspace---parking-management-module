@@ -19,9 +19,8 @@ import {
 import {
   CasTicketService, NewsService,
   NotificationService, SettingsService, StudentTimetableService,
-  WsApiService, ComponentService, AppLauncherService, FcmService
+  WsApiService, ComponentService, AppLauncherService
 } from 'src/app/services';
-import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-with-timezone.pipe';
 import { NewsDetailsModalPage } from '../news/news-details-modal/news-details-modal.page';
 // import { NotifierService } from 'src/app/shared/notifier/notifier.service'; v4: this need to migrate in the future
 // import { NotificationModalPage } from '../notifications/notification-modal'; v4: this need to migrate in the future
@@ -32,8 +31,7 @@ SwiperCore.use([Autoplay, Lazy, Navigation]);
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.page.html',
-  styleUrls: ['./dashboard.page.scss'],
-  providers: [DateWithTimezonePipe]
+  styleUrls: ['./dashboard.page.scss']
 })
 export class DashboardPage implements OnInit {
   // Roles Variables
@@ -162,8 +160,7 @@ export class DashboardPage implements OnInit {
     private settings: SettingsService,
     private storage: Storage,
     // private notifierService: NotifierService,
-    private dateWithTimezonePipe: DateWithTimezonePipe,
-    private fcm: FcmService
+    // private fcm: FcmService
   ) {
     // getting the main accent color to color the chart.js (Temp until removing chart.js)
     // TODO handle value change
