@@ -31,6 +31,7 @@ export class BusShuttleServicesPage implements OnInit {
   };
   devUrl = 'https://2o7wc015dc.execute-api.ap-southeast-1.amazonaws.com/dev';
   timeFormat: string;
+  locationLoaded: boolean;
 
   constructor(
     private ws: WsApiService,
@@ -65,10 +66,14 @@ export class BusShuttleServicesPage implements OnInit {
       };
     }
 
-    this.locations$ = this.ws.get<TransixLocation[]>('/v2/transix/locations', { url: this.devUrl, caching }).pipe(
-      tap(locations => this.locations = locations),
-      finalize(() => refresher && refresher.target.complete())
-    );
+    // Added this check so Filter card will not be loading when users are filtering trips
+    if (!this.locationLoaded) {
+      this.locations$ = this.ws.get<TransixLocation[]>('/v2/transix/locations', { url: this.devUrl, caching }).pipe(
+        tap(locations => this.locations = locations),
+        tap(_ => this.locationLoaded = true),
+        finalize(() => refresher && refresher.target.complete())
+      );
+    }
 
     this.trips$ = this.ws.get<TransixScheduleSet>('/v2/transix/schedule/active', { url: this.devUrl, caching })
       .pipe(
