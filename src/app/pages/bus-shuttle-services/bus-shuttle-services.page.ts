@@ -30,6 +30,7 @@ export class BusShuttleServicesPage implements OnInit {
     timeSkeleton: new Array(4)
   };
   devUrl = 'https://2o7wc015dc.execute-api.ap-southeast-1.amazonaws.com/dev';
+  timeFormat: string;
 
   constructor(
     private ws: WsApiService,
@@ -44,6 +45,10 @@ export class BusShuttleServicesPage implements OnInit {
 
     if (this.settings.get('tripTo')) {
       this.filterObject.toLocation = this.settings.get('tripTo');
+    }
+
+    if (this.settings.get('timeFormat')) {
+      this.timeFormat = this.settings.get('timeFormat');
     }
 
     this.doRefresh();
@@ -69,7 +74,6 @@ export class BusShuttleServicesPage implements OnInit {
       .pipe(
         // Get Information about the Set
         tap(set => this.setDetails = set),
-        tap(set => console.log('Set: ', set)),
         map(set => set.trips),
         map(trips => {
           // Map Trip Time into proper Date format. TransiX by default uses 12 hours format
@@ -77,7 +81,13 @@ export class BusShuttleServicesPage implements OnInit {
             .map(trip => trip.time = this.dateWithTimezonePipe.transform(parse(trip.time, 'hh:mm aa', new Date()), 'bus'));
           // Sort based on Time
           return trips
-            .sort((a, b) => a.time.localeCompare(b.time));
+            .sort((a, b) => {
+              const timeFormat = this.timeFormat === '12' ? 'hh:mm aa' : 'HH:mm';
+              const firstTime = parse(a.time.replace(' (GMT+8)', ''), timeFormat, new Date());
+              const secondTime = parse(b.time.replace(' (GMT+8)', ''), timeFormat, new Date());
+
+              return firstTime.getTime() - secondTime.getTime();
+            });
         }),
         map(trips => {
           let filteredTrips = trips.filter(trip => trip.day === 'mon-fri' || trip.day === 'fri');
@@ -88,11 +98,9 @@ export class BusShuttleServicesPage implements OnInit {
 
           if (!this.detailedView) {
             filteredTrips = filteredTrips.filter(trip => {
-              const timeFilter = this.settings.get('timeFormat') === '24' ?
-                parse(trip.time.replace(' (GMT+8)', ''), 'HH:mm', new Date()) >= this.todaysDate :
-                parse(trip.time.replace(' (GMT+8)', ''), 'hh:mm aa', new Date()) >= this.todaysDate;
+              const timeFormat = this.timeFormat === '12' ? 'hh:mm aa' : 'HH:mm';
 
-              return timeFilter;
+              return parse(trip.time.replace(' (GMT+8)', ''), timeFormat, new Date()) >= this.todaysDate;
             });
           }
 
