@@ -48,6 +48,12 @@ const routes: Routes = [
         loadChildren: () => import('../apcard/apcard.module').then(m => m.ApcardPageModule)
       },
       {
+        canActivate: [AuthGuard],
+        data: { role: Role.Lecturer },
+        path: 'lecturer-timetable',
+        loadChildren: () => import('../lecturer-timetable/lecturer-timetable.module').then(m => m.LecturerTimetablePageModule)
+      },
+      {
         path: 'more',
         canActivate: [AuthGuard],
         data: { role: Role.Student | Role.Lecturer | Role.Admin },
