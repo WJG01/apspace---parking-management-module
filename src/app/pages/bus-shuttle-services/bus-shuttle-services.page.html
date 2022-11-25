@@ -119,7 +119,8 @@
             </ion-item>
 
 
-            <ion-card *ngFor="let t of trips">
+            <ion-card class="ion-no-margin" *ngFor="let t of trips; let isLast = last"
+              [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
               <ion-card-header color="light">
                 <ion-card-subtitle class="glob-text-bold">
                   {{ t.trip_from | uppercase }}
