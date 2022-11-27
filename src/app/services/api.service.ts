@@ -4,7 +4,7 @@ import { AsyncSubject, from, map, Observable, share, tap } from 'rxjs';
 
 import { Storage } from '@ionic/storage-angular';
 
-import { APULocation, APULocations, IntakeListing, LecturerTimetable, MappedLecturerTimetable } from '../interfaces';
+import { IntakeListing, LecturerTimetable, MappedLecturerTimetable, TransixLocation } from '../interfaces';
 import { ConfigurationsService } from './configurations.service';
 import { WsApiService } from './ws-api.service';
 
@@ -14,6 +14,7 @@ import { WsApiService } from './ws-api.service';
 export class ApiService {
 
   intakeAPI = 'https://api.apiit.edu.my/student/intake_listing';
+  transixDevUrl = 'https://2o7wc015dc.execute-api.ap-southeast-1.amazonaws.com/dev';
 
   constructor(
     private http: HttpClient,
@@ -68,11 +69,9 @@ export class ApiService {
       ));
   }
 
-  getLocations(refresher: boolean): Observable<APULocation[]> {
+  getLocations(refresher: boolean): Observable<TransixLocation[]> {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
 
-    return this.ws.get<APULocations>(`/transix/locations`, { auth: false, caching }).pipe(
-      map((res: APULocations) => res.locations)
-    );
+    return this.ws.get<TransixLocation[]>('/v2/transix/locations', { caching, url: this.transixDevUrl });
   }
 }

@@ -8,7 +8,6 @@ export {
 } from './aplc';
 export { Attendance, AttendanceDetails, AttendanceLegend, MappedAttendance } from './attendance';
 export { AttendixClass, AttendanceSummary, AttendanceIntegrityClasses, Classcode, Classcodev1, FlatClasscode } from './attendix';
-export { BusTrip, BusTrips, APULocation, APULocations } from './bus-shuttle-services';
 export { ClassificationLegend } from './classfication-legend';
 export { CourseDetails } from './course-details';
 export { Course } from './course';
@@ -26,11 +25,6 @@ export {
   FeesSummary,
   FeesTotalSummary
 } from './fees';
-export {
-  HolidayColor,
-  HolidayV2,
-  HolidaySets
-} from './holiday';
 export {
   AddFreeSlotBody,
   AddFreeSlotReview,
@@ -69,11 +63,10 @@ export {
   MentorshipSubcourse, StudentRemark
 } from './mentorship';
 export { CgpaPerIntake } from './cgpa-per-intake';
-export { DashboardCardComponentConfigurations } from './dashboard-card-component-configurations';
 export { EventComponentConfigurations } from './event-component-configurations';
-export { Holidays, Holiday } from './holiday';
 export { MoodleEvent } from './moodle-event';
 export { News, ShortNews, ImageSource } from './news';
+export { TransixScheduleSet, TransixScheduleTrip, TransixLocation, TransixDashboardTiming, TransixHolidaySet, TransixHolidayColor, TransixHoliday, Trips } from './transix';
 export { VersionValidator } from './version-validator';
 export { Quote } from './quote';
 export { LeaveHistory, LeaveBalance, PendingApproval, OnLeaveOnMyCluster } from './hr';

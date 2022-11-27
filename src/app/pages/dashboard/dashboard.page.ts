@@ -1,156 +1,60 @@
-import { Component, DoCheck, OnInit, ViewChild } from '@angular/core';
-// import { FirebaseX } from '@ionic-native/firebase-x/ngx'; v4: this need to migrate in the future
-import { AlertButton, IonSlides, ModalController, NavController, Platform } from '@ionic/angular';
-import { Storage } from '@ionic/storage-angular';
-import { format, parse, parseISO } from 'date-fns';
+import { Component, OnInit } from '@angular/core';
+import { AlertButton, ModalController, NavController, Platform } from '@ionic/angular';
+import { Observable, Subscription, combineLatest, forkJoin, of, zip, map, finalize, catchError, concatMap, mergeMap, shareReplay, switchMap, tap, toArray } from 'rxjs';
+
+import { differenceInDays, format, parse } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
-// import { JoyrideService } from 'ngx-joyride';
-// import { JoyrideOptions } from 'ngx-joyride/lib/models/joyride-options.class';
-import { Observable, Subscription, combineLatest, forkJoin, of, zip } from 'rxjs';
-import { catchError, concatMap, finalize, map, mergeMap, shareReplay, switchMap, tap, toArray } from 'rxjs/operators';
+import { ChartData, ChartOptions } from 'chart.js';
+import SwiperCore, { Autoplay, Lazy, Navigation } from 'swiper';
+import { Storage } from '@ionic/storage-angular';
 
 import { accentColors } from 'src/app/constants';
 import {
-  APULocation, APULocations,
-  Apcard, BusTrips, CgpaPerIntake, ConsultationHour, ConsultationSlot,
-  Course, CourseDetails, DashboardCardComponentConfigurations,
-  EventComponentConfigurations, ExamSchedule, FeesTotalSummary, Holiday, Holidays, LecturerTimetable,
+  Apcard, CgpaPerIntake, ConsultationHour, ConsultationSlot,
+  Course, CourseDetails,
+  EventComponentConfigurations, ExamSchedule, FeesTotalSummary, LecturerTimetable,
   MoodleEvent, OrientationStudentDetails, Quote, Role, ShortNews,
-  StaffDirectory, StaffProfile, StudentPhoto, StudentProfile, StudentTimetable, UserVaccineInfo
+  StaffDirectory, StaffProfile, StudentPhoto, StudentProfile, StudentTimetable, UserVaccineInfo, TransixScheduleSet, TransixDashboardTiming, TransixHolidaySet, TransixHoliday
 } from 'src/app/interfaces';
 import {
   CasTicketService, NewsService,
   NotificationService, SettingsService, StudentTimetableService,
-  WsApiService, ComponentService, AppLauncherService, FcmService
+  WsApiService, ComponentService, AppLauncherService
 } from 'src/app/services';
-import { DateWithTimezonePipe } from 'src/app/shared/date-with-timezone/date-with-timezone.pipe';
+import { NewsDetailsModalPage } from '../news/news-details-modal/news-details-modal.page';
 // import { NotifierService } from 'src/app/shared/notifier/notifier.service'; v4: this need to migrate in the future
 // import { NotificationModalPage } from '../notifications/notification-modal'; v4: this need to migrate in the future
-import { ChartData, ChartOptions } from 'chart.js';
-import SwiperCore, { Autoplay, Lazy, Navigation } from 'swiper';
 
 //install swiper modules
 SwiperCore.use([Autoplay, Lazy, Navigation]);
-import { NewsDetailsModalPage } from '../news/news-details-modal/news-details-modal.page';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.page.html',
-  styleUrls: ['./dashboard.page.scss'],
-  providers: [DateWithTimezonePipe]
+  styleUrls: ['./dashboard.page.scss']
 })
-export class DashboardPage implements OnInit, DoCheck {
-  // USER SETTINGS
-
-  @ViewChild('imageSliderSlides') sliderSlides: IonSlides;
-  imageSliderOpts = {
-    initialSlide: 0,
-    slidesPerView: 1,
-    spaceBetween: 10,
-    autoplay: true,
-    centeredContent: true,
-    speed: 400,
-    loop: true,
-    autoplayDisableOnInteraction: true,
-    pagination: {
-      el: '.swiper-pagination',
-      clickable: true,
-      renderBullet: (_, className) => {
-        return '<span style="width: 10px; height: 10px; background-color: #E50565 !important;" class="' + className + '"></span>';
-      }
-    }
-  };
-
-
-
-  role: Role;
+export class DashboardPage implements OnInit {
+  // Roles Variables
   isStudent: boolean;
   isLecturer: boolean;
   isAdmin: boolean;
-  isCapacitor: boolean;
-  skeletons = new Array(5);
-
-  timeFormatChangeFlag: boolean;
-  notification: Subscription;
-
-
-  scheduleSegment: 'today' | 'upcoming' = 'today';
-
-
-  // shownDashboardSections get the data from local storage and hide/show elements based on that
-  activeDashboardSections: string[] = [];
-
-  hideProfilePicture;
-  userProfileName$: Observable<string>;
-  changedName: boolean;
-
-  activeAccentColor = '';
-  lowAttendanceChart: any;
-  editableList = null;
-  busShuttleServiceSettings: any;
-  secondLocation: string;
-  firstLocation: string;
-
-
-  // QUOTE
+  // Observable Variable
   quote$: Observable<Quote>;
-
-  // HOLIDAYS
-  holidays$: Observable<Holiday[]>;
-
-  // PROFILE
+  holidays$: Observable<TransixHolidaySet>;
   staffProfile$: Observable<StaffProfile>;
-  photo$: Observable<StudentPhoto>;
-  greetingMessage = '';
+  photo$: Observable<string>;
   orientationStudentDetails$: Observable<OrientationStudentDetails>;
-  councelorProfile$: Observable<StaffDirectory>;
-  // attendance default intake can be different from timetable default intake
-  // attendanceDefaultIntake = '';
-  timetableDefaultIntake = '';
-  userProfile: any = {};
-  block = false;
-  numberOfUnreadMsgs: number;
-  showAnnouncement = false;
-
-  // TODAY'S SCHEDULE
-  todaysSchedule$: Observable<EventComponentConfigurations[] | any>;
-  todaysScheduleCardConfigurations: DashboardCardComponentConfigurations = {
-    withOptionsButton: false,
-    cardTitle: 'Today\'s Schedule',
-  };
-  intakeGroup = '';
-
-  // UPCOMING EVENTS
+  todaysSchedule$: Observable<EventComponentConfigurations[]>;
+  userProfileName$: Observable<string>;
   upcomingEvent$: Observable<EventComponentConfigurations[]>;
-  upcomingEventsCardConfigurations: DashboardCardComponentConfigurations = {
-    withOptionsButton: false,
-    cardTitle: 'Upcoming Events',
-    cardSubtitle: 'Today: ' + format(new Date(), 'dd MMMM yyyy')
-  };
-
-  // ATTENDANCE
-  // modulesWithLowAttendance$: Observable<Attendance[]>;
-  // overallAttendancePercent$: Observable<{ value: number }>;
-  subject: string;
-  lowAttendanceCardConfigurations: DashboardCardComponentConfigurations = {
-    withOptionsButton: false,
-    cardTitle: 'Attendance Summary',
-    contentPadding: true
-  };
-
-  // APCARD
-  balance$: Observable<{ value: number }>;
   apcardTransaction$: Observable<Apcard[]>;
-  monthlyData: any;
-  currentBalance: number;
-  apcardTransactionsCardConfigurations: DashboardCardComponentConfigurations = {
-    withOptionsButton: false,
-    cardTitle: 'APCard Transactions',
-    contentPadding: true
-  };
-
-  //ApcardChart Configs
-
+  financial$: Observable<FeesTotalSummary>;
+  userVaccinationInfo$: Observable<UserVaccineInfo>;
+  lecturerContacts$: Observable<any>;
+  upcomingTrips$: Observable<TransixDashboardTiming[]>;
+  cgpaPerIntake$: Observable<CgpaPerIntake>;
+  news$: Observable<ShortNews[]>;
+  // Chart Variables
   apcardChart: {
     options: ChartOptions,
     data: ChartData,
@@ -200,13 +104,6 @@ export class DashboardPage implements OnInit, DoCheck {
         ],
       }
     };
-
-  // FINANCIALS
-  totalOverdue$: Observable<{ value: number }>;
-  hasOutstanding: boolean;
-  financial$: Observable<FeesTotalSummary>;
-
-  // Financials chart config
   financialsChart: {
     options: ChartOptions,
     data: ChartData,
@@ -221,74 +118,33 @@ export class DashboardPage implements OnInit, DoCheck {
       },
       data: null
     };
-  financialsCardConfigurations: DashboardCardComponentConfigurations = {
-    withOptionsButton: false,
-    cardTitle: 'Financials',
-    contentPadding: true
-  };
-
-  // UPCOMING TRIPS
-  upcomingTrips$: Observable<any>;
-  showSetLocationsSettings = false;
-  locations: APULocation[];
-  busCardConfigurations: DashboardCardComponentConfigurations = {
-    cardTitle: 'Upcoming Trips',
-    contentPadding: false,
-    withOptionsButton: false
-  };
-
-  // CONTACTS
-  lecturerContacts$: Observable<any>;
-
-  // NEWS
-  news$: Observable<ShortNews[]>;
-  newsCardConfigurations: DashboardCardComponentConfigurations = {
-    cardTitle: 'Latest News',
-    contentPadding: false,
-    withOptionsButton: false
-  };
-  newsIndexToShow = 0; // open the first news section by default
-  noticeBoardCardConfigurations: DashboardCardComponentConfigurations = {
-    cardTitle: 'Notice Board',
-    contentPadding: false,
-    withOptionsButton: false
-  };
-  noticeBoardItems$: Observable<any[]>;
-
-  // CGPA
   cgpaChart: {
     options: ChartOptions,
     data: ChartData,
   };
-  cgpaPerIntake$: Observable<CgpaPerIntake>;
-  barChartData: any;
-  overallCgpa = 0;
-  cgpaCardConfigurations: DashboardCardComponentConfigurations = {
-    withOptionsButton: false,
-    cardTitle: 'CGPA Per Intake',
-    contentPadding: true
-  };
-
-  // User Vaccination Information
-  userVaccinationInfo$: Observable<UserVaccineInfo>;
-  userVaccinationStatus: any = {};
-
-  // timezone
-  enableMalaysiaTimezone;
-
-  // APTour Guide
-  tourGuideStep = [
-    'Apart from seeing your beautiful face 💃, you can also tap your Profile Picture to view your Profile.',
-    'You can refer to your TP Number & Intake Code from this section 👀'
-  ];
-  tourGuideShown: boolean;
-
-  getAccentColor: any;
-
-  // For upcoming trips loading skeleton
-  items = [0, 1];
-
-  // pushInit: boolean;
+  // TransiX Variables
+  secondLocation: string;
+  firstLocation: string;
+  showSetLocationsSettings = false;
+  transixSkeleton = new Array(2);
+  // Other Variables
+  isCapacitor: boolean;
+  skeletons = new Array(5);
+  currentBalance: number; // Show APCard current Balance
+  scheduleSegment: 'today' | 'upcoming' = 'today'; // "My Schedule" Segment
+  activeDashboardSections: string[] = []; // Get User Dashboard Sections
+  hideProfilePicture: boolean; // User Selected Setting
+  enableMalaysiaTimezone: boolean;
+  pushInit: boolean; // Initialise Push Notification
+  timeFormatChangeFlag: boolean;
+  notification: Subscription;
+  activeAccentColor = '';
+  timetableDefaultIntake: string;
+  userProfile: any = {};
+  numberOfUnreadMsgs: number;
+  showAnnouncement = false; // E-Orientation Announcement Image
+  intakeGroup: string;
+  transixDevUrl = 'https://2o7wc015dc.execute-api.ap-southeast-1.amazonaws.com/dev';
 
   constructor(
     private component: ComponentService,
@@ -301,26 +157,22 @@ export class DashboardPage implements OnInit, DoCheck {
     private cas: CasTicketService,
     private appLauncherService: AppLauncherService,
     private platform: Platform,
-    // private firebaseX: FirebaseX, //v4: this need to migrate in the future
     private settings: SettingsService,
     private storage: Storage,
     // private notifierService: NotifierService,
-    private dateWithTimezonePipe: DateWithTimezonePipe,
     // private fcm: FcmService
-    // private joyrideService: JoyrideService
   ) {
     // getting the main accent color to color the chart.js (Temp until removing chart.js)
     // TODO handle value change
     // this.initPushNotification();
     // Check if the accent color in user's storage exists in new accent-color.ts.
     // If it doesn't then rollback to standard blue
-    this.getAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor'));
-    if (typeof this.getAccentColor === 'undefined') {
-      this.getAccentColor = accentColors.find(ac => ac.name === 'blue').name;
+    const getAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor'));
+
+    if (typeof getAccentColor === 'undefined') {
       this.activeAccentColor = accentColors.find(ac => ac.name === 'blue').rgba;
-      this.settings.set('accentColor', this.getAccentColor);
-    }
-    else {
+      this.settings.set('accentColor', accentColors.find(ac => ac.name === 'blue').name);
+    } else {
       this.activeAccentColor = accentColors.find(ac => ac.name === this.settings.get('accentColor')).rgba;
     }
   }
@@ -334,7 +186,7 @@ export class DashboardPage implements OnInit, DoCheck {
     // });
 
     this.storage.get('role').then((role: Role) => {
-      this.role = role;
+      // this.role = role;
       // tslint:disable-next-line: no-bitwise
       this.isStudent = Boolean(role & Role.Student);
       // tslint:disable-next-line: no-bitwise
@@ -353,8 +205,6 @@ export class DashboardPage implements OnInit, DoCheck {
         this.enableMalaysiaTimezone = data
       );
 
-      this.holidays$ = this.getHolidays(false);
-
       combineLatest([
         this.settings.get$('busFirstLocation'),
         this.settings.get$('busSecondLocation'),
@@ -367,17 +217,6 @@ export class DashboardPage implements OnInit, DoCheck {
       //   this.runCodeOnReceivingNotification(); // notifications
       // }
 
-      // // Get Tour Guide status
-      // this.settings.get$('tourGuideSeen').
-      // subscribe(data => this.tourGuideShown = data);
-      // if (!this.tourGuideShown) {
-      //   this.welcomeTourGuide();
-      // }
-      //
-      // // Overwrite the tour guide message for staff
-      // if (!this.isStudent) {
-      //   this.tourGuideStep[1] = 'You can check your Job Title from this section 💼';
-      // }
       this.settings.initialSync();
       this.doRefresh();
     });
@@ -387,8 +226,8 @@ export class DashboardPage implements OnInit, DoCheck {
     this.userVaccinationInfo$ = this.ws.get<UserVaccineInfo>('/covid19/user');
   }
 
-  // For Upcoming Trips
-  ngDoCheck() {
+  doRefresh(refresher?) {
+    // Get TransiX Trips
     combineLatest([
       this.settings.get$('busFirstLocation'),
       this.settings.get$('busSecondLocation'),
@@ -398,12 +237,9 @@ export class DashboardPage implements OnInit, DoCheck {
         this.upcomingTrips$ = this.getUpcomingTrips(busFirstLocation, busSecondLocation);
       }
     });
-  }
 
-  doRefresh(refresher?) {
-    this.getLocations(refresher);
     // tslint:disable-next-line:no-bitwise
-    this.news$ = this.news.get(refresher, this.isStudent, this.isLecturer || Boolean(this.role & Role.Admin)).pipe(
+    this.news$ = this.news.get(refresher, this.isStudent, this.isLecturer || this.isAdmin).pipe(
       map(newsList => {
         return newsList.map(item => {
           if (item && item.featured_media_source.length > 0 && item.featured_media_source[0].source_url) {
@@ -417,18 +253,24 @@ export class DashboardPage implements OnInit, DoCheck {
         }).slice(0, 6);
       }),
     );
-
+    // Get Quotes
     this.quote$ = this.ws.get<Quote>('/apspacequote', { auth: false });
+    // Get Holiday TransiX
     this.holidays$ = this.getHolidays(true);
-    // tslint:disable-next-line: no-bitwise
-    this.noticeBoardItems$ = this.news.getSlideshow(refresher, this.isStudent, this.isLecturer || Boolean(this.role & Role.Admin));
+    // Get Upcoming Trips
     this.upcomingTrips$ = this.getUpcomingTrips(this.firstLocation, this.secondLocation);
-    this.photo$ = this.ws.get<StudentPhoto>('/student/photo');  // no-cache for student photo
+    // Get Student Photo
+    this.photo$ = this.ws.get<StudentPhoto>('/student/photo')
+      .pipe(map(image => image.base64_photo = `data:image/jpg;base64,${image?.base64_photo}`));  // no-cache for student photo
+
     if (!this.isStudent) {
       this.getUpcomingEvents();
     }
+
     this.apcardTransaction$ = this.getTransactions(true); // no-cache for APCard transactions
+
     this.getBadge();
+
     const forkJoinArray = [this.getProfile(refresher)];
     this.getUserVaccinationInfo();
     if (this.isStudent) {
@@ -447,20 +289,17 @@ export class DashboardPage implements OnInit, DoCheck {
     });
   }
 
-  // GET DETAILS FOR HOLIDAYS
-  // holidays$ REQUIRED FOR $upcomingTrips
-  getHolidays(refresher: boolean): Observable<Holiday[]> {
+  getHolidays(refresher: boolean): Observable<any> {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
-    return this.ws.get<Holidays>('/transix/holidays/filtered/staff', { auth: false, caching }).pipe(
-      map(res => res.holidays),
-      // AUTO REFRESH IF HOLIDAY NOT FOUND
-      switchMap(holidays => {
-        const date = new Date();
-        return refresher || holidays.find(h => date < new Date(h.holiday_start_date))
-          ? of(holidays)
-          : this.getHolidays(true);
+
+    return this.ws.get<TransixHolidaySet[]>('/v2/transix/holiday/active', { url: this.transixDevUrl, caching }).pipe(
+      // Auto Refresh if Holidays Not Found
+      switchMap(sets => {
+        const currentYear = new Date().getFullYear();
+
+        return refresher || sets.find(s => s.year === currentYear) ? of(sets.find(s => s.year === currentYear)) : this.getHolidays(true);
       }),
-      shareReplay(1),
+      shareReplay(1)
     );
   }
   // v4: this will need to mirgate in the future
@@ -514,18 +353,11 @@ export class DashboardPage implements OnInit, DoCheck {
   //   await modal.onDidDismiss();
   // }
 
-  // PROFILE AND GREETING MESSAGE FUNCTIONS
   getProfile(refresher: boolean) {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
     return this.isStudent ? this.ws.get<StudentProfile>('/student/profile', { caching }).pipe(
-      tap(studentProfile => {
-        if (studentProfile.BLOCK === true) {
-          this.block = false;
-          this.cgpaPerIntake$ = this.getCgpaPerIntakeData(true); // no-cache for results
-        } else {
-          this.block = true;
-        }
-      }),
+      // no-cache for results
+      tap(() => { this.cgpaPerIntake$ = this.getCgpaPerIntakeData(true); }),
       tap(p => {
         this.orientationStudentDetails$ = this.ws.get<OrientationStudentDetails>(`/orientation/student_details?id=${p.STUDENT_NUMBER}`,
         ).pipe(
@@ -536,25 +368,15 @@ export class DashboardPage implements OnInit, DoCheck {
             if (response.status === 200) {
               if (response.councelor_details.length > 0) {
                 this.showAnnouncement = true;
-                this.councelorProfile$ = this.ws.get<StaffDirectory[]>('/staff/listing', { caching: 'cache-only' }).pipe(
-                  map(res =>
-                    res.find(staff =>
-                      staff.ID.toLowerCase() === response.councelor_details[0].SAMACCOUNTNAME.toLowerCase()
-                    )
-                  )
-                );
               }
             }
           })
         );
       }),
-      // tap(studentProfile => this.attendanceDefaultIntake = studentProfile.INTAKE),
       tap(studentProfile => this.userProfile = studentProfile),
       tap(studentProfile => this.lecturerContacts$ = this.getLecturersContact(studentProfile.INTAKE, refresher)),
       tap(studentProfile => this.getTodaysSchedule(studentProfile.INTAKE, refresher)),
       tap(studentProfile => this.getUpcomingEvents(studentProfile.INTAKE, refresher)), // INTAKE NEEDED FOR EXAMS
-      // tap(studentProfile => this.getAttendance(studentProfile.INTAKE, true)), // no-cache for attendance
-      // tap(studentProfile => this.getUpcomingExam(studentProfile.INTAKE)),
     ) : this.staffProfile$ = this.ws.get<StaffProfile>('/staff/profile', { caching }).pipe(
       tap(staffProfile => this.userProfile = staffProfile[0]),
       tap(_ => {
@@ -721,13 +543,9 @@ export class DashboardPage implements OnInit, DoCheck {
       switchMap(timetables => timetables.length !== 0
         ? of(timetables)
         : this.holidays$.pipe(
-          // XXX: ONLY START DAY IS BEING MATCHED
-          switchMap(holidays => holidays.find(holiday => date === holiday.holiday_start_date)
-            ? of(timetables)
-            : this.ws.get<LecturerTimetable[]>(endpoint, { auth: false, caching: 'network-or-cache' }).pipe(
-              map(timetable => timetable.filter(tt => this.eventIsToday(new Date(tt.time), d))),
-            )
-          ),
+          switchMap(holidays => holidays.holidays.find(holiday => date === holiday.holiday_start_date.toString()) ? of(timetables) : this.ws.get<LecturerTimetable[]>(endpoint, { auth: false, caching: 'network-or-cache' }).pipe(
+            map(timetable => timetable.filter(tt => this.eventIsToday(new Date(tt.time), d))),
+          ))
         )
       ),
       // CONVERT TIMETABLE OBJECT TO THE OBJECT EXPECTED IN THE EVENT COMPONENT
@@ -935,21 +753,25 @@ export class DashboardPage implements OnInit, DoCheck {
 
   getUpcomingHoliday(date: Date, refresher?: boolean): Observable<EventComponentConfigurations[]> {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
-    return forkJoin([
-      this.ws.get<Holidays>('/transix/holidays/filtered/students', { auth: false, caching }),
-      this.holidays$
-    ]).pipe(
-      map(([studentHolidays, staffHolidays]) => {
-        const holiday = this.isStudent ? studentHolidays.holidays.find(h => date < new Date(h.holiday_start_date)) || {} as Holiday
-          : staffHolidays.find(h => date < new Date(h.holiday_start_date)) || {} as Holiday;
 
+    return this.ws.get<TransixHolidaySet[]>('/v2/transix/holiday/active', { url: this.transixDevUrl, caching }).pipe(
+      map(sets => sets[0].holidays),
+      map(holidays => {
+        const studentHoliday = holidays
+          .filter(h => h.holiday_people_affected === 'students' || h.holiday_people_affected === 'all')
+          .find(h => date < new Date(h.holiday_start_date)) || {} as TransixHoliday;
+
+        const staffHoliday = holidays
+          .filter(h => h.holiday_people_affected === 'staffs' || h.holiday_people_affected === 'all')
+          .find(h => date < new Date(h.holiday_start_date)) || {} as TransixHoliday;
+
+        const holiday = this.isStudent ? studentHoliday : staffHoliday;
         const examsListEventMode: EventComponentConfigurations[] = [];
-        const formattedStartDate = format(parseISO(holiday.holiday_start_date), 'dd MMM yyyy');
+        const formattedStartDate = format(new Date(holiday.holiday_start_date), 'dd MMM yyyy');
+
         examsListEventMode.push({
           title: holiday.holiday_name,
-          firstDescription: this.getNumberOfDaysForHoliday(
-            parseISO(holiday.holiday_start_date),
-            parseISO(holiday.holiday_end_date)),
+          firstDescription: this.getNumberOfDaysForHoliday(holiday.holiday_start_date, holiday.holiday_end_date),
           color: '#273160',
           pass: false,
           passColor: '#d7dee3',
@@ -957,15 +779,16 @@ export class DashboardPage implements OnInit, DoCheck {
           type: 'holiday',
           dateOrTime: formattedStartDate
         });
-        return examsListEventMode;
+
+        return examsListEventMode
       })
     );
   }
 
   getNumberOfDaysForHoliday(startDate: Date, endDate: Date): string {
-    const secondsDiff = this.getSecondsDifferenceBetweenTwoDates(startDate, endDate);
-    const daysDiff = Math.floor(secondsDiff / (3600 * 24));
-    return (daysDiff + 1) + ' day' + (daysDiff === 0 ? '' : 's');
+    const difference = differenceInDays(new Date(startDate), new Date(endDate));
+
+    return `${difference + 1} day${difference === 0 ? '' : 's'}`;
   }
 
   getUpcomingMoodle(date: Date, refresher?: boolean): Observable<EventComponentConfigurations[]> {
@@ -1016,17 +839,17 @@ export class DashboardPage implements OnInit, DoCheck {
   getTransactions(refresher) {
     return this.ws.get<Apcard[]>('/apcard/', refresher).pipe(
       tap(transactions => this.analyzeTransactions(transactions)),
-      tap(transactions => this.getCurrentApcardBalance(transactions))
+      // tap(transactions => this.getCurrentApcardBalance(transactions))
     );
   }
 
-  getCurrentApcardBalance(transactions) {
-    if (transactions.length > 0) {
-      this.balance$ = of({ value: transactions[0].Balance });
-    } else {
-      this.balance$ = of({ value: -1 });
-    }
-  }
+  // getCurrentApcardBalance(transactions) {
+  //   if (transactions.length > 0) {
+  //     this.balance$ = of({ value: transactions[0].Balance });
+  //   } else {
+  //     this.balance$ = of({ value: -1 });
+  //   }
+  // }
 
   analyzeTransactions(transactions: Apcard[]) {
     // stop analyzing if transactions is empty
@@ -1038,7 +861,7 @@ export class DashboardPage implements OnInit, DoCheck {
 
     const now = new Date();
     const a = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    this.monthlyData = transactions.reduce(
+    const monthlyData = transactions.reduce(
       (tt, t) => {
         const c = t.SpendVal < 0 ? 'dr' : 'cr'; // classify spent type
         const d = new Date(t.SpendDate);
@@ -1055,8 +878,8 @@ export class DashboardPage implements OnInit, DoCheck {
       }
     );
     // plot graph
-    this.apcardChart.data.datasets[0].data = this.monthlyData.cr[now.getFullYear()];
-    this.apcardChart.data.datasets[1].data = this.monthlyData.dr[now.getFullYear()];
+    this.apcardChart.data.datasets[0].data = monthlyData.cr[now.getFullYear()];
+    this.apcardChart.data.datasets[1].data = monthlyData.dr[now.getFullYear()];
   }
 
   // FINANCIALS FUNCTIONS
@@ -1066,19 +889,6 @@ export class DashboardPage implements OnInit, DoCheck {
       '/student/summary_overall_fee',
       { caching }
     ).pipe(
-      tap((overdueSummary) => {
-        // GET THE VALUE OF THE TOTAL OVERALL USED IN THE QUICK ACCESS ITEM
-        this.totalOverdue$ = of({ value: overdueSummary[0].TOTAL_OVERDUE });
-      }),
-      tap((overdueSummary) => {
-        // Basically checking the Student's financial data to identify if there's any outstanding
-        // tslint:disable-next-line: max-line-length
-        if (overdueSummary[0].FINE !== 0 || overdueSummary[0].TOTAL_PAID !== overdueSummary[0].TOTAL_PAYABLE || overdueSummary[0].TOTAL_OUTSTANDING !== 0 || overdueSummary[0].TOTAL_OVERDUE !== 0) {
-          this.hasOutstanding = true;
-        } else {
-          this.hasOutstanding = false;
-        }
-      }),
       tap(overdueSummary => {
         this.financialsChart.data = {
           labels: ['Financial Status'],
@@ -1100,10 +910,6 @@ export class DashboardPage implements OnInit, DoCheck {
             }
           ]
         };
-      }),
-      catchError(err => {
-        this.totalOverdue$ = of({ value: -1 });
-        return err;
       })
     );
   }
@@ -1129,7 +935,6 @@ export class DashboardPage implements OnInit, DoCheck {
           );
         }),
         toArray(),
-        tap(_ => this.overallCgpa = 0),
         tap(
           d => {
             const data = Array.from(
@@ -1143,10 +948,6 @@ export class DashboardPage implements OnInit, DoCheck {
             const filteredData = data.reverse().filter((res: any) => res.gpa[res.gpa.length - 2]).reverse();
             const labels = filteredData.map((i: any) => i.intakeCode);
             const gpa = filteredData.map((i: any) => i.gpa[i.gpa.length - 2].IMMIGRATION_GPA);
-            gpa.forEach(intakeGpa => {
-              this.overallCgpa += +intakeGpa;
-            });
-            this.overallCgpa = this.overallCgpa / gpa.length;
             this.cgpaChart = {
               options: {
                 indexAxis: 'y',
@@ -1205,71 +1006,41 @@ export class DashboardPage implements OnInit, DoCheck {
       );
   }
 
-  // UPCOMING TRIPS
-  getLocationColor(locationName: string) {
-    for (const location of this.locations) {
-      if (location.location_name === locationName) {
-        return location.location_color;
-      }
-    }
-  }
-
-  getLocations(refresher: boolean) {
-    const caching = refresher ? 'network-or-cache' : 'cache-only';
-    this.ws.get<APULocations>(`/transix/locations`, { auth: false, caching }).pipe(
-      map((res: APULocations) => res.locations),
-      tap(locations => this.locations = locations)
-    ).subscribe();
-  }
-
   getUpcomingTrips(firstLocation: string, secondLocation: string) {
     if (!firstLocation || !secondLocation) {
       this.showSetLocationsSettings = true;
-      return of({});
+      return of([]);
     }
     this.showSetLocationsSettings = false;
     const currentDate = new Date();
-    return this.ws.get<BusTrips>('/transix/trips/applicable', { auth: false }).pipe(
+
+    return this.ws.get<TransixScheduleSet>('/v2/transix/schedule/active', { url: this.transixDevUrl }).pipe(
       map(res => res.trips),
       map(trips => {
         return trips.filter(trip => {
-          const dateObject = new Date(trip.trip_time);
-          return dateObject >= currentDate
-            && trip.trip_day === this.getTodayDay(currentDate)
-            && ((trip.trip_from === firstLocation && trip.trip_to === secondLocation)
-              || (trip.trip_from === secondLocation && trip.trip_to === firstLocation));
+          return trip.day === this.getTodayDay(currentDate)
+            && ((trip.trip_from.name === firstLocation && trip.trip_to.name === secondLocation)
+              || (trip.trip_from.name === secondLocation && trip.trip_to.name === firstLocation));
         });
       }),
       map(trips => {
         return trips.reduce(
           (prev, curr) => {
-            prev[curr.trip_from + curr.trip_to] = prev[curr.trip_from + curr.trip_to] || {
-              trip_from: curr.trip_from_display_name,
-              trip_from_color: this.getLocationColor(curr.trip_from),
-              trip_to: curr.trip_to_display_name,
-              trip_to_color: this.getLocationColor(curr.trip_to),
+            prev[curr.trip_from.name + curr.trip_to.name] = prev[curr.trip_from.name + curr.trip_to.name] || {
+              trip_from: curr.trip_from.name,
+              trip_from_color: curr.trip_from.color,
+              trip_to: curr.trip_to.name,
+              trip_to_color: curr.trip_to.color,
               times: []
             };
-            // Convert to dateObject for time format
-            // const localToUtcOffset = (currentDate.getTimezoneOffset());
-            // const localParsedDate = Date.parse(currentDate.toString());
-            //
-            // const utcDate = new Date(localParsedDate + (localToUtcOffset * 60000));
-            // const utcParsedDate = Date.parse(utcDate.toUTCString());
-            //
-            // const d = new Date(utcParsedDate + (480 * 60000));
-            curr.trip_time = this.dateWithTimezonePipe.transform(curr.trip_time, 'bus');
-            prev[curr.trip_from + curr.trip_to].times.push(curr.trip_time);
+
+            prev[curr.trip_from.name + curr.trip_to.name].times.push(curr.time);
             return prev;
           },
           {}
         );
       }),
-      map(trips => {
-        return Object.keys(trips).map(
-          key => trips[key]
-        );
-      })
+      map(trips => Object.keys(trips).map(key => trips[key]))
     );
   }
 
@@ -1279,19 +1050,6 @@ export class DashboardPage implements OnInit, DoCheck {
     this.cas.getST(url).subscribe(st => {
       this.component.openLink(`${url}?ticket=${st}`);
     });
-  }
-
-  // GENERAL FUNCTIONS
-  getSecondsDifferenceBetweenTwoDates(startDate: Date, endDate: Date): number {
-    // PARAMETERS MUST BE STRING. FORMAT IS ('HH:mm A')
-    // RETURN TYPE IS STRING. FORMAT: 'HH hrs mm min'
-    return (endDate.getTime() - startDate.getTime()) / 1000;
-  }
-
-  secondsToHrsAndMins(seconds: number): string {
-    const hours = Math.floor(seconds / 3600);
-    const mins = Math.floor(seconds % 3600 / 60);
-    return hours + ' hr' + (hours > 1 ? 's' : '') + ' ' + mins + ' min' + (mins > 1 ? 's' : '');
   }
 
   navigateToPage(pageName: string) {
@@ -1322,15 +1080,6 @@ export class DashboardPage implements OnInit, DoCheck {
     }
   }
 
-  // SLIDER
-  prevSlide() {
-    this.sliderSlides.slidePrev();
-  }
-
-  nextSlide() {
-    this.sliderSlides.slideNext();
-  }
-
   openMoodleEvent(courseId: number) {
     const courseUrl = `https://lms2.apiit.edu.my/course/view.php`;
     const url = 'https://lms2.apiit.edu.my/login/index.php';
@@ -1344,63 +1093,6 @@ export class DashboardPage implements OnInit, DoCheck {
   //     this.pushInit = true;
   //     this.fcm.updatePushPermission();
   //   }
-  // }
-
-  // async welcomeTourGuide() {
-  //   const alert = await this.alertCtrl.create({
-  //     header: 'Welcome to APSpace, your digital university companion!',
-  //     message: 'Please take a tour with us to get familiarized with APSpace.',
-  //     buttons: [{
-  //       text: 'Start Tour',
-  //       handler: () => {
-  //         this.startTour();
-  //       }
-  //     }]
-  //   });
-  //   await alert.present();
-  // }
-  //
-  // startTour() {
-  //   let tourSteps;
-  //   const x = window.matchMedia('(max-width: 720px)');
-  //
-  //   // Students and Lecturers are using the same array steps
-  //   // Admins are using different ones
-  //   // If roles are both admin and lecturer then assign them to the lecturer tour guide
-  //   // For mobile devices an additional step is added for all the roles
-  //
-  //   // For small screen
-  //   if (x.matches) {
-  //     // For students, lecturer, & lecturer + admin
-  //     if (!this.isAdmin || this.isLecturer && this.isAdmin) {
-  //       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs',
-  //         'step8@/tabs', 'step9@/tabs'];
-  //     }
-  //     // For admin
-  //     if (!this.isLecturer && this.isAdmin) {
-  //       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs',
-  //         'step8@/tabs'];
-  //     }
-  //   }
-  //   // For large screen
-  //   if (!x.matches) {
-  //     // For admin
-  //     if (!this.isLecturer && this.isAdmin) {
-  //       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs'];
-  //     }
-  //     // For students, lecturer, & lecturer + admin
-  //     if (!this.isAdmin || this.isLecturer && this.isAdmin) {
-  //       tourSteps = ['step1', 'step2', 'step3@/tabs', 'step4@/tabs', 'step5@/tabs', 'step6@/tabs', 'step7@/tabs', 'step8@/tabs'];
-  //     }
-  //   }
-  //
-  //   const options: JoyrideOptions = {
-  //     steps: tourSteps,
-  //     themeColor: '#000000'
-  //   };
-  //
-  //   this.joyrideService.startTour(options);
-  //   this.settings.set('tourGuideSeen', true);
   // }
 }
 

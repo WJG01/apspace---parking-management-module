@@ -11,7 +11,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
 
-import { HolidaySets, HolidayV2, Role } from '../../interfaces';
+import { TransixHolidaySet, TransixHoliday, Role } from '../../interfaces';
 import { ComponentService, WsApiService } from '../../services';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -24,8 +24,8 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class HolidaysPage implements OnInit {
 
   devUrl = 'https://2o7wc015dc.execute-api.ap-southeast-1.amazonaws.com/dev';
-  holidaySets$: Observable<HolidaySets[]>;
-  holidays: HolidayV2[] = [];
+  holidaySets$: Observable<TransixHolidaySet[]>;
+  holidays: TransixHoliday[] = [];
   skeleton = new Array(3);
   selectedSegment: 'list' | 'calendar' = 'list';
   affecting = ['all', 'students', 'staffs'];
@@ -45,7 +45,7 @@ export class HolidaysPage implements OnInit {
     to: null,
     weekStart: 1,
   };
-  selectedHoliday: HolidayV2;
+  selectedHoliday: TransixHoliday;
   // Generate PDF Variables
   pdfObj = null; // Used to generate report
   tableBody: any;
@@ -80,7 +80,7 @@ export class HolidaysPage implements OnInit {
   doRefresh(refresher?) {
     this.holidays = []; // Empty array before pushing
 
-    this.holidaySets$ = this.ws.get<HolidaySets[]>('/v2/transix/holiday/active', { url: this.devUrl }).pipe(
+    this.holidaySets$ = this.ws.get<TransixHolidaySet[]>('/v2/transix/holiday/active', { url: this.devUrl }).pipe(
       tap(holidaySets => {
         for (const holidaySet of holidaySets) {
           const year = holidaySet.year;

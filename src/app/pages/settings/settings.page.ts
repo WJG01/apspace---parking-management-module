@@ -18,7 +18,7 @@ import {
   Themes,
   TimeFormats
 } from '../../constants';
-import { APULocation, Role, StudentProfile, Venue } from '../../interfaces';
+import { Role, StudentProfile, TransixLocation, Venue } from '../../interfaces';
 import { ApiService, SettingsService, StudentTimetableService, WsApiService } from '../../services';
 import { ManageSettingsModalPage } from './manage-settings-modal/manage-settings-modal.page';
 
@@ -35,7 +35,7 @@ export class SettingsPage implements OnInit {
   timeFormats = TimeFormats;
   themes = Themes;
   // API Observable Variables
-  locations$: Observable<APULocation[]>;
+  locations$: Observable<TransixLocation[]>;
   venues$: Observable<Venue[]>;
   // Settings Variables
   theme$ = this.settings.get$('theme');
