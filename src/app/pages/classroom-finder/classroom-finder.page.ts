@@ -97,6 +97,7 @@ export class ClassroomFinderPage implements OnInit {
         const mm = ('0' + newSince % 100).slice(-2);
         this.filterObject.from = `${hh}:${mm}`;
       }
+      this.filterObject.to = data?.time;
     }
   }
 
