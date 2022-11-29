@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavigationExtras } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
-import { AlertButton, NavController } from '@ionic/angular';
+import { AlertButton, NavController, Platform } from '@ionic/angular';
 import { Observable, tap } from 'rxjs';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { Network } from '@capacitor/network';
@@ -27,29 +27,33 @@ export class AppComponent {
     private ws: WsApiService,
     private navCtrl: NavController,
     private component: ComponentService,
-    private settings: SettingsService
+    private settings: SettingsService,
+    private plt: Platform
   ) {
     this.initialiseStorage();
-    this.checkForUpdate();
+
+    this.plt.ready().then(() => {
+      this.accentColor$ = this.settings.get$('accentColor');
+      this.theme$ = this.settings.get$('theme').pipe(
+        tap(async theme => {
+          if (!(Capacitor.getPlatform() === 'web')) {
+            if (theme === 'dark') {
+              await StatusBar.setStyle({ style: Style.Dark });
+            }
+            if (theme === 'light') {
+              await StatusBar.setStyle({ style: Style.Light });
+            }
+          }
+        })
+      );
+      this.checkForUpdate();
+    });
   }
 
   async initialiseStorage() {
     await this.storage.create();
     // Initialise Settings
     this.settings.initSettings();
-    this.accentColor$ = this.settings.get$('accentColor');
-    this.theme$ = this.settings.get$('theme').pipe(
-      tap(async theme => {
-        if (!(Capacitor.getPlatform() === 'web')) {
-          if (theme === 'dark') {
-            await StatusBar.setStyle({ style: Style.Dark });
-          }
-          if (theme === 'light') {
-            await StatusBar.setStyle({ style: Style.Light });
-          }
-        }
-      })
-    );
   }
 
   async checkForUpdate() {
