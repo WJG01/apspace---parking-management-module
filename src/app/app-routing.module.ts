@@ -292,12 +292,19 @@ const routes: Routes = [
     data: { role: Role.Admin | Role.Lecturer },
     loadChildren: () => import('./pages/igraduate/igraduate.module').then(m => m.IgraduatePageModule)
   },
+  {
+    path: 'lecturer-timetable',
+    canActivate: [AuthGuard],
+    data: { role: Role.Lecturer },
+    loadChildren: () => import('./pages/lecturer-timetable/lecturer-timetable.module').then(m => m.LecturerTimetablePageModule)
+  },
   { // this path must always be at the end of the routes array
     path: '**',
     canActivate: [AuthGuard],
     data: { role: Role.Student | Role.Lecturer | Role.Admin },
     loadChildren: () => import('./pages/not-found/not-found.module').then(m => m.NotFoundPageModule)
   }
+
 ];
 
 @NgModule({
