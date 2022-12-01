@@ -112,3 +112,11 @@
 //     }
 //   }
 // }
+
+.native-input[type=date]::-webkit-calendar-picker-indicator {
+  filter: invert(0.5);
+}
+
+.native-input[type=time]::-webkit-calendar-picker-indicator {
+  filter: invert(0.5);
+}
