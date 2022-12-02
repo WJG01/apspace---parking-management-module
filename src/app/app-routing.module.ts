@@ -175,17 +175,14 @@ const routes: Routes = [
   {
     path: 'exam-schedule-admin',
     canActivate: [AuthGuard],
-    data: { role: Role.Student | Role.Admin | Role.Lecturer },
-    children: [
-      {
-        path: '',
-        loadChildren: () => import('./pages/exam-schedule-admin/exam-schedule-admin.module').then(m => m.ExamScheduleAdminPageModule)
-      },
-      {
-        path: ':examId',
-        loadChildren: () => import('./pages/exam-schedule-admin/exam-schedule-details/exam-schedule-details.module').then(m => m.ExamScheduleDetailsPageModule)
-      }
-    ]
+    data: { role: Role.Admin },
+    loadChildren: () => import('./pages/exam-schedule-admin/exam-schedule-admin.module').then(m => m.ExamScheduleAdminPageModule)
+  },
+  {
+    path: 'exam-schedule-details/:examId',
+    canActivate: [AuthGuard],
+    data: { role: Role.Admin },
+    loadChildren: () => import('./pages/exam-schedule-admin/exam-schedule-details/exam-schedule-details.module').then(m => m.ExamScheduleDetailsPageModule)
   },
   {
     path: 'profile',
