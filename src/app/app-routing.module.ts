@@ -175,6 +175,7 @@ const routes: Routes = [
   {
     path: 'exam-schedule-admin',
     canActivate: [AuthGuard],
+    data: { role: Role.Admin },
     loadChildren: () => import('./pages/exam-schedule-admin/exam-schedule-admin.module').then(m => m.ExamScheduleAdminPageModule)
   },
   {
