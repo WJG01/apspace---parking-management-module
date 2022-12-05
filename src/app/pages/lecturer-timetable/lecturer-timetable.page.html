@@ -173,7 +173,7 @@
               </message-with-svg>
             </ng-container>
             <ng-container *ngIf="!viewWeek && profileExists">
-              <app-message-with-svg imageUrl="assets/img/empty2.svg"
+              <message-with-svg imageUrl="assets/img/empty2.svg"
                 messageTitle="Oops! It looks like there are no classes assigned to you on the selected date {{selectedDate | date:'E' | uppercase}}"
                 messageContent="If you think that there is something wrong, you can try this:" wrapperSize="6"
                 wrapperMarginTop="30px" wrapperOffset="3" [advancedMode]="true">
@@ -187,10 +187,10 @@
                     report
                     the issue to us.</p>
                 </div>
-              </app-message-with-svg>
+              </message-with-svg>
             </ng-container>
             <ng-container *ngIf="!profileExists">
-              <app-message-with-svg imageUrl="assets/img/no_data.svg" messageTitle="Error"
+              <message-with-svg imageUrl="assets/img/no_data.svg" messageTitle="Error"
                 messageContent="Your profile has not been created by the HR yet." wrapperSize="5"
                 wrapperMarginTop="30px" wrapperOffset="3.5" [advancedMode]="true">
                 <div class="flex-container">
@@ -198,7 +198,7 @@
                       href="https://apiit.atlassian.net/servicedesk/customer/portals" target="_blank">Help Center</a>
                   </p>
                 </div>
-              </app-message-with-svg>
+              </message-with-svg>
             </ng-container>
           </ion-card-content>
         </ion-card>
