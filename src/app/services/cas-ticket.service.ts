@@ -2,9 +2,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, EMPTY, forkJoin, from, mergeMap, Observable, of, switchMap, tap, throwError } from 'rxjs';
+import { Network } from '@capacitor/network';
 
 import { Storage } from '@ionic/storage-angular';
+
 import { Role } from '../interfaces';
+import { ComponentService } from './component.service';
 
 /**
  * CAS Authentication with fallback mechanism.
@@ -28,6 +31,7 @@ export class CasTicketService {
     public http: HttpClient,
     public storage: Storage,
     public router: Router,
+    private component: ComponentService
   ) { }
 
   /**
@@ -82,11 +86,18 @@ export class CasTicketService {
       responseType: 'text' as 'text', /* TODO: fix this in future angular */
       withCredentials: true,
     };
-    return (tgt ? of(tgt) : from(this.storage.get('tgt'))).pipe(
-      switchMap(tgt => this.http.post(`${this.casUrl}/cas/v1/tickets/${tgt}`, null, options)),
-      catchError(err => err.status !== 0
-        ? this.getTGT().pipe(switchMap(tgt => this.getST(serviceUrl, tgt)))
-        : throwError(() => new Error('No network'))),
+
+    return from(Network.getStatus()).pipe(
+      switchMap(res => {
+        if (!res.connected) {
+          this.component.toastMessage('External links cannot be opened in offline mode. Please ensure you have a network connection and try again.', 'danger');
+          return of('No Network');
+        }
+
+        return (tgt ? of(tgt) : from(this.storage.get('tgt'))).pipe(
+          switchMap(tgt => this.http.post(`${this.casUrl}/cas/v1/tickets/${tgt}`, null, options))
+        );
+      })
     );
   }
 

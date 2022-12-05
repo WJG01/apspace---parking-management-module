@@ -113,10 +113,10 @@
                 </ng-container>
                 <ng-template #loadingStudentsListOrError>
                   <ng-container *ngIf="userUnauthorized; else loadingList">
-                    <app-message-with-svg messageTitle="This is a restricted space!"
+                    <message-with-svg messageTitle="This is a restricted space!"
                       messageContent="Unfortunately, you don't have the permissions required to access this page"
                       imageUrl="assets/img/block.svg" wrapperOffset="3" wrapperSize="6">
-                    </app-message-with-svg>
+                    </message-with-svg>
                   </ng-container>
                   <ng-template #loadingList>
                     <ion-list>
