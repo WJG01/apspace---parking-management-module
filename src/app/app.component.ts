@@ -10,6 +10,7 @@ import { Storage } from '@ionic/storage-angular';
 
 import { VersionValidator } from './interfaces';
 import { ComponentService, ConfigurationsService, SettingsService, WsApiService } from './services';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -30,6 +31,11 @@ export class AppComponent {
     private settings: SettingsService,
     private plt: Platform
   ) {
+    // Supress all console.log() on prod (If forgot to remove when pushing)
+    if (environment.production) {
+      window.console.log = () => { };
+    }
+
     this.initialiseStorage();
 
     this.plt.ready().then(() => {
