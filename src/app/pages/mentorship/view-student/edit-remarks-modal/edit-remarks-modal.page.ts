@@ -35,7 +35,7 @@ export class EditRemarksModalPage implements OnInit {
 
   onSubmit() {
     this.presentLoading();
-    const date = new Date(this.remarksDate);
+    const date = new Date(new Date(this.remarksDate).toISOString().slice(0, -1));
     const newRemarksDate = format(date, 'yyyy-MM-dd HH:mm:ss');
     const body = {
       remarks: this.remarks,
