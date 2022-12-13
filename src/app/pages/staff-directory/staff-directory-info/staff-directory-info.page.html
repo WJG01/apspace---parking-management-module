@@ -28,16 +28,21 @@
                 <h2 class="glob-text-bold" [innerHTML]="staff.TITLE"></h2>
                 <br>
                 <h2>Email:</h2>
-                <h2 *ngIf="staff.EMAIL; else noEmail"><a class="glob-text-bold" href="mailto:{{staff.EMAIL}}">
+                <h2 *ngIf="staff.EMAIL; else noEmail">
+                  <a class="glob-text-bold" href="mailto:{{staff.EMAIL}}">
                     <ion-text color="primary">
                       {{ staff.EMAIL }}
                     </ion-text>
-                  </a></h2>
-                <h2>
-                  <b>
-                    N/A
-                  </b>
+                  </a>
                 </h2>
+
+                <ng-template #noEmail>
+                  <h2>
+                    <b>
+                      N/A
+                    </b>
+                  </h2>
+                </ng-template>
                 <br>
                 <div *ngIf="staff.LOCATION">
                   <h2>Office Location:</h2>
