@@ -1,4 +1,4 @@
-image: node:alpine:3.16
+image: node:14-alpine:3.16
 pipelines:
   # default:
   #   - step: &build-test
