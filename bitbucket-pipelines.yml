@@ -1,4 +1,4 @@
-image: node:fermium-alpine
+image: node:14-alpine
 pipelines:
   # default:
   #   - step: &build-test
@@ -18,7 +18,7 @@ pipelines:
   branches:
     release/v4:
       - step:
-          image: cticti/apspace:08.20
+          image: cticti/ionic_awscli:node14
           caches:
             - node
           script:
