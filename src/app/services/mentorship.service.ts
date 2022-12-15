@@ -59,4 +59,12 @@ export class MentorshipService {
     // tslint:disable-next-line: max-line-length
     return this.ws.get<MentorshipAttendance[]>(`/mentor/module_attendance_details?id=${tp}&module_code=${moduleCode}&intake=${intake}`);
   }
+
+  editRemarks(tp, body, headers){
+    return this.ws.put<any>(`/mentor/update_remarks?id=${tp}`, { body, headers });
+  }
+
+  addRemarks(tp, body, headers){
+    return this.ws.post<any>(`/mentor/add_remarks?id=${tp}`, { body, headers });
+  }
 }
