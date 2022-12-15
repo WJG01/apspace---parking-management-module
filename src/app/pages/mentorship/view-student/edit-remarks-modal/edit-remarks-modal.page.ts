@@ -2,8 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { LoadingController, ModalController, NavParams } from '@ionic/angular';
 import { format } from 'date-fns';
+import { Observable } from 'rxjs';
 
-import { ComponentService, WsApiService } from '../../../../services';
+import { WsApiService, MentorshipService, ComponentService } from '../../../../services';
 
 @Component({
   selector: 'app-edit-remarks-modal',
@@ -16,12 +17,14 @@ export class EditRemarksModalPage implements OnInit {
   staffID: string;
   remarksDate: string;
   tp: string;
+  editedRemarks$: Observable<any>;
 
   constructor(
     private ws: WsApiService,
     public modalController: ModalController,
     public commonModule: CommonModule,
     private loadingCtrl: LoadingController,
+    private mentorship: MentorshipService,
     private component: ComponentService,
     private navParams: NavParams,
   ) { }
@@ -30,7 +33,7 @@ export class EditRemarksModalPage implements OnInit {
     this.tp = this.navParams.get('studentID');
     this.remarks = this.navParams.get('remarks');
     this.staffID = this.navParams.get('staffID');
-    this.remarksDate = this.navParams.get('remarksDate');
+    this.remarksDate = this.navParams.get('remarksDate').slice(0, -4);
   }
 
   onSubmit() {
@@ -44,7 +47,8 @@ export class EditRemarksModalPage implements OnInit {
     };
     const headers = { 'Content-Type': 'application/json' };
     if (body) {
-      this.ws.put<any>(`/mentor/update_remarks?id=${this.tp}`, { body, headers }).subscribe(
+      this.editedRemarks$ = this.mentorship.editRemarks(this.tp, body, headers);
+      this.editedRemarks$.subscribe(
         () => {
           this.component.toastMessage('You have successfully edited the remarks.', 'success');
         },

@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { LoadingController, ModalController, NavParams } from '@ionic/angular';
 
-import { ComponentService, WsApiService } from '../../../../services';
+import { ComponentService, MentorshipService, WsApiService } from '../../../../services';
 
 @Component({
   selector: 'app-add-remarks-modal',
@@ -13,6 +14,7 @@ export class AddRemarksModalPage implements OnInit {
   loading: HTMLIonLoadingElement;
   remarks: string;
   tp: string;
+  addedRemarks$: Observable<any>;
 
   constructor(
     private ws: WsApiService,
@@ -21,6 +23,7 @@ export class AddRemarksModalPage implements OnInit {
     private component: ComponentService,
     private loadingCtrl: LoadingController,
     private navParams: NavParams,
+    private mentorship: MentorshipService
   ) { }
 
   ngOnInit() {
@@ -34,7 +37,8 @@ export class AddRemarksModalPage implements OnInit {
     };
     const headers = { 'Content-Type': 'application/json' };
     if (body) {
-      this.ws.post<any>(`/mentor/add_remarks?id=${this.tp}`, { body, headers }).subscribe(
+      this.addedRemarks$ = this.mentorship.addRemarks(this.tp, body, headers);
+      this.addedRemarks$.subscribe(
         () => {
           this.component.toastMessage('You have successfully submitted the remarks.', 'success');
         },
