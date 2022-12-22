@@ -23,7 +23,6 @@
     "@angular/platform-browser-dynamic": "~13.3.8",
     "@angular/router": "~13.3.8",
     "@awesome-cordova-plugins/app-availability": "^6.2.0",
-    "@apollo/client": "^3.6.4",
     "@awesome-cordova-plugins/badge": "^6.2.0",
     "@awesome-cordova-plugins/core": "^6.2.0",
     "@awesome-cordova-plugins/file-opener": "^6.2.0",
@@ -47,12 +46,10 @@
     "angularx-qrcode": "^13.0.15",
     "apollo-angular": "^1.10.0",
     "apollo-angular-link-http": "^1.11.0",
-    "apollo-cache-inmemory": "1.3.12",
-    "apollo-client": "2.4.6",
-    "apollo-link": "1.2.5",
-    "apollo-link-context": "1.0.11",
-    "apollo-link-http": "1.5.8",
-    "apollo-link-retry": "2.2.7",
+    "apollo-cache-inmemory": "1.6.6",
+    "apollo-client": "2.6.10",
+    "apollo-link": "1.2.14",
+    "apollo-link-http": "1.5.17",
     "aws-appsync": "4.1.4",
     "aws-appsync-auth-link": "2.0.7",
     "aws-appsync-subscription-link": "2.2.6",
@@ -69,7 +66,6 @@
     "moment": "^2.29.3",
     "ng2-charts": "^3.0.12",
     "pdfmake": "^0.2.5",
-    "redux": "^3.7.2",
     "rxjs": "^7.5.7",
     "swiper": "^8.4.4",
     "tslib": "^2.4.0",
@@ -111,6 +107,6 @@
     "karma-jasmine-html-reporter": "^1.7.0",
     "protractor": "~7.0.0",
     "ts-node": "~10.7.0",
-    "typescript": "^4.6.4"
+    "typescript": "4.4.2"
   }
 }

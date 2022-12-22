@@ -133,7 +133,7 @@ export class MarkAttendancePage implements OnInit {
     const attendances$ = attendancesState$.pipe(
       switchMap(state => this.statusUpdate.asObservable().pipe(startWith(state))),
       scan((state: InitAttendanceMutation, action: { id: string; attendance: string; absentReason: string; }) => {
-        const student = JSON.parse(JSON.stringify(state.attendance.students.find(s => s.id === action.id)));
+        const student = state.attendance.students.find(s => s.id === action.id);
         student.attendance = action.attendance;
         student.absentReason = action.absentReason;
         return state;
