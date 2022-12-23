@@ -305,6 +305,16 @@ export const menuItems = [
     tags: ['progression'],
     parents: [],
   },
+  {
+    id: 'apspace-admin' as const,
+    title: 'APSpace Admin',
+    group: 'Academic Operation',
+    url: 'https://admin-apspace.apu.edu.my/',
+    img: 'assets/img/more-icons/apspace-admin.png',
+    role: Role.Lecturer | Role.Admin,
+    tags: ['Apspace admin', 'Apspace', 'Admin'],
+    parents: [],
+  },
   // {
   //   id: 'aptime' as const,
   //   title: 'APTime',
