@@ -303,7 +303,7 @@
                             <ion-col size="3" size-sm="" class="glob-margin-auto ion-no-padding"
                               *ngIf="student.attendance === 'N' || student.attendance === 'R'">
                               <ion-input [value]="student.absentReason" placeholder="Absent with reason"
-                                (change)="mark(student.id, 'R')"></ion-input>
+                                (change)="mark(student.id, 'R', $event)"></ion-input>
                             </ion-col>
                             <ion-col size="9" size-sm="" class="glob-margin-auto ion-text-right">
                               <ion-buttons class="ion-float-right">
