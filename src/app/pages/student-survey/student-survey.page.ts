@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertButton, LoadingController } from '@ionic/angular';
-import { map, Observable, shareReplay, tap } from 'rxjs';
+import { EMPTY, map, Observable, shareReplay, startWith, tap } from 'rxjs';
 
 import { MCQType, StudentProfile, SurveyIntake, SurveyModule } from '../../interfaces';
 import { ComponentService, WsApiService } from '../../services';
@@ -33,6 +33,7 @@ export class StudentSurveyPage implements OnInit {
   selectedModule: SurveyModule;
   selectedIntake: SurveyIntake;
   modules: any;
+  selectedSurveyType: string;
   response = {
     class_code: '',
     intake_code: '',
@@ -46,7 +47,7 @@ export class StudentSurveyPage implements OnInit {
   };
   showFieldMissingError = false;
   skeletons = new Array(3);
-
+  surveyTypes = ['Programme Evaluation', 'Semester'];
   constructor(
     private ws: WsApiService,
     private route: ActivatedRoute,
@@ -112,9 +113,15 @@ export class StudentSurveyPage implements OnInit {
     this.courseType = this.selectedIntake.TYPE_OF_COURSE;
     this.intakeCode = this.selectedIntake.COURSE_CODE_ALIAS;
 
-    this.COURSE_MODULES$ = this.getModules(this.intakeCode);
     this.classCode = ''; // empty class code
-    this.surveyType = ''; // empty survey type
+    this.surveyType = '';
+    this.COURSE_MODULES$ = this.getModules(this.intakeCode);
+    if (this.selectedSurveyType === 'Programme Evaluation') {
+      this.getProgramEvaluation();
+    } else if (this.selectedSurveyType === 'Semester') {
+
+      this.getSurveyType(this.classCode);
+    }
   }
 
   onClassCodeChanged() {
@@ -124,6 +131,16 @@ export class StudentSurveyPage implements OnInit {
     this.getSurveyType(this.classCode);
     this.getModuleByClassCode(this.classCode);
     this.showFieldMissingError = false;
+  }
+
+  onSurveyTypeChange() {
+    this.surveyType = '';
+    this.COURSE_MODULES$ = this.getModules(this.intakeCode);
+    if (this.selectedSurveyType === 'Programme Evaluation') {
+      this.getProgramEvaluation();
+    } else if (this.selectedSurveyType === 'Semester') {
+      this.getSurveyType(this.classCode);
+    }
   }
 
   submitSurvey() {
@@ -189,18 +206,25 @@ export class StudentSurveyPage implements OnInit {
       }),
       tap(modules => {
         this.modules = modules;
-
-        if (this.courseType) {
-          if (!this.courseType.toLowerCase().includes('master') && !this.courseType.toLowerCase().includes('phd')) {
-            if (modules.length === 0 && !this.selectedIntake.PROGRAM_APPRAISAL && Date.parse(this.selectedIntake.PROGRAM_APPRAISAL_DATE) < Date.parse(this.todaysDate.toISOString())) {
-              this.surveyType = 'Programme Evaluation';
-              this.getSurveys(this.intakeCode);
-            }
-          }
-        }
       }),
       shareReplay(1)
     );
+  }
+
+  getProgramEvaluation() {
+    if (this.selectedSurveyType === 'Programme Evaluation' && this.courseType) {
+      if (!this.courseType.toLowerCase().includes('master') && !this.courseType.toLowerCase().includes('phd')) {
+        if (!this.selectedIntake.PROGRAM_APPRAISAL && Date.parse(this.selectedIntake.PROGRAM_APPRAISAL_DATE) < Date.parse(this.todaysDate.toISOString())) {
+          this.surveyType = 'Programme Evaluation';
+          this.getSurveys(this.intakeCode);
+        }
+        // If program evaluation survey has expired then return empty observable to show correct template in view
+        else {
+          this.survey$ = EMPTY.pipe(startWith([]));
+        }
+      }
+
+    }
   }
 
   getModuleByClassCode(classCode: string) {
@@ -239,20 +263,22 @@ export class StudentSurveyPage implements OnInit {
     this.survey$ = this.ws.get<any>(`/survey/surveys?intake_code=${intakeCode}`).pipe(
       map(surveys => surveys.filter(survey => survey.type === this.surveyType)),
       tap(surveys => {
-        for (const section of surveys[0].sections) {
-          for (const question of section.questions) {
-            answers.push({
-              question_id: question.id,
-              content: '',
-            });
+        if (surveys.length > 0) {
+          for (const section of surveys[0].sections) {
+            for (const question of section.questions) {
+              answers.push({
+                question_id: question.id,
+                content: '',
+              });
+            }
           }
+          this.response = {
+            intake_code: this.intakeCode,
+            class_code: this.classCode,
+            survey_id: surveys[0].id,
+            answers,
+          };
         }
-        this.response = {
-          intake_code: this.intakeCode,
-          class_code: this.classCode,
-          survey_id: surveys[0].id,
-          answers,
-        };
       }),
     );
     this.mcqAnswers$ = this.ws.get<MCQType[]>('/survey/mcq');
