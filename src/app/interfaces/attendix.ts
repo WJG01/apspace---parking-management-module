@@ -45,11 +45,16 @@ export interface FlatClasscode {
 }
 
 export interface AttendanceSummary {
-  present: AttendanceData,
-  absent: AttendanceData;
-  absentReason: AttendanceData;
-  late: AttendanceData;
+  labels: string[];
+  datasets: AttendanceSummaryDataset[];
 };
+
+interface AttendanceSummaryDataset {
+  data: number[];
+  backgroundColor: string[];
+  borderColor: string[];
+  borderWidth: number;
+}
 
 export interface AttendanceIntegrityClasses {
   classCode: string;
@@ -59,9 +64,4 @@ export interface AttendanceIntegrityClasses {
   total: number;
   type: string;
   checked: boolean;
-}
-
-interface AttendanceData {
-  color: string;
-  data: number;
 }
