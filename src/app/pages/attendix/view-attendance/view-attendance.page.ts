@@ -30,6 +30,21 @@ export class ViewAttendancePage implements OnInit {
       type: ''
     };
   status = ['Y', 'L', 'N', 'R'];
+  doughnutChart = {
+    type: 'pie',
+    options: {
+      responsive: true,
+      aspectRatio: 3,
+      hover: { mode: null },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'bottom'
+        }
+      },
+    },
+    data: null
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -104,22 +119,28 @@ export class ViewAttendancePage implements OnInit {
     this.attendanceSummary$ = this.students$.pipe(
       map(students => {
         return {
-          present: {
-            color: this.attendanceStatusPipe.transform('Y', true),
-            data: students.filter(student => student.attendance === 'Y').length
-          },
-          absent: {
-            color: this.attendanceStatusPipe.transform('N', true),
-            data: students.filter(student => student.attendance === 'N').length
-          },
-          absentReason: {
-            color: this.attendanceStatusPipe.transform('R', true),
-            data: students.filter(student => student.attendance === 'R').length
-          },
-          late: {
-            color: this.attendanceStatusPipe.transform('L', true),
-            data: students.filter(student => student.attendance === 'L').length
-          }
+          labels: ['Present', 'Absent', 'Absent With Reason', 'Late'],
+          datasets: [{
+            data: [
+              students.filter(student => student.attendance === 'Y').length,
+              students.filter(student => student.attendance === 'N').length,
+              students.filter(student => student.attendance === 'R').length,
+              students.filter(student => student.attendance === 'L').length
+            ],
+            backgroundColor: [
+              'rgba(40, 167, 69, 0.5)',
+              'rgba(220, 53, 69, 0.5)',
+              'rgba(16, 112, 161, 0.5)',
+              'rgba(255, 196, 9, 0.5)'
+            ],
+            borderColor: [
+              this.attendanceStatusPipe.transform('Y', true),
+              this.attendanceStatusPipe.transform('N', true),
+              this.attendanceStatusPipe.transform('R', true),
+              this.attendanceStatusPipe.transform('L', true)
+            ],
+            borderWidth: 2
+          }]
         };
       }),
       shareReplay(1) // keep track while switching mode

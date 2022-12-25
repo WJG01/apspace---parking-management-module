@@ -36,6 +36,9 @@
             </ion-label>
           </ion-item-divider>
 
+          <canvas class="ion-margin-top" *ngIf="attendanceSummary$ | async as chartData" baseChart
+            [type]="doughnutChart.type" [options]="doughnutChart.options" [data]="chartData"></canvas>
+
           <ion-item lines="none">
             <ion-icon slot="start" color="primary" name="library-outline"></ion-icon>
             <ion-label>{{ schedule!.classcode }}</ion-label>
@@ -59,19 +62,6 @@
           <ion-item lines="none">
             <ion-icon slot="start" color="primary" name="chatbox-ellipses-outline"></ion-icon>
             <ion-label>{{ lectureUpdate || 'No Remarks' }}</ion-label>
-          </ion-item>
-
-          <ion-item lines="none" *ngIf="(attendanceSummary$ | async) as s">
-            <ion-icon slot="start" color="primary" name="reader-outline"></ion-icon>
-            <ion-label class="glob-text-bold">
-              <ion-text [style.color]="s.present.color">{{ s.present.data }}</ion-text>
-              |
-              <ion-text [style.color]="s.absent.color">{{ s.absent.data }}</ion-text>
-              |
-              <ion-text [style.color]="s.absentReason.color">{{ s.absentReason.data }}</ion-text>
-              |
-              <ion-text [style.color]="s.late.color">{{ s.late.data }}</ion-text>
-            </ion-label>
           </ion-item>
         </ion-card>
       </ion-col>

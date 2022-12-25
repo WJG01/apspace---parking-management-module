@@ -178,15 +178,10 @@
               </ion-item-divider>
 
               <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end">
-                <ion-row class="ion-align-items-center small-margin-top">
-                  <ion-col class="details-section ion-text-center">
-                    <ion-text color="primary">
-                      <h3 class="glob-text-bold">{{ schedule!.classcode }}</h3>
-                    </ion-text>
-                  </ion-col>
-                </ion-row>
+                <canvas class="ion-margin-top" *ngIf="attendanceSummary$ | async as chartData" baseChart [type]="doughnutChart.type"
+                  [options]="doughnutChart.options" [data]="chartData"></canvas>
 
-                <ion-row class="ion-align-items-center small-margin-top">
+                <ion-row class="ion-align-items-center ion-margin-top">
                   <ion-col class="details-section ion-text-center" size-md="6" size-sm="12">
                     <ion-text color="primary">
                       <h3 class="glob-text-bold">Class Type & Date</h3>
@@ -213,17 +208,9 @@
 
                   <ion-col class="details-section ion-text-center" size-md="6" size-sm="12">
                     <ion-text color="primary">
-                      <h3 class="glob-text-bold">Summary</h3>
+                      <h3 class="glob-text-bold">Class Code</h3>
                     </ion-text>
-                    <p class="glob-fw-600" *ngIf="(attendanceSummary$ | async) as summary">
-                      <ion-text [style.color]="summary.present.color">{{ summary.present.data }}</ion-text>
-                      |
-                      <ion-text [style.color]="summary.absent.color">{{ summary.absent.data }}</ion-text>
-                      |
-                      <ion-text [style.color]="summary.absentReason.color">{{ summary.absentReason.data }}</ion-text>
-                      |
-                      <ion-text [style.color]="summary.late.color">{{ summary.late.data }}</ion-text>
-                    </p>
+                    <h3 class="glob-fw-600">{{ schedule!.classcode }}</h3>
                   </ion-col>
                 </ion-row>
 

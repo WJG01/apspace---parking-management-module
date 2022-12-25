@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { QRCodeModule } from 'angularx-qrcode';
+import { NgChartsModule } from 'ng2-charts';
 
 import { MarkAttendancePageRoutingModule } from './mark-attendance-routing.module';
 import { MarkAttendancePage } from './mark-attendance.page';
@@ -19,7 +20,8 @@ import { AttendanceStatusPipe } from '../../../shared/attendance-status/attendan
     IonicModule,
     MarkAttendancePageRoutingModule,
     QRCodeModule,
-    SharedPipesModule
+    SharedPipesModule,
+    NgChartsModule
   ],
   declarations: [MarkAttendancePage, AttendancePipe, SearchPipe],
   exports: [AttendancePipe, SearchPipe],
