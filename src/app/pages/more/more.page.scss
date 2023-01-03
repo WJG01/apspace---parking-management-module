@@ -15,6 +15,11 @@ ion-avatar {
   --background: transparent !important;
 }
 
+.item-thumbnail {
+  width: 2rem;
+  height: auto;
+}
+
 // NEW CARD VIEW CUSTOM CSS STARTS HERE
 
 .gradient-background {
@@ -65,7 +70,7 @@ ion-item-divider {
   .page-title {
     font-size: 1.05rem;
   }
-    
+
   img {
     margin-right: 20px;
     max-width: 36px;
