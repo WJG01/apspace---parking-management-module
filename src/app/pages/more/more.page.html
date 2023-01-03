@@ -103,7 +103,7 @@
                         <ion-item [lines]="!last ? 'inset' : 'none'" detail="true" button="true" tappable="true"
                           (click)="openPage(item.url, item.attachTicket)">
                           <ion-avatar slot="start">
-                            <img [src]="item.img">
+                            <img class="item-thumbnail" [src]="item.img">
                           </ion-avatar>
                           <ion-label>
                             <h2>{{ item.title }}</h2>
