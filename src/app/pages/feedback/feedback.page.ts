@@ -97,7 +97,7 @@ export class FeedbackPage implements OnInit {
   openOnlineFeedbackSystem() {
     this.cas.getST(this.onlineFeedbackSystemURL).subscribe(st => {
       this.iab.create(`${this.onlineFeedbackSystemURL}?ticket=${st}`, '_system', 'location=true');
-    })
+    });
   }
 
   async presentLoading() {
