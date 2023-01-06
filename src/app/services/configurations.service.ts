@@ -8,7 +8,7 @@ import { Network } from '@capacitor/network';
 })
 export class ConfigurationsService {
 
-  private readonly version = '3.1.2'; // APSpace App Version
+  private readonly version = '4.0.1'; // APSpace App Version
   private connected = true; // Has to be true initially
 
   constructor(private router: Router) {
