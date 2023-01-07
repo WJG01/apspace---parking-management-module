@@ -8,7 +8,6 @@ export { DataCollectorService } from './data-collector.service';
 export { NotificationService } from './notification.service';
 export { WsApiService } from './ws-api.service';
 export { SettingsService } from './settings.service';
-export { VersionService } from './version.service';
 export { StudentTimetableService } from './student-timetable.service';
 export { WebspacePasswordService } from './webspace-password.service';
 export { NotifierService } from './notifier.service';
