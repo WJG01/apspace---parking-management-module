@@ -755,7 +755,7 @@ export class DashboardPage implements OnInit {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
 
     return this.ws.get<TransixHolidaySet[]>('/v2/transix/holiday/active', { url: this.transixDevUrl, caching }).pipe(
-      map(sets => sets[0].holidays),
+      map(sets => sets.find(s => s.year === date.getFullYear())?.holidays || []),
       map(holidays => {
         const studentHoliday = holidays
           .filter(h => h.holiday_people_affected === 'students' || h.holiday_people_affected === 'all')
@@ -767,20 +767,23 @@ export class DashboardPage implements OnInit {
 
         const holiday = this.isStudent ? studentHoliday : staffHoliday;
         const examsListEventMode: EventComponentConfigurations[] = [];
-        const formattedStartDate = format(new Date(holiday.holiday_start_date), 'dd MMM yyyy');
 
-        examsListEventMode.push({
-          title: holiday.holiday_name,
-          firstDescription: this.getNumberOfDaysForHoliday(holiday.holiday_start_date, holiday.holiday_end_date),
-          color: '#273160',
-          pass: false,
-          passColor: '#d7dee3',
-          outputFormat: 'event-with-date-only',
-          type: 'holiday',
-          dateOrTime: formattedStartDate
-        });
+        if (holidays.length > 1) {
+          const formattedStartDate = format(new Date(holiday.holiday_start_date), 'dd MMM yyyy');
 
-        return examsListEventMode
+          examsListEventMode.push({
+            title: holiday.holiday_name,
+            firstDescription: this.getNumberOfDaysForHoliday(holiday.holiday_start_date, holiday.holiday_end_date),
+            color: '#273160',
+            pass: false,
+            passColor: '#d7dee3',
+            outputFormat: 'event-with-date-only',
+            type: 'holiday',
+            dateOrTime: formattedStartDate
+          });
+        }
+
+        return examsListEventMode;
       })
     );
   }
