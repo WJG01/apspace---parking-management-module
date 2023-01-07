@@ -100,7 +100,9 @@ export class HolidaysPage implements OnInit {
         let filteredHolidaySets = holidaySets.filter(h => h.year === this.filterObject.year);
 
         for (const holidaySet of filteredHolidaySets) {
-          holidaySet.holidays = holidaySet.holidays.filter(h => h.holiday_people_affected === this.filterObject.affecting);
+          if (this.filterObject.affecting !== 'all') {
+            holidaySet.holidays = holidaySet.holidays.filter(h => ['all', this.filterObject.affecting].includes(h.holiday_people_affected));
+          }
 
           if (this.filterObject.duration !== 'all') {
             if (this.filterObject.duration === '1 day') {

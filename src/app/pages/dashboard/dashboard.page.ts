@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertButton, ModalController, NavController, Platform } from '@ionic/angular';
 import { Observable, Subscription, combineLatest, forkJoin, of, zip, map, finalize, catchError, concatMap, mergeMap, shareReplay, switchMap, tap, toArray } from 'rxjs';
 
-import { differenceInDays, format, parse } from 'date-fns';
+import { format, parse } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
 import { ChartData, ChartOptions } from 'chart.js';
 import SwiperCore, { Autoplay, Lazy, Navigation } from 'swiper';
@@ -755,7 +755,7 @@ export class DashboardPage implements OnInit {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
 
     return this.ws.get<TransixHolidaySet[]>('/v2/transix/holiday/active', { url: this.transixDevUrl, caching }).pipe(
-      map(sets => sets[0].holidays),
+      map(sets => sets.find(s => s.year === date.getFullYear())?.holidays || []),
       map(holidays => {
         const studentHoliday = holidays
           .filter(h => h.holiday_people_affected === 'students' || h.holiday_people_affected === 'all')
@@ -767,28 +767,32 @@ export class DashboardPage implements OnInit {
 
         const holiday = this.isStudent ? studentHoliday : staffHoliday;
         const examsListEventMode: EventComponentConfigurations[] = [];
-        const formattedStartDate = format(new Date(holiday.holiday_start_date), 'dd MMM yyyy');
 
-        examsListEventMode.push({
-          title: holiday.holiday_name,
-          firstDescription: this.getNumberOfDaysForHoliday(holiday.holiday_start_date, holiday.holiday_end_date),
-          color: '#273160',
-          pass: false,
-          passColor: '#d7dee3',
-          outputFormat: 'event-with-date-only',
-          type: 'holiday',
-          dateOrTime: formattedStartDate
-        });
+        if (holidays.length > 1) {
+          const formattedStartDate = format(new Date(holiday.holiday_start_date), 'dd MMM yyyy');
 
-        return examsListEventMode
+          examsListEventMode.push({
+            title: holiday.holiday_name,
+            firstDescription: this.getNumberOfDaysForHoliday(holiday.holiday_start_date, holiday.holiday_end_date),
+            color: '#273160',
+            pass: false,
+            passColor: '#d7dee3',
+            outputFormat: 'event-with-date-only',
+            type: 'holiday',
+            dateOrTime: formattedStartDate
+          });
+        }
+
+        return examsListEventMode;
       })
     );
   }
 
   getNumberOfDaysForHoliday(startDate: Date, endDate: Date): string {
-    const difference = differenceInDays(new Date(startDate), new Date(endDate));
+    const secondsDifference = (new Date(endDate).getTime() - new Date(startDate).getTime()) / 1000;
+    const daysDifference = Math.floor(secondsDifference / (3600 * 24));
 
-    return `${difference + 1} day${difference === 0 ? '' : 's'}`;
+    return `${daysDifference + 1} day${daysDifference === 0 ? '' : 's'}`;
   }
 
   getUpcomingMoodle(date: Date, refresher?: boolean): Observable<EventComponentConfigurations[]> {

@@ -7,9 +7,7 @@ import {
 } from 'rxjs/operators';
 
 import { Role, Settings, SettingsOld, StaffProfile, StudentProfile } from '../interfaces';
-import { ConfigurationsService } from './configurations.service';
-import { VersionService } from './version.service';
-import { WsApiService } from './ws-api.service';
+import { ConfigurationsService, WsApiService } from './';
 
 
 // TODO replace any isEqual usage with own implementation later
@@ -114,11 +112,10 @@ export class SettingsService {
   private initialSynced = false;
 
   constructor(
-    public http: HttpClient,
-    public storage: Storage,
-    public version: VersionService,
-    private ws: WsApiService,
-    private configuration: ConfigurationsService
+    private http: HttpClient,
+    private storage: Storage,
+    private config: ConfigurationsService,
+    private ws: WsApiService
   ) { }
 
   initSettings() {
@@ -154,7 +151,7 @@ export class SettingsService {
           ]) => {
             this.data.next({
               ...this.data.value, // built with default value
-              appVersion: this.version.name,
+              appVersion: this.config.appVersion,
               modulesBlacklist,
               dashboardSections,
               menuUI,
@@ -285,7 +282,7 @@ export class SettingsService {
 
 
 
-    const options = this.configuration.connectionStatus ? { headers: { 'x-refresh': '' } } : {};
+    const options = this.config.connectionStatus ? { headers: { 'x-refresh': '' } } : {};
     from(this.storage.get('role')).pipe(
       // tslint:disable-next-line:no-bitwise
       switchMap(role => role & Role.Student
