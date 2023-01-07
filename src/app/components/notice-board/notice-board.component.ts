@@ -48,7 +48,7 @@ export class NoticeBoardComponent implements OnInit {
 
     setInterval(() => {
       if (!isDragged) {
-        swiper?.slideNext();
+        swiper.slideNext(500);
       }
       if (isEnd) {
         swiper.slideToLoop(0);
