@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertButton, ModalController, NavController, Platform } from '@ionic/angular';
 import { Observable, Subscription, combineLatest, forkJoin, of, zip, map, finalize, catchError, concatMap, mergeMap, shareReplay, switchMap, tap, toArray } from 'rxjs';
 
-import { differenceInDays, format, parse } from 'date-fns';
+import { format, parse } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
 import { ChartData, ChartOptions } from 'chart.js';
 import SwiperCore, { Autoplay, Lazy, Navigation } from 'swiper';
@@ -789,9 +789,10 @@ export class DashboardPage implements OnInit {
   }
 
   getNumberOfDaysForHoliday(startDate: Date, endDate: Date): string {
-    const difference = differenceInDays(new Date(startDate), new Date(endDate));
+    const secondsDifference = (new Date(endDate).getTime() - new Date(startDate).getTime()) / 1000;
+    const daysDifference = Math.floor(secondsDifference / (3600 * 24));
 
-    return `${difference + 1} day${difference === 0 ? '' : 's'}`;
+    return `${daysDifference + 1} day${daysDifference === 0 ? '' : 's'}`;
   }
 
   getUpcomingMoodle(date: Date, refresher?: boolean): Observable<EventComponentConfigurations[]> {
