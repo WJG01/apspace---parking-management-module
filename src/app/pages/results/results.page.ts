@@ -371,8 +371,8 @@ export class ResultsPage implements OnInit {
     // we need to get st for the service including the params (?id=)
     this.studentsList$ = this.cas.getST(`${this.prodUrl}/search?id=${this.searchKeyword}`).pipe(
       switchMap((st) => {
-        return this.ws.get<StudentSearch[]>(`/students/search?id=${this.searchKeyword}&ticket=${st}`,
-          { auth: false, attempts: 1 }
+        return this.ws.get<StudentSearch[]>(`/search?id=${this.searchKeyword}&ticket=${st}`,
+          { auth: false, attempts: 1, url: this.prodUrl }
         );
       })
     ).pipe(
