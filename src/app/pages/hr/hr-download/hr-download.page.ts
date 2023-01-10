@@ -1,19 +1,14 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { FileOpener } from '@awesome-cordova-plugins/file-opener/ngx';
-import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Directory, Filesystem } from '@capacitor/filesystem';
 import { AlertController, LoadingController, ModalController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { PickerController } from '@ionic/angular';
 
 import { CasTicketService, WsApiService } from 'src/app/services';
 import { SearchedFilesDisplayComponent } from './searched-files-display/searched-files-display.component';
-import { ComponentService } from 'src/app/services';
-import { format } from 'date-fns';
 
-import { IonModal } from '@ionic/angular';
-import { OverlayEventDetail } from '@ionic/core/components';
 
 @Component({
   selector: 'app-hr-download',
@@ -26,25 +21,21 @@ export class HrDownloadPage {
   // ePayslipUrl = 'https://t16rz80rg7.execute-api.ap-southeast-1.amazonaws.com/staging';
   payslipsUrl = 'https://api.apiit.edu.my';
 
-  dateToFilter = null;
+  dateToFilter;
   fileToFilter;
   canAccessPayslipFileSearch;
   segmentValue = 'myFiles';
 
-
-
   constructor(
     public modalCtrl: ModalController,
     public toastCtrl: ToastController,
-    public componentService: ComponentService,
     public alertCtrl: AlertController,
     public loadingCtrl: LoadingController,
     private platform: Platform,
     private storage: Storage,
     private fileOpener: FileOpener,
     private ws: WsApiService,
-    private cas: CasTicketService,
-    private pickerController: PickerController
+    private cas: CasTicketService
   ) { }
 
   ionViewWillEnter() {
@@ -55,7 +46,7 @@ export class HrDownloadPage {
   }
 
   doRefresh() {
-    this.files$ = this.ws.get<any>('/epayslip/list', {url: this.payslipsUrl}).pipe(
+    this.files$ = this.ws.get<any>('/epayslip/list').pipe(
       map(files => [...files.ea_form, ...files.payslips, ...files.pcb_form]),
       map(files => files.sort((a, b) => 0 - (a > b ? 1 : -1))),
       catchError(error => of(error))
@@ -63,37 +54,45 @@ export class HrDownloadPage {
   }
 
   downloadPayslipPdf(payslip) {
-    // const downloadPayslipEndpoint = '/epayslip/download/';
-    // const link = this.payslipsUrl + downloadPayslipEndpoint + payslip;
+    const downloadPayslipEndpoint = '/epayslip/download/';
+    const link = this.payslipsUrl + downloadPayslipEndpoint + payslip;
 
-    // this.cas.getST(link).subscribe(st => {
-    //   fetch(link + `?ticket=${st}`).then(result => result.blob()).then(blob => {
-    //     const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+    this.cas.getST(link).subscribe(st => {
+      fetch(link + `?ticket=${st}`).then(result => result.blob()).then(async blob => {
+        const pdfBlob = new Blob([blob], { type: 'application/pdf' });
 
-    //     if (this.platform.is('capacitor')) {
-    //       const directoryType = this.platform.is('android') ? this.file.externalDataDirectory : this.file.dataDirectory;
+        if (this.platform.is('capacitor')) {
+          try {
+            let path = `apspace/pdf/${payslip}`;
+            const data: any = await this.blobToBase64(pdfBlob)
+            // Save the PDF to the data Directory of our App
+            const result = await Filesystem.writeFile({
+              path,
+              data,
+              directory: Directory.Documents,
+              recursive: true
+            });
+            // Dismiss loading & open the PDf with the correct OS tools
+            this.fileOpener.open(`${result.uri}`, 'application/pdf');
+          } catch (err) {
+            console.error('Unable to Create File');
+          }
+        } else {
+          const blobUrl = URL.createObjectURL(pdfBlob);
+          const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
 
-    //       // Save the PDF to the data Directory of our App
-    //       this.file.writeFile(directoryType, `${payslip}.pdf`, pdfBlob, { replace: true }).then(_ => {
-    //         // Open the PDf with the correct OS tools
-    //         this.fileOpener.open(directoryType + `${payslip}.pdf`, 'application/pdf');
-    //       });
-    //     } else {
-    //       const blobUrl = URL.createObjectURL(pdfBlob);
-    //       const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+          a.href = blobUrl;
+          a.download = payslip;
+          document.body.appendChild(a);
+          a.click();
 
-    //       a.href = blobUrl;
-    //       a.download = payslip;
-    //       document.body.appendChild(a);
-    //       a.click();
-
-    //       setTimeout(() => {
-    //         document.body.removeChild(a);
-    //         URL.revokeObjectURL(blobUrl);
-    //       }, 5000);
-    //     }
-    //   });
-    // });
+          setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(blobUrl);
+          }, 5000);
+        }
+      });
+    });
   }
 
   displayAllFiles() {
@@ -134,7 +133,7 @@ export class HrDownloadPage {
           text: 'Yes',
           handler: _ => {
             this.presentLoading();
-            this.ws.get<any>('/epayslip/sync',{url: this.payslipsUrl}).subscribe({
+            this.ws.get<any>('/epayslip/sync').subscribe({
               next: () => {
                 this.presentAlert('Success!', 'Synchronized', 'The synchronize is done.', 'success-alert');
               },
@@ -179,5 +178,13 @@ export class HrDownloadPage {
 
   dismiss() {
     this.modalCtrl.dismiss();
+  }
+
+  blobToBase64(blob) {
+    return new Promise((resolve, _) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
   }
 }
