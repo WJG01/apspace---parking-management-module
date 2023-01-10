@@ -26,7 +26,6 @@ export class SearchedFilesDisplayComponent implements OnInit {
     private ws: WsApiService,
     private cas: CasTicketService,
     private platform: Platform,
-    private file: File,
     private fileOpener: FileOpener
   ) { }
 
@@ -43,37 +42,45 @@ export class SearchedFilesDisplayComponent implements OnInit {
   }
 
   downloadPayslipPdf(payslip) {
-    // const downloadPayslipEndpoint = '/epayslip/download/';
-    // const link = this.ePayslipUrl + downloadPayslipEndpoint + payslip;
+    const downloadPayslipEndpoint = '/epayslip/download/';
+    const link = this.ePayslipUrl + downloadPayslipEndpoint + payslip;
 
-    // this.cas.getST(link).subscribe(st => {
-    //   fetch(link + `?ticket=${st}`).then(result => result.blob()).then(blob => {
-    //     const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+    this.cas.getST(link).subscribe(st => {
+      fetch(link + `?ticket=${st}`).then(result => result.blob()).then(async blob => {
+        const pdfBlob = new Blob([blob], { type: 'application/pdf' });
 
-    //     if (this.platform.is('cordova')) {
-    //       const directoryType = this.platform.is('android') ? this.file.externalDataDirectory : this.file.dataDirectory;
+        if (this.platform.is('capacitor')) {
+          try {
+            let path = `apspace/pdf/${payslip}`;
+            const data: any = await this.blobToBase64(pdfBlob)
+            // Save the PDF to the data Directory of our App
+            const result = await Filesystem.writeFile({
+              path,
+              data,
+              directory: Directory.Documents,
+              recursive: true
+            });
+            // Dismiss loading & open the PDf with the correct OS tools
+            this.fileOpener.open(`${result.uri}`, 'application/pdf');
+          } catch (err) {
+            console.error('Unable to Create File');
+          }
+        } else {
+          const blobUrl = URL.createObjectURL(pdfBlob);
+          const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
 
-    //       // Save the PDF to the data Directory of our App
-    //       this.file.writeFile(directoryType, `${payslip}.pdf`, pdfBlob, { replace: true }).then(_ => {
-    //         // Open the PDf with the correct OS tools
-    //         this.fileOpener.open(directoryType + `${payslip}.pdf`, 'application/pdf');
-    //       });
-    //     } else {
-    //       const blobUrl = URL.createObjectURL(pdfBlob);
-    //       const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+          a.href = blobUrl;
+          a.download = payslip;
+          document.body.appendChild(a);
+          a.click();
 
-    //       a.href = blobUrl;
-    //       a.download = payslip;
-    //       document.body.appendChild(a);
-    //       a.click();
-
-    //       setTimeout(() => {
-    //         document.body.removeChild(a);
-    //         URL.revokeObjectURL(blobUrl);
-    //       }, 5000);
-    //     }
-    //   });
-    // });
+          setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(blobUrl);
+          }, 5000);
+        }
+      });
+    });
   }
 
   displayAllFiles() {
@@ -83,5 +90,13 @@ export class SearchedFilesDisplayComponent implements OnInit {
 
   dismissModal() {
     this.modalCtrl.dismiss();
+  }
+
+  blobToBase64(blob) {
+    return new Promise((resolve, _) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
   }
 }

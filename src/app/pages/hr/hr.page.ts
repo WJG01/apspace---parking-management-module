@@ -6,8 +6,7 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { OnLeaveOnMyCluster, PendingApproval, StaffDirectory } from 'src/app/interfaces';
-import { WsApiService } from 'src/app/services';
-import { ComponentService } from 'src/app/services';
+import { ComponentService, WsApiService } from 'src/app/services';
 @Component({
   selector: 'app-hr',
   templateUrl: './hr.page.html',
@@ -27,7 +26,7 @@ export class HrPage implements OnInit {
     public modalCtrl: ModalController,
     private ws: WsApiService,
     private router: Router,
-    private component: ComponentService,
+    private component: ComponentService
   ) { }
 
   ngOnInit() {
