@@ -8,6 +8,7 @@ import { ClassesPage } from './classes.page';
 import { ComponentsModule } from '../../../components/components.module';
 import { ClasscodesFilterPipe } from './classcodes-filter/classcodes-filter.pipe';
 import { AttendanceIntegrityModalPageModule } from './attendance-integrity-modal/attendance-integrity-modal.module';
+import { ConfirmClassCodeModalPageModule } from './confirm-class-code-modal/confirm-class-code-modal.module';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { AttendanceIntegrityModalPageModule } from './attendance-integrity-modal
     IonicModule,
     ClassesPageRoutingModule,
     ComponentsModule,
-    AttendanceIntegrityModalPageModule
+    AttendanceIntegrityModalPageModule,
+    ConfirmClassCodeModalPageModule
   ],
   declarations: [ClassesPage, ClasscodesFilterPipe],
   providers: [DatePipe]
