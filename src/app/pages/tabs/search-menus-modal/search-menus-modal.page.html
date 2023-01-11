@@ -8,7 +8,7 @@
   <ng-container *ngIf="searchTerm; else notSearching">
     <ng-container *ngIf="(menus | fuse:searchTerm:options) as filteredMenu">
       <ng-container *ngIf="filteredMenu.length > 0; else notFound">
-        <ion-item lines="none" *ngFor="let m of filteredMenu" button="true" (click)="selectMenu(m.url)">
+        <ion-item lines="none" *ngFor="let m of filteredMenu" button="true" (click)="selectMenu(m.url, m.attachTicket)">
           <ion-icon [name]="m.parents.length > 0 ? 'albums-outline' : 'grid-outline'" slot="start" color="primary">
           </ion-icon>
           <ion-label>
