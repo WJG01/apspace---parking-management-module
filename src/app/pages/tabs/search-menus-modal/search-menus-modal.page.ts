@@ -7,6 +7,7 @@ import Fuse from 'fuse.js';
 import { Role } from '../../../interfaces';
 import { menu, menusTitle } from '../../more/menu';
 import { MenuItem } from '../../more/menu.interface';
+import { CasTicketService, ComponentService } from 'src/app/services';
 
 @Component({
   selector: 'app-search-menus-modal',
@@ -24,6 +25,8 @@ export class SearchMenusModalPage implements OnInit {
   @ViewChild(IonSearchbar, { static: true }) searchbar: IonSearchbar;
 
   constructor(
+    private cas: CasTicketService,
+    private component: ComponentService,
     private storage: Storage,
     private modalCtrl: ModalController
   ) { }
@@ -47,7 +50,14 @@ export class SearchMenusModalPage implements OnInit {
     this.searchbar.setFocus();
   }
 
-  selectMenu(path: string) {
-    this.modalCtrl.dismiss({ path });
+  selectMenu(path: string, attachTicket = false) {
+    if (!attachTicket) {
+      this.modalCtrl.dismiss({path});
+    } else {
+      this.cas.getST(path).subscribe(st => {
+      this.component.openLink(`${path}?ticket=${st}`);
+      });
+      this.modalCtrl.dismiss();
+    }
   }
 }
