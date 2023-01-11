@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertButton, ModalController } from '@ionic/angular';
 import { firstValueFrom, map, Observable, shareReplay } from 'rxjs';
 
-import { subDays } from 'date-fns';
+import { formatISO, subDays } from 'date-fns';
 
 import { DatePickerComponent } from '../../../components/date-picker/date-picker.component';
 import { SearchModalComponent } from '../../../components/search-modal/search-modal.component';
@@ -14,6 +14,7 @@ import { ResetAttendanceGQL, ScheduleInput } from '../../../../generated/graphql
 import { Durations, Timings } from '../../../constants';
 import { formatTime, isoDate, parseTime } from '../date';
 import { AttendanceIntegrityModalPage } from './attendance-integrity-modal/attendance-integrity-modal.page';
+import { ConfirmClassCodeModalPage } from './confirm-class-code-modal/confirm-class-code-modal.page';
 
 @Component({
   selector: 'app-classes',
@@ -88,7 +89,7 @@ export class ClassesPage implements OnInit {
         const paramIntakes: string | null = this.router.getCurrentNavigation().extras.state.intakes; // list of intakes seperated by ','
         this.getClasscodes();
         this.markAttendanceObject.date = paramDate;
-        // this.changeDate(this.markAttendanceObject.date = paramDate);
+        this.changeDate(this.markAttendanceObject.date = paramDate);
         this.markAttendanceObject.startTime = paramStartTime;
         this.markAttendanceObject.endTime = paramEndTime;
         this.markAttendanceObject.duration = parseTime(this.markAttendanceObject.endTime) - parseTime(this.markAttendanceObject.startTime);
@@ -293,6 +294,29 @@ export class ClassesPage implements OnInit {
     }
   }
 
+  /** Change date. */
+  changeDate(date: string) {
+    this.markAttendanceObject.date = formatISO(new Date(date), { representation: 'date' });
+    const newDate = new Date();
+
+    const localToUtcOffset = (newDate.getTimezoneOffset());
+    const localParsedDate = Date.parse(newDate.toString());
+
+    const utcDate = new Date(localParsedDate + (localToUtcOffset * 60000));
+    const utcParsedDate = Date.parse(utcDate.toUTCString());
+
+    const d = new Date(utcParsedDate + (480 * 60000));
+
+    // console.log('malaysianTimeIsoString: ', malaysianTimeIsoString);
+    if (isoDate(new Date(date)) === isoDate(d)) { // current day
+      const nowMins = d.getHours() * 60 + d.getMinutes();
+      const firstFutureClass = this.timings.find(time => nowMins < parseTime(time));
+      this.startTimes = this.timings.slice(0, this.timings.indexOf(firstFutureClass));
+    } else {
+      this.startTimes = this.timings;
+    }
+  }
+
   /** if start time updated after duration => update duration . */
   changeStartTime() {
     if (this.markAttendanceObject.duration) {
@@ -414,8 +438,8 @@ export class ClassesPage implements OnInit {
   /* one last step modal that will open automatically when user uses quick attendnace button */
   async openconfirmClassCodeModal(filteredClassCodes: any[]) { // TODO: add type
     const modal = await this.modalCtrl.create({
-      component: SearchModalComponent,
-      cssClass: 'glob-partial-page-modal',
+      component: ConfirmClassCodeModalPage,
+      cssClass: 'glob-full-page-modal',
       componentProps: {
         classTypes: this.classTypes,
         classCodes: filteredClassCodes,
