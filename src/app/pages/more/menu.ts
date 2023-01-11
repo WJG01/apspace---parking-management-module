@@ -82,7 +82,7 @@ export const menuItems = [
     id: 'e-forms' as const,
     title: 'e-Forms',
     group: 'Collaboration & Information Resources',
-    url: 'http://forms.sites.apiit.edu.my/',
+    url: 'http://forms.sites.apiit.edu.my/home',
     attachTicket: true,
     img: 'assets/img/more-icons/forms-and-applications.png',
     role: Role.Student | Role.Lecturer | Role.Admin,
@@ -445,7 +445,7 @@ export const menuItems = [
     id: 'quality-procedure' as const,
     title: 'Quality Procedure',
     group: 'Corporate',
-    url: 'http://kb.sites.apiit.edu.my/knowledge-base/quality-procedures-information-and-personal-data-protection/', // no ticket
+    url: 'http://apiit.atlassian.net/wiki/spaces/QMS/overview', // no ticket
     img: 'assets/img/more-icons/quality.png',
     role: Role.Lecturer | Role.Admin,
     tags: ['rules'],
