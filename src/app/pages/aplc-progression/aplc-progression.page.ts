@@ -37,7 +37,7 @@ export class AplcProgressionPage implements OnInit {
   // ngModel variables
   subjectCode: string;
   classCode: string;
-  devUrl = 'https://kh1rvo4ilf.execute-api.ap-southeast-1.amazonaws.com/dev';
+  // devUrl = 'https://kh1rvo4ilf.execute-api.ap-southeast-1.amazonaws.com/dev';
 
   constructor(
     private ws: WsApiService,
@@ -50,13 +50,13 @@ export class AplcProgressionPage implements OnInit {
   }
 
   doRefresh() { // changed with refresher
-    this.subjects$ = this.ws.get<APLCSubject[]>(`/aplc/subjects`, { url: this.devUrl });
-    this.scoreLegend$ = this.ws.get<any[]>(`/aplc/score-legend`, { caching: 'cache-only', url: this.devUrl });
-    this.descriptionLegend$ = this.ws.get<any[]>(`/aplc/description-legend`, { caching: 'cache-only', url: this.devUrl });
+    this.subjects$ = this.ws.get<APLCSubject[]>(`/aplc/subjects`);
+    this.scoreLegend$ = this.ws.get<any[]>(`/aplc/score-legend`);
+    this.descriptionLegend$ = this.ws.get<any[]>(`/aplc/description-legend`);
   }
 
   onSubjectCodeChange() {
-    this.classes$ = this.ws.get<APLCClass[]>(`/aplc/classes?subject_code=${this.subjectCode}`, { url: this.devUrl }).pipe(
+    this.classes$ = this.ws.get<APLCClass[]>(`/aplc/classes?subject_code=${this.subjectCode}`).pipe(
       tap(_ => this.classCode = '')
     );
   }
@@ -65,10 +65,10 @@ export class AplcProgressionPage implements OnInit {
     this.numberOfStudents = 0;
     this.numberOfReportsSubmitted = 0;
     this.editMode = false;
-    this.classDescription$ = this.ws.get<APLCClassDescription[]>(`/aplc/class-description?class_code=${this.classCode}`, { url: this.devUrl }).pipe(
+    this.classDescription$ = this.ws.get<APLCClassDescription[]>(`/aplc/class-description?class_code=${this.classCode}`).pipe(
       tap(res => this.classDescription = res)
     );
-    this.studentsBehaviour$ = this.ws.get<APLCStudentBehaviour[]>(`/aplc/student-behavior?class_code=${this.classCode}`, { url: this.devUrl }).pipe(
+    this.studentsBehaviour$ = this.ws.get<APLCStudentBehaviour[]>(`/aplc/student-behavior?class_code=${this.classCode}`).pipe(
       tap(r => console.log('r ', r)),
       tap(_ => this.pdfStudentsList = [ // empty the list whenever there is an update
         [
@@ -321,7 +321,6 @@ export class AplcProgressionPage implements OnInit {
 
         if (formValidFalg) {
           this.ws.put<any>('/aplc/student-behavior', {
-            url: this.devUrl,
             body: studentBehaviors
           }).subscribe({
             next: () => {
