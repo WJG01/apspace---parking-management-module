@@ -4,7 +4,7 @@ import { LoadingController, Platform } from '@ionic/angular';
 
 import { Device } from '@capacitor/device';
 
-import { ComponentService, ConfigurationsService, WsApiService } from '../../services';
+import { CasTicketService, ComponentService, ConfigurationsService, WsApiService } from '../../services';
 
 @Component({
   selector: 'app-feedback',
@@ -18,6 +18,7 @@ export class FeedbackPage implements OnInit {
 
   constructor(
     private component: ComponentService,
+    private cas: CasTicketService,
     private fb: FormBuilder,
     private plt: Platform,
     private config: ConfigurationsService,
@@ -74,7 +75,9 @@ export class FeedbackPage implements OnInit {
   }
 
   openOnlineFeedbackSystem() {
-    this.component.openLink('https://erp.apiit.edu.my/easymoo/web/en/user/feedback/feedbackusersend');
+    this.cas.getST('http://feedback.sites.apiit.edu.my/').subscribe(st => {
+    this.component.openLink(`${'http://feedback.sites.apiit.edu.my/'}?ticket=${st}`);
+    });
   }
 
   get contact(): AbstractControl {
