@@ -43,7 +43,8 @@
 
                 <ion-item lines="inset">
                   <ion-label position="stacked">Affecting</ion-label>
-                  <ion-select interface="popover" [(ngModel)]="filterObject.affecting" (ngModelChange)="doRefresh()" mode="md">
+                  <ion-select interface="popover" [(ngModel)]="filterObject.affecting" (ngModelChange)="doRefresh()"
+                    mode="md">
                     <ion-select-option *ngFor="let a of affecting" [value]="a">
                       {{ a | titlecase }}
                     </ion-select-option>
@@ -52,7 +53,8 @@
 
                 <ion-item lines="inset">
                   <ion-label position="stacked">Duration</ion-label>
-                  <ion-select interface="popover" [(ngModel)]="filterObject.duration" (ngModelChange)="doRefresh()" mode="md">
+                  <ion-select interface="popover" [(ngModel)]="filterObject.duration" (ngModelChange)="doRefresh()"
+                    mode="md">
                     <ion-select-option *ngFor="let d of holidayDurations" [value]="d">
                       {{ d | titlecase }}
                     </ion-select-option>
@@ -132,7 +134,7 @@
                   </ng-container>
 
                   <ng-container *ngSwitchCase="'calendar'">
-                    <ion-card class="ion-no-margin">
+                    <ion-card class="ion-no-margin" *ngIf="holidaysOnCalendar.length > 0; else noHolidays">
                       <ion-card-content>
                         <ion-calendar class="glob-calendar" (change)="calendarChanged($event)" [options]="options"
                           [type]="'string'" [format]="'YYYY-MM-DD'">
