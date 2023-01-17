@@ -79,9 +79,12 @@ export class HolidaysPage implements OnInit {
   }
 
   doRefresh(refresher?) {
-    this.holidays = []; // Empty array before pushing
+    const caching = refresher ? 'network-or-cache' : 'cache-only';
+    // Empty Array before pushing any data
+    this.holidaysOnCalendar = [];
+    this.holidays = [];
 
-    this.holidaySets$ = this.ws.get<TransixHolidaySet[]>('/v2/transix/holiday/active', { url: this.devUrl }).pipe(
+    this.holidaySets$ = this.ws.get<TransixHolidaySet[]>('/v2/transix/holiday/active', { url: this.devUrl, caching }).pipe(
       tap(holidaySets => {
         for (const holidaySet of holidaySets) {
           const year = holidaySet.year;
@@ -131,7 +134,6 @@ export class HolidaysPage implements OnInit {
         return filteredHolidaySets;
       }),
       tap(holidaySets => {
-        this.holidaysOnCalendar = []; // Ensure array is empty
         if (holidaySets.length < 1) return;
 
         for (const holiday of holidaySets[0].holidays) {
