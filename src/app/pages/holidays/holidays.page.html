@@ -124,7 +124,7 @@
 
                           <ion-badge color="medium" [style.margin-top]="'5px'">
                             {{
-                            holiday.holiday_people_affected === 'all' ? 'Students & Staff' :
+                            holiday.holiday_people_affected === 'all' ? (filterObject.affecting === 'students' ? 'Students' : 'Students and Staffs' ) :
                             (holiday.holiday_people_affected | titlecase)
                             }}
                           </ion-badge>
@@ -157,7 +157,7 @@
                               <ion-badge [style.margin-top]="'5px'"
                                 [style.--background]="selectedHoliday.holiday_start_date | monthColor:filteredHolidays.colors">
                                 {{
-                                selectedHoliday.holiday_people_affected === 'all' ? 'Students & Staff' :
+                                selectedHoliday.holiday_people_affected === 'all' ? (filterObject.affecting === 'students' ? 'Students' : 'Students and Staffs' ) :
                                 (selectedHoliday.holiday_people_affected | titlecase)
                                 }}
                               </ion-badge>
