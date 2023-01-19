@@ -41,10 +41,15 @@
                   </ion-select>
                 </ion-item>
 
-                <ion-item lines="inset">
+                <!-- student should not view staff holiday -->
+                <ion-item lines="inset" *ngIf="userRole !== 'students'">
                   <ion-label position="stacked">Affecting</ion-label>
+<<<<<<< HEAD
                   <ion-select interface="popover" [(ngModel)]="filterObject.affecting" (ngModelChange)="doRefresh()"
                     mode="md">
+=======
+                  <ion-select interface="popover" [(ngModel)]="filterObject.affecting" (ngModelChange)="doRefresh()" mode="md">
+>>>>>>> 57562f03 (fix(holidays): Fix affecting filter to not display for student role and added comment)
                     <ion-select-option *ngFor="let a of affecting" [value]="a">
                       {{ a | titlecase }}
                     </ion-select-option>
