@@ -111,7 +111,7 @@
                       <ion-item lines="none">
                         <ion-icon name="calendar" class="ion-padding-end" size="large"
                           [style.color]="holiday.holiday_start_date | monthColor:filteredHolidays.colors"></ion-icon>
-                        <ion-label>
+                        <ion-label class="ion-text-wrap">
                           <h3 class="glob-fw-600">
                             {{ holiday.holiday_name }}
                           </h3>
@@ -142,7 +142,7 @@
 
                         <ng-container *ngIf="selectedHoliday; else noHolidaySelected">
                           <ion-item lines="none">
-                            <ion-label>
+                            <ion-label class="ion-text-wrap">
                               <h3 class="glob-fw-600">
                                 {{ selectedHoliday.holiday_name }}
                               </h3>
