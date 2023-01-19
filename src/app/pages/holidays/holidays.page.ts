@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoadingController, Platform } from '@ionic/angular';
 import { finalize, map, Observable, tap } from 'rxjs';
 
-import { format } from 'date-fns';
+import { eachDayOfInterval, format } from 'date-fns';
 import { CalendarComponentOptions, DayConfig } from 'ion2-calendar';
 import { Storage } from '@ionic/storage-angular';
 import { Filesystem, Directory } from '@capacitor/filesystem';
@@ -46,6 +46,7 @@ export class HolidaysPage implements OnInit {
     weekStart: 1,
   };
   selectedHoliday: TransixHoliday;
+  holidaysOnCalendar: TransixHoliday[] = [];
   // Generate PDF Variables
   pdfObj = null; // Used to generate report
   tableBody: any;
@@ -78,9 +79,12 @@ export class HolidaysPage implements OnInit {
   }
 
   doRefresh(refresher?) {
-    this.holidays = []; // Empty array before pushing
+    const caching = refresher ? 'network-or-cache' : 'cache-only';
+    // Empty Array before pushing any data
+    this.holidaysOnCalendar = [];
+    this.holidays = [];
 
-    this.holidaySets$ = this.ws.get<TransixHolidaySet[]>('/v2/transix/holiday/active', { url: this.devUrl }).pipe(
+    this.holidaySets$ = this.ws.get<TransixHolidaySet[]>('/v2/transix/holiday/active', { url: this.devUrl, caching }).pipe(
       tap(holidaySets => {
         for (const holidaySet of holidaySets) {
           const year = holidaySet.year;
@@ -133,12 +137,39 @@ export class HolidaysPage implements OnInit {
         if (holidaySets.length < 1) return;
 
         for (const holiday of holidaySets[0].holidays) {
-          this.datesConfig.push({
-            date: holiday.holiday_start_date,
-            disable: false,
-            subTitle: '',
-            cssClass: 'holidays',
-          });
+          if (holiday.holiday_start_date === holiday.holiday_end_date) {
+            this.holidaysOnCalendar.push({
+              holiday_name: holiday.holiday_name,
+              holiday_description: holiday.holiday_description,
+              holiday_start_date: new Date(holiday.holiday_start_date),
+              holiday_end_date: new Date(holiday.holiday_end_date),
+              holiday_people_affected: holiday.holiday_people_affected
+            });
+          } else if (holiday.holiday_start_date !== holiday.holiday_end_date) {
+            // To mark in calendars that have long holidays
+            let tempDates: Date[] = [];
+
+            tempDates = (eachDayOfInterval({ start: new Date(holiday.holiday_start_date), end: new Date(holiday.holiday_end_date) }));
+
+            for (const tmpDate of tempDates) {
+              this.holidaysOnCalendar.push({
+                holiday_name: holiday.holiday_name,
+                holiday_description: holiday.holiday_description,
+                holiday_start_date: tmpDate,
+                holiday_end_date: new Date(holiday.holiday_end_date),
+                holiday_people_affected: holiday.holiday_people_affected
+              });
+            }
+          }
+
+          for (const holiday of this.holidaysOnCalendar) {
+            this.datesConfig.push({
+              date: holiday.holiday_start_date,
+              disable: false,
+              subTitle: '',
+              cssClass: 'holidays',
+            });
+          }
         }
       }),
       finalize(() => {
@@ -149,11 +180,12 @@ export class HolidaysPage implements OnInit {
     )
   }
 
-  calendarChanged(ev) {
+  calendarChanged(date: string) {
     for (const holiday of this.holidays) {
-      const formattedHoliday = format(new Date(holiday.holiday_start_date), 'yyyy-MM-dd');
+      const formattedStartDate = format(new Date(holiday.holiday_start_date), 'yyyy-MM-dd');
+      const formattedEndDate = format(new Date(holiday.holiday_end_date), 'yyyy-MM-dd');
 
-      if (ev === formattedHoliday) {
+      if (date === formattedStartDate || date === formattedEndDate) {
         this.selectedHoliday = holiday;
       }
     }

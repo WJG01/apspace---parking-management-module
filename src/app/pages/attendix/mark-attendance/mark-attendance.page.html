@@ -108,13 +108,21 @@
                         <h3 class="glob-text-bold">Summary</h3>
                       </ion-text>
                       <p class="glob-text-bold" *ngIf="(attendanceSummary$ | async) as summary">
-                        <ion-text [style.color]="summary.present.color">{{ summary.present.data }}</ion-text>
+                        <ion-text [style.color]="summary.datasets[0].borderColor[0]">
+                          {{ summary.datasets[0].data[0] }}
+                        </ion-text>
                         |
-                        <ion-text [style.color]="summary.absent.color">{{ summary.absent.data }}</ion-text>
+                        <ion-text [style.color]="summary.datasets[0].borderColor[1]">
+                          {{ summary.datasets[0].data[1] }}
+                        </ion-text>
                         |
-                        <ion-text [style.color]="summary.absentReason.color">{{ summary.absentReason.data }}</ion-text>
+                        <ion-text [style.color]="summary.datasets[0].borderColor[2]">
+                          {{ summary.datasets[0].data[2] }}
+                        </ion-text>
                         |
-                        <ion-text [style.color]="summary.late.color">{{ summary.late.data }}</ion-text>
+                        <ion-text [style.color]="summary.datasets[0].borderColor[3]">
+                          {{ summary.datasets[0].data[3] }}
+                        </ion-text>
                       </p>
                     </ion-col>
                   </ion-row>
@@ -178,8 +186,8 @@
               </ion-item-divider>
 
               <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end">
-                <canvas class="ion-margin-top" *ngIf="attendanceSummary$ | async as chartData" baseChart [type]="doughnutChart.type"
-                  [options]="doughnutChart.options" [data]="chartData"></canvas>
+                <canvas class="ion-margin-top" *ngIf="attendanceSummary$ | async as chartData" baseChart
+                  [type]="doughnutChart.type" [options]="doughnutChart.options" [data]="chartData"></canvas>
 
                 <ion-row class="ion-align-items-center ion-margin-top">
                   <ion-col class="details-section ion-text-center" size-md="6" size-sm="12">
