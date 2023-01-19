@@ -49,6 +49,7 @@ export class HolidaysPage implements OnInit {
   holidaysOnCalendar: TransixHoliday[] = [];
   // Generate PDF Variables
   pdfObj = null; // Used to generate report
+  userRole: string;
   tableBody: any;
   summaryBody: any;
   pdfTitle = '';
@@ -73,7 +74,10 @@ export class HolidaysPage implements OnInit {
 
   ngOnInit() {
     this.storage.get('role')
-      .then((role: Role) => this.filterObject.affecting = role === Role.Student ? 'students' : 'staffs');
+      .then((role: Role) => {
+        this.userRole = role === Role.Student ? 'students' : 'staffs';
+        this.filterObject.affecting = role === Role.Student ? 'students' : 'staffs';
+      });
 
     this.doRefresh();
   }
@@ -95,7 +99,13 @@ export class HolidaysPage implements OnInit {
 
           if (this.filterObject.year === year) {
             for (const holiday of holidaySet.holidays) {
-              this.holidays.push(holiday);
+              if (this.filterObject.affecting === 'students') {
+                if (holiday.holiday_people_affected === 'all' || holiday.holiday_people_affected === this.filterObject.affecting) {
+                  this.holidays.push(holiday);
+                }
+              } else {
+                this.holidays.push(holiday);
+              }
             }
           }
         }
@@ -218,7 +228,7 @@ export class HolidaysPage implements OnInit {
       const niceEDate = format(new Date(holiday.holiday_end_date), 'dd MMM');
 
       if (dateString === format(new Date(holiday.holiday_start_date), 'yyyy-MM-dd')) {
-        const holidayAffecting = holiday.holiday_people_affected === 'all' ? 'Students & Staff'
+        const holidayAffecting = holiday.holiday_people_affected === 'all' ? (this.filterObject.affecting === 'students' ? 'Students' : 'Students and Staffs')
           : new TitleCasePipe().transform(holiday.holiday_people_affected);
         const holidayData = [
           {
