@@ -488,7 +488,7 @@ export const menuItems = [
     id: 'course-schedule' as const,
     title: 'Course Schedule',
     group: 'Academic & Enrollment',
-    url: 'http://kb.sites.apiit.edu.my/knowledge-base/course-schedule/',
+    url: 'https://cloudmails-my.sharepoint.com/personal/wp_repository_staffemail_apu_edu_my/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fwp%5Frepository%5Fstaffemail%5Fapu%5Fedu%5Fmy%2FDocuments%2FScheduling%2FCourse%20Schedule&ga=1',
     img: 'assets/img/more-icons/course-schedule.png',
     role: Role.Student | Role.Lecturer | Role.Admin,
     tags: [],
