@@ -1,14 +1,14 @@
-import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 
 export function duplicateFromTime(control: AbstractControl): { [key: string]: boolean } | null {
-  const parent: FormGroup = control.parent as FormGroup;
+  const parent: UntypedFormGroup = control.parent as UntypedFormGroup;
 
   if (!parent || !parent.parent || !parent.parent.parent) {
     return null;
   }
 
   const selectedTime = parent.get('slotsTime').value;
-  const timeSlots = parent.parent.parent.get('time') as FormArray;
+  const timeSlots = parent.parent.parent.get('time') as UntypedFormArray;
   // Initialise to false
   let isDuplicated = false;
   if (selectedTime !== '') {

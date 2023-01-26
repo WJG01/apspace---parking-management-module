@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import SwiperCore, { Autoplay, Lazy, Navigation } from 'swiper';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, LoadingController, ModalController, Platform } from '@ionic/angular';
 import { catchError, throwError, switchMap, timeout, tap, Observable, map } from 'rxjs';
@@ -41,7 +41,7 @@ export class LoginPage implements OnInit {
 
   constructor(
     public alertCtrl: AlertController,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dc: DataCollectorService,
     private cas: CasTicketService,
     private ws: WsApiService,
