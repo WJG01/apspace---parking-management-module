@@ -78,6 +78,7 @@ export class ManageSettingsModalPage implements OnInit {
       const name = this.allSettings.filter(s => s.selected).map(s => s.value);
 
       this.settings.set('userProfileName', name);
+      this.settings.set('changedName', true);
       this.dismiss();
     }
   }
