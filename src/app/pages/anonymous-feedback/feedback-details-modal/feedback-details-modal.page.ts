@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { map, Observable } from 'rxjs';
 
@@ -15,12 +15,12 @@ export class FeedbackDetailsModalPage implements OnInit {
 
   @Input() feedback: AnonymousFeedbackSummary;
   details$: Observable<AnonymousFeedback>;
-  commentForm: FormGroup;
+  commentForm: UntypedFormGroup;
 
   constructor(
     private ws: WsApiService,
     private modalCtrl: ModalController,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private loadingCtrl: LoadingController,
     private component: ComponentService
   ) { }

@@ -16,12 +16,12 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "~13.3.8",
-    "@angular/core": "~13.3.8",
-    "@angular/forms": "~13.3.8",
-    "@angular/platform-browser": "~13.3.8",
-    "@angular/platform-browser-dynamic": "~13.3.8",
-    "@angular/router": "~13.3.8",
+    "@angular/common": "^14.2.12",
+    "@angular/core": "^14.2.12",
+    "@angular/forms": "^14.2.12",
+    "@angular/platform-browser": "^14.2.12",
+    "@angular/platform-browser-dynamic": "^14.2.12",
+    "@angular/router": "^14.2.12",
     "@awesome-cordova-plugins/app-availability": "^6.2.0",
     "@awesome-cordova-plugins/badge": "^6.2.0",
     "@awesome-cordova-plugins/core": "^6.2.0",
@@ -72,15 +72,15 @@
     "zone.js": "~0.11.5"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~13.3.5",
+    "@angular-devkit/build-angular": "^14.2.10",
     "@angular-eslint/builder": "~13.2.1",
     "@angular-eslint/eslint-plugin": "~13.2.1",
     "@angular-eslint/eslint-plugin-template": "~13.2.1",
     "@angular-eslint/template-parser": "~13.2.1",
-    "@angular/cli": "~13.3.5",
-    "@angular/compiler": "~13.3.8",
-    "@angular/compiler-cli": "~13.3.8",
-    "@angular/language-service": "~13.3.8",
+    "@angular/cli": "^14.2.10",
+    "@angular/compiler": "^14.2.12",
+    "@angular/compiler-cli": "^14.2.12",
+    "@angular/language-service": "^14.2.12",
     "@capacitor/cli": "^4.5.0",
     "@graphql-codegen/typescript": "1.17.4",
     "@graphql-codegen/typescript-apollo-angular": "1.17.4",
@@ -107,6 +107,6 @@
     "karma-jasmine-html-reporter": "^1.7.0",
     "protractor": "~7.0.0",
     "ts-node": "~10.7.0",
-    "typescript": "4.4.2"
+    "typescript": "4.8.4"
   }
 }

@@ -15,7 +15,6 @@ import { VisitHistoryModalPage } from './visit-history/visit-history-modal';
     IonicModule,
     ApcardQrCodePageRoutingModule
   ],
-  declarations: [ApcardQrCodePage, VisitHistoryModalPage, DressCodeReminderModalPage],
-  entryComponents: [VisitHistoryModalPage, DressCodeReminderModalPage]
+  declarations: [ApcardQrCodePage, VisitHistoryModalPage, DressCodeReminderModalPage]
 })
 export class ApcardQrCodePageModule { }
