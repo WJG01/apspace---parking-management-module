@@ -9,6 +9,7 @@ import { ComponentsModule } from 'src/app/components/components.module';
 import { SharedPipesModule } from '../../shared/shared-pipes.module';
 import { DashboardPage } from './dashboard.page';
 import { TimeParserPipe } from './time-parser/time-parser.pipe';
+import { DateWithTimezonePipe } from '../../shared/date-with-timezone/date-with-timezone.pipe';
 
 @NgModule({
   imports: [
@@ -22,6 +23,7 @@ import { TimeParserPipe } from './time-parser/time-parser.pipe';
     DashboardPageRoutingModule,
     SwiperModule
   ],
-  declarations: [DashboardPage, TimeParserPipe]
+  declarations: [DashboardPage, TimeParserPipe],
+  providers: [DateWithTimezonePipe]
 })
 export class DashboardPageModule { }

@@ -553,16 +553,16 @@
                           </h3>
                           <p class="timings">
                             <span class="ion-padding-end current-timing glob-text-bold" *ngIf="trip.times[0]">
-                              {{ trip.times[0] }}
+                              {{ trip.times[0].slice(0, -8) }}
                             </span>
                             <span class="ion-padding-end timing glob-text-bold" *ngIf="trip.times[1]">
-                              {{ trip.times[1] }}
+                              {{ trip.times[1].slice(0, -8) }}
                             </span>
                             <span class="ion-padding-end timing glob-text-bold" *ngIf="trip.times[2]">
-                              {{trip.times[2]}}
+                              {{ trip.times[2].slice(0, -8) }}
                             </span>
                             <span class="ion-padding-end timing glob-text-bold" *ngIf="trip.times[3]">
-                              {{ trip.times[3] }}
+                              {{ trip.times[3].slice(0, -8) }}
                             </span>
                           </p>
                         </div>

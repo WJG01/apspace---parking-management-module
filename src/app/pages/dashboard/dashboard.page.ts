@@ -22,6 +22,7 @@ import {
   WsApiService, ComponentService, AppLauncherService
 } from 'src/app/services';
 import { NewsDetailsModalPage } from '../news/news-details-modal/news-details-modal.page';
+import { DateWithTimezonePipe } from '../../shared/date-with-timezone/date-with-timezone.pipe';
 // import { NotifierService } from 'src/app/shared/notifier/notifier.service'; v4: this need to migrate in the future
 // import { NotificationModalPage } from '../notifications/notification-modal'; v4: this need to migrate in the future
 
@@ -123,6 +124,7 @@ export class DashboardPage implements OnInit {
     data: ChartData,
   };
   // TransiX Variables
+  timeFormat: string;
   secondLocation: string;
   firstLocation: string;
   showSetLocationsSettings = false;
@@ -159,6 +161,7 @@ export class DashboardPage implements OnInit {
     private platform: Platform,
     private settings: SettingsService,
     private storage: Storage,
+    private dateWithTimeZonePipe: DateWithTimezonePipe,
     // private notifierService: NotifierService,
     // private fcm: FcmService
   ) {
@@ -216,6 +219,10 @@ export class DashboardPage implements OnInit {
       // if (this.platform.is('cordova')) {
       //   this.runCodeOnReceivingNotification(); // notifications
       // }
+
+      if (this.settings.get('timeFormat')) {
+        this.timeFormat = this.settings.get('timeFormat');
+      }
 
       this.settings.initialSync();
       this.doRefresh();
@@ -1022,7 +1029,8 @@ export class DashboardPage implements OnInit {
       map(res => res.trips),
       map(trips => {
         return trips.filter(trip => {
-          return trip.day === this.getTodayDay(currentDate)
+          return parse(trip.time.replace(' (GMT+8)', ''), 'hh:mm aa', new Date()) >= currentDate
+          && trip.day === this.getTodayDay(currentDate)
             && ((trip.trip_from.name === firstLocation && trip.trip_to.name === secondLocation)
               || (trip.trip_from.name === secondLocation && trip.trip_to.name === firstLocation));
         });
@@ -1038,6 +1046,7 @@ export class DashboardPage implements OnInit {
               times: []
             };
 
+            curr.time = this.dateWithTimeZonePipe.transform(parse(curr.time.replace(' (GMT+8)', ''), 'hh:mm aa', new Date()), 'bus');
             prev[curr.trip_from.name + curr.trip_to.name].times.push(curr.time);
             return prev;
           },
