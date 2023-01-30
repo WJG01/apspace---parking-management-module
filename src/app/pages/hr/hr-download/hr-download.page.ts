@@ -58,10 +58,13 @@ export class HrDownloadPage {
     const link = this.payslipsUrl + downloadPayslipEndpoint + payslip;
 
     this.cas.getST(link).subscribe(st => {
-      fetch(link + `?ticket=${st}`).then(result => result.blob()).then(async blob => {
-        const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+      fetch(link + `?ticket=${st}`).then(result => result.json())
+        .then(async data => {
+          // Convert base64 to byte
+          const byteArray = new Uint8Array(atob(data.body).split('').map(char => char.charCodeAt(0)));
+          const pdfBlob = new Blob([byteArray], { type: 'application/pdf' });
 
-        if (this.platform.is('capacitor')) {
+          if (this.platform.is('capacitor')) {
           try {
             let path = `apspace/pdf/${payslip}`;
             const data: any = await this.blobToBase64(pdfBlob)
