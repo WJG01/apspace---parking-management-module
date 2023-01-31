@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { AlertButton, LoadingController, ModalController } from '@ionic/angular';
 
-import { ComponentService, NotifierService, SettingsService, WsApiService } from '../../../../services';
+import { ComponentService, SettingsService, WsApiService } from '../../../../services';
 import { AddFreeSlotBody, AddFreeSlotReview } from '../../../../interfaces';
 
 @Component({
@@ -21,8 +21,7 @@ export class ReviewSlotsModalPage {
     private loadingCtrl: LoadingController,
     private ws: WsApiService,
     private settings: SettingsService,
-    private router: Router,
-    private notifierService: NotifierService
+    private router: Router
   ) { }
 
   async submit() {
@@ -57,8 +56,10 @@ export class ReviewSlotsModalPage {
                 this.showDefaultLocationWarningAlert(this.data.location, this.data.venueId);
               }
 
-              this.notifierService.staffConsultationUpdated.next('SUCCESS');
-              this.router.navigateByUrl('iconsult/consultations', {replaceUrl: true });
+              const navigationExtras: NavigationExtras = {
+                state: { reload: true }
+              }
+              this.router.navigateByUrl('iconsult/consultations', navigationExtras);
             }
           });
       }

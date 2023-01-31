@@ -2,9 +2,8 @@ import { Component, Input } from '@angular/core';
 import { AlertButton, AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { forkJoin } from 'rxjs';
 
-import { ComponentService, NotifierService, WsApiService } from '../../../../services';
+import { ComponentService, WsApiService } from '../../../../services';
 import { ConsultationSlot, MappedSlots } from '../../../../interfaces';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-review-deletion-modal',
@@ -20,9 +19,7 @@ export class ReviewDeletionModalPage {
     private ws: WsApiService,
     private loadingCtrl: LoadingController,
     private component: ComponentService,
-    private alertCtrl: AlertController,
-    private router: Router,
-    private notifierService: NotifierService
+    private alertCtrl: AlertController
   ) { }
 
   deleteSlots() {
@@ -108,8 +105,6 @@ export class ReviewDeletionModalPage {
                     },
                     complete: () => {
                       loading.dismiss();
-                      this.notifierService.staffConsultationUpdated.next('SUCCESS');
-                      this.router.navigateByUrl('iconsult/consultations', { replaceUrl: true });
                     }
                   });
                 }
@@ -153,8 +148,6 @@ export class ReviewDeletionModalPage {
           },
           complete: () => {
             loading.dismiss();
-            this.notifierService.staffConsultationUpdated.next('SUCCESS');
-            this.router.navigateByUrl('iconsult/consultations', { replaceUrl: true });
           }
         });
       }

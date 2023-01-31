@@ -1,13 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { forkJoin, map, Observable, tap, finalize, Subscription } from 'rxjs';
+import { forkJoin, map, Observable, tap, finalize } from 'rxjs';
 import { ModalController } from '@ionic/angular';
 
 import { add, format } from 'date-fns';
 import { CalendarComponentOptions, DayConfig } from 'ion2-calendar';
 
 import { ConsultationHour, ConsultationSlot, MappedSlots } from '../../../../interfaces';
-import { NotifierService, WsApiService } from '../../../../services';
+import { WsApiService } from '../../../../services';
 import { DateWithTimezonePipe } from '../../../../shared/date-with-timezone/date-with-timezone.pipe';
 import { SlotDetailsModalPage } from '../../slot-details-modal/slot-details-modal.page';
 import { ReviewDeletionModalPage } from '../review-deletion-modal/review-deletion-modal.page';
@@ -17,7 +17,7 @@ import { ReviewDeletionModalPage } from '../review-deletion-modal/review-deletio
   templateUrl: './consultations.page.html',
   styleUrls: ['./consultations.page.scss'],
 })
-export class ConsultationsPage implements OnInit, OnDestroy {
+export class ConsultationsPage implements OnInit {
 
   slots$: Observable<MappedSlots[]>;
   summary: { availableSlots: number, bookedSlots: number };
@@ -40,30 +40,21 @@ export class ConsultationsPage implements OnInit, OnDestroy {
   deleteMode: boolean; // Allow staffs to delete slots
   rangeMode: boolean; // Determine if the ion-calendar is normal or range mode
   slotsToBeCancelled: ConsultationSlot[] = [];
-  notification: Subscription;
 
   constructor(
     private ws: WsApiService,
     private dateWithTimezonePipe: DateWithTimezonePipe,
     private modalCtrl: ModalController,
-    private router: Router,
-    private notifierService: NotifierService
+    private router: Router
   ) { }
 
   ngOnInit() {
-    this.notification = this.notifierService.staffConsultationUpdated.subscribe(data => {
-      if (data && data === 'SUCCESS') {
-        //Reload page when new slots are created
-        this.daysConfigurations = [];
-        this.doRefresh();
-        return;
-      }
-    });
+    if (this.router.getCurrentNavigation().extras.state && this.router.getCurrentNavigation().extras.state.reload) {
+      // Reload page when new slots are created
+      this.daysConfigurations = [];
+      this.doRefresh();
+    }
     this.doRefresh();
-  }
-
-  ngOnDestroy(): void {
-    this.notification.unsubscribe();
   }
 
   doRefresh(ev?) {
