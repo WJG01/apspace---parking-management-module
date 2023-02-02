@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { addYears, format } from 'date-fns';
 import { IntakeExamSchedule } from '../../../../interfaces/exam-schedule-admin';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, LoadingController, ModalController, PopoverController } from '@ionic/angular';
 import { ComponentService, WsApiService } from '../../../../services';
 import { tap } from 'rxjs';
