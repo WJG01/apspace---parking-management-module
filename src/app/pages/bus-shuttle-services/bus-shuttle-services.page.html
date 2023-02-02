@@ -161,7 +161,7 @@
                           <p>trip to</p>
                           <h3 class="glob-text-bold primary-color">
                             {{ toTrips.trip_to | uppercase }}
-                            <small *ngIf="t.trip_from.toLowerCase() === 'mosque'">
+                            <small *ngIf="toTrips.trip_to.toLowerCase() === 'mosque'">
                               (Friday Only)
                             </small>
                           </h3>
