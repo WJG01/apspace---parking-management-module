@@ -95,7 +95,7 @@ export class BusShuttleServicesPage implements OnInit {
             });
         }),
         map(trips => {
-          let filteredTrips = trips.filter(trip => trip.day === 'mon-fri' || trip.day === 'fri');
+          let filteredTrips = trips.filter(trip => trip.day.toLowerCase() === 'mon-fri' || trip.day.toLowerCase() === 'friday only');
 
           if (this.filterObject.tripDay !== 'mon-fri') {
             filteredTrips = filteredTrips.filter(trip => trip.day === this.filterObject.tripDay);
