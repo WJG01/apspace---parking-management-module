@@ -3,7 +3,7 @@ import { Observable, Subscription, tap } from 'rxjs';
 import { ExamScheduleAdmin } from '../../../interfaces/exam-schedule-admin';
 import { CalendarComponentOptions } from 'ion2-calendar';
 import { addYears, format, isValid, parse, parseISO } from 'date-fns';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, LoadingController, ModalController, Platform, PopoverController } from '@ionic/angular';
 import { ComponentService, NotifierService, WsApiService } from '../../../services';
 import { HttpParams } from '@angular/common/http';
@@ -40,14 +40,14 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
 
   examDuration: string;
 
-  examScheduleForm: UntypedFormGroup;
+  examScheduleForm: FormGroup;
 
   constructor(
     public modalCtrl: ModalController,
     public popoverCtrl: PopoverController,
     public alertCtrl: AlertController,
     public loadingCtrl: LoadingController,
-    private formBuilder: UntypedFormBuilder,
+    private formBuilder: FormBuilder,
     private ws: WsApiService,
     private component: ComponentService,
     private notifierService: NotifierService,

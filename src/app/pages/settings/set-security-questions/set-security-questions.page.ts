@@ -1,6 +1,6 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertButton } from '@ionic/angular';
 import { Observable, tap } from 'rxjs';
 
@@ -14,12 +14,12 @@ import { ComponentService, WsApiService } from '../../../services';
 })
 export class SetSecurityQuestionsPage implements OnInit {
 
-  securityQuestionForm: UntypedFormGroup;
+  securityQuestionForm: FormGroup;
   securityQuestions$: Observable<SecurityQuestionsAndAnswers>;
   skeleton = new Array(5);
 
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private ws: WsApiService,
     private component: ComponentService
   ) { }

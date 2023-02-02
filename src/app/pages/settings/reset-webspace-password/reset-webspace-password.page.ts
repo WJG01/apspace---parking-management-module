@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadingController, AlertButton } from '@ionic/angular';
 import { pluck, map } from 'rxjs';
@@ -16,11 +16,11 @@ import { ComponentService, WebspacePasswordService, WsApiService } from '../../.
 })
 export class ResetWebspacePasswordPage implements OnInit {
 
-  resetWebspaceIDPasswordForm: UntypedFormGroup;
+  resetWebspaceIDPasswordForm: FormGroup;
   name = '';
 
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private component: ComponentService,
     private loadingCtrl: LoadingController,
     private webspacePassword: WebspacePasswordService,

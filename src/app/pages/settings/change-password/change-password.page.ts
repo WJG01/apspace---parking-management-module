@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertButton, LoadingController } from '@ionic/angular';
 import { tap } from 'rxjs';
@@ -17,7 +17,7 @@ import { PasswordValidator } from '../../../validators/password.validator';
 })
 export class ChangePasswordPage implements OnInit {
 
-  changePasswordForm: UntypedFormGroup;
+  changePasswordForm: FormGroup;
   isStudent = false;
   username: string;
   apiUrl = 'https://rk0bjjav54.execute-api.ap-southeast-1.amazonaws.com/dev';
@@ -29,7 +29,7 @@ export class ChangePasswordPage implements OnInit {
   hasSpeacialCharacter = false;
 
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private storage: Storage,
     private ws: WsApiService,
     private loadingCtrl: LoadingController,

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { IonSearchbar, ModalController, PopoverController } from '@ionic/angular';
 import { concat, distinctUntilChanged, map, Observable, of, startWith } from 'rxjs';
 import { Router } from '@angular/router';
@@ -25,7 +25,7 @@ export class SearchModalComponent implements OnInit {
   /** Determine if the search component is opened under modal page or popover */
   @Input() isModal = true;
 
-  searchControl = new UntypedFormControl();
+  searchControl = new FormControl();
   searchItems$: Observable<string[]>;
 
   /** Map each item by function, defaults to `item => item.toUpperCase()`. */

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertButton, LoadingController, ModalController } from '@ionic/angular';
 
 import { Storage } from '@ionic/storage-angular';
@@ -17,7 +17,7 @@ export class BookSlotModalPage implements OnInit {
 
   @Input() slotDetails: ConsultationSlot;
   @Input() staffDetails: StaffDirectory;
-  bookForm: UntypedFormGroup;
+  bookForm: FormGroup;
   consultationOptions = [
     'Lecturer',
     'Masters Supervisor',
@@ -35,7 +35,7 @@ export class BookSlotModalPage implements OnInit {
   textFieldMaxlength = 128;
 
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private storage: Storage,
     private component: ComponentService,
     private ws: WsApiService,

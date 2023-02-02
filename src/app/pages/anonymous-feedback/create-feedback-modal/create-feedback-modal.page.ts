@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 
@@ -14,12 +14,12 @@ import { ComponentService, WsApiService } from '../../../services';
 export class CreateFeedbackModalPage implements OnInit {
 
   categories$: Observable<FeedbackCategory[]>;
-  feedbackForm: UntypedFormGroup;
+  feedbackForm: FormGroup;
 
   constructor(
     private ws: WsApiService,
     private modalCtrl: ModalController,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private component: ComponentService,
     private loadingCtrl: LoadingController
   ) { }

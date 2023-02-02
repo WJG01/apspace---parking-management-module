@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { addYears, format } from 'date-fns';
 import { IntakeExamSchedule } from '../../../../interfaces/exam-schedule-admin';
-import { UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { AlertController, LoadingController, ModalController, PopoverController } from '@ionic/angular';
 import { ComponentService, WsApiService } from '../../../../services';
 import { tap } from 'rxjs';
@@ -22,7 +22,7 @@ export class AddIntakePage implements OnInit {
   loading: HTMLIonLoadingElement;
 
 
-  intakeForm: UntypedFormGroup;
+  intakeForm: FormGroup;
   intakes = [];
 
   venues = [
@@ -48,7 +48,7 @@ export class AddIntakePage implements OnInit {
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
     public component: ComponentService,
-    private formBuilder: UntypedFormBuilder,
+    private formBuilder: FormBuilder,
     private ws: WsApiService
   ) {}
 
@@ -133,7 +133,7 @@ export class AddIntakePage implements OnInit {
   }
 
   get intakeArray() {
-    return this.intakeForm.get('intake') as UntypedFormArray;
+    return this.intakeForm.get('intake') as FormArray;
   }
 
   submit() {

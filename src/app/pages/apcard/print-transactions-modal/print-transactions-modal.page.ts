@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoadingController, ModalController, Platform } from '@ionic/angular';
 
 import { format, formatISO } from 'date-fns';
@@ -22,7 +22,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class PrintTransactionsModalPage implements OnInit {
 
   @Input() transactions: Apcard[];
-  createReport: UntypedFormGroup;
+  createReport: FormGroup;
   types = ['all', 'credit', 'debit'];
   noTransactionFound: boolean;
   todayDate = new Date();
@@ -34,7 +34,7 @@ export class PrintTransactionsModalPage implements OnInit {
 
   constructor(
     private modalCtrl: ModalController,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private component: ComponentService,
     private plt: Platform,
     private fileOpener: FileOpener,

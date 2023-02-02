@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormArray, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { Observable, shareReplay, tap } from 'rxjs';
 
@@ -19,7 +19,7 @@ import { duplicateFromTime } from './validators';
 })
 export class AddFreeSlotPage implements OnInit {
 
-  slotsForm: UntypedFormGroup;
+  slotsForm: FormGroup;
   consultationType = [
     { name: 'Single Slot', value: 'repeatnone' },
     { name: 'Weekly Repeated Slots', value: 'repeatweekly' },
@@ -43,7 +43,7 @@ export class AddFreeSlotPage implements OnInit {
   locations = ['New Campus', 'TPM', 'Online'];
 
   constructor(
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private settings: SettingsService,
     private modalCtrl: ModalController,
     private ws: WsApiService,
@@ -68,17 +68,17 @@ export class AddFreeSlotPage implements OnInit {
       endDate: [''],
       location: [location, [Validators.required]],
       venue: [venue, [Validators.required]],
-      time: new UntypedFormArray([])
+      time: new FormArray([])
     });
 
     this.addTimeSlot();
   }
 
   addTimeSlot() {
-    const group: UntypedFormGroup = this.fb.group({
+    const group: FormGroup = this.fb.group({
       slotsTime: ['', [Validators.required, duplicateFromTime]]
     });
-    const array = this.slotsForm.get('time') as UntypedFormArray;
+    const array = this.slotsForm.get('time') as FormArray;
 
     array.push(group);
   }
@@ -165,7 +165,7 @@ export class AddFreeSlotPage implements OnInit {
   }
 
   removeTimeSlot(i: number) {
-    const timeArray = this.slotsForm.get('time') as UntypedFormArray;
+    const timeArray = this.slotsForm.get('time') as FormArray;
     timeArray.removeAt(i);
   }
 
@@ -274,12 +274,12 @@ export class AddFreeSlotPage implements OnInit {
     return this.slotsForm.get('venue');
   }
 
-  get time(): UntypedFormArray {
-    return this.slotsForm.get('time') as UntypedFormArray;
+  get time(): FormArray {
+    return this.slotsForm.get('time') as FormArray;
   }
 
   getTimeControl(i: number): AbstractControl {
-    const schedule = this.slotsForm.get('time') as UntypedFormArray;
+    const schedule = this.slotsForm.get('time') as FormArray;
 
     return schedule.controls[i].get('slotsTime');
   }

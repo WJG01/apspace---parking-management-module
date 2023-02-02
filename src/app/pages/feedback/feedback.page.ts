@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoadingController, Platform } from '@ionic/angular';
 
 import { Device } from '@capacitor/device';
@@ -13,13 +13,13 @@ import { CasTicketService, ComponentService, ConfigurationsService, WsApiService
 })
 export class FeedbackPage implements OnInit {
 
-  feedbackForm: UntypedFormGroup;
+  feedbackForm: FormGroup;
   readonly screenSize = screen.width + 'x' + screen.height;
 
   constructor(
     private component: ComponentService,
     private cas: CasTicketService,
-    private fb: UntypedFormBuilder,
+    private fb: FormBuilder,
     private plt: Platform,
     private config: ConfigurationsService,
     private ws: WsApiService,
