@@ -37,7 +37,7 @@ export class LoginPage implements OnInit {
   userAuthenticated = false;
   userUnauthenticated = false;
   currentYear = new Date().getFullYear();
-  isCapacitor: boolean;
+  isMobile: boolean;
 
   constructor(
     public alertCtrl: AlertController,
@@ -57,7 +57,8 @@ export class LoginPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.isCapacitor = this.platform.is('capacitor');
+    // Both apps and mobile browser should show mobile UI
+    this.isMobile = this.platform.is('capacitor') || this.platform.is('mobileweb');
     this.news$ = this.news.get(true, true, false).pipe(
       map(newsList => {
         console.log(newsList)

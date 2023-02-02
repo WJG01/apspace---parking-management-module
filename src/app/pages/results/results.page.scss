@@ -2,6 +2,12 @@ ion-item {
   --highlight-color-valid: transparent;
 }
 
+ion-card{
+  pre {
+    white-space: pre-wrap;
+  }
+}
+
 .small-margin-right {
   margin-right: 5px;
 }

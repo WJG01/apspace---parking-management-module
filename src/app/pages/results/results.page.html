@@ -573,17 +573,25 @@
 
         <ng-template #accountBlocked>
           <ion-row>
-            <ion-col class="ion-text-center" size="8" offset="2">
-              <h3 class="ion-text-center">
-                <ion-text color="danger" class="glob-text-bold">
-                  Your account has been disabled
-                </ion-text>
-              </h3>
-
-              <ion-button (click)="openSurvey()">
+            <ion-col size-xs="12" size-md="8" offset-md="2" size-lg="8" offset-lg="2">
+              <ion-button class="ion-margin-top ion-margin-bottom" (click)="openSurvey()" expand="block" size="large">
                 Student Survey
                 <ion-icon name="newspaper" slot="end"></ion-icon>
               </ion-button>
+              <ion-card class="account-disabled">
+                <ion-card-header>
+                  <ion-card-title class="ion-text-center">
+                    <h3>
+                      <ion-text color="danger" class="glob-text-bold">
+                        Your account has been disabled
+                      </ion-text>
+                    </h3>
+                  </ion-card-title>
+                </ion-card-header>
+                <ion-card-content class="ion-padding">
+                  <pre>{{ message }}</pre>
+                </ion-card-content>
+              </ion-card>
             </ion-col>
           </ion-row>
         </ng-template>
