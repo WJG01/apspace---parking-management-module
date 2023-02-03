@@ -58,7 +58,6 @@ export class StaffDirectoryComponent implements OnInit {
         return staffs;
       }),
       tap(staffs => {
-        console.log(staffs)
         for (const staff of staffs) {
           // Filter empty string
           if (staff.DEPARTMENT) {
