@@ -38,9 +38,7 @@ export class LecturerTimetableComponent implements OnInit {
   ngOnInit() {
     this.currentWeek = this.config.currentWeek.startWeek;
 
-    this.timetables$ = this.api.getLecturerTimetable(this.id, this.lastDateOfWeekZero, this.secondsPerWeek, this.secondsPerDay).pipe(
-      tap(tt => console.log('Timetable: ', tt))
-    );
+    this.timetables$ = this.api.getLecturerTimetable(this.id, this.lastDateOfWeekZero, this.secondsPerWeek, this.secondsPerDay);
   }
 
   openStudentTimetable(intake: string) {

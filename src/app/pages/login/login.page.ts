@@ -61,7 +61,6 @@ export class LoginPage implements OnInit {
     this.isMobile = this.platform.is('capacitor') || this.platform.is('mobileweb');
     this.news$ = this.news.get(true, true, false).pipe(
       map(newsList => {
-        console.log(newsList)
         return newsList.map(item => {
           if (item && item.featured_image_src.length > 0) {
             return {
