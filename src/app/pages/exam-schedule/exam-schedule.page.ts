@@ -75,23 +75,23 @@ export class ExamSchedulePage implements OnInit {
         map(res => {
           res.forEach(exam => {
             if (exam.endDate) {
-              if (exam.examType === 'Non Exam'){
+              if (exam.examType === 'Non Exam') {
                 return Object.assign(
                   exam, {duration: this.showDuration(new Date(exam.questionReleaseDate), new Date(`${exam.endDate}T${exam.until.split('T')[1]}`))}
                 );
               }
-              else if (exam.examType === 'Normal Exam'){
+              else if (exam.examType === 'Normal Exam') {
                 return Object.assign(
                   exam, {duration: this.showDuration(new Date(exam.since), new Date(`${exam.endDate}T${exam.until.split('T')[1]}`))}
                 );
               }
             } else {
-              if (exam.examType === 'Non Exam'){
+              if (exam.examType === 'Non Exam') {
                 return Object.assign(
                   exam, {duration: this.showDuration(new Date(exam.questionReleaseDate), new Date(`${exam.endDate}T${exam.until.split('T')[1]}`))}
                 );
               }
-              else if (exam.examType === 'Normal Exam'){
+              else if (exam.examType === 'Normal Exam') {
                 return Object.assign(
                   exam, {duration: this.showDuration(new Date(exam.since), new Date(`${exam.endDate}T${exam.until.split('T')[1]}`))}
                 );
