@@ -264,7 +264,7 @@
                         {{ surveyQuestion.content }}</ion-text>
                     </p>
                     <div>
-                      <ng-template [ngIf]="surveyQuestion.type === 'MCQ'" [ngIfElse]="showTextArea">
+                      <ng-template [ngIf]="surveyQuestion.type.includes('MCQ')" [ngIfElse]="showTextArea">
                         <ion-list class="ion-no-padding">
                           <ion-radio-group
                             [(ngModel)]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content">
