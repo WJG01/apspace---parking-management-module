@@ -37,7 +37,7 @@ export class LoginPage implements OnInit {
   userAuthenticated = false;
   userUnauthenticated = false;
   currentYear = new Date().getFullYear();
-  isMobile= false;
+  isMobile = false;
 
   constructor(
     public alertCtrl: AlertController,
