@@ -45,7 +45,7 @@
             <ion-skeleton-text animated style="width: 100%; height: 35px;"></ion-skeleton-text>
           </ion-item>
         </ng-template>
-        <ng-container *ngIf="selectedSurveyType === 'Semester'">
+        <ng-container *ngIf="selectedSurveyType === 'Module Survey'">
           <ng-container *ngIf="(COURSE_MODULES$ | async) as intakeModules; else loadingModules">
             <ion-item lines="none" [disabled]="intakeModules.length <= 0"
                       mode="md">
