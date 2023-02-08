@@ -57,7 +57,7 @@
                   <ion-item lines="none">
                     <ion-label position="stacked">Day</ion-label>
                     <ion-select [(ngModel)]="filterObject.tripDay" (ngModelChange)="doRefresh()" interface="popover"
-                      mode="md">
+                      mode="md" [disabled]="dayFilterDisabled">
                       <ion-select-option value="sat">Saturday</ion-select-option>
                       <ion-select-option value="sun">Sunday</ion-select-option>
                       <ion-select-option value="mon-fri">Monday - Friday</ion-select-option>
