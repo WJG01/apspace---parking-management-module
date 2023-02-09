@@ -221,7 +221,9 @@ export class ExamScheduleDetailsPage implements OnInit {
   }
 
   async editIntake(intakeDetails: IntakeExamSchedule) {
-    intakeDetails.DOCKETSDUE = format(new Date(intakeDetails.DOCKETSDUE), 'yyyy-MM-dd');
+    if (intakeDetails.DOCKETSDUE) {
+      intakeDetails.DOCKETSDUE = format(new Date(intakeDetails.DOCKETSDUE), 'yyyy-MM-dd');
+    }
     intakeDetails.RESULT_DATE = format(new Date(intakeDetails.RESULT_DATE), 'yyyy-MM-dd');
     const filteredIntakesToBeValidated = this.intakesToBeValidated.filter(intake => intake !== intakeDetails.INTAKE);
     const modal = await this.modalCtrl.create({
