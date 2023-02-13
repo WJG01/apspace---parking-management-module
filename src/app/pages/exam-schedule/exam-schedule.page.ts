@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { finalize, map, Observable } from 'rxjs';
+import { isValid } from 'date-fns';
 
 import { Storage } from '@ionic/storage-angular';
 import { formatDistanceStrict } from 'date-fns';
@@ -9,6 +10,7 @@ import { formatDistanceStrict } from 'date-fns';
 import { ExamSchedule, Role, StudentProfile } from '../../interfaces';
 import { ApiService, ComponentService, SettingsService, WsApiService } from '../../services';
 import { SearchModalComponent } from '../../components/search-modal/search-modal.component';
+import { ExamDurationPipe } from '../exam-schedule-admin/add-exam-schedule/exam-duration.pipe';
 
 @Component({
   selector: 'app-exam-schedule',
@@ -18,6 +20,7 @@ import { SearchModalComponent } from '../../components/search-modal/search-modal
 export class ExamSchedulePage implements OnInit {
 
   exams$: Observable<ExamSchedule[]>;
+  examDuration: string;
   skeletons = new Array(3);
   intake: string;
   intakes: string[];
@@ -69,25 +72,33 @@ export class ExamSchedulePage implements OnInit {
 
     if (this.intake) {
       this.exams$ = this.ws.get<ExamSchedule[]>(`/examination/${this.intake}`, { auth: false, caching }).pipe(
-        map(exams => {
-          for (const exam of exams) {
+        map(res => {
+          res.forEach(exam => {
             if (exam.endDate) {
               if (exam.examType === 'Non Exam') {
-                exam.duration = formatDistanceStrict(new Date(exam.questionReleaseDate), new Date(exam.until));
-                // return Object.assign(exam, { duration:  })
-              } else if (exam.examType === 'Normal Exam') {
-                exam.duration = formatDistanceStrict(new Date(exam.since), new Date(exam.until));
+                return Object.assign(
+                  exam, {duration: this.showDuration(new Date(exam.questionReleaseDate), new Date(`${exam.endDate}T${exam.until.split('T')[1]}`))}
+                );
+              }
+              else if (exam.examType === 'Normal Exam') {
+                return Object.assign(
+                  exam, {duration: this.showDuration(new Date(exam.since), new Date(`${exam.endDate}T${exam.until.split('T')[1]}`))}
+                );
               }
             } else {
               if (exam.examType === 'Non Exam') {
-                exam.duration = formatDistanceStrict(new Date(exam.questionReleaseDate), new Date(exam.until));
-              } else if (exam.examType === 'Normal Exam') {
-                exam.duration = formatDistanceStrict(new Date(exam.since), new Date(exam.until));
+                return Object.assign(
+                  exam, {duration: this.showDuration(new Date(exam.questionReleaseDate), new Date(`${exam.endDate}T${exam.until.split('T')[1]}`))}
+                );
+              }
+              else if (exam.examType === 'Normal Exam') {
+                return Object.assign(
+                  exam, {duration: this.showDuration(new Date(exam.since), new Date(`${exam.endDate}T${exam.until.split('T')[1]}`))}
+                );
               }
             }
-          }
-
-          return exams;
+          });
+          return res;
         }),
         finalize(() => {
           if (refresher) {
@@ -127,6 +138,15 @@ export class ExamSchedulePage implements OnInit {
     const { data: { item: intake } = { item: this.intake } } = await modal.onDidDismiss();
     if (intake) {
       this.changeIntake(intake);
+    }
+  }
+
+  showDuration(formattedStartDate: Date, formattedEndDate: Date) {
+    const duration = new ExamDurationPipe().transform(formattedStartDate, formattedEndDate);
+
+    if (isValid(formattedStartDate) && isValid(formattedEndDate)) {
+      this.examDuration = duration;
+      return this.examDuration;
     }
   }
 }

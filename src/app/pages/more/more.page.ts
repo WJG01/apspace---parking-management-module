@@ -61,10 +61,12 @@ export class MorePage implements OnInit {
       this.storage.get('role'),
       this.storage.get('canAccessResults')
     ]).then(([role, canAccessResults = false]: [Role, boolean]) => {
+      // For students
       if (role & Role.Student) {
         this.filteredMenu = menusWithoutParent.filter(menu => menu.role & role);
       } else {
-        this.filteredMenu = menu.filter(menu =>
+        // For other roles
+        this.filteredMenu = menusWithoutParent.filter(menu =>
           ((menu.role & role) && ((menu.canAccess && menu.canAccess === canAccessResults) || !menu.canAccess))
         );
       }

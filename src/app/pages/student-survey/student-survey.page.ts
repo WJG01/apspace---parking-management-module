@@ -47,7 +47,7 @@ export class StudentSurveyPage implements OnInit {
   };
   showFieldMissingError = false;
   skeletons = new Array(3);
-  surveyTypes = ['Programme Evaluation', 'Semester'];
+  surveyTypes = ['Programme Evaluation', 'Module Survey'];
   constructor(
     private ws: WsApiService,
     private route: ActivatedRoute,

@@ -32,6 +32,7 @@ export class BusShuttleServicesPage implements OnInit {
   devUrl = 'https://2o7wc015dc.execute-api.ap-southeast-1.amazonaws.com/dev';
   timeFormat: string;
   locationLoaded: boolean;
+  dayFilterDisabled: boolean; // Only disable when user filtering location to Mosque
 
   constructor(
     private ws: WsApiService,
@@ -57,6 +58,7 @@ export class BusShuttleServicesPage implements OnInit {
 
   doRefresh(refresher?) {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
+    this.dayFilterDisabled = false;
 
     if (refresher) { // clear the filter data if user refresh the page
       this.filterObject = {
@@ -65,7 +67,13 @@ export class BusShuttleServicesPage implements OnInit {
         tripDay: this.getTodayDay(this.todaysDate),
       };
     }
-
+    // Day filter will be disabled when location is changed to mosque
+    if (this.filterObject.fromLocation.toLowerCase() === 'mosque' || this.filterObject.toLocation.toLowerCase() === 'mosque') {
+      this.dayFilterDisabled = true;
+      this.filterObject.tripDay = 'friday only';
+    } else {
+      this.filterObject.tripDay = this.getTodayDay(this.todaysDate);
+    }
     // Added this check so Filter card will not be loading when users are filtering trips
     if (!this.locationLoaded) {
       this.locations$ = this.ws.get<TransixLocation[]>('/v2/transix/locations', { url: this.devUrl, caching }).pipe(
@@ -95,7 +103,7 @@ export class BusShuttleServicesPage implements OnInit {
             });
         }),
         map(trips => {
-          let filteredTrips = trips.filter(trip => trip.day === 'mon-fri' || trip.day === 'fri');
+          let filteredTrips = trips.filter(trip => trip.day.toLowerCase() === 'mon-fri' || trip.day.toLowerCase() === 'friday only');
 
           if (this.filterObject.tripDay !== 'mon-fri') {
             filteredTrips = filteredTrips.filter(trip => trip.day === this.filterObject.tripDay);

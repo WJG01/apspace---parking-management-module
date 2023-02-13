@@ -108,16 +108,26 @@
                     </ion-row>
                     <ion-row class="ion-no-padding">
                       <ion-col size-xs="12" size-sm="6" size-md="3">
-                        <p>
-                          <ion-icon class="glob-text-bold" name="time-outline"></ion-icon>
-                          {{ timetable.TIME_FROM_ISO | timeParser: timeFormatChangeFlag: true }} - {{
-                          timetable.TIME_TO_ISO | timeParser: timeFormatChangeFlag: true }}
-                        </p>
+                        <ng-container *ngIf="timetable.TIME_FROM_ISO && timetable.TIME_TO_ISO else freeTime">
+                          <p>
+                            <ion-icon class="glob-text-bold" name="time-outline"></ion-icon>
+                            {{ timetable.TIME_FROM_ISO | timeParser: timeFormatChangeFlag: true }} - {{
+                            timetable.TIME_TO_ISO | timeParser: timeFormatChangeFlag: true }}
+                          </p>
+                        </ng-container>
+                        <ng-template #freeTime>
+                          <p>
+                            <ion-icon class="glob-text-bold" name="time-outline"></ion-icon>
+                            -
+                          </p>
+                        </ng-template>
                       </ion-col>
                       <ion-col size-xs="12" size-sm="6" size-md="4">
                         <p>
-                          <ion-icon class="glob-text-bold" name="location-outline"></ion-icon>
-                          {{ timetable.ROOM }} | {{ timetable.LOCATION }}
+                          <a [routerLink]="['/student-timetable', { room: timetable.ROOM }]">
+                            <ion-icon class="glob-text-bold" name="location-outline"></ion-icon>
+                            {{ timetable.ROOM }} | {{ timetable.LOCATION }}
+                          </a>
                         </p>
                       </ion-col>
                       <ion-col size-xs="12" size-sm="12" size-md="5" *ngIf="timetable.NAME">
