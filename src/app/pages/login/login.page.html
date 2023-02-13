@@ -1,12 +1,4 @@
 <ion-content>
-  <ng-template #systemName let-mobile>
-
-  <ion-row  class="ion-justify-content-center">  
-    <ion-col size="4.8">
-      <img src="assets/icon/apspace-black.svg">
-    </ion-col>
-  </ion-row>
-  </ng-template>
 
   <!--Mobile Version-->
   <ng-container *ngIf="isMobile; else webVersion">
@@ -16,6 +8,12 @@
         <ion-col size="10" offset="1" size-md="6" offset-md="3" size-lg="4" offset-lg="4">
           <ion-img src="assets/img/login.png"></ion-img>
         </ion-col>
+        <!-- Apspace Logo  -->
+        <ion-row class="ion-justify-content-center">
+          <ion-col size="4.8">
+            <img src="assets/icon/apspace-black.svg">
+          </ion-col>
+        </ion-row>
         <!--Form & Welcome Message-->
         <ion-col size="10" offset="1" size-md="6" offset-md="3" size-lg="4" offset-lg="4">
           <form (ngSubmit)="login()" class="ion-no-padding">
