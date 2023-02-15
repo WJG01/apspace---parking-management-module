@@ -4,22 +4,26 @@
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
     <ion-title>Payslip | EA Form | PCB</ion-title>
-    <ion-buttons slot="end">
-      <ion-button *ngIf="segmentValue ==='myFiles'" color="primary" fill="outline" (click)="doRefresh()">
-        REFRESH
-        <ion-icon name="refresh" slot="end"></ion-icon>
-      </ion-button>
-      <ion-button *ngIf="canAccessPayslipFileSearch" color="tertiary" fill="outline" (click)="syncFiles()">
-        SYNC
-        <ion-icon name="sync" slot="end"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <div class="glob-container">
     <ion-grid>
+      <ion-row class="ion-justify-content-end">
+        <ion-col size="auto">
+          <ion-buttons>
+            <ion-button *ngIf="segmentValue ==='myFiles'" color="primary" fill="outline" (click)="doRefresh()">
+              Refresh
+              <ion-icon name="refresh" slot="end"></ion-icon>
+            </ion-button>
+            <ion-button *ngIf="canAccessPayslipFileSearch" color="tertiary" fill="outline" (click)="syncFiles()">
+              Sync
+              <ion-icon name="sync" slot="end"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-col>
+      </ion-row>
       <ion-row>
         <ion-col class="ion-padding">
           <ion-segment [(ngModel)]="segmentValue" (ionChange)="segmentChanged($event)">
@@ -115,7 +119,7 @@
 
     <ng-template #loading>
       <div class="loader-container">
-        <loading-spinner message="Loading..." size="50px"></loading-spinner>
+        <loading-spinner message="Loading..." size="2px"></loading-spinner>
       </div>
     </ng-template>
   </div>
