@@ -82,7 +82,7 @@ export const menuItems = [
     id: 'e-forms' as const,
     title: 'e-Forms',
     group: 'Collaboration & Information Resources',
-    url: 'http://forms.sites.apiit.edu.my/home',
+    url: 'https://forms.sites.apiit.edu.my/home/',
     attachTicket: true,
     img: 'assets/img/more-icons/forms-and-applications.png',
     role: Role.Student | Role.Lecturer | Role.Admin,
