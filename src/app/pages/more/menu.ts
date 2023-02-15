@@ -488,7 +488,7 @@ export const menuItems = [
     id: 'course-schedule' as const,
     title: 'Course Schedule',
     group: 'Academic & Enrollment',
-    url: 'https://cloudmails-my.sharepoint.com/personal/wp_repository_staffemail_apu_edu_my/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fwp%5Frepository%5Fstaffemail%5Fapu%5Fedu%5Fmy%2FDocuments%2FScheduling%2FCourse%20Schedule&ga=1',
+    url: 'https://cloudmails-my.sharepoint.com/:f:/g/personal/wp_repository_staffemail_apu_edu_my/EmTbyZJXirtCtdmD80VH4iIBEer2zx1gU2tHnE3OgVSB_Q',
     img: 'assets/img/more-icons/course-schedule.png',
     role: Role.Student | Role.Lecturer | Role.Admin,
     tags: [],
