@@ -266,26 +266,29 @@
                     <div>
                       <ng-template [ngIf]="surveyQuestion.type.includes('MCQ')" [ngIfElse]="showTextArea">
                         <ion-list class="ion-no-padding">
-                          <ion-radio-group
-                            [(ngModel)]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content">
-                            <ng-container *ngFor="let mcqType of mcqAnswers">
-                              <ion-item lines="none" class="d-block d-lg-inline rdBtn"
-                                        [class.rdBtn-with-na]="!surveyQuestion.applicable" *ngFor="let mcqAnswer of mcqType[surveyQuestion.type]">
-                                <ion-radio color="success" slot="start" [value]="mcqAnswer.ID">
-                                </ion-radio>
-                                <ion-label
-                                  [color]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content === mcqAnswer.ID ? 'success' : ''">
-                                  {{ mcqAnswer.VALUE }}
-                                </ion-label>
-                              </ion-item>
-                            </ng-container>
-                            <ion-item lines="none" *ngIf="!surveyQuestion.applicable" class="d-block d-lg-inline na">
-                              <ion-radio value="0">
-                              </ion-radio>
-                              <ion-label style="font-size: 14px;">
-                                N/A
-                              </ion-label>
-                            </ion-item>
+                          <ion-radio-group [(ngModel)]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content">
+                            <ion-grid>
+                              <ion-row>
+                                <ng-container *ngFor="let mcqType of mcqAnswers">
+                                  <ng-container *ngFor="let mcqAnswer of mcqType[surveyQuestion.type]">
+                                    <ion-col class="d-block d-lg-inline rdBtn" [class.rdBtn-with-na]="!surveyQuestion.applicable">
+                                      <ion-item lines="none">
+                                        <ion-radio color="success" [value]="mcqAnswer.ID"></ion-radio>
+                                        <ion-label [color]="response.answers[response.answers.indexOf(getAnswerByQuestionId(surveyQuestion.id))].content === mcqAnswer.ID ? 'success' : ''">
+                                          {{ mcqAnswer.VALUE }}
+                                        </ion-label>
+                                      </ion-item>
+                                    </ion-col>
+                                  </ng-container>
+                                </ng-container>
+                                <ion-col class="d-block d-lg-inline na">
+                                  <ion-item lines="none" *ngIf="!surveyQuestion.applicable">
+                                    <ion-radio value="0"></ion-radio>
+                                    <ion-label style="font-size: 14px;">N/A</ion-label>
+                                  </ion-item>
+                                </ion-col>
+                              </ion-row>
+                            </ion-grid>
                           </ion-radio-group>
                         </ion-list>
                       </ng-template>
