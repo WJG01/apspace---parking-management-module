@@ -43,7 +43,7 @@ export class PrintTransactionsModalPage implements OnInit {
 
   ngOnInit() {
     this.createReport = this.fb.group({
-      month: ['', Validators.required],
+      month: [format(new Date(), 'MMMM yyyy'), Validators.required],
       type: ['', Validators.required]
     });
   }
