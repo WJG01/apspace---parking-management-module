@@ -23,9 +23,10 @@
               Balance
             </ion-card-subtitle>
             <ng-container *ngIf="!noBalance; else none">
+              <!-- Balance may return 0 which is a falsy value therefore need to check "undefined" instead -->
               <ion-card-title class="glob-text-bold"
-                [color]="balance >= 2 ? 'success' : balance < 2 && balance > 0 ? 'warning' : 'danger'"
-                *ngIf="balance; else loadBalance">
+                              [color]="balance >= 2 ? 'success' : balance < 2 && balance > 0 ? 'warning' : 'danger'"
+                              *ngIf="balance !== undefined; else loadBalance">
                 {{ balance | currency:'RM' }}
               </ion-card-title>
               <ng-template #loadBalance>
@@ -55,7 +56,7 @@
       <ion-col size-xs="12" size-md="8" pull-md="4">
         <ion-card class="ion-no-margin ion-margin-top ion-margin-bottom">
           <ion-accordion-group>
-            <ion-accordion value="filters" [disabled]="noBalance || !balance ? true : false">
+            <ion-accordion value="filters" [disabled]="noBalance || balance === undefined ? true : false">
               <ion-item slot="header">
                 <ion-icon class="ion-padding-end" name="filter"></ion-icon>
                 <ion-label>Filters</ion-label>
