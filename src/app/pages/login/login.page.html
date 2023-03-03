@@ -404,9 +404,9 @@
                               </ion-col>
                             </ion-row>
                             <ion-row *ngIf="(department.shifts['Mon-Thu'].length === department.shifts['Fri'].length
-                            && department.shifts['Mon-Thu'].length > 0
-                            && department.shifts['Mon-Thu'][0].start_time === department.shifts['Fri'][0].start_time
-                            && department.shifts['Mon-Thu'][0].end_time === department.shifts['Fri'][0].end_time
+                                        && department.shifts['Mon-Thu'].length > 0
+                                        && department.shifts['Mon-Thu'][0].start_time === department.shifts['Fri'][0].start_time
+                                        && department.shifts['Mon-Thu'][0].end_time === department.shifts['Fri'][0].end_time
                                         && department.shifts['Mon-Thu'][1]); else showSeperate">
                               <ion-col>
                                 <p class="ion-no-margin ion-margin-top operation-hours-subtitle">
