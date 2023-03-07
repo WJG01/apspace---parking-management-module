@@ -134,6 +134,7 @@ export class ResultsPage implements OnInit {
   }
 
   intakeChanged() {
+    this.noSummary = true;
     this.results$ = this.getResults(this.selectedIntake, { caching: 'network-or-cache' });
     this.getCourseDetails(this.selectedIntake, { caching: 'network-or-cache' });
   }
