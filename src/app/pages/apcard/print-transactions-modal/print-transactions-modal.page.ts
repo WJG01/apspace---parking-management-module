@@ -31,6 +31,7 @@ export class PrintTransactionsModalPage implements OnInit {
   tableBody: any;
   summaryBody: any;
   pdfTitle = '';
+  currentMonth = format(new Date(), 'MMMM yyyy');
 
   constructor(
     private modalCtrl: ModalController,
@@ -43,7 +44,7 @@ export class PrintTransactionsModalPage implements OnInit {
 
   ngOnInit() {
     this.createReport = this.fb.group({
-      month: [format(new Date(), 'MMMM yyyy'), Validators.required],
+      month: [this.currentMonth, Validators.required],
       type: ['', Validators.required]
     });
   }
