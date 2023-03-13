@@ -171,11 +171,6 @@ export class BusShuttleServicesPage implements OnInit {
       );
   }
 
-  maja() {
-
-  }
-
-
   // Swap between from and to location
   swapLocations() {
     if (this.filterObject.fromLocation === this.filterObject.toLocation) return; // Prevent user from spamming the button if from and to location is the same
