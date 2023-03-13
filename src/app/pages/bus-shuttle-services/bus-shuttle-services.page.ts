@@ -71,7 +71,7 @@ export class BusShuttleServicesPage implements OnInit {
     if (this.filterObject.fromLocation.toLowerCase() === 'mosque' || this.filterObject.toLocation.toLowerCase() === 'mosque') {
       this.dayFilterDisabled = true;
       this.filterObject.tripDay = 'friday only';
-    } else {
+    } else if (this.filterObject.tripDay === 'friday only') { // Defaults trip day to mon-fri, in case location is changed from mosque
       this.filterObject.tripDay = this.getTodayDay(this.todaysDate);
     }
     // Added this check so Filter card will not be loading when users are filtering trips
@@ -170,6 +170,11 @@ export class BusShuttleServicesPage implements OnInit {
         finalize(() => refresher && refresher.target.complete())
       );
   }
+
+  maja() {
+
+  }
+
 
   // Swap between from and to location
   swapLocations() {
