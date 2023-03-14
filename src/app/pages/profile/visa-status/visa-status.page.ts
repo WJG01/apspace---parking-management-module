@@ -108,6 +108,11 @@ export class VisaStatusPage implements OnInit {
     }).pipe(
       finalize(() => refresher && refresher.target.complete())
     );
+    this.visa$.subscribe({
+      error: () => {
+        this.component.toastMessage('Please enter a valid Travel Document number', 'danger');
+      }
+    });
   }
 
   trackAnotherApplication() {
