@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { finalize, map, Observable, Subscription, tap } from 'rxjs';
-import { ModalController } from '@ionic/angular';
+import { IonContent, ModalController, ViewWillEnter } from '@ionic/angular';
 
 import { format } from 'date-fns';
 
@@ -13,7 +13,9 @@ import { PrintTransactionsModalPage } from './print-transactions-modal/print-tra
   templateUrl: './apcard.page.html',
   styleUrls: ['./apcard.page.scss'],
 })
-export class ApcardPage implements OnInit {
+export class ApcardPage implements OnInit, ViewWillEnter {
+
+  @ViewChild(IonContent) content: IonContent;
 
   transaction$: Observable<Apcard[]>;
   skeleton = new Array(2);
@@ -41,6 +43,16 @@ export class ApcardPage implements OnInit {
   ngOnInit() {
     this.doRefresh();
     this.hideHeader = this.config.comingFromTabs;
+  }
+
+  ionViewWillEnter() {
+    this.config.goToTopEvent.subscribe({
+      next: (tabPath) => {
+        if (tabPath === 'apcard') {
+          this.content.scrollToTop(500);
+        }
+      }
+    });
   }
 
   doRefresh(refresher?) {

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { IonContent, ModalController, ViewWillEnter } from '@ionic/angular';
 import { finalize, map, Observable, tap } from 'rxjs';
 
 import { MappedAttendance, AttendanceLegend, Course, Attendance } from '../../interfaces';
@@ -12,7 +12,9 @@ import { AttendanceDetailsModalPage } from './attendance-details-modal/attendanc
   templateUrl: './attendance.page.html',
   styleUrls: ['./attendance.page.scss'],
 })
-export class AttendancePage implements OnInit {
+export class AttendancePage implements OnInit, ViewWillEnter {
+
+  @ViewChild(IonContent) content: IonContent;
 
   course$: Observable<Course[]>;
   attendance$: Observable<MappedAttendance[]>;
@@ -34,6 +36,16 @@ export class AttendancePage implements OnInit {
     this.doRefresh();
 
     this.hideHeader = this.config.comingFromTabs;
+  }
+
+  ionViewWillEnter() {
+    this.config.goToTopEvent.subscribe({
+      next: (tabPath) => {
+        if (tabPath === 'attendance') {
+          this.content.scrollToTop(500);
+        }
+      }
+    });
   }
 
   doRefresh(refresher?) {

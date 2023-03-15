@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Network } from '@capacitor/network';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,8 @@ export class ConfigurationsService {
 
   private readonly version = '4.0.2'; // APSpace App Version
   private connected = true; // Has to be true initially
+
+  public goToTopEvent = new Subject();
 
   constructor(private router: Router) {
     this.networkStatus();
@@ -77,4 +80,9 @@ export class ConfigurationsService {
     return `&copy; ${this.currentYear} Asia Pacific University of Technology & Innovation (APU). All
     rights reserved.`;
   }
+
+  goToTop(tabPath: string) {
+    this.goToTopEvent.next(tabPath);
+  }
+
 }
