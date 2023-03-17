@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Keyboard } from '@capacitor/keyboard';
-import { IonTabs, ModalController, Platform } from '@ionic/angular';
+import { IonContent, IonTabs, ModalController, Platform } from '@ionic/angular';
 
 import { Storage } from '@ionic/storage-angular';
 
@@ -34,7 +34,7 @@ export class TabsPage implements OnInit {
     private plt: Platform,
     private component: ComponentService,
     private settings: SettingsService,
-    private router: Router
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -55,6 +55,10 @@ export class TabsPage implements OnInit {
 
   onChange() {
     this.activeTab = this.tabs.getSelected();
+  }
+
+  navigateToTop(tabPath: string) {
+    this.config.goToTop(tabPath);
   }
 
   // Key Combination (Ctrl + S)

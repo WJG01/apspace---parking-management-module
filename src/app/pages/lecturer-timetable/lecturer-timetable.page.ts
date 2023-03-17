@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { ActionSheetController, IonRefresher } from '@ionic/angular';
+import { ActionSheetController, IonContent, IonRefresher, ViewWillEnter } from '@ionic/angular';
 import { formatISO } from 'date-fns';
 import { Observable, Subscription, of } from 'rxjs';
 import { catchError, finalize, switchMap, tap} from 'rxjs/operators';
@@ -17,8 +17,9 @@ import { ComponentService, ConfigurationsService, SettingsService, WsApiService 
   styleUrls: ['./lecturer-timetable.page.scss'],
   providers: [DatePipe]
 })
-export class LecturerTimetablePage implements OnInit {
+export class LecturerTimetablePage implements OnInit, ViewWillEnter {
 
+  @ViewChild(IonContent) content: IonContent;
   printUrl = 'https://api.apiit.edu.my/timetable-print/index.php';
 
   wday = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
@@ -75,6 +76,16 @@ export class LecturerTimetablePage implements OnInit {
       if (data && data === 'SUCCESS') {
         this.timeFormatChangeFlag = !this.timeFormatChangeFlag;
         this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
+
+  ionViewWillEnter() {
+    this.config.goToTopEvent.subscribe({
+      next: (tabPath) => {
+        if (tabPath === 'lecturer-timetable') {
+          this.content.scrollToTop(500);
+        }
       }
     });
   }

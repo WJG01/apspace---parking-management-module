@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   DmuFormContent,
   DmuFormRegistration,
@@ -10,9 +10,9 @@ import {
   StudentProfile
 } from '../../interfaces';
 import { NEVER, catchError, map, Observable, of, tap, timeout } from 'rxjs';
-import { ComponentService, AppLauncherService, WsApiService } from '../../services';
+import { ComponentService, AppLauncherService, WsApiService, ConfigurationsService } from '../../services';
 import { Router } from '@angular/router';
-import { AlertController, LoadingController, ModalController } from '@ionic/angular';
+import { AlertController, IonContent, LoadingController, ModalController } from '@ionic/angular';
 import { VirtualCardModalPage } from './virtual-card-modal/virtual-card-modal';
 import { RequestChangeModalPage } from './request-update-modal/request-update-modal';
 import { Storage } from '@ionic/storage-angular';
@@ -23,6 +23,8 @@ import { Storage } from '@ionic/storage-angular';
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage implements OnInit {
+
+  @ViewChild(IonContent) content: IonContent;
   photo$: Observable<StudentPhoto>;
   profile$: Observable<StudentProfile>;
   staffProfile$: Observable<StaffProfile[]>;
@@ -54,7 +56,8 @@ export class ProfilePage implements OnInit {
     private component: ComponentService,
     private loadingCtrl: LoadingController,
     private appLauncher: AppLauncherService,
-    private router: Router
+    private router: Router,
+    private config: ConfigurationsService
   ) { }
 
   ngOnInit() {
@@ -71,6 +74,13 @@ export class ProfilePage implements OnInit {
     this.dmuNeeded$ = this.isDmuNeeded();
     this.registration$ = this.getDmuRegistration();
     this.form$ = this.getDmuForm();
+    this.config.goToTopEvent.subscribe({
+      next: (tabPath) => {
+        if (tabPath === 'profile') {
+          this.content.scrollToTop(500);
+        }
+      }
+    });
   }
 
   isDmuNeeded() {
