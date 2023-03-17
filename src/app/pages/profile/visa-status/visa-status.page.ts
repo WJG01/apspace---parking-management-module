@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CountryData, Role, StudentProfile, VisaDetails } from '../../../interfaces';
-import { finalize, map, Observable, tap } from 'rxjs';
+import { catchError, finalize, map, NEVER, Observable, tap } from 'rxjs';
 import { ComponentService, WsApiService } from '../../../services';
 import { Storage } from '@ionic/storage-angular';
 
@@ -106,6 +106,11 @@ export class VisaStatusPage implements OnInit {
       auth: false,
       caching,
     }).pipe(
+      catchError(err => {
+        this.component.toastMessage('Please enter a valid Travel Document number', 'danger');
+        console.error(err);
+        return NEVER;
+      }),
       finalize(() => refresher && refresher.target.complete())
     );
   }
