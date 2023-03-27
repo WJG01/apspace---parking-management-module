@@ -1,0 +1,6 @@
+:host ::ng-deep img {
+  // Fix issue with stretched images
+  height: auto;
+  object-fit: cover;
+  object-position: center;
+}
