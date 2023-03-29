@@ -29,7 +29,7 @@ export class BusShuttleServicesPage implements OnInit {
     tripsSkeleton: new Array(2),
     timeSkeleton: new Array(4)
   };
-  devUrl = 'https://2o7wc015dc.execute-api.ap-southeast-1.amazonaws.com/dev';
+  devUrl = 'https://h6fff01q79.execute-api.ap-southeast-1.amazonaws.com/staging';
   timeFormat: string;
   locationLoaded: boolean;
   dayFilterDisabled: boolean; // Only disable when user filtering location to Mosque
@@ -76,14 +76,15 @@ export class BusShuttleServicesPage implements OnInit {
     }
     // Added this check so Filter card will not be loading when users are filtering trips
     if (!this.locationLoaded) {
-      this.locations$ = this.ws.get<TransixLocation[]>('/v2/transix/locations', { url: this.devUrl, caching }).pipe(
-        tap(locations => this.locations = locations),
-        tap(_ => this.locationLoaded = true),
-        finalize(() => refresher && refresher.target.complete())
+      this.locations$ = this.ws.get<TransixLocation[]>('/v2/transix/locations', { url: this.devUrl, auth: false, caching })
+        .pipe(
+          tap(locations => this.locations = locations),
+          tap(_ => this.locationLoaded = true),
+          finalize(() => refresher && refresher.target.complete())
       );
     }
 
-    this.trips$ = this.ws.get<TransixScheduleSet>('/v2/transix/schedule/active', { url: this.devUrl, caching })
+    this.trips$ = this.ws.get<TransixScheduleSet>('/v2/transix/schedule/active', { url: this.devUrl, auth: false, caching })
       .pipe(
         // Get Information about the Set
         tap(set => this.setDetails = set),
@@ -91,16 +92,13 @@ export class BusShuttleServicesPage implements OnInit {
         map(trips => {
           // Map Trip Time into proper Date format. TransiX by default uses 12 hours format
           trips
-            .map(trip => trip.time = this.dateWithTimezonePipe.transform(parse(trip.time, 'hh:mm aa', new Date()), 'bus'));
-          // Sort based on Time
-          return trips
-            .sort((a, b) => {
-              const timeFormat = this.timeFormat === '12' ? 'hh:mm aa' : 'HH:mm';
-              const firstTime = parse(a.time.replace(' (GMT+8)', ''), timeFormat, new Date());
-              const secondTime = parse(b.time.replace(' (GMT+8)', ''), timeFormat, new Date());
-
-              return firstTime.getTime() - secondTime.getTime();
+            .map(trip => {
+              if (!trip.time.includes(' ')) {
+                const dateObject = new Date(trip.time);
+                trip.time = this.dateWithTimezonePipe.transform(dateObject, 'bus');
+              }
             });
+          return trips;
         }),
         map(trips => {
           let filteredTrips = trips.filter(trip => trip.day.toLowerCase() === 'mon-fri' || trip.day.toLowerCase() === 'friday only');
