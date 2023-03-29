@@ -45,7 +45,7 @@
     <!--Tab for Small Screen-->
     <ion-tab-bar *ngIf="smallScreen">
       <ion-tab-button [ngClass]="{ 'active-tab': activeTab === tab.path }" *ngFor="let tab of tabItems; index as i"
-        [tab]="tab.path">
+        [tab]="tab.path" (click)="activeTab === tab.path && navigateToTop(tab.path)">
         <ion-label class="tab-label">{{ tab.name }}</ion-label>
         <ion-icon class="tab-icon" [name]="activeTab === tab.path? tab.fillIcon : tab.outlineIcon"></ion-icon>
       </ion-tab-button>

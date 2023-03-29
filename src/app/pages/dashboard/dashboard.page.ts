@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { AlertButton, ModalController, NavController, Platform } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AlertButton, IonContent, ModalController, NavController, Platform, ViewWillEnter } from '@ionic/angular';
 import { Observable, Subscription, combineLatest, forkJoin, of, zip, map, finalize, catchError, concatMap, mergeMap, shareReplay, switchMap, tap, toArray } from 'rxjs';
 
 import { format, parse } from 'date-fns';
@@ -19,7 +19,7 @@ import {
 import {
   CasTicketService, NewsService,
   NotificationService, SettingsService, StudentTimetableService,
-  WsApiService, ComponentService, AppLauncherService
+  WsApiService, ComponentService, AppLauncherService, ConfigurationsService
 } from 'src/app/services';
 import { NewsDetailsModalPage } from '../news/news-details-modal/news-details-modal.page';
 import { DateWithTimezonePipe } from '../../shared/date-with-timezone/date-with-timezone.pipe';
@@ -34,7 +34,9 @@ SwiperCore.use([Autoplay, Lazy, Navigation]);
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss']
 })
-export class DashboardPage implements OnInit {
+export class DashboardPage implements OnInit, ViewWillEnter {
+
+  @ViewChild(IonContent) content: IonContent;
   // Roles Variables
   isStudent: boolean;
   isLecturer: boolean;
@@ -162,6 +164,7 @@ export class DashboardPage implements OnInit {
     private settings: SettingsService,
     private storage: Storage,
     private dateWithTimeZonePipe: DateWithTimezonePipe,
+    private config: ConfigurationsService,
     // private notifierService: NotifierService,
     // private fcm: FcmService
   ) {
@@ -226,6 +229,16 @@ export class DashboardPage implements OnInit {
 
       this.settings.initialSync();
       this.doRefresh();
+    });
+  }
+
+  ionViewWillEnter() {
+    this.config.goToTopEvent.subscribe({
+      next: (tabPath) => {
+        if (tabPath === 'dashboard') {
+          this.content.scrollToTop(500);
+        }
+      }
     });
   }
 

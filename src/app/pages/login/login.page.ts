@@ -307,7 +307,7 @@ export class LoginPage implements OnInit {
   }
 
   async openLink(
-    linkName: 'timetable' | 'holiday' | 'moodle' | 'apkey' | 'apkeyPassword' | 'troubleshooting' | 'apu' | 'aplc' | 'apiit' | 'corporateTraining' | 'facebook' | 'twitter' | 'linkedin' | 'playStore' | 'appStore' | 'privacyPolicy' | 'termsOfUse') {
+    linkName: 'timetable' | 'holiday' | 'moodle' | 'apkey' | 'apkeyPassword' | 'troubleshooting' | 'apu' | 'aplc' | 'apiit' | 'corporateTraining' | 'facebook' | 'twitter' | 'linkedin' | 'playStore' | 'appStore' | 'privacyPolicy' | 'termsOfUse' | 'graduation') {
     let url = '';
     switch (linkName) {
       case 'timetable':
@@ -360,6 +360,9 @@ export class LoginPage implements OnInit {
         break;
       case 'termsOfUse':
         url = 'https://www.apu.edu.my/terms-use';
+        break;
+      case 'graduation':
+        url = 'http://graduation.sites.apiit.edu.my/';
         break;
       default:
         break;

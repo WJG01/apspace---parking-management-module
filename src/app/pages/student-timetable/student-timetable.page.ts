@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ActionSheetController, ModalController, Platform } from '@ionic/angular';
+import { ActionSheetController, IonContent, ModalController, Platform, ViewWillEnter } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Browser } from '@capacitor/browser';
 import { format, formatISO } from 'date-fns';
@@ -23,7 +23,10 @@ import { TheWeekPipe } from './theweek.pipe';
   templateUrl: './student-timetable.page.html',
   styleUrls: ['./student-timetable.page.scss'],
 })
-export class StudentTimetablePage implements OnInit {
+export class StudentTimetablePage implements OnInit, ViewWillEnter {
+
+  @ViewChild(IonContent) content: IonContent;
+
   printUrl = 'https://api.apiit.edu.my/timetable-print/index.php';
   wday = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
@@ -203,6 +206,16 @@ export class StudentTimetablePage implements OnInit {
       }
     });
 
+  }
+
+  ionViewWillEnter() {
+    this.config.goToTopEvent.subscribe({
+      next: (tabPath) => {
+        if (tabPath === 'student-timetable') {
+          this.content.scrollToTop(500);
+        }
+      }
+    });
   }
 
   ngOnDestroy() {

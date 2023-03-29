@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { AlertButton, AlertController, NavController } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AlertButton, AlertController, IonContent, NavController, ViewWillEnter } from '@ionic/angular';
 import { map, Observable } from 'rxjs';
 
 import { Storage } from '@ionic/storage-angular';
 
 import { menu, menusWithoutParent } from './menu';
 import { Role } from '../../interfaces';
-import { CasTicketService, SettingsService } from '../../services';
+import { CasTicketService, ConfigurationsService, SettingsService } from '../../services';
 import { MenuID, MenuItem } from './menu.interface';
 import { ComponentService } from '../../services';
 
@@ -18,7 +18,9 @@ const ICONS_PATH = 'assets/img/more-icons'; // Main Icons Path
   styleUrls: ['./more.page.scss'],
 })
 
-export class MorePage implements OnInit {
+export class MorePage implements OnInit, ViewWillEnter {
+
+  @ViewChild(IonContent) content: IonContent;
 
   keyIcon: { [key: string]: string; } = {
     ['Finance']: `${ICONS_PATH}/finance.png`,
@@ -42,7 +44,8 @@ export class MorePage implements OnInit {
     private storage: Storage,
     public navCtrl: NavController,
     private settings: SettingsService,
-    public component: ComponentService
+    public component: ComponentService,
+    private config: ConfigurationsService
   ) { }
 
   ngOnInit() {
@@ -76,6 +79,16 @@ export class MorePage implements OnInit {
         map(favs => favs.map(fav => menu.find(menu => menu.id === fav && menu.role & role))
           .filter(menu => menu !== undefined)),
       );
+    });
+  }
+
+  ionViewWillEnter() {
+    this.config.goToTopEvent.subscribe({
+      next: (tabPath) => {
+        if (tabPath === 'more') {
+          this.content.scrollToTop(500);
+        }
+      }
     });
   }
 
