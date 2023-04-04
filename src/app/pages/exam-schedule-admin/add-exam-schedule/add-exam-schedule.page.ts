@@ -18,6 +18,7 @@ import { ManageAssessmentTypesPage } from './manage-assessment-types/manage-asse
 })
 export class AddExamSchedulePage implements OnInit, OnDestroy {
   // devURL = 'https://swze54usn5.execute-api.ap-southeast-1.amazonaws.com/dev';
+  newExamId: any;
 
   @Input() onEdit: boolean;
   @Input() examScheduleDetails?: ExamScheduleAdmin;
@@ -253,7 +254,8 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
                   const body = new HttpParams({ fromObject: { ...bodyObject } }).toString();
                   const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
                   this.ws.post('/exam/create_exam_schedule', { body, headers }).subscribe({
-                    next: () => {
+                    next: (res:any) => {
+                      this.newExamId = res.EXAMID;
                       this.component.toastMessage('Exam Schedule added successfully!', 'success');
                     },
                     error: (err) => {
@@ -261,7 +263,7 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
                       this.component.toastMessage(`${ err.status }: ${ err.error.error }`, 'danger');
                     },
                     complete: () => {
-                      this.dismissLoading().then(() => this.modalCtrl.dismiss('Wrapped Up!'));
+                      this.dismissLoading().then(() => this.modalCtrl.dismiss(this.newExamId));
                     }
                   });
                 }
@@ -286,7 +288,7 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
     if (isValid(formattedStartDate) && isValid(formattedEndDate)) {
       this.examDuration = duration;
     }
-  }
+  } 
 
   async presentLoading() {
     this.loading = await this.loadingCtrl.create({

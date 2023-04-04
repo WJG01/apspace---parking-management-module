@@ -19,7 +19,7 @@ import Fuse from 'fuse.js';
 export class ExamScheduleAdminPage implements OnInit {
   loading: HTMLIonLoadingElement;
 
-  // devURL = 'https://swze54usn5.execute-api.ap-southeast-1.amazonaws.com/dev';
+  devURL = 'https://swze54usn5.execute-api.ap-southeast-1.amazonaws.com/dev';
 
   examScheduleListOptions = [
     'Exam Schedule',
@@ -70,17 +70,17 @@ export class ExamScheduleAdminPage implements OnInit {
   }
 
   doRefresh(refresher?) {
-    this.examSchedules$ = this.ws.get<ExamScheduleAdmin[]>('/exam/current_exam').pipe(
+    this.examSchedules$ = this.ws.get<ExamScheduleAdmin[]>('/exam/current_exam', { url:this.devURL }).pipe(
       shareReplay(1)
     );
 
     const lastYear = format(subYears(new Date(), 1), 'yyyy');
 
-    this.pastExamSchedules$ = this.ws.get<ExamScheduleAdmin[]>(`/exam/past_exam?year=${lastYear}`).pipe(
+    this.pastExamSchedules$ = this.ws.get<ExamScheduleAdmin[]>(`/exam/past_exam?year=${lastYear}`, { url:this.devURL }).pipe(
       shareReplay(1)
     );
 
-    this.ws.get<any>('/exam/intake_listing').pipe(
+    this.ws.get<any>('/exam/intake_listing', { url:this.devURL }).pipe(
       tap(intakes => {
         intakes.forEach(intake => this.intakes.push(intake.COURSE_CODE_ALIAS));
       }),
@@ -91,7 +91,7 @@ export class ExamScheduleAdminPage implements OnInit {
   doRefreshResit(selectedIntake) {
     const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     this.resitExamSchedules$ = this.ws.get<ResitExamSchedule[]>(
-      `/exam/resit_exam_schedule_by_intake?intake=${selectedIntake}&types=Resit`, { headers }
+      `/exam/resit_exam_schedule_by_intake?intake=${selectedIntake}&types=Resit`, { headers , url: this.devURL }
     ).pipe(
       shareReplay(1)
     );
@@ -159,7 +159,7 @@ export class ExamScheduleAdminPage implements OnInit {
               this.presentLoading();
               const body = new HttpParams({ fromObject: { ...bodyObject } }).toString();
               const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-              this.ws.post('/exam/delete_exam_schedule', { body, headers }).subscribe({
+              this.ws.post('/exam/delete_exam_schedule', { body, headers, url: this.devURL }).subscribe({
                 next: () => {
                   this.component.toastMessage('Exam Schedule deleted successfully!', 'success');
                 },
@@ -189,6 +189,7 @@ export class ExamScheduleAdminPage implements OnInit {
     modal.onDidDismiss().then((data) => {
       if (data.data !== null) {
         this.doRefresh();
+        this.router.navigate(['exam-schedule-details', data.data], { replaceUrl: false })
       }
     });
 
