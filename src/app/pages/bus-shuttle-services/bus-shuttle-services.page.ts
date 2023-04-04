@@ -29,7 +29,6 @@ export class BusShuttleServicesPage implements OnInit {
     tripsSkeleton: new Array(2),
     timeSkeleton: new Array(4)
   };
-  devUrl = 'https://h6fff01q79.execute-api.ap-southeast-1.amazonaws.com/staging';
   timeFormat: string;
   locationLoaded: boolean;
   dayFilterDisabled: boolean; // Only disable when user filtering location to Mosque
@@ -76,7 +75,7 @@ export class BusShuttleServicesPage implements OnInit {
     }
     // Added this check so Filter card will not be loading when users are filtering trips
     if (!this.locationLoaded) {
-      this.locations$ = this.ws.get<TransixLocation[]>('/v2/transix/locations', { url: this.devUrl, auth: false, caching })
+      this.locations$ = this.ws.get<TransixLocation[]>('/transix-v2/locations', { auth: false, caching })
         .pipe(
           tap(locations => this.locations = locations),
           tap(_ => this.locationLoaded = true),
@@ -84,7 +83,7 @@ export class BusShuttleServicesPage implements OnInit {
       );
     }
 
-    this.trips$ = this.ws.get<TransixScheduleSet>('/v2/transix/schedule/active', { url: this.devUrl, auth: false, caching })
+    this.trips$ = this.ws.get<TransixScheduleSet>('/transix-v2/schedule/active', { auth: false, caching })
       .pipe(
         // Get Information about the Set
         tap(set => this.setDetails = set),

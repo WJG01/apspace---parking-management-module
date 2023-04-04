@@ -88,7 +88,7 @@ export class HolidaysPage implements OnInit {
     this.holidaysOnCalendar = [];
     this.holidays = [];
 
-    this.holidaySets$ = this.ws.get<TransixHolidaySet[]>('/v2/transix/holiday/active', { url: this.devUrl, caching }).pipe(
+    this.holidaySets$ = this.ws.get<TransixHolidaySet[]>('/transix-v2/holiday/active', { caching }).pipe(
       tap(holidaySets => {
         for (const holidaySet of holidaySets) {
           const year = holidaySet.year;
