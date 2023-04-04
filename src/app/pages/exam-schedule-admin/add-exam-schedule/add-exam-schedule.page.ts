@@ -18,7 +18,7 @@ import { ManageAssessmentTypesPage } from './manage-assessment-types/manage-asse
 })
 export class AddExamSchedulePage implements OnInit, OnDestroy {
   // devURL = 'https://swze54usn5.execute-api.ap-southeast-1.amazonaws.com/dev';
-  newExamId: any;
+  newExamId: string;
 
   @Input() onEdit: boolean;
   @Input() examScheduleDetails?: ExamScheduleAdmin;
