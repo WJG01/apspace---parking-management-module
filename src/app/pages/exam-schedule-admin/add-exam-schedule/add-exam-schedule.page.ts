@@ -288,7 +288,7 @@ export class AddExamSchedulePage implements OnInit, OnDestroy {
     if (isValid(formattedStartDate) && isValid(formattedEndDate)) {
       this.examDuration = duration;
     }
-  } 
+  }
 
   async presentLoading() {
     this.loading = await this.loadingCtrl.create({

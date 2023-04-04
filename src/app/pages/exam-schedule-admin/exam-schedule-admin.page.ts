@@ -91,7 +91,7 @@ export class ExamScheduleAdminPage implements OnInit {
   doRefreshResit(selectedIntake) {
     const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     this.resitExamSchedules$ = this.ws.get<ResitExamSchedule[]>(
-      `/exam/resit_exam_schedule_by_intake?intake=${selectedIntake}&types=Resit`, { headers  }
+      `/exam/resit_exam_schedule_by_intake?intake=${selectedIntake}&types=Resit`, { headers }
     ).pipe(
       shareReplay(1)
     );

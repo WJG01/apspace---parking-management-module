@@ -5,8 +5,8 @@
     </ion-buttons>
     <ion-title>Exam List</ion-title>
     <ion-buttons slot="end">
-      <ion-button *ngIf="!isPast && selectedExamScheduleOption === 'Exam Schedule'" 
-                  [disabled]="examScheduleToBeDeleted.length > 0" 
+      <ion-button *ngIf="!isPast && selectedExamScheduleOption === 'Exam Schedule'"
+                  [disabled]="examScheduleToBeDeleted.length > 0"
                   (click)="toggleRemoveExamSchedule()" color="danger"
                   fill="outline">
         <ion-icon [name]="onDelete? 'close' : 'checkbox'"></ion-icon>
