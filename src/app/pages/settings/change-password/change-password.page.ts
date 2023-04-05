@@ -78,8 +78,7 @@ export class ChangePasswordPage implements OnInit {
   canChange() {
     if (this.hasDigit && this.hasLowerCase && this.hasSpeacialCharacter && this.hasUpperCase && (this.changePasswordForm.get('new_password').value === this.changePasswordForm.get('confirm_password').value)) {
       return true;
-    }
-    
+    } 
     return false;
   }
 
