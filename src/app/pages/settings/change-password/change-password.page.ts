@@ -60,7 +60,7 @@ export class ChangePasswordPage implements OnInit {
       const specialCharacterRegExp = /(?=.*?[#?!@$%~()_{}-])/;
 
       this.hasUpperCase = upperCaseRegExp.test(newPassword);
-      this.passwordLengthMatch = newPassword.length > 8;
+      this.passwordLengthMatch = newPassword.length >= 8;
       this.hasLowerCase = lowerCaseRegExp.test(newPassword);
       this.hasDigit = digitRegExp.test(newPassword);
       this.hasSpeacialCharacter = specialCharacterRegExp.test(newPassword);
@@ -73,6 +73,13 @@ export class ChangePasswordPage implements OnInit {
     this.ws.get(endpoint, { caching: 'cache-only' }).pipe(
       tap(user => this.username = this.isStudent ? user['STUDENT_NUMBER'] : user[0]['ID'])
     ).subscribe();
+  }
+
+  canChange() {
+    if (this.hasDigit && this.hasLowerCase && this.hasSpeacialCharacter && this.hasUpperCase && (this.changePasswordForm.get('new_password').value === this.changePasswordForm.get('confirm_password').value)) {
+      return true;
+    } 
+    return false;
   }
 
   async changePassword() {
