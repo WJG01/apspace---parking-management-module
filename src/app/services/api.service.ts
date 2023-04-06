@@ -72,6 +72,6 @@ export class ApiService {
   getLocations(refresher: boolean): Observable<TransixLocation[]> {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
 
-    return this.ws.get<TransixLocation[]>('/v2/transix/locations', { caching, url: this.transixDevUrl });
+    return this.ws.get<TransixLocation[]>('/transix-v2/locations', { caching });
   }
 }
