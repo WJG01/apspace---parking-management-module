@@ -1041,7 +1041,8 @@ export class DashboardPage implements OnInit, ViewWillEnter {
       map(res => res.trips),
       map(trips => {
         return trips.filter(trip => {
-          return parse(trip.time.replace(' (GMT+8)', ''), 'hh:mm aa', new Date()) >= currentDate
+          const dateObject = new Date(trip.time);
+          return dateObject >= currentDate
           && trip.day === this.getTodayDay(currentDate)
             && ((trip.trip_from.name === firstLocation && trip.trip_to.name === secondLocation)
               || (trip.trip_from.name === secondLocation && trip.trip_to.name === firstLocation));
@@ -1058,7 +1059,7 @@ export class DashboardPage implements OnInit, ViewWillEnter {
               times: []
             };
 
-            curr.time = this.dateWithTimeZonePipe.transform(parse(curr.time.replace(' (GMT+8)', ''), 'hh:mm aa', new Date()), 'bus');
+            curr.time = this.dateWithTimeZonePipe.transform(curr.time, 'bus');
             prev[curr.trip_from.name + curr.trip_to.name].times.push(curr.time);
             return prev;
           },
