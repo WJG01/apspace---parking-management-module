@@ -20,7 +20,7 @@ export class NoticeBoardComponent implements OnInit {
   noticeBoardItems$: Observable<News[]>;
   swiperConfig: SwiperOptions = {
     pagination: {
-      dynamicBullets: true
+      clickable: true
     },
     spaceBetween: 10
   }
@@ -54,7 +54,7 @@ export class NoticeBoardComponent implements OnInit {
         swiper.slideToLoop(0);
         isEnd = false;
       }
-    }, 3000);
+    }, 8000);
 
     swiper.on('touchEnd', function () {
       isDragged = false;
