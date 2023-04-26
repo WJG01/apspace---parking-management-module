@@ -22,8 +22,14 @@ export class NoticeBoardComponent implements OnInit {
     pagination: {
       clickable: true
     },
+    autoplay: {
+      delay: 8000,
+      pauseOnMouseEnter: true,
+      disableOnInteraction: false
+    },
+    speed: 500,
     spaceBetween: 10
-  }
+  };
 
   constructor(
     private news: NewsService,
@@ -40,32 +46,5 @@ export class NoticeBoardComponent implements OnInit {
     } else {
       this.component.openLink(news.link);
     }
-  }
-
-  setSwiperInstance(swiper: Swiper) {
-    let isEnd = false;
-    let isDragged = false;
-
-    setInterval(() => {
-      if (!isDragged) {
-        swiper.slideNext(500);
-      }
-      if (isEnd) {
-        swiper.slideToLoop(0);
-        isEnd = false;
-      }
-    }, 8000);
-
-    swiper.on('touchEnd', function () {
-      isDragged = false;
-    })
-
-    swiper.on('sliderFirstMove', function () {
-      isDragged = true;
-    })
-
-    swiper.on('reachEnd', function () {
-      isEnd = true;
-    });
   }
 }
