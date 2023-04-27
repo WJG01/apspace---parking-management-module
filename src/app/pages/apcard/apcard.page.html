@@ -14,7 +14,7 @@
     <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
   </ion-refresher>
 
-  <div class="glob-container">
+  <div class="glob-container" *ngIf="(transaction$ | async); else showMessage">
     <ion-row>
       <ion-col size-xs="12" size-md="4" push-md="8">
         <ion-card class="ion-no-margin ion-margin-top sticky">
@@ -161,4 +161,41 @@
       </ion-card>
     </ng-template>
   </div>
+
+  <ng-template class="glob-container" #showMessage>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size-xs="12" size-md="8">
+        <ion-card color="danger" class="ion-no-margin ion-margin-bottom">
+          <ion-card-header>
+            <ion-card-title class="glob-text-bold ion-text-center">
+              IMPORTANT NOTICE
+            </ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="ion-padding-bottom">
+              Dear APSpace Users,
+            </p>
+            <p>
+              We regret to inform you that the APCard system in APSpace is currently unavailable due to technical issues. We are working to resolve the issue as quickly as possible, and apologize for any inconvenience this may cause.
+            </p>
+            <p>
+              In the meantime, if you need to view your card balance, please visit the kiosk located on level 3 or any card balance readers available. For top-up, please proceed to the kiosk.
+            </p>
+            <p>
+              We appreciate your patience and understanding, and will keep you updated on the status of the APCard system.
+            </p>
+            <p class="ion-padding-bottom">
+              Thank you for your cooperation.
+            </p>
+            <p>
+              Best Regards,
+            </p>
+            <p>
+              The APSpace Team
+            </p>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ng-template>
 </ion-content>
