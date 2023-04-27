@@ -148,7 +148,6 @@ export class DashboardPage implements OnInit, ViewWillEnter {
   numberOfUnreadMsgs: number;
   showAnnouncement = false; // E-Orientation Announcement Image
   intakeGroup: string;
-  transixDevUrl = 'https://2o7wc015dc.execute-api.ap-southeast-1.amazonaws.com/dev';
 
   constructor(
     private component: ComponentService,
@@ -312,7 +311,7 @@ export class DashboardPage implements OnInit, ViewWillEnter {
   getHolidays(refresher: boolean): Observable<any> {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
 
-    return this.ws.get<TransixHolidaySet[]>('/v2/transix/holiday/active', { url: this.transixDevUrl, caching }).pipe(
+    return this.ws.get<TransixHolidaySet[]>('/transix-v2/holiday/active', { caching }).pipe(
       // Auto Refresh if Holidays Not Found
       switchMap(sets => {
         const currentYear = new Date().getFullYear();
@@ -774,7 +773,7 @@ export class DashboardPage implements OnInit, ViewWillEnter {
   getUpcomingHoliday(date: Date, refresher?: boolean): Observable<EventComponentConfigurations[]> {
     const caching = refresher ? 'network-or-cache' : 'cache-only';
 
-    return this.ws.get<TransixHolidaySet[]>('/v2/transix/holiday/active', { url: this.transixDevUrl, caching }).pipe(
+    return this.ws.get<TransixHolidaySet[]>('/transix-v2/holiday/active', { caching }).pipe(
       map(sets => sets.find(s => s.year === date.getFullYear())?.holidays || []),
       map(holidays => {
         const studentHoliday = holidays
@@ -1038,11 +1037,12 @@ export class DashboardPage implements OnInit, ViewWillEnter {
     this.showSetLocationsSettings = false;
     const currentDate = new Date();
 
-    return this.ws.get<TransixScheduleSet>('/v2/transix/schedule/active', { url: this.transixDevUrl }).pipe(
+    return this.ws.get<TransixScheduleSet>('/transix-v2/schedule/active').pipe(
       map(res => res.trips),
       map(trips => {
         return trips.filter(trip => {
-          return parse(trip.time.replace(' (GMT+8)', ''), 'hh:mm aa', new Date()) >= currentDate
+          const dateObject = new Date(trip.time);
+          return dateObject >= currentDate
           && trip.day === this.getTodayDay(currentDate)
             && ((trip.trip_from.name === firstLocation && trip.trip_to.name === secondLocation)
               || (trip.trip_from.name === secondLocation && trip.trip_to.name === firstLocation));
@@ -1059,7 +1059,7 @@ export class DashboardPage implements OnInit, ViewWillEnter {
               times: []
             };
 
-            curr.time = this.dateWithTimeZonePipe.transform(parse(curr.time.replace(' (GMT+8)', ''), 'hh:mm aa', new Date()), 'bus');
+            curr.time = this.dateWithTimeZonePipe.transform(curr.time, 'bus');
             prev[curr.trip_from.name + curr.trip_to.name].times.push(curr.time);
             return prev;
           },

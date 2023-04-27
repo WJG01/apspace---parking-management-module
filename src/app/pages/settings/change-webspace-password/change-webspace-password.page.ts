@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertButton, LoadingController } from '@ionic/angular';
 
@@ -13,10 +13,10 @@ import { ComponentService, WebspacePasswordService } from '../../../services';
 })
 export class ChangeWebspacePasswordPage implements OnInit {
 
-  changePasswordForm: FormGroup;
+  changePasswordForm: UntypedFormGroup;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private component: ComponentService,
     private loadingCtrl: LoadingController,
     private webspacePassword: WebspacePasswordService,

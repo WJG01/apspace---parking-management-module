@@ -18,7 +18,6 @@ registerLocaleData(localEn, 'en-US', localeEnExtra);
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -32,6 +31,6 @@ registerLocaleData(localEn, 'en-US', localeEnExtra);
     { provide: LOCALE_ID, useValue: 'en-US' },
     Badge
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
