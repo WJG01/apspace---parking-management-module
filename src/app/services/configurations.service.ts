@@ -9,7 +9,7 @@ import { Subject } from 'rxjs';
 })
 export class ConfigurationsService {
 
-  private readonly version = '4.0.2'; // APSpace App Version
+  private readonly version = '4.1.1'; // APSpace App Version
   private connected = true; // Has to be true initially
 
   public goToTopEvent = new Subject();
