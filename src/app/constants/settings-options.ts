@@ -31,6 +31,7 @@ export const StudentDashboardSection = [
 export const StaffDashboardSection = [
   { name: 'Notice Board', value: 'noticeBoard' },
   { name: 'News', value: 'news' },
+  { name: 'Upcoming Trips', value: 'upcomingTrips' },
   { name: 'APCard Chart', value: 'apcard' },
 ];
 
