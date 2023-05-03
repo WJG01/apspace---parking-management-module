@@ -8,6 +8,7 @@ import { format, subYears } from 'date-fns';
 import { SearchModalComponent } from '../../components/search-modal/search-modal.component';
 import { HttpParams } from '@angular/common/http';
 import { AddExamSchedulePage } from './add-exam-schedule/add-exam-schedule.page';
+import Fuse from 'fuse.js';
 
 @Component({
   selector: 'app-exam-schedule-admin',
@@ -37,6 +38,12 @@ export class ExamScheduleAdminPage implements OnInit {
 
   examScheduleToBeDeleted: ExamScheduleAdmin[] = [];
   intakes = [];
+  filterModule = '';
+  options: Fuse.IFuseOptions<ExamScheduleAdmin> = {
+    keys: [
+      { name: 'MODULE_CODE' }
+    ]
+  };
 
   constructor(
     public router: Router,
