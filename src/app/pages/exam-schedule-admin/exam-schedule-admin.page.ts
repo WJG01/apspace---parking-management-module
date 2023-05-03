@@ -189,6 +189,7 @@ export class ExamScheduleAdminPage implements OnInit {
     modal.onDidDismiss().then((data) => {
       if (data.data !== null) {
         this.doRefresh();
+        this.router.navigate(['exam-schedule-details', data.data], { replaceUrl: false })
       }
     });
 
