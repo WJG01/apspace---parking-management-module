@@ -1,5 +1,5 @@
 <ng-container *ngIf="(noticeBoardItems$ | async) as noticeBoardItems; else slideLoader">
-  <swiper (swiper)="setSwiperInstance($event)" [config]="swiperConfig">
+  <swiper [config]="swiperConfig">
     <ng-template *ngFor="let noticeBoardItem of noticeBoardItems" swiperSlide>
       <div class="slider-container" (click)="openSlideLink(noticeBoardItem)">
         <img
