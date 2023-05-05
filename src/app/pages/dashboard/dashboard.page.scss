@@ -194,14 +194,25 @@
   }
 }
 
+// News
+.news-title {
+  color: var(--ion-color-step-550);
+}
+
+.news-posted-time {
+  font-size: .8rem;
+  margin-top: .2rem;
+}
+
 // Upcoming Trips
 .locations {
   font-size: 1.2em;
 }
 
 .bus-timing-container {
-  background-color: var(--ion-color-light);
-  border-radius: 5px;
+  border: 1px solid var(--ion-border-color);
+  border-radius: 10px;
+  box-shadow: var(--ion-shadow) 0 3px 1px 1px, var(--ion-shadow) 0 2px 2px 0, var(--ion-shadow) 0 5px 10px 0 !important;
 
   .bus-border {
     border-radius: 5px 20px 20px 0;
