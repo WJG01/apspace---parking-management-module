@@ -489,15 +489,17 @@
 
           <ng-container *ngIf="news$ | async as news; else loadingNews">
             <ng-container *ngIf="news.length > 0; else noNews">
-              <ion-row class="ion-align-items-center">
+              <ion-row class="ion-align-items-center ion-margin-bottom">
                 <ion-col *ngFor="let newsItem of news">
                   <ion-item detail="true" button="true" lines="none" (click)="newsDetails(newsItem)">
                     <ion-thumbnail slot="start">
                       <img [src]="newsItem.url" />
                     </ion-thumbnail>
                     <ion-label>
-                      <h3 class="ion-text-wrap" [innerHTML]="newsItem.title"></h3>
-                      <p>
+                      <ion-text class="news-title ion-margin-bottom">
+                        <h3 class="ion-text-wrap glob-text-bold" [innerHTML]="newsItem.title"></h3>
+                      </ion-text>
+                      <p class="news-posted-time">
                         Posted on {{ newsItem.updated | dateWithTimezone: 'dd MMM yy' }}
                       </p>
                     </ion-label>
@@ -541,7 +543,7 @@
                       <!--Indicates Title and Bus Timing-->
                       <ion-col class="bus-border" [style.borderLeft]="'1rem solid ' + trip.trip_from_color"
                         style="border-radius: 5px 0 0 5px">
-                        <div class="ion-padding bus-timing-container">
+                        <div class="ion-padding">
                           <h3 class="locations glob-text-bold">
                             <span class="ion-padding-end">
                               {{ trip.trip_from }}
