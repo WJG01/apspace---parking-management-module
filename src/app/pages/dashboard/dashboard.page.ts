@@ -127,8 +127,6 @@ export class DashboardPage implements OnInit, ViewWillEnter {
   };
   // TransiX Variables
   timeFormat: string;
-  secondLocation: string;
-  firstLocation: string;
   showSetLocationsSettings = false;
   transixSkeleton = new Array(2);
   // Other Variables
@@ -210,14 +208,6 @@ export class DashboardPage implements OnInit, ViewWillEnter {
         this.enableMalaysiaTimezone = data
       );
 
-      combineLatest([
-        this.settings.get$('busFirstLocation'),
-        this.settings.get$('busSecondLocation'),
-      ]).subscribe(([busFirstLocation, busSecondLocation]) => {
-        this.firstLocation = busFirstLocation;
-        this.secondLocation = busSecondLocation;
-      });
-
       // if (this.platform.is('cordova')) {
       //   this.runCodeOnReceivingNotification(); // notifications
       // }
@@ -250,12 +240,9 @@ export class DashboardPage implements OnInit, ViewWillEnter {
     combineLatest([
       this.settings.get$('busFirstLocation'),
       this.settings.get$('busSecondLocation'),
-    ]).subscribe(([busFirstLocation, busSecondLocation]) => {
-      if (busFirstLocation !== this.firstLocation || busSecondLocation !== this.secondLocation
-        || busFirstLocation !== this.firstLocation && busSecondLocation !== this.secondLocation) {
-        this.upcomingTrips$ = this.getUpcomingTrips(busFirstLocation, busSecondLocation);
-      }
-    });
+    ]).subscribe(([busFirstLocation, busSecondLocation]) =>
+      this.upcomingTrips$ = this.getUpcomingTrips(busFirstLocation, busSecondLocation)
+    );
 
     // tslint:disable-next-line:no-bitwise
     this.news$ = this.news.get(refresher, this.isStudent, this.isLecturer || this.isAdmin).pipe(
@@ -276,8 +263,6 @@ export class DashboardPage implements OnInit, ViewWillEnter {
     this.quote$ = this.ws.get<Quote>('/apspacequote', { auth: false });
     // Get Holiday TransiX
     this.holidays$ = this.getHolidays(true);
-    // Get Upcoming Trips
-    this.upcomingTrips$ = this.getUpcomingTrips(this.firstLocation, this.secondLocation);
     // Get Student Photo
     this.photo$ = this.ws.get<StudentPhoto>('/student/photo')
       .pipe(map(image => image.base64_photo = `data:image/jpg;base64,${image?.base64_photo}`));  // no-cache for student photo
