@@ -16,7 +16,17 @@
     <ng-container *ngIf="items.length > 0; else noItems">
       <ion-item *ngFor="let item of items" lines="none" button="true" (click)="select(item)">
         {{ item }}
+        <ng-container *ngIf="defaultItems.includes(item)">
+          <ion-button fill="clear" slot="end" color="medium" (click)="removeItem(item)">
+            <ion-icon name="close"></ion-icon>
+          </ion-button>
+        </ng-container>
       </ion-item>
+    
+      <ion-text fill="clear" class="search-history-text" *ngIf="!searchControl.value" (click)="clearSearchHistory()" color="medium">
+        Clear Search History
+      </ion-text>      
+      
     </ng-container>
 
     <ng-template #noItems>

@@ -3,6 +3,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { IonSearchbar, ModalController, PopoverController } from '@ionic/angular';
 import { concat, distinctUntilChanged, map, Observable, of, startWith } from 'rxjs';
 import { Router } from '@angular/router';
+import { SettingsService, StudentTimetableService, WsApiService, NotifierService, ConfigurationsService, ComponentService } from '../../services';
 
 @Component({
   selector: 'app-search-modal',
@@ -27,6 +28,9 @@ export class SearchModalComponent implements OnInit {
 
   searchControl = new UntypedFormControl();
   searchItems$: Observable<string[]>;
+  intakeLabels: string[] = [];
+  intake: string;
+  private settings: SettingsService;
 
   /** Map each item by function, defaults to `item => item.toUpperCase()`. */
   @Input() itemMapper = (item: string) => item.toUpperCase();
@@ -34,19 +38,20 @@ export class SearchModalComponent implements OnInit {
   constructor(
     private modalCtrl: ModalController,
     private popoverCtrl: PopoverController,
-    private router: Router
-  ) { }
+    private router: Router,
+    settings: SettingsService
+  ) { this.settings = settings; }
 
   ngOnInit() {
     // convert all items to uppercase
     const searchItems = Array.from(new Set(this.items.map(this.itemMapper))).sort();
     const defaultItems = this.defaultItems.map(this.itemMapper);
-
+    
     // observable to process inputs when value changes
     let searchChange$ = this.searchControl.valueChanges.pipe(
       distinctUntilChanged(),
     );
-
+    
     // default items have higher priority as this is optional
     if (this.defaultTerm) {
       // only pre-search when default items is not specified
@@ -60,11 +65,44 @@ export class SearchModalComponent implements OnInit {
     const searchResult$ = searchChange$.pipe(
       map(term => this.search(searchItems, term)),
     );
-
+       
     // continue default observable with searched result
     this.searchItems$ = concat(of(defaultItems), searchResult$);
   }
 
+  clearSearchHistory() {
+    const intakeHistory = this.settings.get('intakeHistory');
+    this.searchControl.reset();
+    this.searchItems$ = of([]);
+    this.intakeLabels = intakeHistory.slice().reverse();
+    this.intake = intakeHistory[intakeHistory.length - 1];
+  
+    this.searchItems$.subscribe((searchItems) => {
+      // Remove items from intakeHistory that are not in searchItems
+      this.settings.set('intakeHistory', intakeHistory.filter(item => searchItems.includes(item)));
+    });
+  }
+  
+  removeItem(item: string) {
+    const intakeHistory = this.settings.get('intakeHistory');
+    this.intakeLabels = intakeHistory.slice().reverse();
+    const index = this.defaultItems.findIndex((i) => i === item);
+  
+    if (index !== -1) {
+      this.defaultItems.splice(index, 1);
+    }
+  
+    this.searchItems$ = of([]);
+    this.searchItems$ = concat(of(this.defaultItems), this.searchControl.valueChanges.pipe(
+      distinctUntilChanged(),
+      map((term) => this.search(this.items, term))
+    ));
+    this.searchControl.setValue('', { emitEvent: false });
+  
+    // Update the intakeHistory with the modified defaultItems array
+    this.settings.set('intakeHistory', intakeHistory.filter((i) => this.defaultItems.includes(i)));
+  }   
+  
   // Fix issue where searchbar are not focused properly
   ionViewDidEnter() {
     this.searchbar.setFocus();
