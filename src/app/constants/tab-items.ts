@@ -2,45 +2,24 @@ import { Role } from '../interfaces/role';
 
 export const TabItems = [
   {
-    name: 'Timetable',
-    path: 'lecturer-timetable',
-    outlineIcon: 'calendar-outline',
-    fillIcon: 'calendar',
-    role: Role.Lecturer
-  },
-  {
-    name: 'Timetable',
-    path: 'student-timetable',
-    outlineIcon: 'calendar-outline',
-    fillIcon: 'calendar',
-    role: Role.Student
-  },
-  {
-    name: 'Profile',
-    path: 'profile',
-    outlineIcon: 'person-outline',
-    fillIcon: 'person',
-    role: Role.Admin
-  },
-  {
-    name: 'Attendance',
-    path: 'attendance',
-    outlineIcon: 'time-outline',
-    fillIcon: 'time',
-    role: Role.Student
-  },
-  {
-    name: 'Dashboard',
-    path: 'dashboard',
-    outlineIcon: 'grid-outline',
-    fillIcon: 'grid',
+    name: 'Booking',
+    path: 'book-parking',
+    outlineIcon: 'car-sport-outline',
+    fillIcon: 'car-sport',
     role: Role.Admin | Role.Lecturer | Role.Student
   },
   {
-    name: 'APCard',
-    path: 'apcard',
-    outlineIcon: 'card-outline',
-    fillIcon: 'card',
+    name: 'Checkin',
+    path: '',
+    outlineIcon: 'qr-code-outline',
+    fillIcon: 'qr-code',
+    role: Role.Admin | Role.Lecturer | Role.Student
+  },
+  {
+    name: 'Emergency',
+    path: '',
+    outlineIcon: 'megaphone-outline',
+    fillIcon: 'megaphone',
     role: Role.Admin | Role.Lecturer | Role.Student
   },
   {

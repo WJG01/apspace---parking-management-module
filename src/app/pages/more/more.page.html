@@ -20,7 +20,7 @@
           <!--LIST FAV ITEMS-->
           <ion-row *ngIf="fav as filteredFavMenu;"
             class="ion-justify-content-between ion-align-items-center heading-container">
-            <ion-col class="heading-title" size="auto">Favorites</ion-col>
+            <ion-col class="heading-title" size="auto">Others</ion-col>
             <ion-col *ngIf="!editMode else saveButton" class="heading-sub-title ion-align-self-center" size="auto"
               tappable="true" (click)="toggleEdit()">
               <ion-icon name="create-outline"></ion-icon>
@@ -106,7 +106,7 @@
       <!--CARD FAV ITEMS-->
       <ion-row *ngIf="fav as filteredFavMenu;"
         class="ion-justify-content-between ion-align-items-center heading-container">
-        <ion-col class="heading-title" size="auto">Favorites</ion-col>
+        <ion-col class="heading-title" size="auto">Others</ion-col>
         <ion-col *ngIf="!editMode else saveButton" class="heading-sub-title ion-align-self-center" size="auto"
           tappable="true" (click)="toggleEdit()">
           <ion-icon name="create-outline"></ion-icon>
@@ -120,6 +120,7 @@
         </ng-template>
       </ion-row>
 
+      <!-- **wjc list of menu -->
       <div *ngIf="fav as filteredFavMenu;">
         <ion-row *ngIf="filteredFavMenu.length > 0; else noFavorites"
           class="ion-align-items-stretch menu-item-container fav-card-menu">
@@ -148,11 +149,12 @@
             </ion-col>
           </ion-row>
         </ng-template>
-      </div>
-      <!--CARD MENU ITEMS-->
+      </div> 
+         
+      <!-- *wjc CARD MENU ITEMS-->
       <ion-list class="menu-container ion-margin-top">
         <ion-accordion-group>
-          <div *ngFor="let group of filteredMenu | byGroup | keyvalue:noop">
+          <!-- <div *ngFor="let group of filteredMenu | byGroup | keyvalue:noop">
             <ion-accordion [value]="group.key">
               <ion-item class="menu-container" slot="header">
                 <ion-img class="item-thumbnail ion-margin-end" [src]="keyIcon[group.key]"></ion-img>
@@ -178,7 +180,7 @@
                 </ion-row>
               </ion-list>
             </ion-accordion>
-          </div>
+          </div> -->
           <ion-accordion *ngIf="!editMode" (click)="openPage('logout')" toggle-icon="">
             <ion-item class="menu-container" slot="header">
               <ion-img class="item-thumbnail ion-margin-end" src="assets/img/more-icons/logout.png"></ion-img>
@@ -187,6 +189,7 @@
           </ion-accordion>
         </ion-accordion-group>
       </ion-list>
+
     </ng-template>
   </div>
 </ion-content>

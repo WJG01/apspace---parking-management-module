@@ -295,12 +295,19 @@ const routes: Routes = [
     data: { role: Role.Lecturer },
     loadChildren: () => import('./pages/lecturer-timetable/lecturer-timetable.module').then(m => m.LecturerTimetablePageModule)
   },
+  {
+    path: 'book-parking',
+    loadChildren: () => import('./pages/book-parking/book-parking.module').then( m => m.BookParkingPageModule)
+  },
+
   { // this path must always be at the end of the routes array
     path: '**',
     canActivate: [AuthGuard],
     data: { role: Role.Student | Role.Lecturer | Role.Admin },
     loadChildren: () => import('./pages/not-found/not-found.module').then(m => m.NotFoundPageModule)
-  }
+  },
+
+
 
 ];
 

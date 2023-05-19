@@ -29,10 +29,6 @@
                  [routerLink]="['/tabs/dashboard']" />
           </ng-container>
         </ion-col>
-        <!--Search Bar-->
-        <ion-col class="ion-no-padding">
-          <ion-searchbar placeholder="(S)earch APSpace" class="tabs-searchbar" (click)="openSearch()"></ion-searchbar>
-        </ion-col>
       </ion-row>
       <!--Tab Items-->
       <ion-tab-button [ngClass]="{ 'active-tab': activeTab === tab.path }" *ngFor="let tab of tabItems; index as i"
