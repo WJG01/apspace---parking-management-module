@@ -9,6 +9,7 @@ import { Role } from '../../interfaces';
 import { CasTicketService, ConfigurationsService, SettingsService } from '../../services';
 import { MenuID, MenuItem } from './menu.interface';
 import { ComponentService } from '../../services';
+import { Router } from '@angular/router';
 
 const ICONS_PATH = 'assets/img/more-icons'; // Main Icons Path
 
@@ -45,7 +46,8 @@ export class MorePage implements OnInit, ViewWillEnter {
     public navCtrl: NavController,
     private settings: SettingsService,
     public component: ComponentService,
-    private config: ConfigurationsService
+    private config: ConfigurationsService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -141,5 +143,17 @@ export class MorePage implements OnInit, ViewWillEnter {
     } else {
       this.settings.set('favoriteItems', [...fav, id]);
     }
+  }
+
+  goToParkingHistory() {
+    this.router.navigateByUrl('/parking-history');
+  }
+
+  goToParkingIncident() {
+    this.router.navigateByUrl('/parking-incident');
+  }
+
+  goToParkingMap() {
+    this.router.navigateByUrl('/parking-map');
   }
 }

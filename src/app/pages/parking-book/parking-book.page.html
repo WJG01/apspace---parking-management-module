@@ -1,0 +1,150 @@
+<ion-content>
+  <ion-refresher slot="fixed" pullMax="400" pullMin="60" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshing-spinner="dots" pulling-icon="refresh"></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="glob-container">
+    <ion-row>
+      <ng-container>
+
+        <!-- Booking Details -->
+        <ion-col size="12" size-md="4" push-md="8">
+          <ion-card class="ion-no-margin">
+            <ion-item-divider color="light">
+              <ion-label color="primary" class="glob-text-bold">
+                Booking Details
+              </ion-label>
+            </ion-item-divider>
+            <ion-card-content>
+              <!-- <ng-container *ngIf="(legend$ | async) as legend; else loadLegend"> -->
+              <ng-container>
+                <ion-row>
+                  <ion-col size="5">Parking Zone</ion-col>
+                  <ion-col size="7">Chosen Parking Zone</ion-col>
+                  <ion-col size="5">Date</ion-col>
+                  <ion-col size="7">Chosen Date</ion-col>
+                  <ion-col size="5">Start Time</ion-col>
+                  <ion-col size="7">Chosen Start Time</ion-col>
+                  <ion-col size="5">End Time</ion-col>
+                  <ion-col size="7">Chosen End Time</ion-col>
+                </ion-row>
+              </ng-container>
+
+              <ng-template #loadLegend>
+                <ion-row *ngFor="let _ of skeletons">
+                  <ion-col size="3">
+                    <ion-skeleton-text animated style="line-height: 25px; width: 100%;">
+                    </ion-skeleton-text>
+                  </ion-col>
+                  <ion-col size="9">
+                    <ion-skeleton-text animated style="line-height: 25px; width: 100%;">
+                    </ion-skeleton-text>
+                  </ion-col>
+                </ion-row>
+              </ng-template>
+            </ion-card-content>
+            <!-- Confirm Booking button  -->
+            <ion-card-content class="ion-no-padding ion-padding-bottom ion-text-center">
+              <ion-button class="ion-no-margin" size="medium" (click)="confirmBooking()">
+                Confirm Booking
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <!-- Booking Filter  -->
+        <ion-col size="12" size-md="8" pull-md="4">
+          <ion-card class="ion-no-margin ion-margin-bottom">
+            <ion-accordion-group>
+              <ion-accordion value="filters">
+                <ion-item slot="header">
+                  <ion-icon class="ion-padding-end" name="filter"></ion-icon>
+                  <ion-label>Search Parking</ion-label>
+                </ion-item>
+
+                <ion-list slot="content">
+                  <ion-item>
+                    <ion-label position="stacked">
+                      Parking Zone
+                    </ion-label>
+
+                    <ion-select [(ngModel)]="filterObject.location" interface="popover" mode="md">
+                      <ion-select-option *ngFor="let l of locations" [value]="l.key">
+                        {{ l.value }}
+                      </ion-select-option>
+                    </ion-select>
+                  </ion-item>
+
+                  <ion-item (click)="openDatePicker('date')" detail="true" button="true">
+                    <ion-label>
+                      <h3>Date</h3>
+                      <p>{{ filterObject.date }}</p>
+                    </ion-label>
+                  </ion-item>
+
+                  <!-- Hidden datetime picker -->
+                  <ion-datetime displayFormat="DD/MM/YYYY" pickerFormat="DD MMM YYYY" [(ngModel)]="selectedDate"
+                    [hidden]="!showDatePickerFlag" (ionCancel)="hideDatePicker()" (ionChange)="hideDatePicker()"
+                    display-time="false">
+                  </ion-datetime>
+
+                  <ion-item (click)="openPicker('start')" detail="true" button="true">
+                    <ion-label>
+                      <h3>Start</h3>
+                      <p>{{ filterObject.from }}</p>
+                    </ion-label>
+                  </ion-item>
+
+                  <ion-item (click)="openPicker('to')" detail="true" button="true">
+                    <ion-label>
+                      <h3>End</h3>
+                      <p>{{ filterObject.to }}</p>
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
+              </ion-accordion>
+            </ion-accordion-group>
+          </ion-card>
+
+          <ng-container *ngIf="(timetables$ | async) as timetables; else loadTimetable">
+            <ion-card class="ion-no-margin"
+              *ngIf="(timetables | byLocation:filterObject.location | byRooms:filterObject.types | byTime:filterObject.date:filterObject.from:filterObject.to) as rooms">
+              <ion-item>
+                <ion-icon name="albums-outline" slot="start" color="primary"></ion-icon>
+                <ion-label class="glob-text-bold" color="primary">
+                  {{ rooms.length }} Available Parkings
+                </ion-label>
+              </ion-item>
+
+              <ion-card-content>
+                <ion-chip *ngFor="let room of rooms; trackBy: trackByName"
+                  [routerLink]="['/student-timetable', { room: room }]">
+                  {{ room }}
+                </ion-chip>
+              </ion-card-content>
+            </ion-card>
+          </ng-container>
+
+          <ng-template #loadTimetable>
+            <ion-card class="ion-no-margin">
+              <ion-item>
+                <ion-icon name="albums-outline" slot="start" color="primary"></ion-icon>
+                <ion-label class="glob-text-bold" color="primary">
+                  Loading Available Parkings
+                </ion-label>
+              </ion-item>
+
+              <ion-card-content>
+                <ion-row>
+                  <ion-col *ngFor="let _ of skeleton">
+                    <ion-skeleton-text animated style="height: 30px; width: 100%;"></ion-skeleton-text>
+                  </ion-col>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+          </ng-template>
+        </ion-col>
+      </ng-container>
+    </ion-row>
+  </div>
+</ion-content>

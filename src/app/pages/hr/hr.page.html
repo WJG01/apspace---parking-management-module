@@ -102,7 +102,7 @@
             </ion-card-header>
             <ion-card-content class="ion-no-padding">
               <ng-container *ngIf="history$ | async as historyList; else loadingHistory">
-                <ng-container *ngIf="historyList.length > 0; else noHistoryAvailable">
+                <ng-container>
 
                 </ng-container>
                 <ng-template #noHistoryAvailable>

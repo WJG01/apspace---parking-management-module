@@ -54,6 +54,18 @@ const routes: Routes = [
         loadChildren: () => import('../more/more.module').then(m => m.MorePageModule)
       },
       {
+        path: 'parking-book',
+        loadChildren: () => import('../parking-book/parking-book.module').then(m => m.BookParkingPageModule)
+      },
+      {
+        path: 'parking-checkin',
+        loadChildren: () => import('../parking-checkin/parking-checkin.module').then( m => m.ParkingCheckinPageModule)
+      },
+      {
+        path: 'parking-emergency',
+        loadChildren: () => import('../parking-emergency/parking-emergency.module').then( m => m.ParkingEmergencyPageModule)
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'

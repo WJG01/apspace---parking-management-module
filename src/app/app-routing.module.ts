@@ -296,8 +296,28 @@ const routes: Routes = [
     loadChildren: () => import('./pages/lecturer-timetable/lecturer-timetable.module').then(m => m.LecturerTimetablePageModule)
   },
   {
-    path: 'book-parking',
-    loadChildren: () => import('./pages/book-parking/book-parking.module').then( m => m.BookParkingPageModule)
+    path: 'parking-book',
+    loadChildren: () => import('./pages/parking-book/parking-book.module').then( m => m.BookParkingPageModule)
+  },
+  {
+    path: 'parking-checkin',
+    loadChildren: () => import('./pages/parking-checkin/parking-checkin.module').then( m => m.ParkingCheckinPageModule)
+  },
+  {
+    path: 'parking-emergency',
+    loadChildren: () => import('./pages/parking-emergency/parking-emergency.module').then( m => m.ParkingEmergencyPageModule)
+  },
+  {
+    path: 'parking-incident',
+    loadChildren: () => import('./pages/parking-incident/parking-incident.module').then( m => m.ParkingIncidentPageModule)
+  },
+  {
+    path: 'parking-history',
+    loadChildren: () => import('./pages/parking-history/parking-history.module').then( m => m.ParkingHistoryPageModule)
+  },
+  {
+    path: 'parking-map',
+    loadChildren: () => import('./pages/parking-map/parking-map.module').then( m => m.ParkingMapPageModule)
   },
 
   { // this path must always be at the end of the routes array
@@ -306,8 +326,6 @@ const routes: Routes = [
     data: { role: Role.Student | Role.Lecturer | Role.Admin },
     loadChildren: () => import('./pages/not-found/not-found.module').then(m => m.NotFoundPageModule)
   },
-
-
 
 ];
 

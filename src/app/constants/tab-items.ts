@@ -3,21 +3,21 @@ import { Role } from '../interfaces/role';
 export const TabItems = [
   {
     name: 'Booking',
-    path: 'book-parking',
+    path: 'parking-book',
     outlineIcon: 'car-sport-outline',
     fillIcon: 'car-sport',
     role: Role.Admin | Role.Lecturer | Role.Student
   },
   {
     name: 'Checkin',
-    path: '',
+    path: 'parking-checkin',
     outlineIcon: 'qr-code-outline',
     fillIcon: 'qr-code',
     role: Role.Admin | Role.Lecturer | Role.Student
   },
   {
     name: 'Emergency',
-    path: '',
+    path: 'parking-emergency',
     outlineIcon: 'megaphone-outline',
     fillIcon: 'megaphone',
     role: Role.Admin | Role.Lecturer | Role.Student
