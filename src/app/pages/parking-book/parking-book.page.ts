@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { finalize, map, Observable, tap } from 'rxjs';
 import { DatePickerComponent } from 'src/app/components/date-picker/date-picker.component';
+import { StudentTimetable } from 'src/app/interfaces/student-timetable';
+import { StudentTimetableService } from 'src/app/services/student-timetable.service';
 
 @Component({
   selector: 'app-parking-book',
@@ -24,12 +27,15 @@ export class BookParkingPage implements OnInit {
     to: '',
   };
 
+  timetables$: Observable<StudentTimetable[]>;
   selectedDate: string;
   showDatePickerFlag = false;
 
 
   constructor(
     private modalCtrl: ModalController,
+    private tt: StudentTimetableService,
+
 
   ) { }
 
@@ -43,6 +49,21 @@ export class BookParkingPage implements OnInit {
 
   hideDatePicker() {
     this.showDatePickerFlag = false;
+  }
+
+  doRefresh(refresher?) {
+    const refresh = refresher ? true : false;
+    const excludeRooms = ['ONL', 'Online'];
+
+    this.timetables$ = this.tt.get(refresh).pipe(
+      tap(res => console.log(res)),
+      map(data => data.filter(res => excludeRooms.every(room => !res.ROOM.includes(room)))), // Exclude Online and ONL room data
+      finalize(() => {
+        if (refresher) {
+          refresher.target.complete();
+        }
+      })
+    );
   }
 
   async openDatePicker(type: string) {
