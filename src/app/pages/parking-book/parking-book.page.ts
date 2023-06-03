@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { finalize, map, Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
+import { tap, map, finalize } from 'rxjs/operators';
 import { DatePickerComponent } from 'src/app/components/date-picker/date-picker.component';
 import { StudentTimetable } from 'src/app/interfaces/student-timetable';
 import { StudentTimetableService } from 'src/app/services/student-timetable.service';
+import parkingData from './parkingDummy.json';
 
 @Component({
   selector: 'app-parking-book',
@@ -11,7 +13,11 @@ import { StudentTimetableService } from 'src/app/services/student-timetable.serv
   styleUrls: ['./parking-book.page.scss'],
 })
 
+
 export class BookParkingPage implements OnInit {
+
+  bookedParkings = parkingData;
+
 
   locations = [
     { key: 'APU-A', value: 'Zone A - APU' },
@@ -52,18 +58,18 @@ export class BookParkingPage implements OnInit {
   }
 
   doRefresh(refresher?) {
-    const refresh = refresher ? true : false;
-    const excludeRooms = ['ONL', 'Online'];
+    // const refresh = refresher ? true : false;
+    // const excludeRooms = ['ONL', 'Online'];
 
-    this.timetables$ = this.tt.get(refresh).pipe(
-      tap(res => console.log(res)),
-      map(data => data.filter(res => excludeRooms.every(room => !res.ROOM.includes(room)))), // Exclude Online and ONL room data
-      finalize(() => {
-        if (refresher) {
-          refresher.target.complete();
-        }
-      })
-    );
+    // this.timetables$ = this.tt.get(refresh).pipe(
+    //   tap(res => console.log(res)),
+    //   map(data => data.filter(res => excludeRooms.every(room => !res.ROOM.includes(room)))), // Exclude Online and ONL room data
+    //   finalize(() => {
+    //     if (refresher) {
+    //       refresher.target.complete();
+    //     }
+    //   })
+    // );
   }
 
   async openDatePicker(type: string) {
@@ -129,8 +135,73 @@ export class BookParkingPage implements OnInit {
     }
   }
 
-  confirmBooking() {
+  findOccupiedParking(): string[] {
+    const occupiedParking: string[] = [];
+    this.bookedParkings.forEach(booking => {
+      const bookingFromTime = new Date(`2000-01-01T${booking.from}`);
+      const bookingToTime = new Date(`2000-01-01T${booking.to}`);
+      const chosenFromTimeObj = new Date(`2000-01-01T${this.filterObject.from}`);
+      const chosenToTimeObj = new Date(`2000-01-01T${this.filterObject.to}`);
 
+      if (
+        booking.location === this.filterObject.location &&
+        booking.date === this.filterObject.date &&
+        (
+          (chosenFromTimeObj >= bookingFromTime && chosenFromTimeObj <= bookingToTime) || // Chosen start time overlaps
+          (chosenToTimeObj >= bookingFromTime && chosenToTimeObj <= bookingToTime) || // Chosen end time overlaps
+          // Chosen time range completely contains the existing booking
+          (chosenFromTimeObj <= bookingFromTime && chosenToTimeObj >= bookingToTime)
+        )
+      ) {
+        occupiedParking.push(booking.parkingspotid);
+      }
+    });
+
+    console.log(occupiedParking);
+    return occupiedParking;
+  }
+
+  loadVacantParking(): string[] {
+    const totalSpots = 20;
+    const chosenLocation = this.filterObject.location;
+    //const bookedSpots = this.findOccupiedParking();
+    // Generate an array of available spots by excluding the booked locations
+    const availableSpots = Array.from({ length: totalSpots }, (_, index) => {
+      const spotNumber = (index + 1).toString().padStart(2, '0');
+      return spotNumber;
+    }).filter(spot => !this.findOccupiedParking().includes(spot))
+      .map(spot => `${chosenLocation}-${spot}`);
+    return availableSpots;
+  }
+
+
+  confirmBooking() {
+    //console.log('object', this.parkings);
+    //   console.log(this.bookedParkings);
+    //   const bookingExists = this.bookedParkings.some(booking => {
+    //     const bookingFromTime = new Date(`2000-01-01T${booking.from}`);
+    //     const bookingToTime = new Date(`2000-01-01T${booking.to}`);
+    //     const chosenFromTimeObj = new Date(`2000-01-01T${this.filterObject.from}`);
+    //     const chosenToTimeObj = new Date(`2000-01-01T${this.filterObject.to}`);
+    //     return (
+    //       booking.location === this.filterObject.location &&
+    //       booking.date === this.filterObject.date &&
+    //       (
+    //         (chosenFromTimeObj >= bookingFromTime && chosenFromTimeObj <= bookingToTime) || // Chosen start time overlaps
+    //         (chosenToTimeObj >= bookingFromTime && chosenToTimeObj <= bookingToTime) || // Chosen end time overlaps
+    //         // Chosen time range completely contains the existing booking
+    //         (chosenFromTimeObj <= bookingFromTime && chosenToTimeObj >= bookingToTime)
+    //       )
+    //     );
+    //   });
+
+    //   if (bookingExists) {
+    //     console.log('Booking exists');
+    //   } else {
+    //     console.log('Booking does not exist');
+    //   }
+
+    this.loadVacantParking();
   }
 
 }

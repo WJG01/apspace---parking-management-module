@@ -11,11 +11,9 @@
     "importHelpers": true,
     "target": "es2020",
     "module": "es2020",
-    "lib": [
-      "es2018",
-      "dom",
-      "esnext.asynciterable"
-    ],
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "lib": ["es2018", "dom", "esnext.asynciterable"],
     "allowSyntheticDefaultImports": true
   },
   "angularCompilerOptions": {
