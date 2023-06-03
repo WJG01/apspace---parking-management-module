@@ -3,6 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { tap, map, finalize } from 'rxjs/operators';
 import { DatePickerComponent } from 'src/app/components/date-picker/date-picker.component';
+import { ChangeDetectorRef } from '@angular/core';
 import { StudentTimetable } from 'src/app/interfaces/student-timetable';
 import { StudentTimetableService } from 'src/app/services/student-timetable.service';
 import parkingData from './parkingDummy.json';
@@ -16,8 +17,8 @@ import parkingData from './parkingDummy.json';
 
 export class BookParkingPage implements OnInit {
 
-  bookedParkings = parkingData;
-
+  bookedParkings: any;
+  availableParkings: string[] = [];
 
   locations = [
     { key: 'APU-A', value: 'Zone A - APU' },
@@ -40,12 +41,14 @@ export class BookParkingPage implements OnInit {
 
   constructor(
     private modalCtrl: ModalController,
+    private cdr: ChangeDetectorRef,
     private tt: StudentTimetableService,
 
 
   ) { }
 
   ngOnInit() {
+    this.bookedParkings = parkingData;
   }
 
 
@@ -55,6 +58,7 @@ export class BookParkingPage implements OnInit {
 
   hideDatePicker() {
     this.showDatePickerFlag = false;
+    this.checkAllFieldsFilled();
   }
 
   doRefresh(refresher?) {
@@ -88,6 +92,7 @@ export class BookParkingPage implements OnInit {
     if (data?.date) {
       // Update the selected date based on the returned data
       this.filterObject.date = data.date;
+      this.checkAllFieldsFilled();
     }
   }
 
@@ -133,6 +138,44 @@ export class BookParkingPage implements OnInit {
       }
       this.filterObject.to = data?.time;
     }
+    this.checkAllFieldsFilled();
+  }
+
+  isFilterSet(): boolean {
+    // Check if all filter items are set (e.g., location, date, start, end)
+    return (
+      this.filterObject.location !== '' &&
+      this.filterObject.date !== '' &&
+      this.filterObject.from !== '' &&
+      this.filterObject.to !== ''
+    );
+  }
+
+  checkAvailabilityOnChange(): void {
+    if (this.isFilterSet()) {
+      // Perform the logic to check available parking spots based on the selected filters
+      this.availableParkings = this.loadVacantParking();
+      //.filter(parking => this.filterParking(parking));
+    } else {
+      // Clear the available parking spots if filters are not set
+      this.availableParkings = [];
+    }
+  }
+
+  checkAllFieldsFilled() {
+    // Check if all fields have values
+    console.log('Hello');
+    console.log(this.filterObject);
+    if (this.filterObject.location && this.filterObject.date && this.filterObject.from && this.filterObject.to) {
+      this.availableParkings = this.loadVacantParking();
+      console.log(this.availableParkings);
+    } else {
+      // Clear the available parking spots if filters are not set
+      this.availableParkings = [];
+    }
+
+    // Trigger change detection to update the template
+    this.cdr.detectChanges();
   }
 
   findOccupiedParking(): string[] {

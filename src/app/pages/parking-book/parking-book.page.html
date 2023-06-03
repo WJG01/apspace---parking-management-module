@@ -16,7 +16,6 @@
               </ion-label>
             </ion-item-divider>
             <ion-card-content>
-              <!-- <ng-container *ngIf="(legend$ | async) as legend; else loadLegend"> -->
               <ng-container>
                 <ion-row>
                   <ion-col size="5">Parking Zone</ion-col>
@@ -68,34 +67,37 @@
                       Parking Zone
                     </ion-label>
 
-                    <ion-select [(ngModel)]="filterObject.location" interface="popover" mode="md">
+                    <!-- filter location -->
+                    <ion-select [(ngModel)]="filterObject.location" (ngModelChange)="checkAllFieldsFilled()" interface="popover" mode="md">
                       <ion-select-option *ngFor="let l of locations" [value]="l.key">
                         {{ l.value }}
                       </ion-select-option>
                     </ion-select>
                   </ion-item>
 
-                  <ion-item (click)="openDatePicker('date')" detail="true" button="true">
+                  <!-- filter date -->
+                  <ion-item [(ngModel)]="filterObject.date" (click)="openDatePicker('date')" (ngModelChange)="checkAllFieldsFilled()" detail="true" button="true">
                     <ion-label>
                       <h3>Date</h3>
                       <p>{{ filterObject.date }}</p>
                     </ion-label>
                   </ion-item>
 
+                  <!-- filter time -->
                   <!-- Hidden datetime picker -->
-                  <ion-datetime displayFormat="DD/MM/YYYY" pickerFormat="DD MMM YYYY" [(ngModel)]="selectedDate"
-                    [hidden]="!showDatePickerFlag" (ionCancel)="hideDatePicker()" (ionChange)="hideDatePicker()"
+                  <ion-datetime displayFormat="DD/MM/YYYY" pickerFormat="DD MMM YYYY"
+                    [hidden]="!showDatePickerFlag" (ionCancel)="hideDatePicker()" (ionChange)="hideDatePicker()" (ngModelChange)="checkAllFieldsFilled()"
                     display-time="false">
                   </ion-datetime>
 
-                  <ion-item (click)="openPicker('start')" detail="true" button="true">
+                  <ion-item [(ngModel)]="filterObject.from" (click)="openPicker('start')" (ngModelChange)="checkAllFieldsFilled()" detail="true" button="true">
                     <ion-label>
                       <h3>Start</h3>
                       <p>{{ filterObject.from }}</p>
                     </ion-label>
                   </ion-item>
 
-                  <ion-item (click)="openPicker('to')" detail="true" button="true">
+                  <ion-item [(ngModel)]="filterObject.to" (click)="openPicker('to')" (ngModelChange)="checkAllFieldsFilled()" detail="true" button="true">
                     <ion-label>
                       <h3>End</h3>
                       <p>{{ filterObject.to }}</p>
@@ -106,26 +108,24 @@
             </ion-accordion-group>
           </ion-card>
 
-          <ng-container *ngIf="(timetables$ | async) as timetables; else loadTimetable">
-            <ion-card class="ion-no-margin"
-              *ngIf="(timetables | byLocation:filterObject.location | byRooms:filterObject.types | byTime:filterObject.date:filterObject.from:filterObject.to) as rooms">
+          <ng-container *ngIf="availableParkings.length > 0; else loadParking">
+            <ion-card class="ion-no-margin">
               <ion-item>
                 <ion-icon name="albums-outline" slot="start" color="primary"></ion-icon>
                 <ion-label class="glob-text-bold" color="primary">
-                  {{ rooms.length }} Available Parkings
+                  {{ availableParkings.length }} Available Parkings
                 </ion-label>
               </ion-item>
 
               <ion-card-content>
-                <ion-chip *ngFor="let room of rooms; trackBy: trackByName"
-                  [routerLink]="['/student-timetable', { room: room }]">
-                  {{ room }}
+                <ion-chip *ngFor="let parking of availableParkings;">
+                  {{ parking }}
                 </ion-chip>
               </ion-card-content>
             </ion-card>
           </ng-container>
 
-          <ng-template #loadTimetable>
+          <ng-template #loadParking>
             <ion-card class="ion-no-margin">
               <ion-item>
                 <ion-icon name="albums-outline" slot="start" color="primary"></ion-icon>
