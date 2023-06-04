@@ -38,6 +38,10 @@ export class BookParkingPage implements OnInit {
   selectedDate: string;
   showDatePickerFlag = false;
 
+  chosenParkingSpot: string;
+  chosenParkingDate: string;
+  chosenStartTime: string;
+  chosenEndTime: string;
 
   constructor(
     private modalCtrl: ModalController,
@@ -215,6 +219,13 @@ export class BookParkingPage implements OnInit {
     }).filter(spot => !this.findOccupiedParking().includes(spot))
       .map(spot => `${chosenLocation}-${spot}`);
     return availableSpots;
+  }
+
+  fillBookingDetails(parkingSpot: string) {
+    this.chosenParkingSpot = `${parkingSpot}`;
+    this.chosenParkingDate = `${this.filterObject.date}`;
+    this.chosenStartTime = `${this.filterObject.from}`;
+    this.chosenEndTime = `${this.filterObject.to}`;
   }
 
 

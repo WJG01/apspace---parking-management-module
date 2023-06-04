@@ -16,37 +16,27 @@
               </ion-label>
             </ion-item-divider>
             <ion-card-content>
-              <ng-container>
-                <ion-row>
-                  <ion-col size="5">Parking Zone</ion-col>
-                  <ion-col size="7">Chosen Parking Zone</ion-col>
-                  <ion-col size="5">Date</ion-col>
-                  <ion-col size="7">Chosen Date</ion-col>
-                  <ion-col size="5">Start Time</ion-col>
-                  <ion-col size="7">Chosen Start Time</ion-col>
-                  <ion-col size="5">End Time</ion-col>
-                  <ion-col size="7">Chosen End Time</ion-col>
-                </ion-row>
-              </ng-container>
-
-              <ng-template #loadLegend>
-                <ion-row *ngFor="let _ of skeletons">
-                  <ion-col size="3">
-                    <ion-skeleton-text animated style="line-height: 25px; width: 100%;">
-                    </ion-skeleton-text>
-                  </ion-col>
-                  <ion-col size="9">
-                    <ion-skeleton-text animated style="line-height: 25px; width: 100%;">
-                    </ion-skeleton-text>
-                  </ion-col>
-                </ion-row>
-              </ng-template>
+              <ion-row class="field-row">
+                <ion-col size="5" class="field-label">Parking Zone</ion-col>
+                <ion-col size="7" class="field-value">{{chosenParkingSpot}}</ion-col>
+              </ion-row>
+              <ion-row class="field-row">
+                <ion-col size="5" class="field-label">Date</ion-col>
+                <ion-col size="7" class="field-value">{{chosenParkingDate}}</ion-col>
+              </ion-row>
+              <ion-row class="field-row">
+                <ion-col size="5" class="field-label">Start Time</ion-col>
+                <ion-col size="7" class="field-value">{{chosenStartTime}}</ion-col>
+              </ion-row>
+              <ion-row class="field-row">
+                <ion-col size="5" class="field-label">End Time</ion-col>
+                <ion-col size="7" class="field-value">{{chosenEndTime}}</ion-col>
+              </ion-row>
             </ion-card-content>
-            <!-- Confirm Booking button  -->
+            <br>
+            <!-- Confirm Booking button -->
             <ion-card-content class="ion-no-padding ion-padding-bottom ion-text-center">
-              <ion-button class="ion-no-margin" size="medium" (click)="confirmBooking()">
-                Confirm Booking
-              </ion-button>
+              <ion-button class="ion-no-margin" size="medium" (click)="confirmBooking()">Confirm Booking</ion-button>
             </ion-card-content>
           </ion-card>
         </ion-col>
@@ -68,7 +58,8 @@
                     </ion-label>
 
                     <!-- filter location -->
-                    <ion-select [(ngModel)]="filterObject.location" (ngModelChange)="checkAllFieldsFilled()" interface="popover" mode="md">
+                    <ion-select [(ngModel)]="filterObject.location" (ngModelChange)="checkAllFieldsFilled()"
+                      interface="popover" mode="md">
                       <ion-select-option *ngFor="let l of locations" [value]="l.key">
                         {{ l.value }}
                       </ion-select-option>
@@ -76,7 +67,8 @@
                   </ion-item>
 
                   <!-- filter date -->
-                  <ion-item [(ngModel)]="filterObject.date" (click)="openDatePicker('date')" (ngModelChange)="checkAllFieldsFilled()" detail="true" button="true">
+                  <ion-item [(ngModel)]="filterObject.date" (click)="openDatePicker('date')"
+                    (ngModelChange)="checkAllFieldsFilled()" detail="true" button="true">
                     <ion-label>
                       <h3>Date</h3>
                       <p>{{ filterObject.date }}</p>
@@ -85,19 +77,21 @@
 
                   <!-- filter time -->
                   <!-- Hidden datetime picker -->
-                  <ion-datetime displayFormat="DD/MM/YYYY" pickerFormat="DD MMM YYYY"
-                    [hidden]="!showDatePickerFlag" (ionCancel)="hideDatePicker()" (ionChange)="hideDatePicker()" (ngModelChange)="checkAllFieldsFilled()"
-                    display-time="false">
+                  <ion-datetime displayFormat="DD/MM/YYYY" pickerFormat="DD MMM YYYY" [hidden]="!showDatePickerFlag"
+                    (ionCancel)="hideDatePicker()" (ionChange)="hideDatePicker()"
+                    (ngModelChange)="checkAllFieldsFilled()" display-time="false">
                   </ion-datetime>
 
-                  <ion-item [(ngModel)]="filterObject.from" (click)="openPicker('start')" (ngModelChange)="checkAllFieldsFilled()" detail="true" button="true">
+                  <ion-item [(ngModel)]="filterObject.from" (click)="openPicker('start')"
+                    (ngModelChange)="checkAllFieldsFilled()" detail="true" button="true">
                     <ion-label>
                       <h3>Start</h3>
                       <p>{{ filterObject.from }}</p>
                     </ion-label>
                   </ion-item>
 
-                  <ion-item [(ngModel)]="filterObject.to" (click)="openPicker('to')" (ngModelChange)="checkAllFieldsFilled()" detail="true" button="true">
+                  <ion-item [(ngModel)]="filterObject.to" (click)="openPicker('to')"
+                    (ngModelChange)="checkAllFieldsFilled()" detail="true" button="true">
                     <ion-label>
                       <h3>End</h3>
                       <p>{{ filterObject.to }}</p>
@@ -118,7 +112,7 @@
               </ion-item>
 
               <ion-card-content>
-                <ion-chip *ngFor="let parking of availableParkings;">
+                <ion-chip *ngFor="let parking of availableParkings;" (click)="fillBookingDetails(parking)">
                   {{ parking }}
                 </ion-chip>
               </ion-card-content>
