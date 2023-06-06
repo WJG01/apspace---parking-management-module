@@ -1,9 +1,43 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>parking-emergency</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="ion-padding">
+  <!-- Title -->
+  <div class="title-container">
+    <h2 class="title-text">Press and hold button for 3 seconds</h2>
+  </div>
 
-<ion-content>
+  <!-- Help Button -->
+  <div class="button-container">
+    <button class="help-button" (mousedown)="onMouseDown()" (mouseup)="onMouseUp()">
+      <div class="button-inner">SOS</div>
+    </button>
+  </div>
+
+  <br>
+  <!-- Status Section -->
+  <div class="card-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Info</ion-card-title>
+      </ion-card-header>
+      <div class="divider"></div>
+      <ion-card-content>
+        <ion-list>
+          <ion-item lines="none" class="status-item">
+            <div class="label-container">
+              <ion-label>SOS Status:</ion-label>
+            </div>
+            <div class="text-container">
+              <ion-text color="primary" class="text-start">{{ sosStatus }}</ion-text>
+            </div>
+            <div class="button-container">
+              <ion-button color="primary" [disabled]="sosStatus === 'Looking for help' || sosStatus === '- - -'"
+                (click)="showDetails()">Details</ion-button>
+              <ion-button color="danger" [disabled]="sosStatus === '- - -' || sosStatus === 'Solved'"
+                (click)="cancel()">Cancel</ion-button>
+            </div>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
 </ion-content>

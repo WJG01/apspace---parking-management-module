@@ -32,6 +32,10 @@
                 <ion-col size="5" class="field-label">End Time</ion-col>
                 <ion-col size="7" class="field-value">{{chosenEndTime}}</ion-col>
               </ion-row>
+              <ion-row class="field-row">
+                <ion-col size="5" class="field-label">Duration</ion-col>
+                <ion-col size="7" class="field-value">{{chosenDuration}}</ion-col>
+              </ion-row>
             </ion-card-content>
             <br>
             <!-- Confirm Booking button -->
@@ -58,8 +62,7 @@
                     </ion-label>
 
                     <!-- filter location -->
-                    <ion-select [(ngModel)]="filterObject.location" (ngModelChange)="checkAllFieldsFilled()"
-                      interface="popover" mode="md">
+                    <ion-select interface="popover" mode="md" (ionFocus)="loadLocations()" (ionChange)="checkAllFieldsFilled()">
                       <ion-select-option *ngFor="let l of locations" [value]="l.key">
                         {{ l.value }}
                       </ion-select-option>
@@ -112,7 +115,7 @@
               </ion-item>
 
               <ion-card-content>
-                <ion-chip *ngFor="let parking of availableParkings;" (click)="fillBookingDetails(parking)">
+                <ion-chip *ngFor="let parking of availableParkings;" (click)="fillBookingDetails(parking)" [class.selected]="parking === selectedParking">
                   {{ parking }}
                 </ion-chip>
               </ion-card-content>

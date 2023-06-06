@@ -125,8 +125,7 @@
         <ion-row class="ion-align-items-stretch menu-item-container fav-card-menu">
           <ion-col size="3" size-lg="3" size-md="4" size-sm="6" size-xs="12">
             <!-- report incident -->
-            <ion-card class="ion-padding ion-no-margin menu-card"
-              (click)="goToParkingIncident()">
+            <ion-card class="ion-padding ion-no-margin menu-card" (click)="goToParkingIncident()">
               <ion-row class="ion-align-items-center card-menu-item-row">
                 <ion-col size="auto">
                   <ion-img class="item-thumbnail" src="assets/img/more-icons/parking-incident.png"></ion-img>
@@ -143,26 +142,24 @@
           <!-- parking history -->
           <ion-col size="3" size-lg="3" size-md="4" size-sm="6" size-xs="12">
             <!-- report incident -->
-            <ion-card class="ion-padding ion-no-margin menu-card"
-              (click)="goToParkingHistory()">
+            <ion-card class="ion-padding ion-no-margin menu-card" (click)="goToParkingHistory()">
               <ion-row class="ion-align-items-center card-menu-item-row">
                 <ion-col size="auto">
                   <ion-img class="item-thumbnail" src="assets/img/more-icons/parking-history.png"></ion-img>
                 </ion-col>
                 <ion-col class="card-label ion-margin-end">
-                 Parking History
+                  Parking History
                 </ion-col>
                 <!-- <ion-icon *ngIf="editMode" class="fav-icon" [name]="(fav | itemInFav: item) ? 'star' : 'star-outline'">
                 </ion-icon> -->
               </ion-row>
             </ion-card>
-
-            <!-- parking map -->
           </ion-col>
+
+          <!-- parking map -->
           <ion-col size="3" size-lg="3" size-md="4" size-sm="6" size-xs="12">
             <!-- report incident -->
-            <ion-card class="ion-padding ion-no-margin menu-card"
-              (click)="goToParkingMap()">
+            <ion-card class="ion-padding ion-no-margin menu-card" (click)="goToParkingMap()">
               <ion-row class="ion-align-items-center card-menu-item-row">
                 <ion-col size="auto">
                   <ion-img class="item-thumbnail" src="assets/img/more-icons/parking-map.png"></ion-img>
@@ -175,6 +172,24 @@
               </ion-row>
             </ion-card>
           </ion-col>
+
+
+          <!-- Explore -->
+          <ion-col size="3" size-lg="3" size-md="4" size-sm="6" size-xs="12">
+            <!-- report incident -->
+            <ion-card class="ion-padding ion-no-margin menu-card" [routerLink]="['/apcard-qr-code']">
+              <ion-row class="ion-align-items-center card-menu-item-row">
+                <ion-col size="auto">
+                  <ion-img class="item-thumbnail" src="assets/img/more-icons/parking-map.png"></ion-img>
+                </ion-col>
+                <ion-col class="card-label ion-margin-end">
+                  Explore
+                </ion-col>
+              </ion-row>
+            </ion-card>
+          </ion-col>
+
+
         </ion-row>
 
         <ng-template #noFavorites>

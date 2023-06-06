@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: ParkingEmergencyPage
+  },
+  {
+    path: 'emergency-details-modal',
+    loadChildren: () => import('./emergency-details-modal/emergency-details-modal.module').then( m => m.EmergencyDetailsModalPageModule)
   }
 ];
 

@@ -7,6 +7,8 @@ import { ChangeDetectorRef } from '@angular/core';
 import { StudentTimetable } from 'src/app/interfaces/student-timetable';
 import { StudentTimetableService } from 'src/app/services/student-timetable.service';
 import parkingData from './parkingDummy.json';
+import moment from 'moment';
+
 
 @Component({
   selector: 'app-parking-book',
@@ -28,7 +30,7 @@ export class BookParkingPage implements OnInit {
   ];
 
   filterObject = {
-    location: '',
+    location: null,
     date: '',
     from: '',
     to: '',
@@ -42,6 +44,9 @@ export class BookParkingPage implements OnInit {
   chosenParkingDate: string;
   chosenStartTime: string;
   chosenEndTime: string;
+  chosenDuration: string;
+  selectedParking: string;
+
 
   constructor(
     private modalCtrl: ModalController,
@@ -63,6 +68,13 @@ export class BookParkingPage implements OnInit {
   hideDatePicker() {
     this.showDatePickerFlag = false;
     this.checkAllFieldsFilled();
+  }
+
+  // Component code
+  loadLocations() {
+    if (!this.filterObject.location && this.locations.length > 0) {
+      this.filterObject.location = this.locations[0].key;
+    }
   }
 
   doRefresh(refresher?) {
@@ -167,6 +179,14 @@ export class BookParkingPage implements OnInit {
   }
 
   checkAllFieldsFilled() {
+    this.selectedParking = null;
+    this.availableParkings = [];
+    this.chosenParkingDate = '';
+    this.chosenStartTime = '';
+    this.chosenParkingSpot = '';
+    this.chosenEndTime = '';
+    this.chosenDuration = '';
+
     // Check if all fields have values
     console.log('Hello');
     console.log(this.filterObject);
@@ -222,40 +242,23 @@ export class BookParkingPage implements OnInit {
   }
 
   fillBookingDetails(parkingSpot: string) {
+    this.selectedParking = parkingSpot;
     this.chosenParkingSpot = `${parkingSpot}`;
     this.chosenParkingDate = `${this.filterObject.date}`;
     this.chosenStartTime = `${this.filterObject.from}`;
     this.chosenEndTime = `${this.filterObject.to}`;
+
+    // Calculate duration
+    const startTime = moment(this.filterObject.from, 'HH:mm');
+    const endTime = moment(this.filterObject.to, 'HH:mm');
+    const duration = moment.duration(endTime.diff(startTime));
+    const hours = duration.hours();
+    const minutes = duration.minutes();
+    this.chosenDuration = `${hours} hours ${minutes} minutes`;
   }
 
 
   confirmBooking() {
-    //console.log('object', this.parkings);
-    //   console.log(this.bookedParkings);
-    //   const bookingExists = this.bookedParkings.some(booking => {
-    //     const bookingFromTime = new Date(`2000-01-01T${booking.from}`);
-    //     const bookingToTime = new Date(`2000-01-01T${booking.to}`);
-    //     const chosenFromTimeObj = new Date(`2000-01-01T${this.filterObject.from}`);
-    //     const chosenToTimeObj = new Date(`2000-01-01T${this.filterObject.to}`);
-    //     return (
-    //       booking.location === this.filterObject.location &&
-    //       booking.date === this.filterObject.date &&
-    //       (
-    //         (chosenFromTimeObj >= bookingFromTime && chosenFromTimeObj <= bookingToTime) || // Chosen start time overlaps
-    //         (chosenToTimeObj >= bookingFromTime && chosenToTimeObj <= bookingToTime) || // Chosen end time overlaps
-    //         // Chosen time range completely contains the existing booking
-    //         (chosenFromTimeObj <= bookingFromTime && chosenToTimeObj >= bookingToTime)
-    //       )
-    //     );
-    //   });
-
-    //   if (bookingExists) {
-    //     console.log('Booking exists');
-    //   } else {
-    //     console.log('Booking does not exist');
-    //   }
-
-    this.loadVacantParking();
   }
 
 }

@@ -1,0 +1,110 @@
+.title-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.title-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #008bfd;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.help-button {
+  position: relative;
+  padding: 10px 20px;
+  width: 500px;
+  height: 500px;
+  border-radius: 50% !important;
+  background-color: rgba(233, 16, 16, 0.63);
+  border: none;
+  outline: none;
+  color: #fff;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.button-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  font-size: 80px;
+  color: white !important;
+  font-weight: bold;
+  text-align: center;
+}
+
+.help-button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background-color: rgba(255, 0, 0, 0.808);
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+}
+
+.help-button:hover::before,
+.help-button:focus::before,
+.help-button:active::before {
+  width: 1000px;
+  height: 1000px;
+  opacity: 1;
+  background-color: rgba(255, 0, 0, 0.808);
+  transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+}
+
+ion-card {
+  width: 50%;
+}
+
+.card-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .status-item {
+    display: flex;
+    align-items: center;
+  }
+  
+  .label-container {
+    width: 120px; /* Adjust the width as needed */
+  }
+  
+  .text-container {
+    flex-grow: 1;
+  }
+  
+  .text-start {
+    margin-left: 10px; /* Adjust the margin as needed */
+  }
+
+  .button-container {
+    margin-top: 10px; /* Adjust the margin as needed */
+  }
+  
+  ion-button + ion-button {
+    margin-left: 30px; /* Adjust the margin as needed */
+  }
+
+  .divider {
+    border-top: 0.5px solid #0000004b;
+    margin: 10px 0;
+  }
