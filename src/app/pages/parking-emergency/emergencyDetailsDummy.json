@@ -1,0 +1,28 @@
+[
+  {
+    "victimID": "1",
+    "securityID": "SID1",
+    "status": "Completed",
+    "reportedDateTime": "2019-04-01T12:00:00Z"
+  },
+  {
+    "victimID": "1",
+    "securityID": "SID1",
+    "status": "FoundHelp",
+    "reportedDateTime": "2023-04-01T12:00:00Z"
+  },
+  {
+    "victimID": "2",
+    "securityID": "SID3",
+    "status": "Resolved",
+    "reportedDateTime": "2019-04-01T12:00:00Z"
+
+  },
+
+  {
+    "victimID": "3",
+    "securityID": "-",
+    "status": "LookingForHelp",
+    "reportedDateTime": "2019-04-01T12:00:00Z"
+  }
+]

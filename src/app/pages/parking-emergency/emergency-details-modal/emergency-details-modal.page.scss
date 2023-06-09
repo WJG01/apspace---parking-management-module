@@ -1,0 +1,70 @@
+.round-border {
+  border-radius: 50%;
+  max-width: 300px;
+  max-height: 300px;
+  margin: 40px 0px;
+}
+
+.ion-margin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.profile-picture {
+  margin-bottom: 10px;
+}
+
+.profile-details {
+  margin-bottom: 20px;
+}
+
+.profile-details p {
+  margin-bottom: 5px;
+  font-size: 20px;
+}
+
+.details-title {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.details-subtitle {
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.problem-solved-section {
+    margin-top: 20px;
+  }
+  
+  .section-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .buttons ion-button {
+    flex: 1;
+    margin-right: 10px;
+  }
+
+  .problem-section-card {
+    background-color: rgb(42, 131, 255);
+  }
+
+  .problem-section-title{
+    color: white;
+    margin-left: 10px;
+    font-size: 20px;
+    font-style: normal;
+  }

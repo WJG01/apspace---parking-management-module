@@ -1,0 +1,36 @@
+[
+    {
+      "securityID": "SID1",
+      "securityName": "Tandoori",
+      "gender": "Male",
+      "status": "Active",
+      "contactNumber": "013-2460633",
+      "profilePicture": "assets/img/securityGuard-SID1.jpg"
+    },
+    {
+      "securityID": "SID2",
+      "securityName": "Tankasala",
+      "gender": "Female",
+      "status": "Active",
+      "contactNumber": "013-3460633",
+      "profilePicture": "assets/img/securityGuard-SID1.jpg"
+
+    },
+    {
+      "securityID": "SID3",
+      "securityName": "Wael Mohamed",
+      "gender": "Male",
+      "status": "Idle",
+      "contactNumber": "013-4460633",
+      "profilePicture": "assets/img/securityGuard-SID1.jpg"
+    },
+  
+    {
+      "securityID": "SID4",
+      "securityName": "Abdul Qadir",
+      "gender": "Male",
+      "status": "Idle",
+      "contactNumber": "013-5460633",
+      "profilePicture": "assets/img/securityGuard-SID1.jpg"
+    }
+  ]

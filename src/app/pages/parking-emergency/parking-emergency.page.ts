@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { EmergencyDetailsModalPage } from './emergency-details-modal/emergency-details-modal.page';
 import { ModalController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
+import emergencyDummyData from './emergencyDetailsDummy.json';
+import { EmergencyDetails } from 'src/app/interfaces/emergency-details';
+import { Observable, filter, of } from 'rxjs';
 
 
 @Component({
@@ -11,10 +14,11 @@ import { AlertController } from '@ionic/angular';
 })
 export class ParkingEmergencyPage implements OnInit {
 
-
+  emergency$: Observable<EmergencyDetails[]>;
+  emergencyDetails: any;
+  foundEmergencyDetails: EmergencyDetails | null = null;
   sosStatus = '- - -';
   private holdTimer: any;
-
 
   constructor(
     private modalCtrl: ModalController,
@@ -22,6 +26,8 @@ export class ParkingEmergencyPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    //this.emergencyDetails = emergencyDummyData;
+    this.emergency$ = of(emergencyDummyData);
   }
 
 
@@ -77,5 +83,43 @@ export class ParkingEmergencyPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  loadEmergencyDetails(): void {
+    const victimID = '1'; // Predefined victimID
+
+    this.emergency$
+      .subscribe((emergencyDetails: EmergencyDetails[]) => {
+        const filteredData = emergencyDetails.filter(item => item.victimID === victimID);
+        if (filteredData.length > 0) {
+          this.foundEmergencyDetails = filteredData.reduce((acc, curr) => {
+            if (!acc || curr.reportedDateTime > acc.reportedDateTime) {
+              return curr;
+            }
+            return acc;
+          });
+        } else {
+          //console.log('No emergency details found!');
+          this.foundEmergencyDetails = null;
+        }
+        if (this.foundEmergencyDetails) {
+          //console.log('Found emergency details: ', this.foundEmergencyDetails);
+          this.openEmergencyDetailsModal(this.foundEmergencyDetails);
+        }
+      });
+  }
+
+
+  async openEmergencyDetailsModal(emergencyDetailsItem: any): Promise<void> {
+    //console.log('Checking what inside data: ', emergencyDetailsItem);
+    const modal = await this.modalCtrl.create({
+      component: EmergencyDetailsModalPage,
+      componentProps: {
+        emergencyDetailsItem
+      },
+      breakpoints: [0, 1],
+      initialBreakpoint: 1
+    });
+    await modal.present();
   }
 }

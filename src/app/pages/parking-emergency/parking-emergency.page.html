@@ -29,10 +29,19 @@
               <ion-text color="primary" class="text-start">{{ sosStatus }}</ion-text>
             </div>
             <div class="button-container">
-              <ion-button color="primary" [disabled]="sosStatus === 'Looking for help' || sosStatus === '- - -'"
-                (click)="showDetails()">Details</ion-button>
+              <ion-button color="primary" (click)="loadEmergencyDetails()">Details</ion-button>
+              <!-- <ion-button color="primary" [disabled]="sosStatus === 'Looking for help' || sosStatus === '- - -'"
+                (click)="loadEmergencyDetails()">Details</ion-button> -->
               <ion-button color="danger" [disabled]="sosStatus === '- - -' || sosStatus === 'Solved'"
                 (click)="cancel()">Cancel</ion-button>
+            </div>
+          </ion-item>
+          <ion-item lines="none" class="status-item">
+            <div class="label-container">
+              <ion-label>Reported DateTime:</ion-label>
+            </div>
+            <div class="text-container">
+              <ion-text color="primary" class="text-start">Reported Date Time</ion-text>
             </div>
           </ion-item>
         </ion-list>
