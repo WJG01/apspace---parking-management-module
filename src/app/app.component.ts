@@ -52,7 +52,7 @@ export class AppComponent {
           }
         })
       );
-      this.checkForUpdate();
+      //this.checkForUpdate();
     });
   }
 

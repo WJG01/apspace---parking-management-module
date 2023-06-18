@@ -1,6 +1,6 @@
 <ion-content>
-  <ion-refresher slot="fixed" pullMax="400" pullMin="60" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content refreshing-spinner="dots" pulling-icon="refresh"></ion-refresher-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event.target)">
+    <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
   </ion-refresher>
 
   <div class="glob-container">
@@ -62,7 +62,7 @@
                     </ion-label>
 
                     <!-- filter location -->
-                    <ion-select interface="popover" mode="md" (ionFocus)="loadLocations()" (ionChange)="checkAllFieldsFilled()">
+                    <ion-select interface="popover" mode="md" (ionFocus)="loadLocations()" [(ngModel)]="filterObject.location"  (ionChange)="checkAllFieldsFilled()">
                       <ion-select-option *ngFor="let l of locations" [value]="l.key">
                         {{ l.value }}
                       </ion-select-option>

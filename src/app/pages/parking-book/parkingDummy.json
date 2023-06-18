@@ -1,5 +1,6 @@
 [
   {
+    "APQParkingID": "000001",
     "location": "APU-A",
     "parkingspotid": "01",
     "date": "2023-06-10",
@@ -7,6 +8,7 @@
     "to": "20:00"
   },
   {
+    "APQParkingID": "000002",
     "location": "APU-A",
     "parkingspotid": "20",
     "date": "2023-06-10",
@@ -15,6 +17,7 @@
   },
 
   {
+    "APQParkingID": "000003",
     "location": "APU-A",
     "parkingspotid": "01",
     "date": "2023-06-09",

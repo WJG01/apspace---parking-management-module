@@ -84,9 +84,9 @@ export class WsApiService {
           return throwError(() => new Error(err));
         }
         // remove the condition once mandatory json endpoint has been fixed
-        if (url !== 'https://d370klgwtx3ftb.cloudfront.net/apspace_mandatory_update.json') {
-          this.component.toastMessage(err.message, 'medium');
-        }
+        // if (url !== 'https://d370klgwtx3ftb.cloudfront.net/apspace_mandatory_update.json') {
+        //   this.component.toastMessage(err.message, 'medium');
+        // }
 
         return from(this.storage.get(endpoint)).pipe(
           switchMap(v => v ? of(v as T) : throwError(() => new Error(err))),

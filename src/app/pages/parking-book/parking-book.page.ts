@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { LoadingController, ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { tap, map, finalize } from 'rxjs/operators';
 import { DatePickerComponent } from 'src/app/components/date-picker/date-picker.component';
@@ -8,6 +8,10 @@ import { StudentTimetable } from 'src/app/interfaces/student-timetable';
 import { StudentTimetableService } from 'src/app/services/student-timetable.service';
 import parkingData from './parkingDummy.json';
 import moment from 'moment';
+import { ParkingWsApiService } from 'src/app/services/parking_module-ws-api.service';
+import { ComponentService } from 'src/app/services/component.service';
+import { BookParkingService } from 'src/app/services/book-parking.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -19,6 +23,7 @@ import moment from 'moment';
 
 export class BookParkingPage implements OnInit {
 
+  loading: HTMLIonLoadingElement;
   bookedParkings: any;
   availableParkings: string[] = [];
 
@@ -40,24 +45,50 @@ export class BookParkingPage implements OnInit {
   selectedDate: string;
   showDatePickerFlag = false;
 
-  chosenParkingSpot: string;
-  chosenParkingDate: string;
-  chosenStartTime: string;
-  chosenEndTime: string;
-  chosenDuration: string;
+  chosenParkingSpot = '----';
+  chosenParkingDate= '----';
+  chosenStartTime= '----';
+  chosenEndTime= '----';
+  chosenDuration= '----';
   selectedParking: string;
 
 
   constructor(
     private modalCtrl: ModalController,
     private cdr: ChangeDetectorRef,
-    private tt: StudentTimetableService,
+    private component: ComponentService,
+    private bookps: BookParkingService,
+    private loadingCtrl: LoadingController,
+    public modalController: ModalController,
+    private router: Router
 
 
   ) { }
 
   ngOnInit() {
-    this.bookedParkings = parkingData;
+    this.doRefresh();
+  }
+
+  doRefresh(refresher?) {
+    this.getAllBookings();
+
+    if (refresher) {
+      refresher.target.complete();
+    }
+  }
+
+
+
+  getAllBookings() {
+    this.bookps.getAllBookedParkings().subscribe(
+      (response: any) => {
+        this.bookedParkings = response; // Store the response in the variable
+        console.log('result', this.bookedParkings)
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
   }
 
 
@@ -77,20 +108,6 @@ export class BookParkingPage implements OnInit {
     }
   }
 
-  doRefresh(refresher?) {
-    // const refresh = refresher ? true : false;
-    // const excludeRooms = ['ONL', 'Online'];
-
-    // this.timetables$ = this.tt.get(refresh).pipe(
-    //   tap(res => console.log(res)),
-    //   map(data => data.filter(res => excludeRooms.every(room => !res.ROOM.includes(room)))), // Exclude Online and ONL room data
-    //   finalize(() => {
-    //     if (refresher) {
-    //       refresher.target.complete();
-    //     }
-    //   })
-    // );
-  }
 
   async openDatePicker(type: string) {
     const modal = await this.modalCtrl.create({
@@ -188,7 +205,6 @@ export class BookParkingPage implements OnInit {
     this.chosenDuration = '';
 
     // Check if all fields have values
-    console.log('Hello');
     console.log(this.filterObject);
     if (this.filterObject.location && this.filterObject.date && this.filterObject.from && this.filterObject.to) {
       this.availableParkings = this.loadVacantParking();
@@ -204,7 +220,12 @@ export class BookParkingPage implements OnInit {
 
   findOccupiedParking(): string[] {
     const occupiedParking: string[] = [];
-    this.bookedParkings.forEach(booking => {
+
+    console.log('in other place', this.bookedParkings);
+    console.log('checking_filterObject.location', this.filterObject.location);
+
+
+    this.bookedParkings.selectParkingResponse.forEach(booking => {
       const bookingFromTime = new Date(`2000-01-01T${booking.from}`);
       const bookingToTime = new Date(`2000-01-01T${booking.to}`);
       const chosenFromTimeObj = new Date(`2000-01-01T${this.filterObject.from}`);
@@ -224,7 +245,7 @@ export class BookParkingPage implements OnInit {
       }
     });
 
-    console.log(occupiedParking);
+    console.log('hello this is occupiedparking',occupiedParking);
     return occupiedParking;
   }
 
@@ -259,6 +280,74 @@ export class BookParkingPage implements OnInit {
 
 
   confirmBooking() {
+    this.presentLoading();
+    const location_parkingspotid = this.chosenParkingSpot;
+    const parts = location_parkingspotid.split('-');
+
+    const body = {
+      location: this.filterObject.location,
+      parkingspotid: parts[2],
+      date: this.chosenParkingDate,
+      from: this.chosenStartTime,
+      to: this.chosenEndTime,
+    }
+
+    const headers = { 'Content-Type': 'application/json' };
+
+    if (body) {
+      this.bookps.createNewParkingBooking(body, headers).subscribe({
+        next: () => {
+          this.component.toastMessage(`Successfully Booked Parking Spot ${this.chosenParkingSpot}!`, 'success').then(() => {
+            this.dismissLoading();
+            this.clearFilter();
+            this.doRefresh(); // Reload the page to its initial state
+          });
+        },
+        error: (err) => {
+          this.component.toastMessage(err.message, 'danger');
+          this.dismissLoading();
+        },
+      });
+    }
+  }
+
+  async presentLoading() {
+    this.loading = await this.loadingCtrl.create({
+      spinner: 'dots',
+      duration: 20000,
+      message: 'Loading ...',
+      translucent: true,
+      animated: true
+    });
+    return await this.loading.present();
+  }
+
+  async dismissLoading() {
+    if (this.loading) {
+      this.dismiss();
+      return await this.loading.dismiss();
+    }
+  }
+
+  dismiss() {
+    this.modalController.dismiss({
+      dismissed: true
+    });
+  }
+
+  clearFilter() {
+    this.filterObject.location = null;
+    this.filterObject.date = '';
+    this.filterObject.from = '';
+    this.filterObject.to = '';
+    this.availableParkings = [];
+    this.selectedParking = null;
+    this.chosenParkingSpot = '----';
+    this.chosenParkingDate = '----';
+    this.chosenStartTime = '----';
+    this.chosenEndTime = '----';
+    this.chosenDuration = '-';
+    this.filterObject.location = null;
   }
 
 }

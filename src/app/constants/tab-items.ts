@@ -2,7 +2,7 @@ import { Role } from '../interfaces/role';
 
 export const TabItems = [
   {
-    name: 'Booking',
+    name: 'Parking',
     path: 'parking-book',
     outlineIcon: 'car-sport-outline',
     fillIcon: 'car-sport',
