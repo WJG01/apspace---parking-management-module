@@ -1,3 +1,7 @@
+/* eslint-disable no-bitwise */
+/* eslint-disable @typescript-eslint/quotes */
+/* eslint-disable max-len */
+/* eslint-disable arrow-body-style */
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AlertButton, IonContent, ModalController, NavController, Platform, ViewWillEnter } from '@ionic/angular';
 import { Observable, Subscription, combineLatest, forkJoin, of, zip, map, finalize, catchError, concatMap, mergeMap, shareReplay, switchMap, tap, toArray } from 'rxjs';

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnInit } from '@angular/core';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
@@ -12,6 +13,7 @@ import { ParkingWsApiService } from 'src/app/services/parking_module-ws-api.serv
 import { ComponentService } from 'src/app/services/component.service';
 import { BookParkingService } from 'src/app/services/book-parking.service';
 import { Router } from '@angular/router';
+import { Storage } from '@ionic/storage-angular';
 
 
 @Component({
@@ -46,11 +48,13 @@ export class BookParkingPage implements OnInit {
   showDatePickerFlag = false;
 
   chosenParkingSpot = '----';
-  chosenParkingDate= '----';
-  chosenStartTime= '----';
-  chosenEndTime= '----';
-  chosenDuration= '----';
+  chosenParkingDate = '----';
+  chosenStartTime = '----';
+  chosenEndTime = '----';
+  chosenDuration = '----';
   selectedParking: string;
+
+  currentLoginUserID = '';
 
 
   constructor(
@@ -60,13 +64,15 @@ export class BookParkingPage implements OnInit {
     private bookps: BookParkingService,
     private loadingCtrl: LoadingController,
     public modalController: ModalController,
-    private router: Router
+    private router: Router,
+    private storage: Storage
 
 
   ) { }
 
   ngOnInit() {
     this.doRefresh();
+    this.getUserData();
   }
 
   doRefresh(refresher?) {
@@ -77,13 +83,20 @@ export class BookParkingPage implements OnInit {
     }
   }
 
+  async getUserData() {
+    const userData = await this.storage.get('userData');
+    if (userData) {
+      this.currentLoginUserID = userData.parkinguserid;
+    }
+  }
+
 
 
   getAllBookings() {
     this.bookps.getAllBookedParkings().subscribe(
       (response: any) => {
         this.bookedParkings = response; // Store the response in the variable
-        console.log('result', this.bookedParkings)
+        console.log('result', this.bookedParkings);
       },
       (error: any) => {
         console.log(error);
@@ -245,7 +258,7 @@ export class BookParkingPage implements OnInit {
       }
     });
 
-    console.log('hello this is occupiedparking',occupiedParking);
+    console.log('hello this is occupiedparking', occupiedParking);
     return occupiedParking;
   }
 
@@ -290,7 +303,10 @@ export class BookParkingPage implements OnInit {
       date: this.chosenParkingDate,
       from: this.chosenStartTime,
       to: this.chosenEndTime,
-    }
+      userid: this.currentLoginUserID,
+    };
+
+    console.log('what is this userid?', body);
 
     const headers = { 'Content-Type': 'application/json' };
 

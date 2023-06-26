@@ -1,0 +1,37 @@
+[
+  {
+    "userid": "TP000001",
+    "displayname": "Staff 1",
+    "username": "ALECTURENAME",
+    "role": "STAFF",
+    "contactno": "012-9374857"
+  },
+  {
+    "userid": "TP055808",
+    "displayname": "Student 1",
+    "username": "GAN WEI JUN",
+    "role": "STUDENT",
+    "contactno": "013-9374857"
+  },
+  {
+    "userid": "SID1",
+    "displayname": "Security Guard 1",
+    "username": "Tandoori",
+    "role": "SECURITY_GUARD",
+    "contactno": "013-2460633"
+  },
+  {
+    "userid": "SID2",
+    "displayname": "Security Guard 2",
+    "username": "Tankasala",
+    "role": "SECURITY_GUARD",
+    "contactno": "013-3460633"
+  },
+  {
+    "userid": "TP999999",
+    "displayname": "Admin 1",
+    "username": "THE_ADMIN",
+    "role": "admin",
+    "contactno": "013-9374857"
+  }
+]
