@@ -1,10 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { EmergencyDetailsModalPage } from './emergency-details-modal/emergency-details-modal.page';
 import { ModalController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import emergencyDummyData from './emergencyDetailsDummy.json';
 import { EmergencyDetails } from 'src/app/interfaces/emergency-details';
 import { Observable, filter, of } from 'rxjs';
+import { Storage } from '@ionic/storage-angular';
+import { DatePipe } from '@angular/common';
+import { ParkingEmergencyService } from 'src/app/services/parking-emergency.service';
+import { ComponentService } from 'src/app/services';
+import { finalize } from 'rxjs/operators';
 
 
 @Component({
@@ -18,22 +23,44 @@ export class ParkingEmergencyPage implements OnInit {
   emergencyDetails: any;
   foundEmergencyDetails: EmergencyDetails | null = null;
   sosStatus = '- - -';
+
+  currentLoginUserID = '';
+  currentLoginUserContact = '';
+
   private holdTimer: any;
 
   constructor(
     private modalCtrl: ModalController,
     private alertController: AlertController,
+    private storage: Storage,
+    private peS: ParkingEmergencyService,
+    private component: ComponentService,
+    private ngZone: NgZone,
   ) { }
 
   ngOnInit() {
     //this.emergencyDetails = emergencyDummyData;
     this.emergency$ = of(emergencyDummyData);
+    this.getUserData();
+
+    // this.createEmergency();
+  }
+
+  async getUserData() {
+    const userData = await this.storage.get('userData');
+    if (userData) {
+      this.currentLoginUserID = userData.parkinguserid;
+      this.currentLoginUserContact = userData.parkingusercontact;
+      console.log(this.currentLoginUserContact);
+    }
   }
 
 
-  onMouseDown(): void {
+  onClick(event: MouseEvent): void {
     this.holdTimer = setTimeout(() => {
-      this.triggerAction();
+      this.ngZone.run(() => {
+        this.createEmergency();
+      });
     }, 3000);
   }
 
@@ -41,10 +68,43 @@ export class ParkingEmergencyPage implements OnInit {
     clearTimeout(this.holdTimer);
   }
 
-  triggerAction(): void {
-    // Perform your desired action here
-    console.log('Action triggered!');
-    this.sosStatus = 'Looking For Help';
+  createEmergency(): void {
+    const currentDate = new Date();
+    const datePipe = new DatePipe('en-US');
+
+    const formattedDateTime = datePipe.transform(currentDate, 'yyyy-dd-MMTHH:mm:ss');
+
+    const body = {
+      userid: this.currentLoginUserID,
+      usercontactno: this.currentLoginUserContact,
+      securityguardid: '',
+      emergencyreportstatus: 'HELPFIND',
+      reportdatetime: formattedDateTime,
+      parkingspotid: this.currentLoginUserID,
+    };
+    const headers = { 'Content-Type': 'application/json' };
+
+    if (body) {
+      this.peS.createNewEmergencyReport(body, headers)
+        .pipe(
+          finalize(() => {
+            this.component.toastMessage('Initiated SOS Call. Kindly wait for assistance to arrive.', 'success').then(() => {
+              this.sosStatus = 'Looking For Help';
+            });
+          })
+        )
+        .subscribe({
+          next: () => {
+            // Success handling if needed
+            console.log('running successfully');
+            console.log('checking the body', body);
+          },
+          error: (err) => {
+            console.log('Error:', err);
+            this.component.toastMessage(err.message, 'danger');
+          }
+        });
+    }
   }
 
   ngOnDestroy(): void {

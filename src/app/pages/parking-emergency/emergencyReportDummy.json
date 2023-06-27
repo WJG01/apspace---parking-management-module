@@ -1,0 +1,38 @@
+[
+  {
+    "APQEmergencyID": "ER000001",
+    "userid": "TP055808",
+    "usercontactno": "011-738453",
+    "securityguardid": "",
+    "emergencyreportstatus": "HELPFIND",
+    "reportdatetime": "2023-01-01T00:00:00",
+    "parkingspotid": "APU-A-01"
+  },
+  {
+    "APQEmergencyID": "ER000002",
+    "userid": "TP055807",
+    "usercontactno": "011-738453",
+    "securityguardid": "SID1",
+    "emergencyreportstatus": "HELPFOUND",
+    "reportdatetime": "2023-01-01T00:00:00",
+    "parkingspotid": "APU-A-01"
+  },
+  {
+    "APQEmergencyID": "ER000003",
+    "userid": "TP055808",
+    "usercontactno": "011-738453",
+    "securityguardid": "SID1",
+    "emergencyreportstatus": "HELPDONE",
+    "reportdatetime": "2023-01-01T00:00:00",
+    "parkingspotid": "APU-A-01"
+  },
+  {
+    "APQEmergencyID": "ER000004",
+    "userid": "TP055808",
+    "usercontactno": "011-738453",
+    "securityguardid": "SID1",
+    "emergencyreportstatus": "HELPCOMPLETE",
+    "reportdatetime": "2023-01-01T00:00:00",
+    "parkingspotid": "APU-A-01"
+  }
+]

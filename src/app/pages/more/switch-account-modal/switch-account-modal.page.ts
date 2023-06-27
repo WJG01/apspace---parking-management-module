@@ -28,10 +28,11 @@ export class SwitchAccountModalPage implements OnInit {
     // Handle user selection here
     console.log('Selected User:', user);
     this.component.toastMessage(`Switched to ${user.displayname} -  ${user.username}`, 'success');
-    //console.log(`checking storage to ${user.role} - ${user.userid}`);
+    console.log(`checking storage to ${user.role} - ${user.userid}- ${user.contactno}`);
     const cachedUserData = {
       parkinguserid: user.userid,
-      parkingRole: user.role
+      parkingRole: user.role,
+      parkingusercontact: user.contactno,
     };
 
     this.storage.set('userData', cachedUserData);
