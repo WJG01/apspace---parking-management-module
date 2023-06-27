@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AlertButton, AlertController, IonContent, NavController, ViewWillEnter } from '@ionic/angular';
+import { AlertButton, AlertController, IonContent, ModalController, NavController, ViewWillEnter, IonicModule } from '@ionic/angular';
 import { map, Observable } from 'rxjs';
 
 import { Storage } from '@ionic/storage-angular';
@@ -10,6 +10,8 @@ import { CasTicketService, ConfigurationsService, SettingsService } from '../../
 import { MenuID, MenuItem } from './menu.interface';
 import { ComponentService } from '../../services';
 import { Router } from '@angular/router';
+import importedUserData from '../parking-book/APQParkingUserDummy.json';
+import { SwitchAccountModalPage } from './switch-account-modal/switch-account-modal.page';
 
 const ICONS_PATH = 'assets/img/more-icons'; // Main Icons Path
 
@@ -22,6 +24,13 @@ const ICONS_PATH = 'assets/img/more-icons'; // Main Icons Path
 export class MorePage implements OnInit, ViewWillEnter {
 
   @ViewChild(IonContent) content: IonContent;
+
+  //switch user modal changes
+  @ViewChild('switchAccountModal') switchAccountModal: any;
+
+  userData: any[] = [];
+  currentLoginUser = '';
+
 
   keyIcon: { [key: string]: string; } = {
     ['Finance']: `${ICONS_PATH}/finance.png`,
@@ -48,6 +57,7 @@ export class MorePage implements OnInit, ViewWillEnter {
     public component: ComponentService,
     private config: ConfigurationsService,
     private router: Router,
+    private modalController: ModalController,
   ) { }
 
   ngOnInit() {
@@ -82,6 +92,15 @@ export class MorePage implements OnInit, ViewWillEnter {
           .filter(menu => menu !== undefined)),
       );
     });
+
+    // importedUserData.forEach(user => {
+    //   this.userData.push(user);
+    // });
+    if (importedUserData) {
+      this.userData = importedUserData;
+    }
+    console.log(this.userData);
+    this.getUserData();
   }
 
   ionViewWillEnter() {
@@ -155,5 +174,32 @@ export class MorePage implements OnInit, ViewWillEnter {
 
   goToParkingMap() {
     this.router.navigateByUrl('/parking-map');
+  }
+
+  //switch user modal changes
+
+  async openSwitchAccountModal() {
+    const modal = await this.modalController.create({
+      component: SwitchAccountModalPage,
+      componentProps: {
+        userData: this.userData
+      },
+      animated: true,
+      backdropDismiss: false
+    });
+
+    modal.onDidDismiss().then((result) => {
+      if (result) {
+        this.getUserData();
+      }
+    });
+    await modal.present();
+  }
+
+  async getUserData() {
+    const userData = await this.storage.get('userData');
+    if (userData) {
+      this.currentLoginUser = '\n' + '\'' + userData.parkinguserid + '\' AS \'' + userData.parkingRole + '\' ROLE';
+    }
   }
 }

@@ -7,7 +7,11 @@ const routes: Routes = [
   {
     path: '',
     component: MorePage
+  },  {
+    path: 'switch-account-modal',
+    loadChildren: () => import('./switch-account-modal/switch-account-modal.module').then( m => m.SwitchAccountModalPageModule)
   }
+
 ];
 
 @NgModule({
