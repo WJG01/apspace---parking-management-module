@@ -1,6 +1,18 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>parking-history</ion-title>
+    <ion-title>
+      Parking History
+    </ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="selectedSegment">
+      <ion-segment-button value="list">Present / Future</ion-segment-button>
+      <ion-segment-button value="calendar">Past</ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
 </ion-header>
 

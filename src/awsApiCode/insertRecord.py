@@ -32,3 +32,37 @@ def lambda_handler(event, context):
     else:
         return {"insertFoodOrderResponse": insertFoodOrderResponse, "insertOrderItemsResponse": insertOrderItemsResponse}
         # return {"insertOrderItemsResponse": insertOrderItemsResponse}
+
+
+
+# 2. Updated with UUID
+import json, boto3,uuid
+from botocore.exceptions import ClientError
+
+def lambda_handler(event, context):
+    ddb = boto3.resource('dynamodb')
+    data = json.loads(json.dumps(event))
+    #print("testing here   " + str(type(data['APQParkingID'])))
+    
+    # Generate a UUID for APQParkingID
+    apq_parking_id = str(uuid.uuid4())
+    
+    try:
+        insertParkingResponse = ddb.meta.client.execute_statement(
+            Statement=f"INSERT INTO APQParking VALUE {{ 'APQParkingID':?, 'location':?, 'parkingspotid':?, 'date':?, 'from':?, 'to':? }}",
+            # Parameters=[
+            #     {'S': data['APQParkingID']},  # Assuming APQParkingID is a string
+            #     {'S': data['location']},
+            #     {'S': data['parkingspotid']},
+            #     {'S': data['date']},
+            #     {'S': data['from']},
+            #     {'S': data['to']}
+            Parameters=[apq_parking_id, data['location'], data['parkingspotid'], data['date'], data['from'], data['to']]
+
+        )
+        
+    except ClientError as err:
+        print("You hit an error. You feel so sad")
+        raise
+    else:
+        return {"insertParkingResponse": insertParkingResponse}

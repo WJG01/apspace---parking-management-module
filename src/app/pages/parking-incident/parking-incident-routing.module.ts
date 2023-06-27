@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+
 import { ParkingIncidentPage } from './parking-incident.page';
 
 const routes: Routes = [

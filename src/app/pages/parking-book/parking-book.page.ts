@@ -297,7 +297,7 @@ export class BookParkingPage implements OnInit {
     if (body) {
       this.bookps.createNewParkingBooking(body, headers).subscribe({
         next: () => {
-          this.component.toastMessage(`Successfully Booked Parking Spot ${this.chosenParkingSpot}!`, 'success').then(() => {
+          this.component.toastMessage(`Successfully Booked Parking Spot ${this.chosenParkingSpot} !`, 'success').then(() => {
             this.dismissLoading();
             this.clearFilter();
             this.doRefresh(); // Reload the page to its initial state

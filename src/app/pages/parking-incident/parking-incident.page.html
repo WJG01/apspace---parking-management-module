@@ -1,9 +1,96 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>parking-incident</ion-title>
+    <ion-title>
+      Report Incident
+    </ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <div class="glob-container">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-xs="12" size-md="5" push-md="7">
+          <ion-card class="ion-no-margin">
+            <ion-card-header>
+              <ion-card-title color="danger" class="glob-text-bold">Important Notice</ion-card-title>
+            </ion-card-header>
+            <ion-card-content class="ion-padding-top">
+              <ion-text>
+                <p>
+                  This Service is used when you wanted to report an incident happened in <ion-text color="danger">APU's
+                    parking zones</ion-text>.
+                </p>
+                <br>
+                <p>
+                  The feedback will be received by the <span class="glob-text-bold">APU's administrator</span>
+                  and we will do our best to keep up with the standards so you enjoy our service.
+                </p>
+                <br>
+                <p class="glob-text-bold">
+                  Please note that your identity or contact information will BE REVEALED to the person receiving this
+                  Incident Report.
+                </p>
+              </ion-text>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
 
+        <ion-col size-xs="12" size-md="7" pull-md="5">
+          <ion-card class="ion-no-margin">
+            <ion-item-divider lines="none" color="light" mode="md">
+              <ion-label class="glob-text-bold">
+                Your Incident Report
+              </ion-label>
+            </ion-item-divider>
+
+            <form [formGroup]="incidentForm">
+              <ion-item lines="none">
+                <ion-label position="stacked">Incident Description:</ion-label>
+                <ion-textarea autoGrow formControlName="message" placeholder="Describe the Incident"></ion-textarea>
+              </ion-item>
+
+              <ion-item lines="none">
+                <ion-label position="stacked">Relevant Images:</ion-label>
+                <br>
+                <!-- <ion-input type="file" formControlName="images" multiple (change)="onFileSelected($event)"></ion-input> -->
+                <ion-list>
+                  <ion-item *ngFor="let image of images">
+                    <ion-thumbnail slot="start">
+                      <ion-img [src]="image"></ion-img>
+                    </ion-thumbnail>
+                    <ion-label>{{ image.name }}</ion-label>
+                    <ion-button slot="end" fill="clear" slot="end" (click)="removeImage(image)">
+                      <ion-icon slot="icon-only" name="trash"></ion-icon>
+                    </ion-button>
+                  </ion-item>
+                  <ion-item>
+                    <ion-button fill="clear" (click)="fileInput.click()">
+                      <ion-icon name="add-circle"></ion-icon>
+                    </ion-button>
+                    <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept="image/*" multiple>
+                  </ion-item>
+                </ion-list>
+              </ion-item>
+              <div class="ion-padding-start ion-padding-end">
+                <ion-text color="danger">
+                  <small *ngIf="!imageValid">Only accept jpeg, png, and jpg file types.</small>
+                </ion-text>
+              </div>
+            </form>
+
+            <ion-card-content>
+              <ion-button expand="block" (click)="submit()">
+                Submit
+                <ion-icon name="send" slot="end"></ion-icon>
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
 </ion-content>
