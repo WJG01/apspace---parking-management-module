@@ -11,6 +11,10 @@ export class ParkingEmergencyService {
     private pws: ParkingWsApiService,
   ) { }
 
+  getAllEmergencyReport(): Observable<any> {
+    return this.pws.get<any>('//parking-emergency');
+  }
+
   createNewEmergencyReport(body, headers): Observable<any> {
     return this.pws.post<any>('/parking-emergency', { body, headers });
   }

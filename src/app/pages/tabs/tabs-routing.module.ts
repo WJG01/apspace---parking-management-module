@@ -59,11 +59,15 @@ const routes: Routes = [
       },
       {
         path: 'parking-checkin',
-        loadChildren: () => import('../parking-checkin/parking-checkin.module').then( m => m.ParkingCheckinPageModule)
+        loadChildren: () => import('../parking-checkin/parking-checkin.module').then(m => m.ParkingCheckinPageModule)
       },
       {
         path: 'parking-emergency',
-        loadChildren: () => import('../parking-emergency/parking-emergency.module').then( m => m.ParkingEmergencyPageModule)
+        loadChildren: () => import('../parking-emergency/parking-emergency.module').then(m => m.ParkingEmergencyPageModule)
+      },
+      {
+        path: 'parking-emergency-assistance',
+        loadChildren: () => import('../parking-emergency-assist/parking-emergency-assist.module').then(m => m.ParkingEmergencyAssistPageModule)
       },
       {
         path: '',

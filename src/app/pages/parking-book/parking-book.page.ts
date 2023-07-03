@@ -11,7 +11,7 @@ import parkingData from './parkingDummy.json';
 import moment from 'moment';
 import { ParkingWsApiService } from 'src/app/services/parking_module-ws-api.service';
 import { ComponentService } from 'src/app/services/component.service';
-import { BookParkingService } from 'src/app/services/book-parking.service';
+import { BookParkingService } from 'src/app/services/parking-book.service';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
 

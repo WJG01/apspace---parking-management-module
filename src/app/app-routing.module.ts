@@ -297,27 +297,32 @@ const routes: Routes = [
   },
   {
     path: 'parking-book',
-    loadChildren: () => import('./pages/parking-book/parking-book.module').then( m => m.BookParkingPageModule)
+    loadChildren: () => import('./pages/parking-book/parking-book.module').then(m => m.BookParkingPageModule)
   },
   {
     path: 'parking-checkin',
-    loadChildren: () => import('./pages/parking-checkin/parking-checkin.module').then( m => m.ParkingCheckinPageModule)
+    loadChildren: () => import('./pages/parking-checkin/parking-checkin.module').then(m => m.ParkingCheckinPageModule)
   },
   {
     path: 'parking-emergency',
-    loadChildren: () => import('./pages/parking-emergency/parking-emergency.module').then( m => m.ParkingEmergencyPageModule)
+    loadChildren: () => import('./pages/parking-emergency/parking-emergency.module').then(m => m.ParkingEmergencyPageModule)
   },
   {
     path: 'parking-incident',
-    loadChildren: () => import('./pages/parking-incident/parking-incident.module').then( m => m.ParkingIncidentPageModule)
+    loadChildren: () => import('./pages/parking-incident/parking-incident.module').then(m => m.ParkingIncidentPageModule)
   },
   {
     path: 'parking-history',
-    loadChildren: () => import('./pages/parking-history/parking-history.module').then( m => m.ParkingHistoryPageModule)
+    loadChildren: () => import('./pages/parking-history/parking-history.module').then(m => m.ParkingHistoryPageModule)
   },
   {
     path: 'parking-map',
-    loadChildren: () => import('./pages/parking-map/parking-map.module').then( m => m.ParkingMapPageModule)
+    loadChildren: () => import('./pages/parking-map/parking-map.module').then(m => m.ParkingMapPageModule)
+  },
+  {
+    path: 'parking-emergency-assistance',
+    // eslint-disable-next-line max-len
+    loadChildren: () => import('./pages/parking-emergency-assist/parking-emergency-assist.module').then(m => m.ParkingEmergencyAssistPageModule)
   },
 
   { // this path must always be at the end of the routes array
@@ -326,6 +331,9 @@ const routes: Routes = [
     data: { role: Role.Student | Role.Lecturer | Role.Admin },
     loadChildren: () => import('./pages/not-found/not-found.module').then(m => m.NotFoundPageModule)
   },
+
+
+
 
 ];
 

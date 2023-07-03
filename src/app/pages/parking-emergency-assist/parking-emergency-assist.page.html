@@ -1,0 +1,208 @@
+<ion-header>
+  <ion-toolbar>
+
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="selectedSegment">
+      <ion-segment-button value="newRequest">New Request</ion-segment-button>
+      <ion-segment-button value="assignedRequest">Assigned Request</ion-segment-button>
+      <ion-segment-button value="completedRequest">Completed Request</ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" pullMax="400" pullMin="60" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="glob-container">
+    <ion-row class="ion-margin-top">
+      <ion-col size-xs="12" size-md="8" class="glob-margin-auto">
+
+
+        <!-- filter group -->
+        <!-- <ion-card class="ion-no-margin ion-margin-bottom">
+          <ion-accordion-group>
+            <ion-accordion value="first">
+              <ion-item slot="header">
+                <ion-icon class="ion-padding-end" name="filter"></ion-icon>
+                <ion-label>Filters</ion-label>
+              </ion-item>
+
+              <ion-list class="ion-no-padding" slot="content">
+                <ion-item lines="inset">
+                  <ion-label position="stacked">Year</ion-label>
+                  <ion-select [disabled]="setYears.length < 1" interface="popover" placeholder="Select Year" mode="md"
+                    [(ngModel)]="filterObject.year" (ngModelChange)="doRefresh()">
+                    <ion-select-option *ngFor="let y of setYears" [value]="y">
+                      {{ y }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+
+                <ion-item lines="inset" *ngIf="userRole !== 'students'">
+                  <ion-label position="stacked">Affecting</ion-label>
+                  <ion-select interface="popover" [(ngModel)]="filterObject.affecting" (ngModelChange)="doRefresh()" mode="md">
+                    <ion-select-option *ngFor="let a of affecting" [value]="a">
+                      {{ a | titlecase }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+
+                <ion-item lines="inset">
+                  <ion-label position="stacked">Duration</ion-label>
+                  <ion-select interface="popover" [(ngModel)]="filterObject.duration" (ngModelChange)="doRefresh()"
+                    mode="md">
+                    <ion-select-option *ngFor="let d of holidayDurations" [value]="d">
+                      {{ d | titlecase }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+
+                <ion-item lines="none">
+                  <ion-label>Upcoming Holidays</ion-label>
+                  <ion-toggle [(ngModel)]="filterObject.upcoming" (ngModelChange)="doRefresh()"></ion-toggle>
+                </ion-item>
+
+                <ion-row>
+                  <ion-col>
+                    <ion-button expand="block" (click)="generatePdf()">
+                      Generate PDF
+                      <ion-icon slot="end" name="print"></ion-icon>
+                    </ion-button>
+                  </ion-col>
+
+                  <ion-col>
+                    <ion-button expand="block" color="danger" (click)="resetFilters()">
+                      Reset Filters
+                      <ion-icon slot="end" name="refresh"></ion-icon>
+                    </ion-button>
+                  </ion-col>
+                </ion-row>
+              </ion-list>
+            </ion-accordion>
+          </ion-accordion-group>
+        </ion-card> -->
+
+        <ng-container *ngIf="!(loading$ | async)">
+          <ng-container *ngIf="(emergencyReports && emergencyReports.length > 0); else loading">
+            <ng-container>
+              <ng-container>
+                <!-- <ion-item color="light" lines="none" class="ion-margin-bottom">
+                  <ion-thumbnail>
+                    <ion-icon size="large" color="warning" name="information" class="ion-margin-top"></ion-icon>
+                  </ion-thumbnail>
+                  <ion-label class="ion-text-wrap">
+                    <h3 class="glob-fw-600">
+                      Note:
+                    </h3>
+                    <p>
+                      {{ filteredHolidays.remarks }}
+                    </p>
+                  </ion-label>
+                </ion-item> -->
+
+                <ng-container [ngSwitch]="selectedSegment">
+                  <ng-container *ngSwitchCase="'newRequest'">
+                    <ion-card class="ion-no-margin" *ngFor="let report of emergencyReports | keyvalue">
+                      <ion-item lines="none" *ngIf="report.emergencyreportstatus === 'HELPFIND'">
+                        <!-- Add your desired HTML content here -->
+                        <ion-label class="ion-text-wrap">
+                          <h3 class="glob-fw-600">
+                            {{ report.APQEmergencyID }}
+                          </h3>
+                          <p>
+                            Report Date: {{ report.reportdatetime | date }}
+                          </p>
+                          <!-- Display other attributes as needed -->
+                        </ion-label>
+                      </ion-item>
+                    </ion-card>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'assignedRequest'">
+                    <ion-card class="ion-no-margin" *ngFor="let report of emergencyReports | keyvalue">
+                      <ion-item lines="none" *ngIf="report.emergencyreportstatus === 'HELPFIND'">
+                        <!-- Add your desired HTML content here -->
+                        <ion-label class="ion-text-wrap">
+                          <h3 class="glob-fw-600">
+                            {{ report.APQEmergencyID }}
+                          </h3>
+                          <p>
+                            Report Date: {{ report.reportdatetime | date }}
+                          </p>
+                          <!-- Display other attributes as needed -->
+                        </ion-label>
+                      </ion-item>
+                    </ion-card>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'completedRequest'">
+                    <ion-card class="ion-no-margin" *ngFor="let report of emergencyReports | keyvalue">
+                      <ion-item lines="none" *ngIf="report.emergencyreportstatus === 'HELPFIND'">
+                        <!-- Add your desired HTML content here -->
+                        <ion-label class="ion-text-wrap">
+                          <h3 class="glob-fw-600">
+                            {{ report.APQEmergencyID }}
+                          </h3>
+                          <p>
+                            Report Date: {{ report.reportdatetime | date }}
+                          </p>
+                          <!-- Display other attributes as needed -->
+                        </ion-label>
+                      </ion-item>
+                    </ion-card>
+                  </ng-container>
+
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+
+          <ng-template #noHolidays>
+            <ion-card class="ion-no-margin">
+              <message-with-svg imageUrl="assets/img/search_not_found.svg" messageTitle="No Holidays Available!"
+                wrapperSize="6" wrapperOffset="3"
+                messageContent="No Holidays available to show. You can try changing the filter option to view other holidays"
+                wrapperMarginTop="20px">
+              </message-with-svg>
+            </ion-card>
+          </ng-template>
+        </ng-container>
+
+        <ng-template #loading>
+          <!-- <ion-item color="light" lines="none" class="ion-margin-bottom">
+            <ion-thumbnail>
+              <ion-icon size="large" color="warning" name="information" class="ion-margin-top"></ion-icon>
+            </ion-thumbnail>
+            <ion-label class="ion-text-wrap">
+              <h3 class="glob-fw-600">
+                Note:
+              </h3>
+              <p>
+                <ion-skeleton-text animated style="width: 30%; line-height: 15px"></ion-skeleton-text>
+                <ion-skeleton-text animated style="width: 20%; line-height: 15px"></ion-skeleton-text>
+              </p>
+            </ion-label>
+          </ion-item> -->
+
+          <ng-container>
+            <ion-card class="ion-no-margin" *ngFor="let _ of skeleton; let isLast = last"
+              [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+              <ion-item lines="none">
+                <ion-icon name="calendar" class="ion-padding-end" size="large"></ion-icon>
+                <ion-label>
+                  <ion-skeleton-text animated style="width: 30%; line-height: 15px"></ion-skeleton-text>
+                  <ion-skeleton-text animated style="width: 20%; line-height: 15px"></ion-skeleton-text>
+                  <ion-skeleton-text animated style="width: 10%; line-height: 15px"></ion-skeleton-text>
+                </ion-label>
+              </ion-item>
+            </ion-card>
+          </ng-container>
+        </ng-template>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>

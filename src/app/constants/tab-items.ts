@@ -23,6 +23,13 @@ export const TabItems = [
     role: Role.Admin | Role.Lecturer | Role.Student
   },
   {
+    name: 'Assistance',
+    path: 'parking-emergency-assistance',
+    outlineIcon: 'body-outline',
+    fillIcon: 'body',
+    role: Role.Admin | Role.Lecturer | Role.Student
+  },
+  {
     name: 'More',
     path: 'more',
     outlineIcon: 'ellipsis-vertical-outline',
