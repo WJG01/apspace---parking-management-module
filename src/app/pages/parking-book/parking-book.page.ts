@@ -2,17 +2,12 @@
 import { Component, OnInit } from '@angular/core';
 import { LoadingController, ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
-import { tap, map, finalize } from 'rxjs/operators';
 import { DatePickerComponent } from 'src/app/components/date-picker/date-picker.component';
 import { ChangeDetectorRef } from '@angular/core';
 import { StudentTimetable } from 'src/app/interfaces/student-timetable';
-import { StudentTimetableService } from 'src/app/services/student-timetable.service';
-import parkingData from './parkingDummy.json';
 import moment from 'moment';
-import { ParkingWsApiService } from 'src/app/services/parking_module-ws-api.service';
 import { ComponentService } from 'src/app/services/component.service';
 import { BookParkingService } from 'src/app/services/parking-book.service';
-import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
 
 
@@ -64,7 +59,6 @@ export class BookParkingPage implements OnInit {
     private bookps: BookParkingService,
     private loadingCtrl: LoadingController,
     public modalController: ModalController,
-    private router: Router,
     private storage: Storage
 
 

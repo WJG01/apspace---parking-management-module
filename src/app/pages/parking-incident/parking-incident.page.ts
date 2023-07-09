@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-for-of */
 import { Component, OnInit } from '@angular/core';
 import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
@@ -27,7 +28,7 @@ export class ParkingIncidentPage implements OnInit {
     const files: FileList = event.target.files;
     for (let i = 0; i < files.length; i++) {
       const file: File = files[i];
-  
+
       // Validate file type
       if (!file.type.startsWith('image/')) {
         // Invalid file type
@@ -35,7 +36,7 @@ export class ParkingIncidentPage implements OnInit {
         return;
       }
       this.imageValid = true;
-  
+
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.images.push(e.target.result);

@@ -4,10 +4,10 @@
   </ion-toolbar>
 
   <ion-toolbar>
-    <ion-segment [(ngModel)]="selectedSegment">
-      <ion-segment-button value="newRequest">New Request</ion-segment-button>
-      <ion-segment-button value="assignedRequest">Assigned Request</ion-segment-button>
-      <ion-segment-button value="completedRequest">Completed Request</ion-segment-button>
+    <ion-segment [(ngModel)]="selectedSegment" (ionChange)="onSegmentChange(segment.value)">
+      <ion-segment-button #segment value="newRequest">New Request</ion-segment-button>
+      <ion-segment-button #segment value="assignedRequest">Assigned Request</ion-segment-button>
+      <ion-segment-button #segment value="completedRequest">Completed Request</ion-segment-button>
     </ion-segment>
   </ion-toolbar>
 </ion-header>
@@ -19,147 +19,121 @@
 
   <div class="glob-container">
     <ion-row class="ion-margin-top">
-      <ion-col size-xs="12" size-md="8" class="glob-margin-auto">
-
-
-        <!-- filter group -->
-        <!-- <ion-card class="ion-no-margin ion-margin-bottom">
-          <ion-accordion-group>
-            <ion-accordion value="first">
-              <ion-item slot="header">
-                <ion-icon class="ion-padding-end" name="filter"></ion-icon>
-                <ion-label>Filters</ion-label>
-              </ion-item>
-
-              <ion-list class="ion-no-padding" slot="content">
-                <ion-item lines="inset">
-                  <ion-label position="stacked">Year</ion-label>
-                  <ion-select [disabled]="setYears.length < 1" interface="popover" placeholder="Select Year" mode="md"
-                    [(ngModel)]="filterObject.year" (ngModelChange)="doRefresh()">
-                    <ion-select-option *ngFor="let y of setYears" [value]="y">
-                      {{ y }}
-                    </ion-select-option>
-                  </ion-select>
-                </ion-item>
-
-                <ion-item lines="inset" *ngIf="userRole !== 'students'">
-                  <ion-label position="stacked">Affecting</ion-label>
-                  <ion-select interface="popover" [(ngModel)]="filterObject.affecting" (ngModelChange)="doRefresh()" mode="md">
-                    <ion-select-option *ngFor="let a of affecting" [value]="a">
-                      {{ a | titlecase }}
-                    </ion-select-option>
-                  </ion-select>
-                </ion-item>
-
-                <ion-item lines="inset">
-                  <ion-label position="stacked">Duration</ion-label>
-                  <ion-select interface="popover" [(ngModel)]="filterObject.duration" (ngModelChange)="doRefresh()"
-                    mode="md">
-                    <ion-select-option *ngFor="let d of holidayDurations" [value]="d">
-                      {{ d | titlecase }}
-                    </ion-select-option>
-                  </ion-select>
-                </ion-item>
-
-                <ion-item lines="none">
-                  <ion-label>Upcoming Holidays</ion-label>
-                  <ion-toggle [(ngModel)]="filterObject.upcoming" (ngModelChange)="doRefresh()"></ion-toggle>
-                </ion-item>
-
-                <ion-row>
-                  <ion-col>
-                    <ion-button expand="block" (click)="generatePdf()">
-                      Generate PDF
-                      <ion-icon slot="end" name="print"></ion-icon>
-                    </ion-button>
-                  </ion-col>
-
-                  <ion-col>
-                    <ion-button expand="block" color="danger" (click)="resetFilters()">
-                      Reset Filters
-                      <ion-icon slot="end" name="refresh"></ion-icon>
-                    </ion-button>
-                  </ion-col>
-                </ion-row>
-              </ion-list>
-            </ion-accordion>
-          </ion-accordion-group>
-        </ion-card> -->
-
-        <ng-container *ngIf="!(loading$ | async)">
+      <ion-col>
+        <ng-container>
           <ng-container *ngIf="(emergencyReports && emergencyReports.length > 0); else loading">
             <ng-container>
               <ng-container>
-                <!-- <ion-item color="light" lines="none" class="ion-margin-bottom">
-                  <ion-thumbnail>
-                    <ion-icon size="large" color="warning" name="information" class="ion-margin-top"></ion-icon>
-                  </ion-thumbnail>
-                  <ion-label class="ion-text-wrap">
-                    <h3 class="glob-fw-600">
-                      Note:
-                    </h3>
-                    <p>
-                      {{ filteredHolidays.remarks }}
-                    </p>
-                  </ion-label>
-                </ion-item> -->
 
                 <ng-container [ngSwitch]="selectedSegment">
+
+                  <!-- first tab -->
                   <ng-container *ngSwitchCase="'newRequest'">
-                    <ion-card class="ion-no-margin" *ngFor="let report of emergencyReports | keyvalue">
-                      <ion-item lines="none" *ngIf="report.emergencyreportstatus === 'HELPFIND'">
-                        <!-- Add your desired HTML content here -->
-                        <ion-label class="ion-text-wrap">
-                          <h3 class="glob-fw-600">
-                            {{ report.APQEmergencyID }}
-                          </h3>
-                          <p>
-                            Report Date: {{ report.reportdatetime | date }}
-                          </p>
-                          <!-- Display other attributes as needed -->
-                        </ion-label>
-                      </ion-item>
-                    </ion-card>
+                    <ng-container *ngTemplateOutlet="tabContentTemplate; context: { emergencyStatus: 'HELPFIND' }">
+                    </ng-container>
                   </ng-container>
 
+                  <!-- second tab -->
                   <ng-container *ngSwitchCase="'assignedRequest'">
-                    <ion-card class="ion-no-margin" *ngFor="let report of emergencyReports | keyvalue">
-                      <ion-item lines="none" *ngIf="report.emergencyreportstatus === 'HELPFIND'">
-                        <!-- Add your desired HTML content here -->
-                        <ion-label class="ion-text-wrap">
-                          <h3 class="glob-fw-600">
-                            {{ report.APQEmergencyID }}
-                          </h3>
-                          <p>
-                            Report Date: {{ report.reportdatetime | date }}
-                          </p>
-                          <!-- Display other attributes as needed -->
-                        </ion-label>
-                      </ion-item>
-                    </ion-card>
+                    <ng-container *ngTemplateOutlet="tabContentTemplate; context: { emergencyStatus: 'HELPFOUND' }">
+                    </ng-container>
                   </ng-container>
 
+                  <!-- third tab -->
                   <ng-container *ngSwitchCase="'completedRequest'">
-                    <ion-card class="ion-no-margin" *ngFor="let report of emergencyReports | keyvalue">
-                      <ion-item lines="none" *ngIf="report.emergencyreportstatus === 'HELPFIND'">
-                        <!-- Add your desired HTML content here -->
-                        <ion-label class="ion-text-wrap">
-                          <h3 class="glob-fw-600">
-                            {{ report.APQEmergencyID }}
-                          </h3>
-                          <p>
-                            Report Date: {{ report.reportdatetime | date }}
-                          </p>
-                          <!-- Display other attributes as needed -->
-                        </ion-label>
-                      </ion-item>
-                    </ion-card>
+                    <ng-container *ngTemplateOutlet="tabContentTemplate; context: { emergencyStatus: 'HELPCOMPLETE' }">
+                    </ng-container>
                   </ng-container>
 
                 </ng-container>
               </ng-container>
             </ng-container>
           </ng-container>
+
+          <ng-template #tabContentTemplate let-emergencyStatus="emergencyStatus">
+            <ion-grid>
+              <ion-row>
+                <ion-col size="8">
+                  <!-- Left column -->
+                  <ng-container *ngIf="emergencyReports">
+                    <ng-container *ngFor="let report of emergencyReports; let i = index">
+                      <ng-container *ngIf="report.emergencyreportstatus === emergencyStatus; else skipItem">
+                        <ion-card>
+                          <ion-item lines="none">
+                            <ion-badge slot="start">{{ getVisibleItemsCount(i) + 1 }}</ion-badge>
+                            <ion-label class="ion-text-wrap">
+                              <h3 class="glob-fw-600">
+                                {{ report.APQEmergencyID }}
+                              </h3>
+                              <p style="margin-top:20px;">
+                                Reported Date: {{ report.reportdatetime | date}}
+                              </p>
+                              <p>
+                                Requested By: {{ report.userid}}
+                              </p>
+                            </ion-label>
+                            <div class="button-container">
+                              <ion-button color="primary" (click)="showEmergencyDetails(report)">Details</ion-button>
+                            </div>
+                          </ion-item>
+                        </ion-card>
+
+                        <ng-template #skipItem>
+                          <!-- This template is used to skip items that don't meet the condition -->
+                        </ng-template>
+
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </ion-col>
+                <ion-col size="4">
+                  <!-- Right column -->
+                  <ion-card>
+                    <ion-card-header color="primary">
+                      <ion-card-title>More Details</ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                      <ion-row class="field-row" style="margin-top: 20px;">
+                        <ion-col size="5" class="field-label">Emergency ID : </ion-col>
+                        <ion-col size="7" class="field-value">{{chosenEmergencyID}}</ion-col>
+                      </ion-row>
+                      <ion-row class="field-row">
+                        <ion-col size="5" class="field-label">Reported Date : </ion-col>
+                        <ion-col size="7" class="field-value">{{chosenReportedDate}}</ion-col>
+                      </ion-row>
+                      <ion-row class="field-row">
+                        <ion-col size="5" class="field-label">Reported By : </ion-col>
+                        <ion-col size="7" class="field-value">{{chosenReportedBy}}</ion-col>
+                      </ion-row>
+                      <ion-row class="field-row">
+                        <ion-col size="5" class="field-label">Parking Spot:</ion-col>
+                        <ion-col size="7" class="field-value">{{ chosenParkingSpot }}</ion-col>
+                      </ion-row>
+                      <ion-row class="field-row">
+                        <ion-col size="5" class="field-label">Contact No : </ion-col>
+                        <ion-col size="7" class="field-value">{{chosenContactNo}}</ion-col>
+                      </ion-row>
+                      <ion-row class="field-row" *ngIf="emergencyStatus !== 'HELPFIND'">
+                        <ion-col size="5" class="field-label">Security Guard Assigned: </ion-col>
+                        <ion-col size="7" class="field-value">{{chosenAssignedSecurity}}</ion-col>
+                      </ion-row>
+
+                    </ion-card-content>
+                    <br>
+                    <!-- Confirm Booking button -->
+                    <ion-card-content class="ion-no-padding ion-padding-bottom ion-text-center">
+                      <ion-button class="ion-no-margin" size="medium" *ngIf="emergencyStatus === 'HELPFIND'"
+                        (click)="acceptEmergencyReports()">Accept</ion-button>
+
+                      <ion-button class="ion-no-margin" size="medium"
+                        *ngIf="emergencyStatus === 'HELPFOUND' && chosenAssignedSecurity === currentLoginUserID"
+                        (click)="cancelAcceptedEmergencyReport()">Cancel</ion-button>
+                    </ion-card-content>
+                  </ion-card>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ng-template>
 
           <ng-template #noHolidays>
             <ion-card class="ion-no-margin">
@@ -173,21 +147,6 @@
         </ng-container>
 
         <ng-template #loading>
-          <!-- <ion-item color="light" lines="none" class="ion-margin-bottom">
-            <ion-thumbnail>
-              <ion-icon size="large" color="warning" name="information" class="ion-margin-top"></ion-icon>
-            </ion-thumbnail>
-            <ion-label class="ion-text-wrap">
-              <h3 class="glob-fw-600">
-                Note:
-              </h3>
-              <p>
-                <ion-skeleton-text animated style="width: 30%; line-height: 15px"></ion-skeleton-text>
-                <ion-skeleton-text animated style="width: 20%; line-height: 15px"></ion-skeleton-text>
-              </p>
-            </ion-label>
-          </ion-item> -->
-
           <ng-container>
             <ion-card class="ion-no-margin" *ngFor="let _ of skeleton; let isLast = last"
               [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">

@@ -267,7 +267,7 @@ const routes: Routes = [
   {
     path: 'hr',
     canActivate: [AuthGuard],
-    data: { role: Role.Admin | Role.Lecturer },
+    data: { role: Role.Student | Role.Lecturer | Role.Admin },
     loadChildren: () => import('./pages/hr/hr.module').then(m => m.HrPageModule)
   },
   {

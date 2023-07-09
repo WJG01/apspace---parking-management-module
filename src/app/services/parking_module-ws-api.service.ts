@@ -114,14 +114,15 @@ export class ParkingWsApiService {
     return this.http.post(url, recordData);
   }
 
+  //POST METHOD
   post<T>(endpoint: string, options: {
-    auth?: boolean,
-    body?: any | null,
-    headers?: HttpHeaders | { [header: string]: string | string[]; },
-    params?: HttpParams | { [param: string]: string | string[]; },
-    timeout?: number,
-    withCredentials?: boolean,
-    url?: string,
+    auth?: boolean;
+    body?: any | null;
+    headers?: HttpHeaders | { [header: string]: string | string[] };
+    params?: HttpParams | { [param: string]: string | string[] };
+    timeout?: number;
+    withCredentials?: boolean;
+    url?: string;
   } = {}): Observable<T> {
     options = {
       auth: true,
@@ -147,7 +148,45 @@ export class ParkingWsApiService {
 
     console.log('Network Status: ', this.config.connectionStatus);
 
-    return this.http.post<T>(url, options.body, opt)
+    return this.http.post<T>(url, options.body, opt);
+  }
+
+
+  //PUT METHOD
+  put<T>(endpoint: string, options: {
+    auth?: boolean;
+    body?: any | null;
+    headers?: HttpHeaders | { [header: string]: string | string[] };
+    params?: HttpParams | { [param: string]: string | string[] };
+    timeout?: number;
+    url?: string;
+    withCredentials?: boolean;
+  } = {}): Observable<T> {
+    options = {
+      auth: true,
+      body: null,
+      headers: {},
+      params: {},
+      timeout: 10000,
+      url: this.apiUrl,
+      withCredentials: false,
+      ...options
+    };
+
+    const url = options.url + endpoint;
+    const opt = {
+      headers: options.headers,
+      params: options.params,
+      withCredentials: options.withCredentials,
+    };
+
+    if (this.plt.is('capacitor') && !this.config.connectionStatus) {
+      return this.handleOffline();
+    }
+
+    console.log('Network Status: ', this.config.connectionStatus);
+
+    return this.http.put<T>(url, options.body, opt);
   }
 
   // Update an existing record
