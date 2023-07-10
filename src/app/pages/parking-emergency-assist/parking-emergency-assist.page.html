@@ -50,6 +50,7 @@
             </ng-container>
           </ng-container>
 
+          <!-- emergencystatus can be 'HELPFIND', 'HELPFOUND', 'HELPCOMPLETE -->
           <ng-template #tabContentTemplate let-emergencyStatus="emergencyStatus">
             <ion-grid>
               <ion-row>
@@ -60,7 +61,9 @@
                       <ng-container *ngIf="report.emergencyreportstatus === emergencyStatus; else skipItem">
                         <ion-card>
                           <ion-item lines="none">
-                            <ion-badge slot="start">{{ getVisibleItemsCount(i) + 1 }}</ion-badge>
+                            <ion-badge slot="start">
+                              {{getDistinctiveIndex(emergencyStatus, i) }}
+                            </ion-badge>
                             <ion-label class="ion-text-wrap">
                               <h3 class="glob-fw-600">
                                 {{ report.APQEmergencyID }}

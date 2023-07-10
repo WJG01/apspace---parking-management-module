@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable max-len */
 import { Component, OnInit } from '@angular/core';
 import { ParkingEmergencyService } from 'src/app/services/parking-emergency.service';
@@ -28,6 +29,10 @@ export class ParkingEmergencyAssistPage implements OnInit {
   chosenAssignedSecurity: any;
 
   emergencyStatus: string;
+  // Inside your component class
+  newRequestIndex: number = 0;
+  assignedRequestIndex: number = 0;
+  completedRequestIndex: number = 0;
 
 
   constructor(
@@ -41,6 +46,7 @@ export class ParkingEmergencyAssistPage implements OnInit {
   ngOnInit() {
     this.doRefresh();
     this.getUserData();
+    this.getAllEmergencies();
   }
 
   doRefresh(refresher?) {
@@ -65,11 +71,6 @@ export class ParkingEmergencyAssistPage implements OnInit {
       (response: any) => {
         this.emergencyReports = response.selectEmergencyResponse;
 
-        // Convert the reportdatetime values to the desired format using moment.js
-        //   this.emergencyReports.forEach(report => {
-        //     report.reportdatetime = moment(report.reportdatetime).format('MMM D, YYYY');
-        //   });
-
         // sort date descending
         this.emergencyReports.sort((a, b) => {
           // Convert the reportdatetime strings to Date objects for comparison
@@ -88,14 +89,17 @@ export class ParkingEmergencyAssistPage implements OnInit {
     );
   }
 
-  getVisibleItemsCount(index: number): number {
-    let count = 0;
+  getDistinctiveIndex(emergencyStatus: string, index: number): number {
+    let counter = 0;
+
+    // Iterate through the emergencyReports to count the distinctive index
     for (let i = 0; i <= index; i++) {
-      if (this.emergencyReports[i].emergencyreportstatus === this.emergencyStatus) {
-        count++;
+      if (this.emergencyReports[i].emergencyreportstatus === emergencyStatus) {
+        counter++;
       }
     }
-    return count;
+
+    return counter;
   }
 
   onSegmentChange(segmentValue: string) {

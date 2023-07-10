@@ -1,15 +1,17 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Component, NgZone, OnInit } from '@angular/core';
 import { EmergencyDetailsModalPage } from './emergency-details-modal/emergency-details-modal.page';
 import { ModalController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import emergencyDummyData from './emergencyDetailsDummy.json';
 import { EmergencyDetails } from 'src/app/interfaces/emergency-details';
-import { Observable, filter, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Storage } from '@ionic/storage-angular';
 import { DatePipe } from '@angular/common';
 import { ParkingEmergencyService } from 'src/app/services/parking-emergency.service';
 import { ComponentService } from 'src/app/services';
 import { finalize } from 'rxjs/operators';
+import { ToastController } from '@ionic/angular';
 
 
 @Component({
@@ -23,9 +25,15 @@ export class ParkingEmergencyPage implements OnInit {
   emergencyDetails: any;
   foundEmergencyDetails: EmergencyDetails | null = null;
   sosStatus = '- - -';
+  latestReportDateTimeDisplay = '- - -';
+  latestStatusRead = '';
+  latestEmergencyReportID = '';
+  isSosCallInProgress: boolean = true;
 
   currentLoginUserID = '';
   currentLoginUserContact = '';
+  emergencyReports: any[] = [];
+  needLoading = true; // Loading flag
 
   private holdTimer: any;
 
@@ -36,36 +44,103 @@ export class ParkingEmergencyPage implements OnInit {
     private peS: ParkingEmergencyService,
     private component: ComponentService,
     private ngZone: NgZone,
+    private toastController: ToastController
   ) { }
 
   ngOnInit() {
     //this.emergencyDetails = emergencyDummyData;
+    this.needLoading = true;
     this.emergency$ = of(emergencyDummyData);
+    this.doRefresh();
     this.getUserData();
-
+    this.getLatestSosStatus();
     // this.createEmergency();
   }
+
+  doRefresh(refresher?) {
+    this.needLoading = true;
+    this.getUserData();
+    this.getLatestSosStatus();
+
+    if (refresher) {
+      refresher.target.complete();
+    }
+  }
+
 
   async getUserData() {
     const userData = await this.storage.get('userData');
     if (userData) {
       this.currentLoginUserID = userData.parkinguserid;
       this.currentLoginUserContact = userData.parkingusercontact;
-      console.log(this.currentLoginUserContact);
+      //console.log(this.currentLoginUserContact);
     }
   }
 
+  getLatestSosStatus() {
+    this.peS.getAllEmergencyReport().subscribe(
+      (response: any) => {
+        this.emergencyReports = response.selectEmergencyResponse;
+        const filteredReports = this.emergencyReports.filter(report => report.userid === this.currentLoginUserID);
+        console.log('current user', this.currentLoginUserID);
+        console.log('filterreport', filteredReports);
 
-  onClick(event: MouseEvent): void {
-    this.holdTimer = setTimeout(() => {
-      this.ngZone.run(() => {
-        this.createEmergency();
-      });
-    }, 3000);
+
+        if (filteredReports.length > 0) {
+          filteredReports.sort((a, b) => new Date(b.reportdatetime).getTime() - new Date(a.reportdatetime).getTime());
+          const latestReport = filteredReports[0];
+          console.log('Latest Report', latestReport);
+          this.latestStatusRead = latestReport.emergencyreportstatus;
+          this.latestEmergencyReportID = latestReport.APQEmergencyID;
+
+          console.log('UserLoginID', this.currentLoginUserID);
+          console.log('Latest emergency report status:', this.latestStatusRead);
+
+          if (this.latestStatusRead === 'HELPFIND') {
+            this.sosStatus = 'Looking For Help';
+          } else if (this.latestStatusRead === 'HELPFOUND') {
+            this.sosStatus = 'Help Found';
+          } else if (this.latestStatusRead === 'HELPCOMPLETE') {
+            this.sosStatus = 'Solved';
+          }
+
+          this.latestReportDateTimeDisplay = latestReport.reportdatetime;
+
+          console.log('Latest emergency report status:', this.sosStatus);
+        } else {
+          console.log('No emergency reports found for the current login user.');
+          this.latestStatusRead = '';
+          this.sosStatus = '- - -';
+          this.latestReportDateTimeDisplay = '- - -';
+        }
+      },
+      (error: any) => {
+        console.log(error);
+        this.needLoading = false;
+      }
+    );
+  }
+
+
+  async onClick(event: MouseEvent) {
+    if (this.latestStatusRead === 'HELPFIND' || this.latestStatusRead === 'HELPFOUND') {
+      console.log('Hello i ran');
+      this.component.toastMessage('Existing SOS call in progress !', 'danger');
+    } else {
+      this.holdTimer = setTimeout(() => {
+        this.ngZone.run(() => {
+          this.createEmergency();
+        });
+      }, 3000);
+    }
   }
 
   onMouseUp(): void {
     clearTimeout(this.holdTimer);
+  }
+
+  isButtonHovered(): boolean {
+    return this.latestStatusRead === 'HELPFIND' || this.latestStatusRead === 'HELPFOUND';
   }
 
   createEmergency(): void {
@@ -96,8 +171,8 @@ export class ParkingEmergencyPage implements OnInit {
         .subscribe({
           next: () => {
             // Success handling if needed
-            console.log('running successfully');
-            console.log('checking the body', body);
+            this.doRefresh();
+
           },
           error: (err) => {
             console.log('Error:', err);
@@ -123,7 +198,7 @@ export class ParkingEmergencyPage implements OnInit {
   async cancel() {
     const alert = await this.alertController.create({
       header: 'Confirmation',
-      message: 'Are you sure you want to cancel?',
+      message: 'Are you sure you want to  your current SOS call?',
       buttons: [
         {
           text: 'No',
@@ -135,14 +210,32 @@ export class ParkingEmergencyPage implements OnInit {
         {
           text: 'Yes',
           handler: () => {
-            // Perform the cancel action here
-            // Call any necessary functions or update variables
+            this.deleteCurrentSosCall();
           }
         }
       ]
     });
 
     await alert.present();
+  }
+
+  deleteCurrentSosCall() {
+    if (this.latestStatusRead === 'HELPFIND' || this.latestStatusRead === 'HELPFOUND') {
+      console.log('delete code calling');
+      this.peS.deleteEmergencyReport(this.latestEmergencyReportID).subscribe(
+        (response: any) => {
+          console.log('Delete Response', response);
+          this.component.toastMessage('SOS call cancelled successfully', 'success').then(() => {
+            this.sosStatus = '- - -';
+            this.latestReportDateTimeDisplay = '- - -';
+            this.doRefresh();
+          });
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
+    }
   }
 
   loadEmergencyDetails(): void {

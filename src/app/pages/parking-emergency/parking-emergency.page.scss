@@ -70,6 +70,10 @@
   transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
 }
 
+.button-hovered {
+  background-color: rgba(255, 0, 0, 0.808) !important;
+}
+
 ion-card {
   width: 50%;
 }

@@ -189,6 +189,42 @@ export class ParkingWsApiService {
     return this.http.put<T>(url, options.body, opt);
   }
 
+
+  //DELETE METHOD
+  delete<T>(endpoint: string, options: {
+    auth?: boolean,
+    headers?: HttpHeaders | { [header: string]: string | string[]; },
+    params?: HttpParams | { [param: string]: string | string[]; },
+    timeout?: number,
+    url?: string,
+    withCredentials?: boolean,
+  } = {}): Observable<T> {
+    options = {
+      auth: true,
+      headers: {},
+      params: {},
+      timeout: 10000,
+      url: this.apiUrl,
+      withCredentials: false,
+      ...options
+    };
+
+    const url = options.url + endpoint;
+    const opt = {
+      headers: options.headers,
+      params: options.params,
+      withCredentials: options.withCredentials,
+    };
+
+    if (this.plt.is('capacitor') && !this.config.connectionStatus) {
+      return this.handleOffline();
+    }
+
+    console.log('Network Status: ', this.config.connectionStatus);
+
+    return this.http.delete<T>(url, opt);
+  }
+
   // Update an existing record
   updateRecord(APQParkingID: string, recordData: any) {
     const url = `${this.apiUrl}/record/${APQParkingID}`;

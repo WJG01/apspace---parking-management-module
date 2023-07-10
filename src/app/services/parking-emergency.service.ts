@@ -26,4 +26,8 @@ export class ParkingEmergencyService {
     console.log('headers:', headers);
     return this.pws.put<any>(`/parking-emergency?APQEmergencyID=${APQEmergencyID}`, { body, headers });
   }
+
+  deleteEmergencyReport(APQEmergencyID): Observable<any> {
+    return this.pws.delete<any>(`/parking-emergency?APQEmergencyID=${APQEmergencyID}`);
+  };
 }

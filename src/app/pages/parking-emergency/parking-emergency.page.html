@@ -1,4 +1,7 @@
 <ion-content class="ion-padding">
+  <ion-refresher slot="fixed" pullMax="400" pullMin="60" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
+  </ion-refresher>
   <!-- Title -->
   <div class="title-container">
     <h2 class="title-text">Press and hold button for 3 seconds</h2>
@@ -6,7 +9,8 @@
 
   <!-- Help Button -->
   <div class="button-container">
-    <button class="help-button" (mousedown)="onClick($event)" (mouseup)="onMouseUp()">
+    <button class="help-button" [ngClass]="{ 'button-hovered': isButtonHovered() }" (mousedown)="onClick($event)"
+      (mouseup)="onMouseUp()">
       <div class="button-inner">SOS</div>
     </button>
   </div>
@@ -32,7 +36,7 @@
               <ion-button color="primary" (click)="loadEmergencyDetails()">Details</ion-button>
               <!-- <ion-button color="primary" [disabled]="sosStatus === 'Looking for help' || sosStatus === '- - -'"
                 (click)="loadEmergencyDetails()">Details</ion-button> -->
-              <ion-button color="danger" [disabled]="sosStatus === '- - -' || sosStatus === 'Solved'"
+              <ion-button color="danger" [disabled]="sosStatus === '- - -' || sosStatus === 'HELPCOMPLETE'"
                 (click)="cancel()">Cancel</ion-button>
             </div>
           </ion-item>
@@ -41,7 +45,7 @@
               <ion-label>Last Reported DateTime:</ion-label>
             </div>
             <div class="text-container">
-              <ion-text color="primary" class="text-start">Last Reported DateTime</ion-text>
+              <ion-text color="primary" class="text-start">{{latestReportDateTimeDisplay}}</ion-text>
             </div>
           </ion-item>
         </ion-list>
