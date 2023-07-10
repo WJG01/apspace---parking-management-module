@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Component, NgZone, OnInit } from '@angular/core';
 import { EmergencyDetailsModalPage } from './emergency-details-modal/emergency-details-modal.page';
@@ -12,6 +13,7 @@ import { ParkingEmergencyService } from 'src/app/services/parking-emergency.serv
 import { ComponentService } from 'src/app/services';
 import { finalize } from 'rxjs/operators';
 import { ToastController } from '@ionic/angular';
+import { BookParkingService } from 'src/app/services/parking-book.service';
 
 
 @Component({
@@ -28,12 +30,13 @@ export class ParkingEmergencyPage implements OnInit {
   latestReportDateTimeDisplay = '- - -';
   latestStatusRead = '';
   latestEmergencyReportID = '';
-  isSosCallInProgress: boolean = true;
+  latestEmergencyReport: any;
 
   currentLoginUserID = '';
   currentLoginUserContact = '';
   emergencyReports: any[] = [];
   needLoading = true; // Loading flag
+  bookedParkings: any;
 
   private holdTimer: any;
 
@@ -44,7 +47,7 @@ export class ParkingEmergencyPage implements OnInit {
     private peS: ParkingEmergencyService,
     private component: ComponentService,
     private ngZone: NgZone,
-    private toastController: ToastController
+    private bookps: BookParkingService,
   ) { }
 
   ngOnInit() {
@@ -54,6 +57,7 @@ export class ParkingEmergencyPage implements OnInit {
     this.doRefresh();
     this.getUserData();
     this.getLatestSosStatus();
+    this.getParkingSpotId();
     // this.createEmergency();
   }
 
@@ -82,19 +86,20 @@ export class ParkingEmergencyPage implements OnInit {
       (response: any) => {
         this.emergencyReports = response.selectEmergencyResponse;
         const filteredReports = this.emergencyReports.filter(report => report.userid === this.currentLoginUserID);
-        console.log('current user', this.currentLoginUserID);
-        console.log('filterreport', filteredReports);
+        // console.log('current user', this.currentLoginUserID);
+        //console.log('filterreport', filteredReports);
 
 
         if (filteredReports.length > 0) {
           filteredReports.sort((a, b) => new Date(b.reportdatetime).getTime() - new Date(a.reportdatetime).getTime());
           const latestReport = filteredReports[0];
-          console.log('Latest Report', latestReport);
+          //console.log('Latest Report', latestReport);
           this.latestStatusRead = latestReport.emergencyreportstatus;
           this.latestEmergencyReportID = latestReport.APQEmergencyID;
+          this.latestEmergencyReport = latestReport;
 
           console.log('UserLoginID', this.currentLoginUserID);
-          console.log('Latest emergency report status:', this.latestStatusRead);
+          //console.log('Latest emergency report status:', this.latestStatusRead);
 
           if (this.latestStatusRead === 'HELPFIND') {
             this.sosStatus = 'Looking For Help';
@@ -106,9 +111,9 @@ export class ParkingEmergencyPage implements OnInit {
 
           this.latestReportDateTimeDisplay = latestReport.reportdatetime;
 
-          console.log('Latest emergency report status:', this.sosStatus);
+          //console.log('Latest emergency report status:', this.sosStatus);
         } else {
-          console.log('No emergency reports found for the current login user.');
+          // console.log('No emergency reports found for the current login user.');
           this.latestStatusRead = '';
           this.sosStatus = '- - -';
           this.latestReportDateTimeDisplay = '- - -';
@@ -124,7 +129,6 @@ export class ParkingEmergencyPage implements OnInit {
 
   async onClick(event: MouseEvent) {
     if (this.latestStatusRead === 'HELPFIND' || this.latestStatusRead === 'HELPFOUND') {
-      console.log('Hello i ran');
       this.component.toastMessage('Existing SOS call in progress !', 'danger');
     } else {
       this.holdTimer = setTimeout(() => {
@@ -143,43 +147,77 @@ export class ParkingEmergencyPage implements OnInit {
     return this.latestStatusRead === 'HELPFIND' || this.latestStatusRead === 'HELPFOUND';
   }
 
+  getParkingSpotId(): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      this.bookps.getAllBookedParkings().subscribe(
+        (response: any) => {
+          this.bookedParkings = response.selectParkingResponse; // Store the response in the variable
+          console.log('result', this.bookedParkings);
+
+          if (Array.isArray(this.bookedParkings)) {
+            const filteredParkings = this.bookedParkings.filter(
+              (item: any) => item.userid === this.currentLoginUserID && item.parkingstatus === 'CHECKIN'
+            );
+
+            if (filteredParkings.length > 0) {
+              const parkingSpotId = `${filteredParkings[0].location}-${filteredParkings[0].parkingspotid}`;
+              console.log('FOUND parkingspot id', parkingSpotId);
+              resolve(parkingSpotId);
+            } else {
+              reject('No matching parking spot found');
+            }
+          }
+        },
+        (error: any) => {
+          reject(error);
+        }
+      );
+    });
+  }
+
   createEmergency(): void {
     const currentDate = new Date();
     const datePipe = new DatePipe('en-US');
 
     const formattedDateTime = datePipe.transform(currentDate, 'yyyy-dd-MMTHH:mm:ss');
 
-    const body = {
-      userid: this.currentLoginUserID,
-      usercontactno: this.currentLoginUserContact,
-      securityguardid: '',
-      emergencyreportstatus: 'HELPFIND',
-      reportdatetime: formattedDateTime,
-      parkingspotid: this.currentLoginUserID,
-    };
-    const headers = { 'Content-Type': 'application/json' };
+    this.getParkingSpotId().then(
+      (parkingSpotId) => {
+        const body = {
+          userid: this.currentLoginUserID,
+          usercontactno: this.currentLoginUserContact,
+          securityguardid: '',
+          emergencyreportstatus: 'HELPFIND',
+          reportdatetime: formattedDateTime,
+          parkingspotid: parkingSpotId,
+        };
+        const headers = { 'Content-Type': 'application/json' };
 
-    if (body) {
-      this.peS.createNewEmergencyReport(body, headers)
-        .pipe(
-          finalize(() => {
-            this.component.toastMessage('Initiated SOS Call. Kindly wait for assistance to arrive.', 'success').then(() => {
-              this.sosStatus = 'Looking For Help';
+        console.log('BODY', body);
+
+        if (body) {
+          this.peS.createNewEmergencyReport(body, headers)
+            .pipe(
+              finalize(() => {
+                this.component.toastMessage('Initiated SOS Call. Kindly wait for assistance to arrive.', 'success').then(() => {
+                  this.sosStatus = 'Looking For Help';
+                });
+              })
+            )
+            .subscribe({
+              next: () => {
+                // Success handling if needed
+                //this.doRefresh();
+
+              },
+              error: (err) => {
+                console.log('Error:', err);
+                this.component.toastMessage(err.message, 'danger');
+              }
             });
-          })
-        )
-        .subscribe({
-          next: () => {
-            // Success handling if needed
-            this.doRefresh();
-
-          },
-          error: (err) => {
-            console.log('Error:', err);
-            this.component.toastMessage(err.message, 'danger');
-          }
-        });
-    }
+        }
+      }
+    );
   }
 
   ngOnDestroy(): void {
@@ -221,7 +259,6 @@ export class ParkingEmergencyPage implements OnInit {
 
   deleteCurrentSosCall() {
     if (this.latestStatusRead === 'HELPFIND' || this.latestStatusRead === 'HELPFOUND') {
-      console.log('delete code calling');
       this.peS.deleteEmergencyReport(this.latestEmergencyReportID).subscribe(
         (response: any) => {
           console.log('Delete Response', response);
@@ -239,32 +276,13 @@ export class ParkingEmergencyPage implements OnInit {
   }
 
   loadEmergencyDetails(): void {
-    const victimID = '1'; // Predefined victimID
-
-    this.emergency$
-      .subscribe((emergencyDetails: EmergencyDetails[]) => {
-        const filteredData = emergencyDetails.filter(item => item.victimID === victimID);
-        if (filteredData.length > 0) {
-          this.foundEmergencyDetails = filteredData.reduce((acc, curr) => {
-            if (!acc || curr.reportedDateTime > acc.reportedDateTime) {
-              return curr;
-            }
-            return acc;
-          });
-        } else {
-          //console.log('No emergency details found!');
-          this.foundEmergencyDetails = null;
-        }
-        if (this.foundEmergencyDetails) {
-          //console.log('Found emergency details: ', this.foundEmergencyDetails);
-          this.openEmergencyDetailsModal(this.foundEmergencyDetails);
-        }
-      });
+    if (this.latestEmergencyReport != null && this.latestStatusRead !== '') {
+      this.openEmergencyDetailsModal(this.latestEmergencyReport);
+    }
   }
 
 
   async openEmergencyDetailsModal(emergencyDetailsItem: any): Promise<void> {
-    //console.log('Checking what inside data: ', emergencyDetailsItem);
     const modal = await this.modalCtrl.create({
       component: EmergencyDetailsModalPage,
       componentProps: {
@@ -273,6 +291,13 @@ export class ParkingEmergencyPage implements OnInit {
       breakpoints: [0, 1],
       initialBreakpoint: 1
     });
+
+    modal.onDidDismiss().then(() => {
+      // Reload or refresh the parent page here
+      // You can call a function or perform any necessary actions
+      this.doRefresh();
+    });
+
     await modal.present();
   }
 }

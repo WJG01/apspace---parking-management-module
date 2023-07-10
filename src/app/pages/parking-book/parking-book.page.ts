@@ -298,6 +298,7 @@ export class BookParkingPage implements OnInit {
       from: this.chosenStartTime,
       to: this.chosenEndTime,
       userid: this.currentLoginUserID,
+      parkingstatus: 'BOOKED'
     };
 
     console.log('what is this userid?', body);

@@ -60,8 +60,10 @@ export class ParkingEmergencyAssistPage implements OnInit {
 
   async getUserData() {
     const userData = await this.storage.get('userData');
+    console.log('CurrentUserData', userData);
     if (userData) {
       this.currentLoginUserID = userData.parkinguserid;
+      console.log('CurrentUserAcceptingis', this.currentLoginUserID);
     }
   }
 

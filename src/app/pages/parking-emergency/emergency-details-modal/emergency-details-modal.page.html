@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>SOS status: {{ emergencyDetailsItem?.status }}</ion-title>
+    <ion-title>SOS status: {{ sosStatusHeaderDisplay }}</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">
         <ion-icon name="close" slot="icon-only"></ion-icon>
@@ -11,7 +11,7 @@
 
 
 <ion-content>
-  <ng-container *ngIf="emergencyDetailsItem.status!=='LookingForHelp'; else lookingForHelp">
+  <ng-container *ngIf="emergencyDetailsItem.emergencyreportstatus!=='HELPFIND'; else lookingForHelp">
     <ion-card class="ion-margin">
       <ion-card-header>
         <ion-card-title class="details-title">I will be assisting you today !</ion-card-title>
@@ -31,14 +31,13 @@
       </ion-card-content>
     </ion-card>
 
-    <ion-card class="problem-section-card">
+    <ion-card class="problem-section-card" *ngIf="emergencyDetailsItem.emergencyreportstatus!=='HELPCOMPLETE'">
       <ion-card-header>
-        <ion-card-title class="problem-section-title">*Is your problem solved?</ion-card-title>
+        <ion-card-title class="problem-section-title">Is your problem solved?</ion-card-title>  
       </ion-card-header>
       <ion-card-content>
         <div class="buttons">
-          <ion-button expand="block" color="success">Solved</ion-button>
-          <ion-button expand="block" color="danger">Not Solved</ion-button>
+          <ion-button expand="block" color="success" (click)="markAsComplete()">Solved</ion-button>
         </div>
       </ion-card-content>
     </ion-card>

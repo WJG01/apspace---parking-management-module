@@ -5,7 +5,7 @@
       "gender": "Male",
       "status": "Active",
       "contactNumber": "013-2460633",
-      "profilePicture": "assets/img/securityGuard-SID1.jpg"
+      "profilePicture": "assets/img/securityGuard-SID2.jpg"
     },
     {
       "securityID": "SID2",
@@ -13,24 +13,24 @@
       "gender": "Female",
       "status": "Active",
       "contactNumber": "013-3460633",
-      "profilePicture": "assets/img/securityGuard-SID1.jpg"
+      "profilePicture": "assets/img/securityGuard-SID3.jpg"
 
     },
     {
       "securityID": "SID3",
       "securityName": "Wael Mohamed",
       "gender": "Male",
-      "status": "Idle",
+      "status": "Active",
       "contactNumber": "013-4460633",
-      "profilePicture": "assets/img/securityGuard-SID1.jpg"
+      "profilePicture": "assets/img/securityGuard-SID4.jpg"
     },
   
     {
       "securityID": "SID4",
       "securityName": "Abdul Qadir",
       "gender": "Male",
-      "status": "Idle",
+      "status": "Active",
       "contactNumber": "013-5460633",
-      "profilePicture": "assets/img/securityGuard-SID1.jpg"
+      "profilePicture": "assets/img/securityGuard-SID5.jpg"
     }
   ]

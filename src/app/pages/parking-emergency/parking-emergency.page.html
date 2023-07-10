@@ -33,7 +33,8 @@
               <ion-text color="primary" class="text-start">{{ sosStatus }}</ion-text>
             </div>
             <div class="button-container">
-              <ion-button color="primary" (click)="loadEmergencyDetails()">Details</ion-button>
+              <ion-button color="primary" (click)="loadEmergencyDetails()"
+                [disabled]="latestStatusRead === ''">Details</ion-button>
               <!-- <ion-button color="primary" [disabled]="sosStatus === 'Looking for help' || sosStatus === '- - -'"
                 (click)="loadEmergencyDetails()">Details</ion-button> -->
               <ion-button color="danger" [disabled]="sosStatus === '- - -' || sosStatus === 'HELPCOMPLETE'"
