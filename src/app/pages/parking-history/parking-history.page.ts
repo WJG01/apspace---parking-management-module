@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BookParkingService } from 'src/app/services/parking-book.service';
 
 @Component({
   selector: 'app-parking-history',
@@ -7,9 +8,70 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ParkingHistoryPage implements OnInit {
 
-  constructor() { }
+  selectedSegment: 'present_future' | 'past' = 'present_future';
+  parkingRecords: any[] = [];
+
+
+  constructor(
+    private bookps: BookParkingService,
+
+  ) { }
 
   ngOnInit() {
+    this.doRefresh();
+  }
+
+  doRefresh(refresher?) {
+    // this.needLoading = true;
+    this.getAllBookings();
+
+    if (refresher) {
+      refresher.target.complete();
+    }
+  }
+
+  getAllBookings() {
+    this.bookps.getAllBookedParkings().subscribe(
+      (response: any) => {
+        this.parkingRecords = response.selectParkingResponse;
+
+        // Sort the parkingRecords array
+        this.parkingRecords.sort((a, b) => {
+          if (a.parkingstatus === 'CHECKIN' && b.parkingstatus !== 'CHECKIN') {
+            return -1; // a comes before b
+          } else if (a.parkingstatus !== 'CHECKIN' && b.parkingstatus === 'CHECKIN') {
+            return 1; // a comes after b
+          }
+
+          if (a.parkingstatus === 'CHECKIN' && b.parkingstatus === 'CHECKIN') {
+            // Sort by bookingcreateddate in descending order for 'CHECKIN' status
+            return new Date(b.date).getTime() - new Date(a.date).getTime();
+          }
+
+          // Sort by bookingcreateddate in descending order for other statuses
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
+
+        console.log('result', this.parkingRecords);
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
+  }
+
+
+  getDistinctiveIndex(parkingStatus: string, index: number): number {
+    let counter = 0;
+
+    // Iterate through the emergencyReports to count the distinctive index
+    for (let i = 0; i <= index; i++) {
+      if (this.parkingRecords[i].parkingStatus === parkingStatus) {
+        counter++;
+      }
+    }
+
+    return counter;
   }
 
 }

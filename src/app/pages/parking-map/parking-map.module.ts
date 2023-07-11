@@ -16,7 +16,6 @@ import { ConsultationsPage } from '../iconsult/staffs/consultations/consultation
   ],
   declarations: [
     ParkingMapPage,
-    ConsultationsPage,
-  ]
+    ]
 })
 export class ParkingMapPageModule { }

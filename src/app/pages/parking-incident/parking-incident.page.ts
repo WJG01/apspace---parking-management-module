@@ -52,4 +52,8 @@ export class ParkingIncidentPage implements OnInit {
     }
   }
 
+  submit() {
+
+  }
+
 }

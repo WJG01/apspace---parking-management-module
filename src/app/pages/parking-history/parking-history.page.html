@@ -10,12 +10,160 @@
 
   <ion-toolbar>
     <ion-segment [(ngModel)]="selectedSegment">
-      <ion-segment-button value="list">Present / Future</ion-segment-button>
-      <ion-segment-button value="calendar">Past</ion-segment-button>
+      <ion-segment-button value="present_future">Present / Future</ion-segment-button>
+      <ion-segment-button value="past">Past</ion-segment-button>
     </ion-segment>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-refresher slot="fixed" pullMax="400" pullMin="60" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
+  </ion-refresher>
 
+  <div class="glob-container">
+    <ion-row class="ion-margin-top">
+      <ion-col>
+        <ng-container>
+          <ng-container *ngIf="(parkingRecords && parkingRecords.length > 0); else loading">
+            <ng-container>
+              <ng-container>
+
+                <ng-container [ngSwitch]="selectedSegment">
+
+                  <!-- first tab -->
+                  <ng-container *ngSwitchCase="'present_future'">
+                    <ng-container *ngTemplateOutlet="tabContentTemplate; context: { parkingStatus: 'present_future' }">
+                    </ng-container>
+                  </ng-container>
+
+                  <!-- second tab -->
+                  <ng-container *ngSwitchCase="'past'">
+                    <ng-container *ngTemplateOutlet="tabContentTemplate; context: { parkingStatus: 'past' }">
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+
+          <!-- parkingStatus can be 'present_future', 'past' -->
+          <ng-template #tabContentTemplate let-parkingStatus="parkingStatus">
+            <ion-grid>
+              <ion-row>
+                <ion-col size="8">
+                  <!-- Left column -->
+                  <ng-container *ngIf="parkingRecords">
+                    <ng-container *ngFor="let parkings of parkingRecords; let i = index">
+                      <!-- <ng-container *ngIf="report.emergencyreportstatus === parkingStatus; else skipItem"> -->
+                      <ng-container
+                        *ngIf="parkingStatus === 'present_future' && (parkings.parkingstatus === 'CHECKIN' || parkings.parkingstatus === 'BOOKED') || (parkingStatus === 'past' && parkings.parkingstatus === 'COMPLETED')">
+                        <ion-card>
+                          <ion-item lines="none">
+                            <ion-badge slot="start">
+                              {{getDistinctiveIndex(parkingStatus, i) }}
+                            </ion-badge>
+                            <ion-label class="ion-text-wrap">
+                              <h3 class="glob-fw-600">
+                                {{ parkings.APQParkingID }}
+                              </h3>
+                              <p style="margin-top:20px;">
+                                Booking Date: {{ parkings.date}}
+                              </p>
+                              <p>
+                                Booking Time: {{ parkings.from }} - {{ parkings.to }}
+                              </p>
+                            </ion-label>
+                            <div class="button-container">
+                              <ion-button color="primary" (click)="showEmergencyDetails(report)">Details</ion-button>
+                            </div>
+                          </ion-item>
+                        </ion-card>
+
+                        <ng-template #skipItem>
+                          <!-- This template is used to skip items that don't meet the condition -->
+                        </ng-template>
+
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </ion-col>
+                <ion-col size="4">
+                  <!-- Right column -->
+                  <ion-card>
+                    <ion-card-header color="primary">
+                      <ion-card-title>More Details</ion-card-title>
+                    </ion-card-header>
+                    <ion-card-content>
+                      <ion-row class="field-row" style="margin-top: 20px;">
+                        <ion-col size="5" class="field-label">Emergency ID : </ion-col>
+                        <ion-col size="7" class="field-value">{{chosenEmergencyID}}</ion-col>
+                      </ion-row>
+                      <ion-row class="field-row">
+                        <ion-col size="5" class="field-label">Reported Date : </ion-col>
+                        <ion-col size="7" class="field-value">{{chosenReportedDate}}</ion-col>
+                      </ion-row>
+                      <ion-row class="field-row">
+                        <ion-col size="5" class="field-label">Reported By : </ion-col>
+                        <ion-col size="7" class="field-value">{{chosenReportedBy}}</ion-col>
+                      </ion-row>
+                      <ion-row class="field-row">
+                        <ion-col size="5" class="field-label">Parking Spot:</ion-col>
+                        <ion-col size="7" class="field-value">{{ chosenParkingSpot }}</ion-col>
+                      </ion-row>
+                      <ion-row class="field-row">
+                        <ion-col size="5" class="field-label">Contact No : </ion-col>
+                        <ion-col size="7" class="field-value">{{chosenContactNo}}</ion-col>
+                      </ion-row>
+                      <ion-row class="field-row" *ngIf="parkingStatus !== 'HELPFIND'">
+                        <ion-col size="5" class="field-label">Security Guard Assigned: </ion-col>
+                        <ion-col size="7" class="field-value">{{chosenAssignedSecurity}}</ion-col>
+                      </ion-row>
+
+                    </ion-card-content>
+                    <br>
+                    <!-- Confirm Booking button -->
+                    <ion-card-content class="ion-no-padding ion-padding-bottom ion-text-center">
+                      <ion-button class="ion-no-margin" size="medium" *ngIf="parkingStatus === 'HELPFIND'"
+                        (click)="acceptEmergencyReports()">Accept</ion-button>
+
+                      <ion-button class="ion-no-margin" size="medium"
+                        *ngIf="parkingStatus === 'HELPFOUND' && chosenAssignedSecurity === currentLoginUserID"
+                        (click)="cancelAcceptedEmergencyReport()">Cancel</ion-button>
+                    </ion-card-content>
+                  </ion-card>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ng-template>
+
+          <ng-template #noHolidays>
+            <ion-card class="ion-no-margin">
+              <message-with-svg imageUrl="assets/img/search_not_found.svg" messageTitle="No Holidays Available!"
+                wrapperSize="6" wrapperOffset="3"
+                messageContent="No Holidays available to show. You can try changing the filter option to view other holidays"
+                wrapperMarginTop="20px">
+              </message-with-svg>
+            </ion-card>
+          </ng-template>
+        </ng-container>
+
+        <ng-template #loading>
+          <ng-container>
+            <ion-card class="ion-no-margin" *ngFor="let _ of skeleton; let isLast = last"
+              [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+              <ion-item lines="none">
+                <ion-icon name="calendar" class="ion-padding-end" size="large"></ion-icon>
+                <ion-label>
+                  <ion-skeleton-text animated style="width: 30%; line-height: 15px"></ion-skeleton-text>
+                  <ion-skeleton-text animated style="width: 20%; line-height: 15px"></ion-skeleton-text>
+                  <ion-skeleton-text animated style="width: 10%; line-height: 15px"></ion-skeleton-text>
+                </ion-label>
+              </ion-item>
+            </ion-card>
+          </ng-container>
+        </ng-template>
+      </ion-col>
+    </ion-row>
+  </div>
 </ion-content>
