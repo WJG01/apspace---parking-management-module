@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-for-of */
 import { Component, OnInit } from '@angular/core';
 import { BookParkingService } from 'src/app/services/parking-book.service';
 
@@ -63,15 +64,25 @@ export class ParkingHistoryPage implements OnInit {
 
   getDistinctiveIndex(parkingStatus: string, index: number): number {
     let counter = 0;
+    let statusCheck: string[] = [];
+    console.log('this is the parking status', parkingStatus);
+
+    if (parkingStatus === 'present_future') {
+      statusCheck = ['CHECKIN', 'BOOKED'];
+    } else if (parkingStatus === 'past') {
+      statusCheck = ['COMPLETED'];
+    }
 
     // Iterate through the emergencyReports to count the distinctive index
     for (let i = 0; i <= index; i++) {
-      if (this.parkingRecords[i].parkingStatus === parkingStatus) {
+      if (statusCheck.includes(this.parkingRecords[i].parkingstatus)) {
         counter++;
       }
     }
 
     return counter;
   }
+
+
 
 }

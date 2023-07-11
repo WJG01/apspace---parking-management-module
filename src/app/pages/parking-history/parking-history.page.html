@@ -57,7 +57,7 @@
                     <ng-container *ngFor="let parkings of parkingRecords; let i = index">
                       <!-- <ng-container *ngIf="report.emergencyreportstatus === parkingStatus; else skipItem"> -->
                       <ng-container
-                        *ngIf="parkingStatus === 'present_future' && (parkings.parkingstatus === 'CHECKIN' || parkings.parkingstatus === 'BOOKED') || (parkingStatus === 'past' && parkings.parkingstatus === 'COMPLETED')">
+                        *ngIf="parkingStatus === 'present_future' && (parkings.parkingstatus === 'CHECKIN' || parkings.parkingstatus === 'BOOKED') || (parkingStatus === 'past' && parkings.parkingstatus === 'COMPLETED'); else skipItem">
                         <ion-card>
                           <ion-item lines="none">
                             <ion-badge slot="start">
@@ -73,6 +73,9 @@
                               <p>
                                 Booking Time: {{ parkings.from }} - {{ parkings.to }}
                               </p>
+                              <ion-badge color="medium" [style.margin-top]="'5px'">
+                                {{ parkings.parkingstatus }}
+                              </ion-badge>
                             </ion-label>
                             <div class="button-container">
                               <ion-button color="primary" (click)="showEmergencyDetails(report)">Details</ion-button>
