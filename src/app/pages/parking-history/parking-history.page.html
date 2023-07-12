@@ -78,7 +78,7 @@
                               </ion-badge>
                             </ion-label>
                             <div class="button-container">
-                              <ion-button color="primary" (click)="showEmergencyDetails(report)">Details</ion-button>
+                              <ion-button color="primary" (click)="showParkingDetails(parkings)">Details</ion-button>
                             </div>
                           </ion-item>
                         </ion-card>
@@ -99,40 +99,47 @@
                     </ion-card-header>
                     <ion-card-content>
                       <ion-row class="field-row" style="margin-top: 20px;">
-                        <ion-col size="5" class="field-label">Emergency ID : </ion-col>
-                        <ion-col size="7" class="field-value">{{chosenEmergencyID}}</ion-col>
+                        <ion-col size="5" class="field-label">ParkingRecord ID : </ion-col>
+                        <ion-col size="7" class="field-value">{{chosenParkingRecord.APQParkingID}}</ion-col>
                       </ion-row>
                       <ion-row class="field-row">
-                        <ion-col size="5" class="field-label">Reported Date : </ion-col>
-                        <ion-col size="7" class="field-value">{{chosenReportedDate}}</ion-col>
+                        <ion-col size="5" class="field-label">Parking Spot : </ion-col>
+                        <ion-col size="7" class="field-value">{{chosenParkingRecord.location}} -
+                          {{chosenParkingRecord.parkingspotid}}</ion-col>
                       </ion-row>
                       <ion-row class="field-row">
-                        <ion-col size="5" class="field-label">Reported By : </ion-col>
-                        <ion-col size="7" class="field-value">{{chosenReportedBy}}</ion-col>
+                        <ion-col size="5" class="field-label">Date : </ion-col>
+                        <ng-container *ngIf="chosenParkingRecord.date !== '---'">
+                          {{ chosenParkingRecord.date | date }}
+                        </ng-container>
+                        <ng-container *ngIf="chosenParkingRecord.date === '---'">
+                          {{ chosenParkingRecord.date }}
+                        </ng-container>
                       </ion-row>
                       <ion-row class="field-row">
-                        <ion-col size="5" class="field-label">Parking Spot:</ion-col>
-                        <ion-col size="7" class="field-value">{{ chosenParkingSpot }}</ion-col>
+                        <ion-col size="5" class="field-label">Start Time : </ion-col>
+                        <ion-col size="7" class="field-value">{{chosenParkingRecord.from }}</ion-col>
                       </ion-row>
                       <ion-row class="field-row">
-                        <ion-col size="5" class="field-label">Contact No : </ion-col>
-                        <ion-col size="7" class="field-value">{{chosenContactNo}}</ion-col>
+                        <ion-col size="5" class="field-label">End Time : </ion-col>
+                        <ion-col size="7" class="field-value">{{chosenParkingRecord.to}}</ion-col>
                       </ion-row>
-                      <ion-row class="field-row" *ngIf="parkingStatus !== 'HELPFIND'">
-                        <ion-col size="5" class="field-label">Security Guard Assigned: </ion-col>
-                        <ion-col size="7" class="field-value">{{chosenAssignedSecurity}}</ion-col>
+                      <ion-row class="field-row">
+                        <ion-col size="5" class="field-label">ParkingStatus : </ion-col>
+                        <ion-col size="7" class="field-value">{{chosenParkingRecord.parkingstatus}}</ion-col>
                       </ion-row>
 
                     </ion-card-content>
                     <br>
                     <!-- Confirm Booking button -->
                     <ion-card-content class="ion-no-padding ion-padding-bottom ion-text-center">
-                      <ion-button class="ion-no-margin" size="medium" *ngIf="parkingStatus === 'HELPFIND'"
-                        (click)="acceptEmergencyReports()">Accept</ion-button>
+                      <ion-button class="ion-no-margin" size="medium"
+                        *ngIf="chosenParkingRecord.parkingstatus === 'CHECKIN'"
+                        (click)="checkoutParking(chosenParkingRecord)">CheckOut</ion-button>
 
                       <ion-button class="ion-no-margin" size="medium"
-                        *ngIf="parkingStatus === 'HELPFOUND' && chosenAssignedSecurity === currentLoginUserID"
-                        (click)="cancelAcceptedEmergencyReport()">Cancel</ion-button>
+                        *ngIf="chosenParkingRecord.parkingstatus === 'BOOKED'"
+                        (click)="cancelParking(chosenParkingRecord)">Cancel</ion-button>
                     </ion-card-content>
                   </ion-card>
                 </ion-col>

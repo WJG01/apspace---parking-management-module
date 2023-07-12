@@ -1,5 +1,9 @@
+/* eslint-disable max-len */
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/prefer-for-of */
 import { Component, OnInit } from '@angular/core';
+import { AlertController, LoadingController } from '@ionic/angular';
+import { ComponentService } from 'src/app/services/component.service';
 import { BookParkingService } from 'src/app/services/parking-book.service';
 
 @Component({
@@ -12,9 +16,23 @@ export class ParkingHistoryPage implements OnInit {
   selectedSegment: 'present_future' | 'past' = 'present_future';
   parkingRecords: any[] = [];
 
+  chosenParkingRecord = {
+    APQParkingID: '---',
+    date: '---',
+    from: '---',
+    to: '---',
+    location: '---',
+    parkingspotid: '---',
+    parkingstatus: '---',
+  };
+
 
   constructor(
     private bookps: BookParkingService,
+    private component: ComponentService,
+    private loadingCtrl: LoadingController,
+    private alertController: AlertController,
+
 
   ) { }
 
@@ -83,6 +101,110 @@ export class ParkingHistoryPage implements OnInit {
     return counter;
   }
 
+  showParkingDetails(parkings: any) {
+    this.chosenParkingRecord = parkings;
+  }
 
+  async checkoutParking(chosenParking: any) {
+    if (chosenParking.parkingstatus === 'CHECKIN') {
+
+      const body = {
+        parkingstatus: 'COMPLETED'
+      };
+      const headers = { 'Content-Type': 'application/json' };
+
+      const alert = await this.alertController.create({
+        header: 'Confirmation',
+        message: 'Are you sure you want to checkout? <br>You have to leave this parking within 5 mins after checkout',
+        buttons: [
+          {
+            text: 'No',
+            role: 'cancel',
+            handler: () => {
+              // No action needed
+            }
+          },
+          {
+            text: 'Yes',
+            handler: () => {
+
+              //update emergency report status to HELPFIND, clear security guard id
+              if (body) {
+                this.bookps.updateParkingBooking(chosenParking.APQParkingID, body, headers).subscribe(
+                  (response: any) => {
+                    console.log('Delete Response', response);
+                    this.component.toastMessage('Successfully checkout for parking' + chosenParking.location + '- ' + chosenParking.parkingspotid, 'success').then(() => {
+                      this.clearSelectedField();
+                      this.doRefresh();
+                    });
+                  },
+                  (error: any) => {
+                    console.log(error);
+                  }
+
+                );
+
+              }
+
+            }
+          }
+        ]
+      });
+
+      await alert.present();
+    }
+  }
+
+  async cancelParking(chosenParking: any) {
+    if (chosenParking.parkingstatus === 'BOOKED') {
+
+      const alert = await this.alertController.create({
+        header: 'Confirmation',
+        message: 'Are you sure you want to cancel this booking?',
+        buttons: [
+          {
+            text: 'No',
+            role: 'cancel',
+            handler: () => {
+              // No action needed
+            }
+          },
+          {
+            text: 'Yes',
+            handler: () => {
+              this.bookps.deleteParkingBooking(chosenParking.APQParkingID).subscribe(
+                (response: any) => {
+                  console.log('Delete Response', response);
+                  this.component.toastMessage('Successfully deleted booking for parking' + chosenParking.location + '- ' + chosenParking.parkingspotid, 'success').then(() => {
+                    this.clearSelectedField();
+                    this.doRefresh();
+                  });
+                },
+                (error: any) => {
+                  console.log(error);
+                }
+              );
+
+            }
+          }
+        ]
+      });
+
+      await alert.present();
+
+
+
+    }
+
+  }
+
+  clearSelectedField() {
+    for (const prop in this.chosenParkingRecord) {
+      if (this.chosenParkingRecord.hasOwnProperty(prop)) {
+        this.chosenParkingRecord[prop] = '---'; // or chosenFields[prop] = null;
+      }
+    }
+  }
 
 }
+
