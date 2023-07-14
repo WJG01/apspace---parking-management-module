@@ -5,6 +5,8 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { ComponentService } from 'src/app/services/component.service';
 import { BookParkingService } from 'src/app/services/parking-book.service';
+import { Storage } from '@ionic/storage-angular';
+
 
 @Component({
   selector: 'app-parking-history',
@@ -15,6 +17,8 @@ export class ParkingHistoryPage implements OnInit {
 
   selectedSegment: 'present_future' | 'past' = 'present_future';
   parkingRecords: any[] = [];
+  currentLoginUserID = '';
+
 
   chosenParkingRecord = {
     APQParkingID: '---',
@@ -30,6 +34,7 @@ export class ParkingHistoryPage implements OnInit {
   constructor(
     private bookps: BookParkingService,
     private component: ComponentService,
+    private storage: Storage,
     private loadingCtrl: LoadingController,
     private alertController: AlertController,
 
@@ -37,6 +42,7 @@ export class ParkingHistoryPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.getUserData();
     this.doRefresh();
   }
 
@@ -46,6 +52,15 @@ export class ParkingHistoryPage implements OnInit {
 
     if (refresher) {
       refresher.target.complete();
+    }
+  }
+
+  async getUserData() {
+    const userData = await this.storage.get('userData');
+    console.log('CurrentUserData', userData);
+    if (userData) {
+      this.currentLoginUserID = userData.parkinguserid;
+      console.log('CurrentUserAcceptingis', this.currentLoginUserID);
     }
   }
 
@@ -83,7 +98,6 @@ export class ParkingHistoryPage implements OnInit {
   getDistinctiveIndex(parkingStatus: string, index: number): number {
     let counter = 0;
     let statusCheck: string[] = [];
-    console.log('this is the parking status', parkingStatus);
 
     if (parkingStatus === 'present_future') {
       statusCheck = ['CHECKIN', 'BOOKED'];

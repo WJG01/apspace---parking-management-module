@@ -164,7 +164,7 @@ export class ParkingEmergencyPage implements OnInit {
               console.log('FOUND parkingspot id', parkingSpotId);
               resolve(parkingSpotId);
             } else {
-              reject('No matching parking spot found');
+              resolve('');
             }
           }
         },
@@ -179,7 +179,7 @@ export class ParkingEmergencyPage implements OnInit {
     const currentDate = new Date();
     const datePipe = new DatePipe('en-US');
 
-    const formattedDateTime = datePipe.transform(currentDate, 'yyyy-dd-MMTHH:mm:ss');
+    const formattedDateTime = datePipe.transform(currentDate, 'yyyy-MM-ddTHH:mm:ss');
 
     this.getParkingSpotId().then(
       (parkingSpotId) => {
@@ -201,6 +201,8 @@ export class ParkingEmergencyPage implements OnInit {
               finalize(() => {
                 this.component.toastMessage('Initiated SOS Call. Kindly wait for assistance to arrive.', 'success').then(() => {
                   this.sosStatus = 'Looking For Help';
+                  this.latestReportDateTimeDisplay = formattedDateTime;
+                  this.doRefresh();
                 });
               })
             )

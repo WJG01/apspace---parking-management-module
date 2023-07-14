@@ -20,7 +20,7 @@ export class ParkingEmergencyAssistPage implements OnInit {
   selectedSegment: 'newRequest' | 'assignedRequest' | 'completedRequest' = 'newRequest';
   needLoading = true; // Loading flag
 
-  chosenEmergencyRecord: any;
+  chosenEmergencyRecord: any = null;
   chosenEmergencyID: any;
   chosenReportedDate: any;
   chosenReportedBy: any;
@@ -44,9 +44,10 @@ export class ParkingEmergencyAssistPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.doRefresh();
     this.getUserData();
+    this.doRefresh();
     this.getAllEmergencies();
+    console.log('this emergency report', this.chosenEmergencyRecord);
   }
 
   doRefresh(refresher?) {
