@@ -1,6 +1,6 @@
 <ion-toolbar>
   <ion-title>
-    Parking History
+    Parking Map
   </ion-title>
   <ion-buttons slot="start">
     <ion-back-button defaultHref="/"></ion-back-button>
@@ -13,14 +13,36 @@
       <ion-col size-xs="12" size-md="8" class="glob-margin-auto">
         <ion-card class="ion-no-margin ion-margin-bottom">
 
-          <ion-item lines="none">
-            <ion-label position="stacked">Parking Zone</ion-label>
-            <ion-select interface="popover" [(ngModel)]="chosenParkingZone" (ngModelChange)="changeMap()" mode="md">
-              <ion-select-option *ngFor="let l of locations" [value]="l.value">
-                {{ l.value }}
-              </ion-select-option>
-            </ion-select>
-          </ion-item>
+          <ion-accordion-group>
+            <ion-accordion value="filters">
+              <ion-item slot="header">
+                <ion-icon class="ion-padding-end" name="filter"></ion-icon>
+                <ion-label>Search Parking Map</ion-label>
+              </ion-item>
+
+              <ion-list slot="content">
+
+                <ion-item lines="none">
+                  <ion-label position="stacked">Parking Zone</ion-label>
+                  <ion-select interface="popover" [(ngModel)]="chosenParkingZone" (ngModelChange)="changeMap()"
+                    mode="md">
+                    <ion-select-option *ngFor="let l of locations" [value]="l.value">
+                      {{ l.value }}
+                    </ion-select-option>
+                  </ion-select>
+                </ion-item>
+
+                <ion-item lines="none">
+                  <ion-label position="stacked">Parking Spot</ion-label>
+                  <ion-select interface="popover" [(ngModel)]="chosenParkingSpot" (ngModelChange)="changeParkingSpot()">
+                    <ion-select-option *ngFor="let option of generateNumberOptions()" [value]="option">{{ option
+                      }}</ion-select-option>
+                  </ion-select>
+                </ion-item>
+
+              </ion-list>
+            </ion-accordion>
+          </ion-accordion-group>
         </ion-card>
 
 
@@ -29,7 +51,7 @@
           <ion-card class="ion-no-margin">
             <ion-card-header color="light">
               <ion-card-subtitle class="glob-text-bold">
-                {{chosenParkingZone}}
+                {{chosenParkingZone}} - {{chosenParkingSpot}}
               </ion-card-subtitle>
             </ion-card-header>
             <ion-progress-bar value="1">
@@ -37,17 +59,14 @@
 
             <ion-card-content class="ion-no-padding ion-padding-bottom ion-padding-start ion-padding-end">
               <ion-grid>
-                <ion-col>
+                <ion-col size-xs="8" size-md="6">
                   <ion-row>
-                    <!-- <div class="map-container">
-                      <img [src]="getImageByLocation(chosenParkingZone)" alt="Parking Map" class="center-image">
-                      <img class="pinpoint-icon" src="/assets/img/location_pinpoint_icon.png" alt="Pinpoint Icon">
-                    </div> -->
-                      <div class="map-container">
-                        <img class="map-image" [src]="getImageByLocation(chosenParkingZone)" alt="Map Image" class="center-image">
-                        <img [style.top.px]="pinpointTop" [style.left.px]="pinpointLeft" class="pinpoint-icon"
-                          src="/assets/img/location_pinpoint_icon.png" alt="Pinpoint Icon">
-                      </div>
+                    <div class="map-container">
+                      <img *ngIf="chosenParkingZone !== ''" class="map-image" [src]="getImageByLocation(chosenParkingZone)" alt="Map Image"
+                        class="center-image">
+                      <img *ngIf="chosenParkingSpot !== ''" [style.top.px]="pinpointTop" [style.left.px]="pinpointLeft" class="pinpoint-icon"
+                        src="/assets/img/location_pinpoint_icon.png" alt="Pinpoint Icon">
+                    </div>
                   </ion-row>
                 </ion-col>
               </ion-grid>
