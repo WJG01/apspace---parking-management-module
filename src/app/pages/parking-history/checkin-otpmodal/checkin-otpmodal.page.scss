@@ -1,0 +1,26 @@
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 40vh;
+    width: 30vw;
+    margin: auto;
+    text-align: center;
+  }
+  
+  .otp-value {
+    font-size: 5vw;
+    font-weight: bold;
+    margin-bottom: 2vh;
+  }
+  
+  .note {
+    font-size: 0.7vw;
+    color: red;
+    margin-bottom: 2vh;
+  }
+  
+  ion-button {
+    margin-top: 4vh;
+  }

@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnInit } from '@angular/core';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { DatePickerComponent } from 'src/app/components/date-picker/date-picker.component';
 import { ChangeDetectorRef } from '@angular/core';
@@ -9,6 +10,7 @@ import moment from 'moment';
 import { ComponentService } from 'src/app/services/component.service';
 import { BookParkingService } from 'src/app/services/parking-book.service';
 import { Storage } from '@ionic/storage-angular';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -27,15 +29,14 @@ export class BookParkingPage implements OnInit {
   locations = [
     { key: 'APU-A', value: 'Zone A - APU' },
     { key: 'APU-B', value: 'Zone B - APU' },
-    { key: 'APIIT-A', value: 'Zone A - APIIT' },
     { key: 'APIIT-G', value: 'Zone G - APIIT' }
   ];
 
   filterObject = {
-    location: null,
-    date: '',
-    from: '',
-    to: '',
+    parkinglocation: null,
+    parkingdate: '',
+    starttime: '',
+    endtime: '',
   };
 
   timetables$: Observable<StudentTimetable[]>;
@@ -59,7 +60,8 @@ export class BookParkingPage implements OnInit {
     private bookps: BookParkingService,
     private loadingCtrl: LoadingController,
     public modalController: ModalController,
-    private storage: Storage
+    private storage: Storage,
+    private alertController: AlertController,
 
 
   ) { }
@@ -110,8 +112,8 @@ export class BookParkingPage implements OnInit {
 
   // Component code
   loadLocations() {
-    if (!this.filterObject.location && this.locations.length > 0) {
-      this.filterObject.location = this.locations[0].key;
+    if (!this.filterObject.parkinglocation && this.locations.length > 0) {
+      this.filterObject.parkinglocation = this.locations[0].key;
     }
   }
 
@@ -131,7 +133,7 @@ export class BookParkingPage implements OnInit {
     // Handle the returned data from the date picker modal
     if (data?.date) {
       // Update the selected date based on the returned data
-      this.filterObject.date = data.date;
+      this.filterObject.parkingdate = data.date;
       this.checkAllFieldsFilled();
     }
   }
@@ -155,28 +157,28 @@ export class BookParkingPage implements OnInit {
 
     if (data?.selected === 'start') {
       const since = +data?.time.replace(':', '');
-      const until = +this.filterObject.to.replace(':', '');
+      const until = +this.filterObject.endtime.replace(':', '');
 
       if (until < since) {
         const newUntil = since + 100; // Add 1 Hour
         const hh = ('0' + Math.trunc(newUntil / 100)).slice(-2);
         const mm = ('0' + newUntil % 100).slice(-2);
-        this.filterObject.to = `${hh}:${mm}`;
+        this.filterObject.endtime = `${hh}:${mm}`;
       }
-      this.filterObject.from = data?.time;
+      this.filterObject.starttime = data?.time;
     }
 
     if (data?.selected === 'to') {
-      const since = +this.filterObject.from.replace(':', '');
+      const since = +this.filterObject.starttime.replace(':', '');
       const until = +data.time.replace(':', '');
 
       if (until < since) {
         const newSince = until - 100; // Minus 1 Hour
         const hh = ('0' + Math.trunc(newSince / 100)).slice(-2);
         const mm = ('0' + newSince % 100).slice(-2);
-        this.filterObject.from = `${hh}:${mm}`;
+        this.filterObject.starttime = `${hh}:${mm}`;
       }
-      this.filterObject.to = data?.time;
+      this.filterObject.endtime = data?.time;
     }
     this.checkAllFieldsFilled();
   }
@@ -184,25 +186,14 @@ export class BookParkingPage implements OnInit {
   isFilterSet(): boolean {
     // Check if all filter items are set (e.g., location, date, start, end)
     return (
-      this.filterObject.location !== '' &&
-      this.filterObject.date !== '' &&
-      this.filterObject.from !== '' &&
-      this.filterObject.to !== ''
+      this.filterObject.parkinglocation !== '' &&
+      this.filterObject.parkingdate !== '' &&
+      this.filterObject.starttime !== '' &&
+      this.filterObject.endtime !== ''
     );
   }
 
-  checkAvailabilityOnChange(): void {
-    if (this.isFilterSet()) {
-      // Perform the logic to check available parking spots based on the selected filters
-      this.availableParkings = this.loadVacantParking();
-      //.filter(parking => this.filterParking(parking));
-    } else {
-      // Clear the available parking spots if filters are not set
-      this.availableParkings = [];
-    }
-  }
-
-  checkAllFieldsFilled() {
+  async checkAllFieldsFilled() {
     this.selectedParking = null;
     this.availableParkings = [];
     this.chosenParkingDate = '';
@@ -213,9 +204,13 @@ export class BookParkingPage implements OnInit {
 
     // Check if all fields have values
     console.log(this.filterObject);
-    if (this.filterObject.location && this.filterObject.date && this.filterObject.from && this.filterObject.to) {
-      this.availableParkings = this.loadVacantParking();
-      console.log(this.availableParkings);
+    if (this.filterObject.parkinglocation && this.filterObject.parkingdate && this.filterObject.starttime && this.filterObject.endtime) {
+      if (!this.foundExistingBookingByUser()) {
+        this.availableParkings = this.loadVacantParking();
+        console.log(this.availableParkings);
+      } else {
+        this.component.alertMessage('Warning', 'Found an existing booking made by you earlier !', 'danger');
+      }
     } else {
       // Clear the available parking spots if filters are not set
       this.availableParkings = [];
@@ -225,22 +220,54 @@ export class BookParkingPage implements OnInit {
     this.cdr.detectChanges();
   }
 
+  foundExistingBookingByUser(): boolean {
+
+    console.log('at this point', this.currentLoginUserID);
+    const currentUserBookings = this.bookedParkings.selectParkingResponse.filter(booking =>
+      booking.userid === this.currentLoginUserID
+    );
+
+    const chosenFromTimeObj = new Date(`2000-01-01T${this.filterObject.starttime}`);
+    chosenFromTimeObj.setMinutes(chosenFromTimeObj.getMinutes() - 10); // Apply 10-minute buffer
+    const chosenToTimeObj = new Date(`2000-01-01T${this.filterObject.endtime}`);
+
+    for (const booking of currentUserBookings) {
+      const bookingFromTime = new Date(`2000-01-01T${booking.starttime}`);
+      const bookingToTime = new Date(`2000-01-01T${booking.endtime}`);
+
+      if (
+        booking.parkingdate === this.filterObject.parkingdate &&
+        (
+          (chosenFromTimeObj >= bookingFromTime && chosenFromTimeObj <= bookingToTime) || // Chosen start time overlaps
+          (chosenToTimeObj >= bookingFromTime && chosenToTimeObj <= bookingToTime) || // Chosen end time overlaps
+          // Chosen time range completely contains the existing booking
+          (chosenFromTimeObj <= bookingFromTime && chosenToTimeObj >= bookingToTime)
+        )
+      ) {
+        console.log('Existing booking found made by you!');
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   findOccupiedParking(): string[] {
     const occupiedParking: string[] = [];
 
-    console.log('in other place', this.bookedParkings);
-    console.log('checking_filterObject.location', this.filterObject.location);
+    //console.log('in other place', this.bookedParkings);
+    //console.log('checking_filterObject.location', this.filterObject.parkinglocation);
 
 
     this.bookedParkings.selectParkingResponse.forEach(booking => {
-      const bookingFromTime = new Date(`2000-01-01T${booking.from}`);
-      const bookingToTime = new Date(`2000-01-01T${booking.to}`);
-      const chosenFromTimeObj = new Date(`2000-01-01T${this.filterObject.from}`);
-      const chosenToTimeObj = new Date(`2000-01-01T${this.filterObject.to}`);
+      const bookingFromTime = new Date(`2000-01-01T${booking.starttime}`);
+      const bookingToTime = new Date(`2000-01-01T${booking.endtime}`);
+      const chosenFromTimeObj = new Date(`2000-01-01T${this.filterObject.starttime}`);
+      const chosenToTimeObj = new Date(`2000-01-01T${this.filterObject.endtime}`);
 
       if (
-        booking.location === this.filterObject.location &&
-        booking.date === this.filterObject.date &&
+        booking.parkinglocation === this.filterObject.parkinglocation &&
+        booking.parkingdate === this.filterObject.parkingdate &&
         (
           (chosenFromTimeObj >= bookingFromTime && chosenFromTimeObj <= bookingToTime) || // Chosen start time overlaps
           (chosenToTimeObj >= bookingFromTime && chosenToTimeObj <= bookingToTime) || // Chosen end time overlaps
@@ -252,13 +279,13 @@ export class BookParkingPage implements OnInit {
       }
     });
 
-    console.log('hello this is occupiedparking', occupiedParking);
+    //console.log('hello this is occupiedparking', occupiedParking);
     return occupiedParking;
   }
 
   loadVacantParking(): string[] {
     const totalSpots = 20;
-    const chosenLocation = this.filterObject.location;
+    const chosenLocation = this.filterObject.parkinglocation;
     //const bookedSpots = this.findOccupiedParking();
     // Generate an array of available spots by excluding the booked locations
     const availableSpots = Array.from({ length: totalSpots }, (_, index) => {
@@ -272,13 +299,13 @@ export class BookParkingPage implements OnInit {
   fillBookingDetails(parkingSpot: string) {
     this.selectedParking = parkingSpot;
     this.chosenParkingSpot = `${parkingSpot}`;
-    this.chosenParkingDate = `${this.filterObject.date}`;
-    this.chosenStartTime = `${this.filterObject.from}`;
-    this.chosenEndTime = `${this.filterObject.to}`;
+    this.chosenParkingDate = `${this.filterObject.parkingdate}`;
+    this.chosenStartTime = `${this.filterObject.starttime}`;
+    this.chosenEndTime = `${this.filterObject.endtime}`;
 
     // Calculate duration
-    const startTime = moment(this.filterObject.from, 'HH:mm');
-    const endTime = moment(this.filterObject.to, 'HH:mm');
+    const startTime = moment(this.filterObject.starttime, 'HH:mm');
+    const endTime = moment(this.filterObject.endtime, 'HH:mm');
     const duration = moment.duration(endTime.diff(startTime));
     const hours = duration.hours();
     const minutes = duration.minutes();
@@ -286,19 +313,35 @@ export class BookParkingPage implements OnInit {
   }
 
 
+  private generateOTP(): string {
+    const digits = 3; // Number of digits in the OTP
+    let otp = '';
+    for (let i = 0; i < digits; i++) {
+      otp += Math.floor(Math.random() * 10); // Generate a random number between 0 and 9
+    }
+    return otp;
+  }
+
   confirmBooking() {
     this.presentLoading();
     const location_parkingspotid = this.chosenParkingSpot;
     const parts = location_parkingspotid.split('-');
+    const currentDate = new Date();
+    const datePipe = new DatePipe('en-US');
+
+    const formattedDateTime = datePipe.transform(currentDate, 'yyyy-MM-ddTHH:mm:ss');
+    const otp = this.generateOTP();
 
     const body = {
-      location: this.filterObject.location,
+      parkinglocation: this.filterObject.parkinglocation,
       parkingspotid: parts[2],
-      date: this.chosenParkingDate,
-      from: this.chosenStartTime,
-      to: this.chosenEndTime,
+      parkingdate: this.chosenParkingDate,
+      starttime: this.chosenStartTime,
+      endtime: this.chosenEndTime,
       userid: this.currentLoginUserID,
-      parkingstatus: 'BOOKED'
+      parkingstatus: 'BOOKED',
+      bookingcreateddatetime: formattedDateTime,
+      checkincode: otp
     };
 
     console.log('what is this userid?', body);
@@ -347,10 +390,10 @@ export class BookParkingPage implements OnInit {
   }
 
   clearFilter() {
-    this.filterObject.location = null;
-    this.filterObject.date = '';
-    this.filterObject.from = '';
-    this.filterObject.to = '';
+    this.filterObject.parkinglocation = null;
+    this.filterObject.parkingdate = '';
+    this.filterObject.starttime = '';
+    this.filterObject.endtime = '';
     this.availableParkings = [];
     this.selectedParking = null;
     this.chosenParkingSpot = '----';
@@ -358,7 +401,7 @@ export class BookParkingPage implements OnInit {
     this.chosenStartTime = '----';
     this.chosenEndTime = '----';
     this.chosenDuration = '-';
-    this.filterObject.location = null;
+    this.filterObject.parkinglocation = null;
   }
 
 }

@@ -1,8 +1,26 @@
 .field-row {
-    margin-bottom: 10px;
-  }
-  
-  .field-value {
-    font-weight: bold;
-    font-size: 16px;
-  }
+  margin-bottom: 10px;
+}
+
+.field-value {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.checkin-otp-alert .note {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.note {
+  font-size: smaller;
+  color: red;
+}
+
+.custom-modal {
+  --height: 40vh;
+  --width: 70vw;
+  --padding-top: 10vh;
+  --padding-bottom: 10vh;
+}

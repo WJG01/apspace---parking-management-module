@@ -1,0 +1,13 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">Check-In OTP</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="modal-content">
+    <div class="otp-value">{{ otp }}</div>
+    <div class="note">You can check in up to 10 minutes before your booking start time. (Not earlier than that)</div>
+    <ion-button class="ion-no-margin" size="medium" (click)="dismissModal()">Close</ion-button>
+  </div>
+</ion-content>

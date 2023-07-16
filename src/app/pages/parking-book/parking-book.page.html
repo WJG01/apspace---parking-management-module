@@ -62,7 +62,7 @@
                     </ion-label>
 
                     <!-- filter location -->
-                    <ion-select interface="popover" mode="md" (ionFocus)="loadLocations()" [(ngModel)]="filterObject.location"  (ionChange)="checkAllFieldsFilled()">
+                    <ion-select interface="popover" mode="md" (ionFocus)="loadLocations()" [(ngModel)]="filterObject.parkinglocation"  (ionChange)="checkAllFieldsFilled()">
                       <ion-select-option *ngFor="let l of locations" [value]="l.key">
                         {{ l.value }}
                       </ion-select-option>
@@ -70,11 +70,11 @@
                   </ion-item>
 
                   <!-- filter date -->
-                  <ion-item [(ngModel)]="filterObject.date" (click)="openDatePicker('date')"
+                  <ion-item [(ngModel)]="filterObject.parkingdate" (click)="openDatePicker('date')"
                     (ngModelChange)="checkAllFieldsFilled()" detail="true" button="true">
                     <ion-label>
                       <h3>Date</h3>
-                      <p>{{ filterObject.date }}</p>
+                      <p>{{ filterObject.parkingdate }}</p>
                     </ion-label>
                   </ion-item>
 
@@ -85,19 +85,19 @@
                     (ngModelChange)="checkAllFieldsFilled()" display-time="false">
                   </ion-datetime>
 
-                  <ion-item [(ngModel)]="filterObject.from" (click)="openPicker('start')"
+                  <ion-item [(ngModel)]="filterObject.starttime" (click)="openPicker('start')"
                     (ngModelChange)="checkAllFieldsFilled()" detail="true" button="true">
                     <ion-label>
                       <h3>Start</h3>
-                      <p>{{ filterObject.from }}</p>
+                      <p>{{ filterObject.starttime }}</p>
                     </ion-label>
                   </ion-item>
 
-                  <ion-item [(ngModel)]="filterObject.to" (click)="openPicker('to')"
+                  <ion-item [(ngModel)]="filterObject.endtime" (click)="openPicker('to')"
                     (ngModelChange)="checkAllFieldsFilled()" detail="true" button="true">
                     <ion-label>
                       <h3>End</h3>
-                      <p>{{ filterObject.to }}</p>
+                      <p>{{ filterObject.endtime }}</p>
                     </ion-label>
                   </ion-item>
                 </ion-list>

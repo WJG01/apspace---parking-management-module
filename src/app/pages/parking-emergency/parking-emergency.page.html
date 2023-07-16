@@ -35,9 +35,8 @@
             <div class="button-container">
               <ion-button color="primary" (click)="loadEmergencyDetails()"
                 [disabled]="latestStatusRead === ''">Details</ion-button>
-              <!-- <ion-button color="primary" [disabled]="sosStatus === 'Looking for help' || sosStatus === '- - -'"
-                (click)="loadEmergencyDetails()">Details</ion-button> -->
-              <ion-button color="danger" [disabled]="sosStatus === '- - -' || sosStatus === 'HELPCOMPLETE'"
+
+              <ion-button color="danger" [disabled]="latestStatusRead === '' || latestStatusRead === 'HELPCOMPLETE'"
                 (click)="cancel()">Cancel</ion-button>
             </div>
           </ion-item>

@@ -2,10 +2,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/prefer-for-of */
 import { Component, OnInit } from '@angular/core';
-import { AlertController, LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { ComponentService } from 'src/app/services/component.service';
 import { BookParkingService } from 'src/app/services/parking-book.service';
 import { Storage } from '@ionic/storage-angular';
+import { CheckinOTPModalPage } from './checkin-otpmodal/checkin-otpmodal.page';
 
 
 @Component({
@@ -22,12 +23,13 @@ export class ParkingHistoryPage implements OnInit {
 
   chosenParkingRecord = {
     APQParkingID: '---',
-    date: '---',
-    from: '---',
-    to: '---',
-    location: '---',
+    parkingdate: '---',
+    starttime: '---',
+    endtime: '---',
+    parkinglocation: '---',
     parkingspotid: '---',
     parkingstatus: '---',
+    bookingcreateddatetime: '---',
   };
 
 
@@ -37,6 +39,7 @@ export class ParkingHistoryPage implements OnInit {
     private storage: Storage,
     private loadingCtrl: LoadingController,
     private alertController: AlertController,
+    private modalController: ModalController
 
 
   ) { }
@@ -167,6 +170,32 @@ export class ParkingHistoryPage implements OnInit {
 
       await alert.present();
     }
+  }
+
+  // async getCheckinOTP(chosenParkingRecord: any) {
+  //   const note = 'You can check in up to 10 minutes before your booking start time. (Not earlier than that)';
+  //   const message = `${chosenParkingRecord.checkincode}<br><span class="note">${note}</span>`;
+
+  //   const alert = await this.alertController.create({
+  //     header: 'Check-In OTP:',
+  //     message: message,
+  //     cssClass: 'checkin-otp-alert',
+  //     buttons: ['OK']
+  //   });
+
+  //   await alert.present();
+  // }
+
+  async getCheckinOTP(chosenParkingRecord: any) {
+    const modal = await this.modalController.create({
+      component: CheckinOTPModalPage,
+      componentProps: {
+        otp: chosenParkingRecord.checkincode,
+      },
+      cssClass: 'custom-modal',
+    });
+  
+    return await modal.present();
   }
 
   async cancelParking(chosenParking: any) {

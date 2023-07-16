@@ -7,6 +7,10 @@ const routes: Routes = [
   {
     path: '',
     component: ParkingHistoryPage
+  },
+  {
+    path: 'checkin-otpmodal',
+    loadChildren: () => import('./checkin-otpmodal/checkin-otpmodal.module').then( m => m.CheckinOTPModalPageModule)
   }
 ];
 

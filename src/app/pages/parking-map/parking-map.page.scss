@@ -1,0 +1,31 @@
+ion-content {
+  --background: transparent; /* Make the content area transparent */
+}
+
+.map-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.center-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 2rem auto 0; /* Adds 2 rem margin-top, auto margin for horizontal centering */
+}
+
+.pinpoint-icon {
+  position: absolute;
+  top: 50%; /* Adjust the top position as needed */
+  left: 50%; /* Adjust the left position as needed */
+  transform: translate(-50%, -50%); /* Center the icon */
+  z-index: 10; /* Ensure the icon is displayed on top of the map image */
+  width: 200px; /* Adjust the width of the icon as needed */
+  height: 100px; /* Adjust the height of the icon as needed */
+}
+//   C:\Users\wjun\Documents\vscode\apspace\src\assets\img\location_pinpoint_icon.png
+
+//   C:\Users\wjun\Documents\vscode\apspace\src\app\pages\parking-map\parking-map.page.scss
+
+// background-image: url("/assets/img/location_pinpoint_icon.png")

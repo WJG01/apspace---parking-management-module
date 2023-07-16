@@ -68,10 +68,10 @@
                                 {{ parkings.APQParkingID }}
                               </h3>
                               <p style="margin-top:20px;">
-                                Booking Date: {{ parkings.date}}
+                                Booking Date: {{ parkings.parkingdate}}
                               </p>
                               <p>
-                                Booking Time: {{ parkings.from }} - {{ parkings.to }}
+                                Booking Time: {{ parkings.starttime }} - {{ parkings.endtime }}
                               </p>
                               <ion-badge color="medium" [style.margin-top]="'5px'">
                                 {{ parkings.parkingstatus }}
@@ -104,25 +104,29 @@
                       </ion-row>
                       <ion-row class="field-row">
                         <ion-col size="5" class="field-label">Parking Spot : </ion-col>
-                        <ion-col size="7" class="field-value">{{chosenParkingRecord.location}} -
+                        <ion-col size="7" class="field-value">{{chosenParkingRecord.parkinglocation}} -
                           {{chosenParkingRecord.parkingspotid}}</ion-col>
                       </ion-row>
                       <ion-row class="field-row">
-                        <ion-col size="5" class="field-label">Date : </ion-col>
-                        <ng-container *ngIf="chosenParkingRecord.date !== '---'">
-                          {{ chosenParkingRecord.date | date }}
-                        </ng-container>
-                        <ng-container *ngIf="chosenParkingRecord.date === '---'">
-                          {{ chosenParkingRecord.date }}
-                        </ng-container>
+                        <ion-col size="5" class="field-label">Parking Date : </ion-col>
+                        <ion-col size="7" class="field-value" *ngIf="chosenParkingRecord.parkingdate !== '---'">
+                          {{ chosenParkingRecord.parkingdate | date }}
+                        </ion-col>
+                        <ion-col size="7" class="field-value" *ngIf="chosenParkingRecord.parkingdate === '---'">
+                          {{ chosenParkingRecord.parkingdate }}
+                        </ion-col>
                       </ion-row>
                       <ion-row class="field-row">
                         <ion-col size="5" class="field-label">Start Time : </ion-col>
-                        <ion-col size="7" class="field-value">{{chosenParkingRecord.from }}</ion-col>
+                        <ion-col size="7" class="field-value">{{chosenParkingRecord.starttime }}</ion-col>
                       </ion-row>
                       <ion-row class="field-row">
                         <ion-col size="5" class="field-label">End Time : </ion-col>
-                        <ion-col size="7" class="field-value">{{chosenParkingRecord.to}}</ion-col>
+                        <ion-col size="7" class="field-value">{{chosenParkingRecord.endtime}}</ion-col>
+                      </ion-row>
+                      <ion-row class="field-row">
+                        <ion-col size="5" class="field-label">Created DateTime : </ion-col>
+                        <ion-col size="7" class="field-value">{{chosenParkingRecord.bookingcreateddatetime}}</ion-col>
                       </ion-row>
                       <ion-row class="field-row">
                         <ion-col size="5" class="field-label">ParkingStatus : </ion-col>
@@ -133,13 +137,27 @@
                     <br>
                     <!-- Confirm Booking button -->
                     <ion-card-content class="ion-no-padding ion-padding-bottom ion-text-center">
-                      <ion-button class="ion-no-margin" size="medium"
-                        *ngIf="chosenParkingRecord.parkingstatus === 'CHECKIN'"
-                        (click)="checkoutParking(chosenParkingRecord)">CheckOut</ion-button>
 
                       <ion-button class="ion-no-margin" size="medium"
-                        *ngIf="chosenParkingRecord.parkingstatus === 'BOOKED'"
-                        (click)="cancelParking(chosenParkingRecord)">Cancel</ion-button>
+                        *ngIf="chosenParkingRecord.parkingstatus === 'CHECKIN'"
+                        (click)="checkoutParking(chosenParkingRecord)">
+                        CheckOut
+                      </ion-button>
+
+                      <div style="display: flex; justify-content: center; gap: 10px;">
+                        <ion-button class="ion-no-margin" size="medium"
+                          *ngIf="chosenParkingRecord.parkingstatus === 'BOOKED'"
+                          (click)="getCheckinOTP(chosenParkingRecord)">
+                          Check-In OTP
+                        </ion-button>
+
+                        <ion-button class="ion-no-margin" size="medium"
+                          *ngIf="chosenParkingRecord.parkingstatus === 'BOOKED'"
+                          (click)="cancelParking(chosenParkingRecord)">
+                          Cancel
+                        </ion-button>
+
+                      </div>
                     </ion-card-content>
                   </ion-card>
                 </ion-col>
