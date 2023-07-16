@@ -138,21 +138,24 @@
                     <!-- Confirm Booking button -->
                     <ion-card-content class="ion-no-padding ion-padding-bottom ion-text-center">
 
-                      <ion-button class="ion-no-margin" size="medium"
-                        *ngIf="chosenParkingRecord.parkingstatus === 'CHECKIN'"
-                        (click)="checkoutParking(chosenParkingRecord)">
-                        CheckOut
-                      </ion-button>
+                      <div style="display: flex; justify-content: center; gap: 20px;">
+                        <ion-button color="success" class="ion-no-margin"
+                          (click)="viewInMap(chosenParkingRecord)">
+                          View in Map
+                        </ion-button>
 
-                      <div style="display: flex; justify-content: center; gap: 10px;">
-                        <ion-button class="ion-no-margin" size="medium"
-                          *ngIf="chosenParkingRecord.parkingstatus === 'BOOKED'"
+                        <ion-button color="primary" class="ion-no-margin"
+                          *ngIf="chosenParkingRecord.parkingstatus === 'CHECKIN'"
+                          (click)="checkoutParking(chosenParkingRecord)">
+                          CheckOut
+                        </ion-button>
+
+                        <ion-button class="ion-no-margin" *ngIf="chosenParkingRecord.parkingstatus === 'BOOKED'"
                           (click)="getCheckinOTP(chosenParkingRecord)">
                           Check-In OTP
                         </ion-button>
 
-                        <ion-button class="ion-no-margin" size="medium"
-                          *ngIf="chosenParkingRecord.parkingstatus === 'BOOKED'"
+                        <ion-button color="danger" class="ion-no-margin" *ngIf="chosenParkingRecord.parkingstatus === 'BOOKED'"
                           (click)="cancelParking(chosenParkingRecord)">
                           Cancel
                         </ion-button>

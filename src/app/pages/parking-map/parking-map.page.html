@@ -24,7 +24,7 @@
 
                 <ion-item lines="none">
                   <ion-label position="stacked">Parking Zone</ion-label>
-                  <ion-select interface="popover" [(ngModel)]="chosenParkingZone" (ngModelChange)="changeMap()"
+                  <ion-select interface="popover" [(ngModel)]="chosenParkingZone"
                     mode="md">
                     <ion-select-option *ngFor="let l of locations" [value]="l.value">
                       {{ l.value }}
@@ -34,7 +34,7 @@
 
                 <ion-item lines="none">
                   <ion-label position="stacked">Parking Spot</ion-label>
-                  <ion-select interface="popover" [(ngModel)]="chosenParkingSpot" (ngModelChange)="changeParkingSpot()">
+                  <ion-select interface="popover" [(ngModel)]="chosenParkingSpot" (ngModelChange)="showParkingSpot()">
                     <ion-select-option *ngFor="let option of generateNumberOptions()" [value]="option">{{ option
                       }}</ion-select-option>
                   </ion-select>

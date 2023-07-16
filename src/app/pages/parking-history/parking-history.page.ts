@@ -7,6 +7,7 @@ import { ComponentService } from 'src/app/services/component.service';
 import { BookParkingService } from 'src/app/services/parking-book.service';
 import { Storage } from '@ionic/storage-angular';
 import { CheckinOTPModalPage } from './checkin-otpmodal/checkin-otpmodal.page';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -39,7 +40,8 @@ export class ParkingHistoryPage implements OnInit {
     private storage: Storage,
     private loadingCtrl: LoadingController,
     private alertController: AlertController,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private router: Router
 
 
   ) { }
@@ -172,19 +174,14 @@ export class ParkingHistoryPage implements OnInit {
     }
   }
 
-  // async getCheckinOTP(chosenParkingRecord: any) {
-  //   const note = 'You can check in up to 10 minutes before your booking start time. (Not earlier than that)';
-  //   const message = `${chosenParkingRecord.checkincode}<br><span class="note">${note}</span>`;
+  viewInMap(chosenParkingRecord: any) {
+    const location = chosenParkingRecord.parkinglocation;
+    const parkingspotid = chosenParkingRecord.parkingspotid;
 
-  //   const alert = await this.alertController.create({
-  //     header: 'Check-In OTP:',
-  //     message: message,
-  //     cssClass: 'checkin-otp-alert',
-  //     buttons: ['OK']
-  //   });
-
-  //   await alert.present();
-  // }
+    this.router.navigate(['/parking-map'], {
+      queryParams: { location, parkingspotid }
+    });
+  }
 
   async getCheckinOTP(chosenParkingRecord: any) {
     const modal = await this.modalController.create({
@@ -194,7 +191,7 @@ export class ParkingHistoryPage implements OnInit {
       },
       cssClass: 'custom-modal',
     });
-  
+
     return await modal.present();
   }
 

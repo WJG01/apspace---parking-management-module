@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit } from '@angular/core';
 import { parkingPositions } from './parkingspot-pinpoint-position';
+import { Platform } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-parking-map',
@@ -19,50 +22,31 @@ export class ParkingMapPage implements OnInit {
 
   pinpointTop: number;
   pinpointLeft: number;
+  isCapacitor: boolean;
 
-  constructor() { }
+  constructor(
+    public plt: Platform,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit() {
-    // this.pinpointTop = 35;
-    //this.pinpointTop = 68;
-    //this.pinpointLeft = 638;
+    this.isCapacitor = this.plt.is('capacitor');
 
-    //for mobile left
-    // this.pinpointTop = 50;
-    // this.pinpointLeft = 240;
+    this.route.queryParams.subscribe(params => {
+      if (Object.keys(params).length !== 0) {
+        const paramLocation = params['location'];
+        const paramParkingSpotId = params['parkingspotid'];
+
+        this.chosenParkingZone = this.locations.find((location) => location.key === paramLocation).value;;
+        this.chosenParkingSpot = paramParkingSpotId;
+        this.getImageByLocation(this.chosenParkingZone);
+        this.showParkingSpot();
+      }
+    });
   }
 
-  changeMap() {
-
-  }
-
-  // changeParkingSpot() {
-  //   const viewType = 'Desktop';
-  //   const parkinglocationType = this.chosenParkingZone;
-  //   const parkingspot = this.chosenParkingSpot;
-
-  //   const filteredSpots = parkingPositions
-  //     .filter(position => position.viewType === viewType)
-  //     .map(position => position.parkinglocationtype)
-  //     .flat() //console.log here
-  //     .filter(location => location.parkinglocation === parkinglocationType)
-  //     .map(location => location.spots)
-  //     .flat() //console.log here
-  //     .filter(spot => spot.parkingspotid === parkingspot);
-
-  //   if (filteredSpots.length > 0) {
-  //     const spot = filteredSpots[0]; // Assuming we only need the first spot
-
-  //     this.pinpointTop = spot.top;
-  //     this.pinpointLeft = spot.left;
-  //   } else {
-  //     // Handle case when no matching spots found
-  //   }
-
-  // }
-
-  changeParkingSpot() {
-    const viewType = 'Mobile';
+  showParkingSpot() {
+    const viewType = this.isCapacitor ? 'Mobile' : 'Desktop';
     const parkinglocationType = this.locations.find((location) => location.value === this.chosenParkingZone).key;
     const parkingspot = this.chosenParkingSpot;
 
