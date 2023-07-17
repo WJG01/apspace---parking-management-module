@@ -60,7 +60,7 @@
                 <ion-list>
                   <ion-item *ngFor="let image of images">
                     <ion-thumbnail slot="start">
-                      <ion-img [src]="image"></ion-img>
+                      <ion-img [src]="image.data"></ion-img>
                     </ion-thumbnail>
                     <ion-label>{{ image.name }}</ion-label>
                     <ion-button slot="end" fill="clear" slot="end" (click)="removeImage(image)">

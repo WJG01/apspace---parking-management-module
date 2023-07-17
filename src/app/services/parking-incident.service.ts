@@ -12,7 +12,7 @@ export class ParkingIncidentService {
   ) { }
 
 
-  uploadIncidentImages(body, headers): Observable<any> {
+  createIncidentReport(body, headers): Observable<any> {
     return this.pws.post<any>('/parking-incident', { body, headers });
   }
 }
