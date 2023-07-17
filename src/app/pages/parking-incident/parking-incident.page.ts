@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/prefer-for-of */
+import { HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ParkingIncidentService } from 'src/app/services/parking-incident.service';
 
 @Component({
   selector: 'app-parking-incident',
@@ -15,6 +17,7 @@ export class ParkingIncidentPage implements OnInit {
 
   constructor(
     private fb: UntypedFormBuilder,
+    private pIS: ParkingIncidentService,
 
   ) { }
 
@@ -53,7 +56,37 @@ export class ParkingIncidentPage implements OnInit {
   }
 
   submit() {
+    if (this.images.length > 0) {
+      const headers = { 'Content-Type': 'application/json' };
 
+      const imageList = this.images.map((image, index) => ({
+        name: `image${index}.jpg`,
+        data: image.split(',')[1] // Extract the base64 data from the data URL
+      }));
+
+      const body = JSON.stringify({ images: imageList });
+
+      if (body) {
+        this.pIS.uploadIncidentImages(body, headers).subscribe(r =>
+          console.log(r)
+        );
+      }
+
+      // Specify API endpoint that connects with the Lambda function to handle upload images to S3
+      // const endpoint = "/prod/upload-images";
+      // const url = "https://o2qzi0a049.execute-api.us-east-1.amazonaws.com";
+      // const response$ = this.ws.post(endpoint, {
+      //   "url": url,
+      //   body: body,
+      //   timeout: 30000,
+      //   headers: headers
+      // });
+      // response$.subscribe(r => console.log(r));
+    } else {
+      console.log('No Images found');
+    }
   }
+
+
 
 }
