@@ -5,6 +5,7 @@ import { FormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@
 import { ParkingIncidentService } from 'src/app/services/parking-incident.service';
 import { Storage } from '@ionic/storage-angular';
 import { DatePipe } from '@angular/common';
+import { ComponentService } from 'src/app/services';
 
 @Component({
   selector: 'app-parking-incident',
@@ -22,6 +23,8 @@ export class ParkingIncidentPage implements OnInit {
     private fb: UntypedFormBuilder,
     private pIS: ParkingIncidentService,
     private storage: Storage,
+    private component: ComponentService,
+
 
   ) { }
 
@@ -80,34 +83,45 @@ export class ParkingIncidentPage implements OnInit {
 
     const formattedDateTime = datePipe.transform(currentDate, 'yyyy-MM-ddTHH:mm:ss');
 
-    if (this.images.length > 0) {
-      const timestamp = new Date().getTime();
-      const headers = { 'Content-Type': 'application/json' };
 
-      const imageList = this.images.map((image, index) => {
-        const base64Data = image.data.split(',')[1]; // Extract the base64 data from the data URL
-        const fileName = image.name + '_' + timestamp; // Use the real name of the image
-        return {
-          name: fileName,
-          data: base64Data
-        };
+    const timestamp = new Date().getTime();
+    const headers = { 'Content-Type': 'application/json' };
+
+    const imageList = this.images.length > 0 ? this.images.map((image, index) => {
+      const base64Data = image.data.split(',')[1]; // Extract the base64 data from the data URL
+      const fileName = image.name + '_' + timestamp; // Use the real name of the image
+      return {
+        name: fileName,
+        data: base64Data
+      };
+    }) : [];
+
+    const body = JSON.stringify({
+      description: this.incidentForm.value.message,
+      reporteddatetime: formattedDateTime,
+      userreported: this.currentLoginUserID,
+      images: imageList
+    });
+
+    if (body) {
+      this.pIS.createIncidentReport(body, headers).subscribe(async (response) => {
+
+        console.log(response);
+
+        if (response.statusCode === 200) {
+          this.component.toastMessage('Successfully submitted your incident report!', 'success');
+
+          // Clear the message form and image list
+          this.incidentForm.get('message').reset();
+          this.images = [];
+        } else {
+          this.component.toastMessage('Failed to submit your incident report !', 'danger');
+          console.log('Error creating incident report:', response.body);
+        }
       });
-
-      const body = JSON.stringify({
-        description: this.incidentForm.value.message,
-        reporteddatetime: formattedDateTime,
-        userreported: this.currentLoginUserID,
-        images: imageList
-      });
-
-      if (body) {
-        this.pIS.createIncidentReport(body, headers).subscribe(r =>
-          console.log(r)
-        );
-      }
-    } else {
-      console.log('No Images found');
     }
+
+
   }
 
 
