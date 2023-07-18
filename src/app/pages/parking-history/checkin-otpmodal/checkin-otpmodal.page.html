@@ -1,13 +1,21 @@
 <ion-header>
   <ion-toolbar>
     <ion-title class="ion-text-center">Check-In OTP</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <div class="modal-content">
-    <div class="otp-value">{{ otp }}</div>
-    <div class="note">You can check in up to 10 minutes before your booking start time. (Not earlier than that)</div>
-    <ion-button class="ion-no-margin" size="medium" (click)="dismissModal()">Close</ion-button>
+    <ion-col class="ion-text-center" size="12" size-md="12" size-lg="12">
+      <qrcode [qrdata]="otp" [width]="200" [errorCorrectionLevel]="'H'" [colorDark]="'#ffffff'" [colorLight]="'#191919'"
+        [elementType]="'svg'" [margin]="2" [ngClass]="otp === '---' ? 'qrcode' : undefined"></qrcode>
+      <div class="otp-value">{{ otp }}</div>
+      <div class="note">You can check in up to 10 minutes before your booking start time. (Not earlier than that)</div>
+    </ion-col>
   </div>
 </ion-content>

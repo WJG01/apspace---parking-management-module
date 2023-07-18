@@ -7,12 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { CheckinOTPModalPageRoutingModule } from './checkin-otpmodal-routing.module';
 
 import { CheckinOTPModalPage } from './checkin-otpmodal.page';
+import { QRCodeModule } from 'angularx-qrcode';
+
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    QRCodeModule,
     CheckinOTPModalPageRoutingModule
   ],
   declarations: [CheckinOTPModalPage]

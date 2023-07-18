@@ -40,7 +40,8 @@
             <br>
             <!-- Confirm Booking button -->
             <ion-card-content class="ion-no-padding ion-padding-bottom ion-text-center">
-              <ion-button class="ion-no-margin" size="medium" (click)="confirmBooking()">Confirm Booking</ion-button>
+              <ion-button *ngIf="selectedParking !== ''" class="ion-no-margin" size="medium"
+                (click)="confirmBooking()">Confirm Booking</ion-button>
             </ion-card-content>
           </ion-card>
         </ion-col>
@@ -62,7 +63,8 @@
                     </ion-label>
 
                     <!-- filter location -->
-                    <ion-select interface="popover" mode="md" (ionFocus)="loadLocations()" [(ngModel)]="filterObject.parkinglocation"  (ionChange)="checkAllFieldsFilled()">
+                    <ion-select interface="popover" mode="md" (ionFocus)="loadLocations()"
+                      [(ngModel)]="filterObject.parkinglocation" (ionChange)="checkAllFieldsFilled()">
                       <ion-select-option *ngFor="let l of locations" [value]="l.key">
                         {{ l.value }}
                       </ion-select-option>
@@ -115,7 +117,8 @@
               </ion-item>
 
               <ion-card-content>
-                <ion-chip *ngFor="let parking of availableParkings;" (click)="fillBookingDetails(parking)" [class.selected]="parking === selectedParking">
+                <ion-chip *ngFor="let parking of availableParkings;" (click)="fillBookingDetails(parking)"
+                  [class.selected]="parking === selectedParking">
                   {{ parking }}
                 </ion-chip>
               </ion-card-content>

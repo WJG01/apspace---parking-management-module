@@ -186,6 +186,8 @@ export class ParkingHistoryPage implements OnInit {
   async getCheckinOTP(chosenParkingRecord: any) {
     const modal = await this.modalController.create({
       component: CheckinOTPModalPage,
+      breakpoints: [0, 1],
+      initialBreakpoint: 1,
       componentProps: {
         otp: chosenParkingRecord.checkincode,
       },

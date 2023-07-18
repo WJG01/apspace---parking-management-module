@@ -48,7 +48,7 @@ export class BookParkingPage implements OnInit {
   chosenStartTime = '----';
   chosenEndTime = '----';
   chosenDuration = '----';
-  selectedParking: string;
+  selectedParking = '';
 
   currentLoginUserID = '';
 

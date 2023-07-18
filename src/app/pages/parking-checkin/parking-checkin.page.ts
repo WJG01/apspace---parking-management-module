@@ -23,7 +23,7 @@ export class ParkingCheckinPage implements OnInit {
   isCapacitor: boolean;
   scan = false;
   sending = false;
-  updateAttendance: UpdateAttendanceGQL; // Declare the property
+  //updateAttendance: UpdateAttendanceGQL; // Declare the property
 
   currentLoginUserID = '';
 
@@ -201,6 +201,7 @@ export class ParkingCheckinPage implements OnInit {
 
       } else {
         console.log('Invalid OTP or no matching booking found.');
+        this.component.alertMessage('Error', 'Invalid OTP or no matching booking found.', 'danger');
         // Handle the case when the OTP is invalid or no matching booking is found
       }
     } catch (error) {

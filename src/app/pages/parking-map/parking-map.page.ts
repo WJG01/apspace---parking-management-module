@@ -47,6 +47,7 @@ export class ParkingMapPage implements OnInit {
 
   showParkingSpot() {
     const viewType = this.isCapacitor ? 'Mobile' : 'Desktop';
+    //const viewType = 'Mobile';
     const parkinglocationType = this.locations.find((location) => location.value === this.chosenParkingZone).key;
     const parkingspot = this.chosenParkingSpot;
 

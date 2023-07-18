@@ -46,13 +46,13 @@ export const parkingPositions = [
                         return {
                             parkingspotid: '20',
                             top: 35,
-                            left: 150
+                            left: 200
                         };
                     }
                     return {
                         parkingspotid: String(index + 1).padStart(2, '0'),
-                        top: 35 + (index * 15) + index *1.5,
-                        left: 240
+                        top: 35 + (index * 15) + index * 7,
+                        left: 320
                     };
                 })
             },
