@@ -10,7 +10,8 @@
   color: #008bfd;
 }
 
-.button-container {
+.button-container,
+.action-button-container {
   display: flex;
   justify-content: center;
   margin-top: 20px;
@@ -29,22 +30,6 @@
   border-radius: 50%;
   overflow: hidden;
   cursor: pointer;
-}
-
-@media (max-width: 425px) {
-  .help-button {
-    padding: 10px 20px;
-    width: 250px;
-    height: 250px;
-    border-radius: 50% !important;
-    background-color: rgba(233, 16, 16, 0.63);
-    border: none;
-    outline: none;
-    color: #fff;
-    border-radius: 50%;
-    overflow: hidden;
-    cursor: pointer;
-  }
 }
 
 .button-inner {
@@ -93,12 +78,11 @@
 ion-card {
   width: 50%;
 }
-
 .card-container {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap; /* Add this line */
 }
-
 .status-item {
   display: flex;
   align-items: center;
@@ -127,4 +111,74 @@ ion-button + ion-button {
 .divider {
   border-top: 0.5px solid #0000004b;
   margin: 10px 0;
+}
+
+@media (max-width: 425px) {
+  .help-button {
+    padding: 10px 20px;
+    width: 250px;
+    height: 250px;
+    border-radius: 50% !important;
+    background-color: rgba(233, 16, 16, 0.63);
+    border: none;
+    outline: none;
+    color: #fff;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .action-button-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .card-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  ion-card {
+    width: 100%;
+  }
+  
+  ion-item {
+    width: auto; /* Adjust the width as needed or use flexbox layout */
+    padding-right: 0; /* Remove any unnecessary right padding */
+    margin-right: 0; /* Remove any unnecessary right margin */
+  }
+  
+  .item-inner {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  .status-item {
+    display: flex;
+    align-items: flex-start; /* Adjusted to align items at the top */
+    justify-content: space-between;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  
+  .label-container {
+    margin-bottom: 5px;
+    font-size: 12px;
+    flex-shrink: 0;
+    width: auto; /* Remove the fixed width */
+    margin-right: 0; /* Remove the right margin */
+  }
+  
+  .text-container {
+    flex-grow: 1;
+  }
+  
+  .text-start {
+    font-size: 12px;
+    line-height: 1.4;
+    margin-bottom: 5px;
+    text-align: right;
+  }
 }

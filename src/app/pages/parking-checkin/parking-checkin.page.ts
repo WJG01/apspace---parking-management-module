@@ -126,7 +126,8 @@ export class ParkingCheckinPage implements OnInit {
 
   getCurrentBookingRecord(): Promise<any> {
     return new Promise<any>((resolve, reject) => {
-      const currentDate = new Date('2023-07-20T12:23'); // Hardcoded current date and time for testing
+      //const todayDate = new Date('2023-07-20T12:23'); // Hardcoded current date and time for testing
+      const todayDate = new Date();
 
       this.bookps.getAllBookedParkings().subscribe(
         (response: any) => {
@@ -140,8 +141,8 @@ export class ParkingCheckinPage implements OnInit {
             // Check if the current date and time falls between the booking start date and time,
             // or is within 10 minutes earlier than the start date and time
             return (
-              currentDate >= bookingStartDateMinus10Mins &&
-              currentDate <= bookingEndDate &&
+              todayDate >= bookingStartDateMinus10Mins &&
+              todayDate <= bookingEndDate &&
               booking.userid === this.currentLoginUserID &&
               booking.parkingstatus === 'BOOKED'
             );
@@ -164,16 +165,12 @@ export class ParkingCheckinPage implements OnInit {
   }
 
 
-  /** Send OTP. */
   async checkin(otp: string): Promise<void> {
     console.assert(otp.length === this.digits.length);
     this.sending = true;
 
-
     try {
       const foundParking = await this.getCurrentBookingRecord();
-
-      //console.log('this is found parking value :', foundParking);
 
       if (foundParking != null && otp === foundParking.checkincode) {
 
@@ -200,13 +197,13 @@ export class ParkingCheckinPage implements OnInit {
         );
 
       } else {
+        // Handle the case when the OTP is invalid or no matching booking is found
         console.log('Invalid OTP or no matching booking found.');
         this.component.alertMessage('Error', 'Invalid OTP or no matching booking found.', 'danger');
-        // Handle the case when the OTP is invalid or no matching booking is found
       }
     } catch (error) {
-      console.log('Error getting current booking:', error);
       // Handle the error case
+      console.log('Error getting current booking:', error);
     } finally {
       this.sending = false;
     }

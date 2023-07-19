@@ -255,10 +255,6 @@ export class BookParkingPage implements OnInit {
   findOccupiedParking(): string[] {
     const occupiedParking: string[] = [];
 
-    //console.log('in other place', this.bookedParkings);
-    //console.log('checking_filterObject.location', this.filterObject.parkinglocation);
-
-
     this.bookedParkings.selectParkingResponse.forEach(booking => {
       const bookingFromTime = new Date(`2000-01-01T${booking.starttime}`);
       const bookingToTime = new Date(`2000-01-01T${booking.endtime}`);
@@ -269,8 +265,12 @@ export class BookParkingPage implements OnInit {
         booking.parkinglocation === this.filterObject.parkinglocation &&
         booking.parkingdate === this.filterObject.parkingdate &&
         (
-          (chosenFromTimeObj >= bookingFromTime && chosenFromTimeObj <= bookingToTime) || // Chosen start time overlaps
-          (chosenToTimeObj >= bookingFromTime && chosenToTimeObj <= bookingToTime) || // Chosen end time overlaps
+          // Chosen start time overlaps
+          (chosenFromTimeObj >= bookingFromTime && chosenFromTimeObj <= bookingToTime) ||
+
+          // Chosen end time overlaps
+          (chosenToTimeObj >= bookingFromTime && chosenToTimeObj <= bookingToTime) ||
+
           // Chosen time range completely contains the existing booking
           (chosenFromTimeObj <= bookingFromTime && chosenToTimeObj >= bookingToTime)
         )
@@ -279,7 +279,6 @@ export class BookParkingPage implements OnInit {
       }
     });
 
-    //console.log('hello this is occupiedparking', occupiedParking);
     return occupiedParking;
   }
 
@@ -328,7 +327,6 @@ export class BookParkingPage implements OnInit {
     const parts = location_parkingspotid.split('-');
     const currentDate = new Date();
     const datePipe = new DatePipe('en-US');
-
     const formattedDateTime = datePipe.transform(currentDate, 'yyyy-MM-ddTHH:mm:ss');
     const otp = this.generateOTP();
 
@@ -343,8 +341,6 @@ export class BookParkingPage implements OnInit {
       bookingcreateddatetime: formattedDateTime,
       checkincode: otp
     };
-
-    console.log('what is this userid?', body);
 
     const headers = { 'Content-Type': 'application/json' };
 

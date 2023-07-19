@@ -1,3 +1,4 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/prefer-for-of */
@@ -17,7 +18,7 @@ import { Router } from '@angular/router';
 })
 export class ParkingHistoryPage implements OnInit {
 
-  selectedSegment: 'present_future' | 'past' = 'present_future';
+  selectedSegment: 'ongoingBooking' | 'completedBooking' = 'ongoingBooking';
   parkingRecords: any[] = [];
   currentLoginUserID = '';
 
@@ -73,23 +74,37 @@ export class ParkingHistoryPage implements OnInit {
     this.bookps.getAllBookedParkings().subscribe(
       (response: any) => {
         this.parkingRecords = response.selectParkingResponse;
+        console.log('All Parking Records', this.parkingRecords);
 
-        // Sort the parkingRecords array
-        this.parkingRecords.sort((a, b) => {
-          if (a.parkingstatus === 'CHECKIN' && b.parkingstatus !== 'CHECKIN') {
-            return -1; // a comes before b
-          } else if (a.parkingstatus !== 'CHECKIN' && b.parkingstatus === 'CHECKIN') {
-            return 1; // a comes after b
+        const todayDate = new Date();
+        // Separate records based on status
+        const checkinRecord = this.parkingRecords.find(record => record.parkingstatus === 'CHECKIN');
+        const booked_completedRecords = this.parkingRecords.filter(record => record.parkingstatus === 'BOOKED' || record.parkingstatus === 'COMPLETED');
+
+        // Create a new property combining parking date and start time as a Date object
+        booked_completedRecords.forEach(record => {
+          record.parkingDateTime = new Date(`${record.parkingdate} ${record.starttime}`);
+
+          // Update status to 'COMPLETED' for records with a parking date that has passed today's date
+          if (record.parkingstatus !== 'COMPLETED' && record.parkingDateTime < todayDate && record.parkingDateTime.toDateString() !== todayDate.toDateString()) {
+            record.parkingstatus = 'COMPLETED';
+            this.markBookingCompleted(record);
           }
-
-          if (a.parkingstatus === 'CHECKIN' && b.parkingstatus === 'CHECKIN') {
-            // Sort by bookingcreateddate in descending order for 'CHECKIN' status
-            return new Date(b.date).getTime() - new Date(a.date).getTime();
-          }
-
-          // Sort by bookingcreateddate in descending order for other statuses
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
         });
+
+
+
+        // Sort the booked_completedRecords array based on parkingDateTime in ascending order
+        booked_completedRecords.sort((a, b) => {
+          return a.parkingDateTime.getTime() - b.parkingDateTime.getTime();
+        });
+
+        // Check if checkinRecord exists and concatenate it with the sorted booked_completedRecords
+        if (checkinRecord) {
+          this.parkingRecords = [checkinRecord, ...booked_completedRecords];
+        } else {
+          this.parkingRecords = booked_completedRecords;
+        }
 
         console.log('result', this.parkingRecords);
       },
@@ -104,9 +119,9 @@ export class ParkingHistoryPage implements OnInit {
     let counter = 0;
     let statusCheck: string[] = [];
 
-    if (parkingStatus === 'present_future') {
+    if (parkingStatus === 'ongoingBooking') {
       statusCheck = ['CHECKIN', 'BOOKED'];
-    } else if (parkingStatus === 'past') {
+    } else if (parkingStatus === 'completedBooking') {
       statusCheck = ['COMPLETED'];
     }
 
@@ -174,6 +189,30 @@ export class ParkingHistoryPage implements OnInit {
     }
   }
 
+  async markBookingCompleted(parkingRecord: any) {
+    if (parkingRecord.parkingstatus === 'BOOKED') {
+
+      const body = {
+        parkingstatus: 'COMPLETED'
+      };
+      const headers = { 'Content-Type': 'application/json' };
+
+      //update emergency report status to HELPFIND, clear security guard id
+      if (body) {
+        this.bookps.updateParkingBooking(parkingRecord.APQParkingID, body, headers).subscribe(
+          (response: any) => {
+            console.log('Found and Marked Completed for expired', parkingRecord.APQParkingID, ' parking record');
+          },
+          (error: any) => {
+            console.log(error);
+          }
+
+        );
+
+      }
+    }
+  }
+
   viewInMap(chosenParkingRecord: any) {
     const location = chosenParkingRecord.parkinglocation;
     const parkingspotid = chosenParkingRecord.parkingspotid;
@@ -231,11 +270,7 @@ export class ParkingHistoryPage implements OnInit {
           }
         ]
       });
-
       await alert.present();
-
-
-
     }
 
   }

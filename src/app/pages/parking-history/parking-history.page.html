@@ -10,8 +10,8 @@
 
   <ion-toolbar>
     <ion-segment [(ngModel)]="selectedSegment">
-      <ion-segment-button value="present_future">Present / Future</ion-segment-button>
-      <ion-segment-button value="past">Past</ion-segment-button>
+      <ion-segment-button value="ongoingBooking">Ongoing Booking</ion-segment-button>
+      <ion-segment-button value="completedBooking">Completed Booking</ion-segment-button>
     </ion-segment>
   </ion-toolbar>
 </ion-header>
@@ -32,14 +32,14 @@
                 <ng-container [ngSwitch]="selectedSegment">
 
                   <!-- first tab -->
-                  <ng-container *ngSwitchCase="'present_future'">
-                    <ng-container *ngTemplateOutlet="tabContentTemplate; context: { parkingStatus: 'present_future' }">
+                  <ng-container *ngSwitchCase="'ongoingBooking'">
+                    <ng-container *ngTemplateOutlet="tabContentTemplate; context: { parkingStatus: 'ongoingBooking' }">
                     </ng-container>
                   </ng-container>
 
                   <!-- second tab -->
-                  <ng-container *ngSwitchCase="'past'">
-                    <ng-container *ngTemplateOutlet="tabContentTemplate; context: { parkingStatus: 'past' }">
+                  <ng-container *ngSwitchCase="'completedBooking'">
+                    <ng-container *ngTemplateOutlet="tabContentTemplate; context: { parkingStatus: 'completedBooking' }">
                     </ng-container>
                   </ng-container>
                 </ng-container>
@@ -47,7 +47,7 @@
             </ng-container>
           </ng-container>
 
-          <!-- parkingStatus can be 'present_future', 'past' -->
+          <!-- parkingStatus can be 'ongoingBooking', 'completedBooking' -->
           <ng-template #tabContentTemplate let-parkingStatus="parkingStatus">
             <ion-grid>
               <ion-row>
@@ -57,7 +57,7 @@
                     <ng-container *ngFor="let parkings of parkingRecords; let i = index">
                       <!-- <ng-container *ngIf="report.emergencyreportstatus === parkingStatus; else skipItem"> -->
                       <ng-container
-                        *ngIf="parkingStatus === 'present_future' && (parkings.parkingstatus === 'CHECKIN' || parkings.parkingstatus === 'BOOKED') || (parkingStatus === 'past' && parkings.parkingstatus === 'COMPLETED'); else skipItem">
+                        *ngIf="parkingStatus === 'ongoingBooking' && (parkings.parkingstatus === 'CHECKIN' || parkings.parkingstatus === 'BOOKED') || (parkingStatus === 'completedBooking' && parkings.parkingstatus === 'COMPLETED'); else skipItem">
                         <ion-card>
                           <ion-item lines="none">
                             <ion-badge slot="start">
