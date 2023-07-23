@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable max-len */
 import { Component, OnInit } from '@angular/core';
@@ -74,6 +75,13 @@ export class ParkingEmergencyAssistPage implements OnInit {
       (response: any) => {
         this.emergencyReports = response.selectEmergencyResponse;
 
+        //Concantenate parking IDs for all records
+        this.emergencyReports.forEach((record: any) => {
+          const APQEmergencyIdDisplay = record.APQEmergencyID; // Get the APQParkingID from the record
+          const firstPart = '#' + APQEmergencyIdDisplay.split('-')[0]; // Extract the first part before the first hyphen "-"
+          record.APQEmergencyIdDisplay = firstPart;
+        });
+
         // sort date descending
         this.emergencyReports.sort((a, b) => {
           // Convert the reportdatetime strings to Date objects for comparison
@@ -113,17 +121,31 @@ export class ParkingEmergencyAssistPage implements OnInit {
     } else if (segmentValue === 'completedRequest') {
       this.emergencyStatus = 'HELPDONE';
     }
+
+    this.clearChosenEmergencyDetails();
+  }
+
+  clearChosenEmergencyDetails() {
+    this.chosenEmergencyRecord = null;
+    this.chosenEmergencyID = null;
+    this.chosenReportedDate = null;
+    this.chosenReportedBy = null;
+    this.chosenParkingSpot = null;
+    this.chosenContactNo = null;
+    this.chosenAssignedSecurity = null;
   }
 
   showEmergencyDetails(report: any) {
     this.chosenEmergencyRecord = report;
-    this.chosenEmergencyID = report.APQEmergencyID;
+    this.chosenEmergencyID = report.APQEmergencyIdDisplay;
     this.chosenReportedDate = report.reportdatetime;
     this.chosenReportedBy = report.userid;
     this.chosenParkingSpot = report.parkingspotid ? report.parkingspotid : 'None';
     this.chosenContactNo = report.usercontactno;
     this.chosenAssignedSecurity = report.securityguardid;
   }
+
+
 
   acceptEmergencyReports() {
     if (this.chosenEmergencyRecord != null) {
@@ -136,7 +158,7 @@ export class ParkingEmergencyAssistPage implements OnInit {
       const headers = { 'Content-Type': 'application/json' };
 
       if (body) {
-        this.peS.updateEmergencyReport(this.chosenEmergencyID, body, headers).subscribe({
+        this.peS.updateEmergencyReport(this.chosenEmergencyRecord.APQEmergencyID, body, headers).subscribe({
           next: () => {
             this.component.toastMessage(`Successfully Accepted Emergency Report ${this.chosenEmergencyID} !`, 'success').then(() => {
               this.dismissLoading();
@@ -178,7 +200,7 @@ export class ParkingEmergencyAssistPage implements OnInit {
 
               //update emergency report status to HELPFIND, clear security guard id
               if (body) {
-                this.peS.updateEmergencyReport(this.chosenEmergencyID, body, headers).subscribe({
+                this.peS.updateEmergencyReport(this.chosenEmergencyRecord.APQEmergencyID, body, headers).subscribe({
                   next: () => {
                     this.component.toastMessage(`Successfully Canceled Assigning Emergency Report ${this.chosenEmergencyID} to you !`, 'success').then(() => {
                       this.dismissLoading();
@@ -215,6 +237,13 @@ export class ParkingEmergencyAssistPage implements OnInit {
   async dismissLoading() {
     if (this.loading) {
       return await this.loading.dismiss();
+    }
+  }
+
+  callReporter() {
+    if (this.chosenContactNo) {
+      const phoneNumber = this.chosenContactNo.trim();
+      window.location.href = `tel:${phoneNumber}`;
     }
   }
 

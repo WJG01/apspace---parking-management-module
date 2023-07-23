@@ -85,4 +85,11 @@ export class EmergencyDetailsModalPage implements OnInit {
     }
   }
 
+  callSecurityGuard() {
+    if (this.foundSecurityGuard.contactNumber) {
+      const phoneNumber = this.foundSecurityGuard.contactNumber.trim();
+      window.location.href = `tel:${phoneNumber}`;
+    }
+  }
+
 }

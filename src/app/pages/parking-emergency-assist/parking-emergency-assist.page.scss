@@ -1,8 +1,12 @@
 .field-row {
-    margin-bottom: 10px;
-  }
-  
-  .field-value {
-    font-weight: bold;
-    font-size: 16px;
-  }
+  margin-bottom: 10px;
+}
+
+.field-value {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+ion-button.ion-margin-start {
+  margin-left: 3rem; /* Adjust the value as needed */
+}

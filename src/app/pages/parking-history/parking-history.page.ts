@@ -141,9 +141,9 @@ export class ParkingHistoryPage implements OnInit {
 
         //Concantenate parking IDs for all records
         this.parkingRecords.forEach((record: any) => {
-          const APQParkingID = record.APQParkingID; // Get the APQParkingID from the record
-          const firstPart = '#' + APQParkingID.split('-')[0]; // Extract the first part before the first hyphen "-"
-          record.APQParkingID = firstPart;
+          const APQParkingIdDisplay = record.APQParkingID; // Get the APQParkingID from the record
+          const firstPart = '#' + APQParkingIdDisplay.split('-')[0]; // Extract the first part before the first hyphen "-"
+          record.APQParkingIdDisplay = firstPart;
         });
 
         // Separate records based on status
@@ -331,7 +331,7 @@ export class ParkingHistoryPage implements OnInit {
       if (body) {
         this.bookps.updateParkingBooking(parkingRecord.APQParkingID, body, headers).subscribe(
           (response: any) => {
-            console.log('Found and Marked Completed for expired', parkingRecord.APQParkingID, ' parking record');
+            console.log('Found and Marked Completed for expired', parkingRecord.APQParkingIdDisplay, ' parking record');
           },
           (error: any) => {
             console.log(error);

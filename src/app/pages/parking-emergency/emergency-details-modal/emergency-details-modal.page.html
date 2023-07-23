@@ -13,9 +13,9 @@
 
 
 <ion-content>
-  <div class="glob-small-margin-top">
+  <div class="card-container">
     <ng-container *ngIf="emergencyDetailsItem.emergencyreportstatus!=='HELPFIND'; else lookingForHelp">
-      <ion-card class="ion-margin">
+      <ion-card>
         <ion-card-header>
           <ion-card-title class="details-title"><u>I will be assisting you today !</u></ion-card-title>
         </ion-card-header>
@@ -34,17 +34,6 @@
         </ion-card-content>
       </ion-card>
 
-      <!-- <ion-card class="problem-section-card" *ngIf="emergencyDetailsItem.emergencyreportstatus!=='HELPCOMPLETE'">
-      <ion-card-header>
-        <ion-card-title class="problem-section-title">Is your problem solved?</ion-card-title>  
-      </ion-card-header>
-      <ion-card-content>
-        <div class="buttons">
-          <ion-button expand="block" color="success" (click)="markAsComplete()">Solved</ion-button>
-        </div>
-      </ion-card-content>
-    </ion-card> -->
-
     </ng-container>
 
     <ng-template #lookingForHelp>
@@ -60,16 +49,18 @@
   </div>
 </ion-content>
 
-<ion-footer>
+<ion-footer *ngIf="emergencyDetailsItem.emergencyreportstatus !== 'HELPFIND'">
   <ion-toolbar>
     <ion-row>
       <ion-col>
-        <ion-button expand="block" color="danger" (click)="markAsComplete()">
+        <ion-button expand="block" [disabled]="emergencyDetailsItem.emergencyreportstatus === 'HELPCOMPLETE'"
+          size="large" color="danger" (click)="callSecurityGuard()">
           Call Him/Her
         </ion-button>
       </ion-col>
       <ion-col>
-        <ion-button expand="block" color="success" (click)="markAsComplete()">
+        <ion-button expand="block" [disabled]="emergencyDetailsItem.emergencyreportstatus === 'HELPCOMPLETE'"
+          size="large" color="success" (click)="markAsComplete()">
           Mark Complete
         </ion-button>
       </ion-col>

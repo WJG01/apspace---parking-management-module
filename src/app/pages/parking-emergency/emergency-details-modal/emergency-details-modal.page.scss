@@ -3,6 +3,42 @@ ion-title {
   width: 100%;
 }
 
+ion-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+ion-card {
+  /* Adjust the card styles as needed */
+  width: 80%; /* Example width, change as per your design */
+  max-width: 35rem; /* Example max-width, change as per your design */
+  margin: 0; /* Remove default margin */
+  padding: 2rem; /* Add padding to spread out the card content */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center; /* Center the text content horizontally */
+}
+
+ion-card-content {
+  flex: 1; /* Allow the content to expand and take available vertical space */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .round-border {
   border-radius: 50%;
   max-width: 300px;
@@ -42,33 +78,50 @@ ion-title {
 }
 
 .problem-solved-section {
-    margin-top: 20px;
-  }
-  
-  .section-title {
-    font-size: 18px;
-    font-weight: bold;
-  }
-  
-  .buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-top: 10px;
-  }
-  
-  .buttons ion-button {
-    flex: 1;
-    margin-right: 10px;
-  }
+  margin-top: 20px;
+}
 
-  .problem-section-card {
-    background-color: rgb(42, 131, 255);
-  }
+.section-title {
+  font-size: 18px;
+  font-weight: bold;
+}
 
-  .problem-section-title{
-    color: white;
-    margin-left: 10px;
-    font-size: 20px;
-    font-style: normal;
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.buttons ion-button {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.problem-section-card {
+  background-color: rgb(42, 131, 255);
+}
+
+.problem-section-title {
+  color: white;
+  margin-left: 10px;
+  font-size: 20px;
+  font-style: normal;
+}
+
+
+ion-footer {
+  ion-toolbar {
+    ion-row {
+      ion-col {
+        &:first-child {
+          margin-right: 2rem; /* Add margin to the right side of the first button */
+        }
+
+        &:last-child {
+          margin-left: 2rem; /* Add margin to the left side of the second button */
+        }
+      }
+    }
   }
+}
