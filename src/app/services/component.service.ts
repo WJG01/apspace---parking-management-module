@@ -61,6 +61,7 @@ export class ComponentService {
       buttons.push(button);
     }
 
+
     const alert = await this.alertCtrl.create({
       header,
       message,

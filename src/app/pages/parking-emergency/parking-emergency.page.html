@@ -9,9 +9,9 @@
 
   <!-- Help Button -->
   <div class="button-container">
-    <button class="help-button" [ngClass]="{ 'button-hovered': isButtonHovered() }" (mousedown)="onClick($event)"
+    <button class="help-button" [ngClass]="{ 'button-hovered': isButtonHovered(), 'disabled-hover-effect': isHoverEffectDisabled() }" (mousedown)="onClick($event)"
       (mouseup)="onMouseUp()">
-      <div class="button-inner">SOS</div>
+      <div [ngStyle]="{ 'color': isButtonHovered() ? 'red' : 'white' }" class="button-inner" >SOS</div>
     </button>
   </div>
 

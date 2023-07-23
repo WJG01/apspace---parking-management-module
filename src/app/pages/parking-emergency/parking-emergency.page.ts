@@ -147,6 +147,10 @@ export class ParkingEmergencyPage implements OnInit {
     return this.latestStatusRead === 'HELPFIND' || this.latestStatusRead === 'HELPFOUND';
   }
 
+  isHoverEffectDisabled(): boolean {
+    return this.isButtonHovered();
+  }
+
   getParkingSpotId(): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       this.bookps.getAllBookedParkings().subscribe(
@@ -232,7 +236,7 @@ export class ParkingEmergencyPage implements OnInit {
       breakpoints: [0, 1],
       initialBreakpoint: 1
     });
-    modal.present();
+    await modal.present();
   }
 
   async cancel() {

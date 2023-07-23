@@ -2,26 +2,29 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/prefer-for-of */
-import { Component, OnInit } from '@angular/core';
-import { AlertController, LoadingController, ModalController } from '@ionic/angular';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AlertController, LoadingController, ModalController, Platform } from '@ionic/angular';
 import { ComponentService } from 'src/app/services/component.service';
 import { BookParkingService } from 'src/app/services/parking-book.service';
 import { Storage } from '@ionic/storage-angular';
 import { CheckinOTPModalPage } from './checkin-otpmodal/checkin-otpmodal.page';
 import { Router } from '@angular/router';
+import { first } from 'rxjs';
 
 
 @Component({
   selector: 'app-parking-history',
   templateUrl: './parking-history.page.html',
-  styleUrls: ['./parking-history.page.scss'],
+  styleUrls: ['./parking-history.page.scss','../../../theme/custom-library.scss'],
 })
 export class ParkingHistoryPage implements OnInit {
 
   selectedSegment: 'ongoingBooking' | 'completedBooking' = 'ongoingBooking';
   parkingRecords: any[] = [];
+  parkingRecordsCopy: any[] = [];
+  filteredParkingRecords: any[] = [];
   currentLoginUserID = '';
-
+  isMobile: boolean;
 
   chosenParkingRecord = {
     APQParkingID: '---',
@@ -35,6 +38,29 @@ export class ParkingHistoryPage implements OnInit {
   };
 
 
+  //filter object data declare
+  todaysDate = new Date();
+
+  filterObject = {
+    isToday: false,
+    year: -1,
+    month: -1
+  };
+
+  yearRange: number[] = [];
+  monthList: { key: string; value: number }[] = [];
+  parkingDays: string[] = ['today', 'tomorrow'];
+
+  statusColors: { [status: string]: string } = {
+    BOOKED: 'primary',
+    CHECKIN: 'warning',
+    COMPLETED: 'success'
+  };
+
+
+
+
+
   constructor(
     private bookps: BookParkingService,
     private component: ComponentService,
@@ -42,14 +68,21 @@ export class ParkingHistoryPage implements OnInit {
     private loadingCtrl: LoadingController,
     private alertController: AlertController,
     private modalController: ModalController,
-    private router: Router
+    private router: Router,
+    private platform: Platform,
+    private cdr: ChangeDetectorRef,
 
 
-  ) { }
+  ) {
+    this.isMobile = this.platform.is('mobile');
+    this.generateYearRange();
+    this.generateMonthList();
+  }
 
   ngOnInit() {
     this.getUserData();
     this.doRefresh();
+
   }
 
   doRefresh(refresher?) {
@@ -70,6 +103,34 @@ export class ParkingHistoryPage implements OnInit {
     }
   }
 
+  generateYearRange(): void {
+    const currentYear = new Date().getFullYear();
+    for (let i = currentYear - 5; i <= currentYear + 5; i++) {
+      this.yearRange.push(i);
+    }
+  }
+
+  generateMonthList(): void {
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    for (let i = 0; i < 12; i++) {
+      this.monthList.push({ key: monthNames[i], value: i + 1 });
+    }
+  }
+
+
   getAllBookings() {
     this.bookps.getAllBookedParkings().subscribe(
       (response: any) => {
@@ -77,6 +138,14 @@ export class ParkingHistoryPage implements OnInit {
         console.log('All Parking Records', this.parkingRecords);
 
         const todayDate = new Date();
+
+        //Concantenate parking IDs for all records
+        this.parkingRecords.forEach((record: any) => {
+          const APQParkingID = record.APQParkingID; // Get the APQParkingID from the record
+          const firstPart = '#' + APQParkingID.split('-')[0]; // Extract the first part before the first hyphen "-"
+          record.APQParkingID = firstPart;
+        });
+
         // Separate records based on status
         const checkinRecord = this.parkingRecords.find(record => record.parkingstatus === 'CHECKIN');
         const booked_completedRecords = this.parkingRecords.filter(record => record.parkingstatus === 'BOOKED' || record.parkingstatus === 'COMPLETED');
@@ -92,8 +161,6 @@ export class ParkingHistoryPage implements OnInit {
           }
         });
 
-
-
         // Sort the booked_completedRecords array based on parkingDateTime in ascending order
         booked_completedRecords.sort((a, b) => {
           return a.parkingDateTime.getTime() - b.parkingDateTime.getTime();
@@ -101,9 +168,12 @@ export class ParkingHistoryPage implements OnInit {
 
         // Check if checkinRecord exists and concatenate it with the sorted booked_completedRecords
         if (checkinRecord) {
+          checkinRecord.parkingDateTime = new Date(`${checkinRecord.parkingdate} ${checkinRecord.starttime}`);
           this.parkingRecords = [checkinRecord, ...booked_completedRecords];
+          this.parkingRecordsCopy = [...this.parkingRecords];
         } else {
           this.parkingRecords = booked_completedRecords;
+          this.parkingRecordsCopy = [...this.parkingRecords];
         }
 
         console.log('result', this.parkingRecords);
@@ -113,6 +183,65 @@ export class ParkingHistoryPage implements OnInit {
       }
     );
   }
+
+  padNumberWithZero(num: number): string {
+    return num.toString().padStart(2, '0');
+  }
+
+  filterParkingRecords(): void {
+    const todayDate = new Date().toISOString().split('T')[0];
+
+    // Create a new array to hold the filtered records
+    let filteredParkingRecords = this.parkingRecordsCopy;
+    this.parkingRecords = this.parkingRecordsCopy;
+
+    // this.parkingRecords.forEach((record: any) => {
+    //   console.log('compare', todayDate, 'vs', record.parkingdate);
+    //   console.log('compareDate', todayDate === record.parkingdate);
+    // });
+
+    if (this.filterObject.isToday) {
+      console.log('today filtering is running now');
+      filteredParkingRecords = filteredParkingRecords.filter((record: any) => {
+        return record.parkingdate === todayDate;
+      });
+    } else if (this.filterObject.year !== -1 || this.filterObject.month !== -1) {
+      console.log('both filtering is running now');
+
+      if (this.filterObject.year !== -1) {
+        console.log('comparing year', this.parkingRecords);
+        filteredParkingRecords = filteredParkingRecords.filter((record: any) => {
+          const parkingYear = Number(record.parkingdate.split('-')[0]);
+          console.log('comparing year', parkingYear, 'vs', this.filterObject.year);
+
+          return parkingYear === this.filterObject.year;
+        });
+      }
+
+      if (this.filterObject.month !== -1) {
+        console.log('month filtering is running now');
+        const formattedMonth = this.padNumberWithZero(this.filterObject.month);
+
+        filteredParkingRecords = filteredParkingRecords.filter((record: any) => {
+          const parkingMonth = record.parkingdate.split('-')[1];
+          console.log('comparing year', parkingMonth, 'vs', this.filterObject.month);
+          return parkingMonth === formattedMonth;
+        });
+      }
+    } else {
+      // If no filters are selected, set the filtered records to the original array
+      console.log('Running no filters showing', filteredParkingRecords);
+      //this.getAllBookings();
+      filteredParkingRecords = this.parkingRecordsCopy;
+    }
+
+    // Now assign the filtered array back to this.parkingRecords
+    this.parkingRecords = filteredParkingRecords;
+
+    console.log('checking parking record', this.parkingRecords);
+  }
+
+
 
 
   getDistinctiveIndex(parkingStatus: string, index: number): number {
@@ -149,7 +278,7 @@ export class ParkingHistoryPage implements OnInit {
 
       const alert = await this.alertController.create({
         header: 'Confirmation',
-        message: 'Are you sure you want to checkout? <br>You have to leave this parking within 5 mins after checkout',
+        message: 'You have to leave this parking within <b><span class="red-text">10 mins</span></b> after checkout ! <br> Proceed?',
         buttons: [
           {
             text: 'No',
@@ -182,7 +311,8 @@ export class ParkingHistoryPage implements OnInit {
 
             }
           }
-        ]
+        ],
+        cssClass: 'custom-alert',
       });
 
       await alert.present();

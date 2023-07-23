@@ -183,6 +183,12 @@ ion-select-popover {
   overflow: scroll !important;
 }
 
+.custom-alert .alert-message {
+  .red-text {
+    color: red;
+  }
+}
+
 @media screen and (max-width: 750px) {
   .glob-popover {
     --width: 100% !important;

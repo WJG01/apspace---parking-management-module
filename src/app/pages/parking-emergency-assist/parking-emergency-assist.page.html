@@ -125,10 +125,10 @@
                     <br>
                     <!-- Confirm Booking button -->
                     <ion-card-content class="ion-no-padding ion-padding-bottom ion-text-center">
-                      <ion-button class="ion-no-margin" size="medium" *ngIf="emergencyStatus === 'HELPFIND' && chosenEmergencyRecord !== null"
+                      <ion-button color="success" class="ion-no-margin" size="medium" *ngIf="emergencyStatus === 'HELPFIND' && chosenEmergencyRecord !== null"
                         (click)="acceptEmergencyReports()">Accept</ion-button>
 
-                      <ion-button class="ion-no-margin" size="medium"
+                      <ion-button color="danger" class="ion-no-margin" size="medium" 
                         *ngIf="emergencyStatus === 'HELPFOUND' && chosenAssignedSecurity === currentLoginUserID && chosenEmergencyRecord !== null"
                         (click)="cancelAcceptedEmergencyReport()">Cancel</ion-button>
                     </ion-card-content>

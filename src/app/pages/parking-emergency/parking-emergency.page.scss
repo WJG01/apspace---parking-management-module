@@ -41,7 +41,7 @@
   width: 100%;
   height: 100%;
   font-size: 80px;
-  color: white !important;
+  //color: white !important;
   font-weight: bold;
   text-align: center;
 }
@@ -71,8 +71,20 @@
   transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
 }
 
+/* Disable hover effect for HELPFIND and HELPFOUND statuses */
+.help-button.disabled-hover-effect:hover::before,
+.help-button.disabled-hover-effect:focus::before,
+.help-button.disabled-hover-effect:active::before {
+  width: auto;
+  height: auto;
+  opacity: 0;
+  background-color: transparent;
+  transition: none;
+}     
+
 .button-hovered {
-  background-color: rgba(255, 0, 0, 0.808) !important;
+  //color: rgba(255, 0, 0, 0.808);
+  background-color: #979494dc !important;
 }
 
 ion-card {
@@ -139,22 +151,22 @@ ion-button + ion-button {
     justify-content: center;
     flex-wrap: wrap;
   }
-  
+
   ion-card {
     width: 100%;
   }
-  
+
   ion-item {
     width: auto; /* Adjust the width as needed or use flexbox layout */
     padding-right: 0; /* Remove any unnecessary right padding */
     margin-right: 0; /* Remove any unnecessary right margin */
   }
-  
+
   .item-inner {
     padding: 0 !important;
     margin: 0 !important;
   }
-  
+
   .status-item {
     display: flex;
     align-items: flex-start; /* Adjusted to align items at the top */
@@ -162,7 +174,7 @@ ion-button + ion-button {
     margin-bottom: 15px;
     width: 100%;
   }
-  
+
   .label-container {
     margin-bottom: 5px;
     font-size: 12px;
@@ -170,11 +182,11 @@ ion-button + ion-button {
     width: auto; /* Remove the fixed width */
     margin-right: 0; /* Remove the right margin */
   }
-  
+
   .text-container {
     flex-grow: 1;
   }
-  
+
   .text-start {
     font-size: 12px;
     line-height: 1.4;

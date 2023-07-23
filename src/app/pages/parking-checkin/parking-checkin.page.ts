@@ -6,7 +6,6 @@ import { AlertButton, AlertController, Platform } from '@ionic/angular';
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 
 import { ComponentService, SettingsService } from '../../services';
-import { UpdateAttendanceGQL } from '../../../generated/graphql';
 import { BookParkingService } from 'src/app/services/parking-book.service';
 import { Storage } from '@ionic/storage-angular';
 
@@ -23,7 +22,6 @@ export class ParkingCheckinPage implements OnInit {
   isCapacitor: boolean;
   scan = false;
   sending = false;
-  //updateAttendance: UpdateAttendanceGQL; // Declare the property
 
   currentLoginUserID = '';
 
@@ -49,17 +47,10 @@ export class ParkingCheckinPage implements OnInit {
     //console.log('Current Booking', this.getCurrentBookingRecord());
   }
 
-  async getUserData() {
-    const userData = await this.storage.get('userData');
-    if (userData) {
-      this.currentLoginUserID = userData.parkinguserid;
-      console.log('Current User is ', this.currentLoginUserID);
-    }
-  }
-
   ionViewDidEnter() {
     this.otpInput.nativeElement.focus();
   }
+
 
   /** Swap mode between auto scan and manual input. */
   async swapMode() {
@@ -86,6 +77,16 @@ export class ParkingCheckinPage implements OnInit {
       BarcodeScanner.stopScan();
     }
   }
+
+  async getUserData() {
+    const userData = await this.storage.get('userData');
+    if (userData) {
+      this.currentLoginUserID = userData.parkinguserid;
+      console.log('Current User is ', this.currentLoginUserID);
+    }
+  }
+
+
 
   onKey(ev: KeyboardEvent) {
     const el = ev.target as HTMLInputElement;
@@ -166,9 +167,6 @@ export class ParkingCheckinPage implements OnInit {
 
 
   async checkin(otp: string): Promise<void> {
-    console.assert(otp.length === this.digits.length);
-    this.sending = true;
-
     try {
       const foundParking = await this.getCurrentBookingRecord();
 
@@ -185,11 +183,13 @@ export class ParkingCheckinPage implements OnInit {
             this.component.alertMessage('Parking Check-In', 'Successfully checked in for parking   ' + foundParking.parkinglocation + '- ' + foundParking.parkingspotid, 'success');
             this.component.successHaptic();
             //this.location.back();
+            this.sending = false;
           },
           (error: any) => {
             console.log('Update Error', error);
             this.component.alertMessage('Parking Check-In Failed', 'Failed to update parking status.', 'danger');
             this.component.errorHaptic();
+            this.sending = false;
           },
           () => {
             this.sending = false;
@@ -198,8 +198,13 @@ export class ParkingCheckinPage implements OnInit {
 
       } else {
         // Handle the case when the OTP is invalid or no matching booking is found
-        console.log('Invalid OTP or no matching booking found.');
-        this.component.alertMessage('Error', 'Invalid OTP or no matching booking found.', 'danger');
+        if (!foundParking) {
+          console.log('Booking not found.');
+          this.component.alertMessage('Booking Not Found', 'Booking not found for the provided OTP.', 'danger');
+        } else {
+          console.log('Invalid OTP.');
+          this.component.alertMessage('Invalid OTP', `Invalid OTP. Code should only be ${this.digits.length} digits`, 'danger');
+        }
       }
     } catch (error) {
       // Handle the error case
@@ -208,6 +213,7 @@ export class ParkingCheckinPage implements OnInit {
       this.sending = false;
     }
   }
+
 
   /** Clear otp value. */
   clear(el: HTMLInputElement) {
@@ -241,6 +247,12 @@ export class ParkingCheckinPage implements OnInit {
     });
   }
 
+  swapBack() {
+    // stop scan mode
+    if (this.isCapacitor && this.scan) {
+      this.swapMode();
+    }
+  }
 
   ngOnDestroy() {
     // stop scan mode

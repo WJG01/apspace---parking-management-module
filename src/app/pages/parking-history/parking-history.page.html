@@ -21,180 +21,241 @@
     <ion-refresher-content refreshing-spinner="dots" pullingIcon="refresh"></ion-refresher-content>
   </ion-refresher>
 
+
+
+
   <div class="glob-container">
-    <ion-row class="ion-margin-top">
-      <ion-col>
-        <ng-container>
+    <ion-grid>
+      <ion-row class="ion-margin-top">
+
+        <!-- Right column (Mobile view) -->
+        <ng-container *ngIf="!isMobile; else rightColumnTemplate"></ng-container>
+
+        <!-- Left column -->
+        <ion-col size="12" size-md="8">
+          <!-- ... Left column content ... -->
+
+          <!-- filter group list -->
+          <ion-card class="ion-no-margin ion-margin-bottom">
+            <ion-accordion-group>
+              <ion-accordion value="first">
+                <ion-item slot="header">
+                  <ion-icon class="ion-padding-end" name="filter"></ion-icon>
+                  <ion-label>Filters</ion-label>
+                </ion-item>
+
+                <ion-list class="ion-no-padding" slot="content">
+
+                  <ion-item lines="none">
+                    <ion-label>Today</ion-label>
+                    <ion-toggle [(ngModel)]="filterObject.isToday" (ngModelChange)="filterParkingRecords()"></ion-toggle>
+                  </ion-item>
+
+                  <ion-item lines="inset">
+                    <ion-label position="stacked">Year</ion-label>
+                    <ion-select interface="popover" placeholder="Select Year" mode="md" [(ngModel)]="filterObject.year"
+                      (ngModelChange)="filterParkingRecords()" [disabled]="filterObject.isToday">
+                      <ion-select-option [value]="-1">All</ion-select-option>
+                      <ion-select-option *ngFor="let y of yearRange" [value]="y">
+                        {{ y }}
+                      </ion-select-option>
+                    </ion-select>
+                  </ion-item>
+
+                  <ion-item lines="inset">
+                    <ion-label position="stacked">Month</ion-label>
+                    <ion-select interface="popover" [(ngModel)]="filterObject.month"
+                      (ngModelChange)="filterParkingRecords()" mode="md" [disabled]="filterObject.isToday">
+                      <ion-select-option [value]="-1">All</ion-select-option>
+                      <ion-select-option *ngFor="let m of monthList" [value]="m.value">
+                        {{ m.key }} {{ m.value }}
+                      </ion-select-option>
+                    </ion-select>
+                  </ion-item>
+
+                </ion-list>
+              </ion-accordion>
+            </ion-accordion-group>
+          </ion-card>
+
           <ng-container *ngIf="(parkingRecords && parkingRecords.length > 0); else loading">
-            <ng-container>
-              <ng-container>
+            <ng-container [ngSwitch]="selectedSegment">
 
-                <ng-container [ngSwitch]="selectedSegment">
-
-                  <!-- first tab -->
-                  <ng-container *ngSwitchCase="'ongoingBooking'">
-                    <ng-container *ngTemplateOutlet="tabContentTemplate; context: { parkingStatus: 'ongoingBooking' }">
-                    </ng-container>
-                  </ng-container>
-
-                  <!-- second tab -->
-                  <ng-container *ngSwitchCase="'completedBooking'">
-                    <ng-container *ngTemplateOutlet="tabContentTemplate; context: { parkingStatus: 'completedBooking' }">
-                    </ng-container>
-                  </ng-container>
+              <!-- first tab -->
+              <ng-container *ngSwitchCase="'ongoingBooking'">
+                <ng-container *ngTemplateOutlet="tabContentTemplate; context: { parkingStatus: 'ongoingBooking' }">
                 </ng-container>
+              </ng-container>
+
+              <!-- second tab -->
+              <ng-container *ngSwitchCase="'completedBooking'">
+                <ng-container
+                  *ngTemplateOutlet="tabContentTemplate; context: { parkingStatus: 'completedBooking' }"></ng-container>
               </ng-container>
             </ng-container>
           </ng-container>
 
-          <!-- parkingStatus can be 'ongoingBooking', 'completedBooking' -->
-          <ng-template #tabContentTemplate let-parkingStatus="parkingStatus">
-            <ion-grid>
-              <ion-row>
-                <ion-col size="8">
-                  <!-- Left column -->
-                  <ng-container *ngIf="parkingRecords">
-                    <ng-container *ngFor="let parkings of parkingRecords; let i = index">
-                      <!-- <ng-container *ngIf="report.emergencyreportstatus === parkingStatus; else skipItem"> -->
-                      <ng-container
-                        *ngIf="parkingStatus === 'ongoingBooking' && (parkings.parkingstatus === 'CHECKIN' || parkings.parkingstatus === 'BOOKED') || (parkingStatus === 'completedBooking' && parkings.parkingstatus === 'COMPLETED'); else skipItem">
-                        <ion-card>
-                          <ion-item lines="none">
-                            <ion-badge slot="start">
-                              {{getDistinctiveIndex(parkingStatus, i) }}
-                            </ion-badge>
-                            <ion-label class="ion-text-wrap">
-                              <h3 class="glob-fw-600">
-                                {{ parkings.APQParkingID }}
-                              </h3>
-                              <p style="margin-top:20px;">
-                                Booking Date: {{ parkings.parkingdate}}
-                              </p>
-                              <p>
-                                Booking Time: {{ parkings.starttime }} - {{ parkings.endtime }}
-                              </p>
-                              <ion-badge color="medium" [style.margin-top]="'5px'">
-                                {{ parkings.parkingstatus }}
-                              </ion-badge>
-                            </ion-label>
-                            <div class="button-container">
-                              <ion-button color="primary" (click)="showParkingDetails(parkings)">Details</ion-button>
-                            </div>
-                          </ion-item>
-                        </ion-card>
+        </ion-col>
 
-                        <ng-template #skipItem>
-                          <!-- This template is used to skip items that don't meet the condition -->
-                        </ng-template>
-
-                      </ng-container>
-                    </ng-container>
-                  </ng-container>
-                </ion-col>
-                <ion-col size="4">
-                  <!-- Right column -->
-                  <ion-card>
-                    <ion-card-header color="primary">
-                      <ion-card-title>More Details</ion-card-title>
-                    </ion-card-header>
-                    <ion-card-content>
-                      <ion-row class="field-row" style="margin-top: 20px;">
-                        <ion-col size="5" class="field-label">ParkingRecord ID : </ion-col>
-                        <ion-col size="7" class="field-value">{{chosenParkingRecord.APQParkingID}}</ion-col>
-                      </ion-row>
-                      <ion-row class="field-row">
-                        <ion-col size="5" class="field-label">Parking Spot : </ion-col>
-                        <ion-col size="7" class="field-value">{{chosenParkingRecord.parkinglocation}} -
-                          {{chosenParkingRecord.parkingspotid}}</ion-col>
-                      </ion-row>
-                      <ion-row class="field-row">
-                        <ion-col size="5" class="field-label">Parking Date : </ion-col>
-                        <ion-col size="7" class="field-value" *ngIf="chosenParkingRecord.parkingdate !== '---'">
-                          {{ chosenParkingRecord.parkingdate | date }}
-                        </ion-col>
-                        <ion-col size="7" class="field-value" *ngIf="chosenParkingRecord.parkingdate === '---'">
-                          {{ chosenParkingRecord.parkingdate }}
-                        </ion-col>
-                      </ion-row>
-                      <ion-row class="field-row">
-                        <ion-col size="5" class="field-label">Start Time : </ion-col>
-                        <ion-col size="7" class="field-value">{{chosenParkingRecord.starttime }}</ion-col>
-                      </ion-row>
-                      <ion-row class="field-row">
-                        <ion-col size="5" class="field-label">End Time : </ion-col>
-                        <ion-col size="7" class="field-value">{{chosenParkingRecord.endtime}}</ion-col>
-                      </ion-row>
-                      <ion-row class="field-row">
-                        <ion-col size="5" class="field-label">Created DateTime : </ion-col>
-                        <ion-col size="7" class="field-value">{{chosenParkingRecord.bookingcreateddatetime}}</ion-col>
-                      </ion-row>
-                      <ion-row class="field-row">
-                        <ion-col size="5" class="field-label">ParkingStatus : </ion-col>
-                        <ion-col size="7" class="field-value">{{chosenParkingRecord.parkingstatus}}</ion-col>
-                      </ion-row>
-
-                    </ion-card-content>
-                    <br>
-                    <!-- Confirm Booking button -->
-                    <ion-card-content class="ion-no-padding ion-padding-bottom ion-text-center">
-
-                      <div style="display: flex; justify-content: center; gap: 20px;">
-                        <ion-button color="success" class="ion-no-margin"
-                          (click)="viewInMap(chosenParkingRecord)">
-                          View in Map
-                        </ion-button>
-
-                        <ion-button color="primary" class="ion-no-margin"
-                          *ngIf="chosenParkingRecord.parkingstatus === 'CHECKIN'"
-                          (click)="checkoutParking(chosenParkingRecord)">
-                          CheckOut
-                        </ion-button>
-
-                        <ion-button class="ion-no-margin" *ngIf="chosenParkingRecord.parkingstatus === 'BOOKED'"
-                          (click)="getCheckinOTP(chosenParkingRecord)">
-                          Check-In OTP
-                        </ion-button>
-
-                        <ion-button color="danger" class="ion-no-margin" *ngIf="chosenParkingRecord.parkingstatus === 'BOOKED'"
-                          (click)="cancelParking(chosenParkingRecord)">
-                          Cancel
-                        </ion-button>
-
-                      </div>
-                    </ion-card-content>
-                  </ion-card>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ng-template>
-
-          <ng-template #noHolidays>
-            <ion-card class="ion-no-margin">
-              <message-with-svg imageUrl="assets/img/search_not_found.svg" messageTitle="No Holidays Available!"
-                wrapperSize="6" wrapperOffset="3"
-                messageContent="No Holidays available to show. You can try changing the filter option to view other holidays"
-                wrapperMarginTop="20px">
-              </message-with-svg>
-            </ion-card>
-          </ng-template>
+        <!-- Right column (Tablet and Desktop view) -->
+        <ng-container *ngIf="isMobile; else rightColumnTemplate">
+          <!-- If not mobile, render the right column directly using the template -->
         </ng-container>
 
-        <ng-template #loading>
-          <ng-container>
-            <ion-card class="ion-no-margin" *ngFor="let _ of skeleton; let isLast = last"
-              [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
-              <ion-item lines="none">
-                <ion-icon name="calendar" class="ion-padding-end" size="large"></ion-icon>
-                <ion-label>
-                  <ion-skeleton-text animated style="width: 30%; line-height: 15px"></ion-skeleton-text>
-                  <ion-skeleton-text animated style="width: 20%; line-height: 15px"></ion-skeleton-text>
-                  <ion-skeleton-text animated style="width: 10%; line-height: 15px"></ion-skeleton-text>
-                </ion-label>
-              </ion-item>
-            </ion-card>
-          </ng-container>
-        </ng-template>
-      </ion-col>
-    </ion-row>
+      </ion-row>
+    </ion-grid>
   </div>
+
+
+  <!-- parkingStatus can be 'ongoingBooking', 'completedBooking' -->
+  <ng-template #tabContentTemplate let-parkingStatus="parkingStatus">
+
+    <ng-container *ngIf="parkingRecords">
+      <ng-container *ngFor="let parkings of parkingRecords; let i = index">
+        <!-- <ng-container *ngIf="report.emergencyreportstatus === parkingStatus; else skipItem"> -->
+        <ng-container
+          *ngIf="parkingStatus === 'ongoingBooking' && (parkings.parkingstatus === 'CHECKIN' || parkings.parkingstatus === 'BOOKED') || (parkingStatus === 'completedBooking' && parkings.parkingstatus === 'COMPLETED'); else skipItem">
+          <ion-card>
+            <ion-item lines="none">
+              <ion-badge slot="start">
+                {{getDistinctiveIndex(parkingStatus, i) }}
+              </ion-badge>
+              <ion-label class="ion-text-wrap">
+                <h3 class="glob-fw-600">
+                  Booking ID: {{ parkings.APQParkingID }}
+                </h3>
+                <p style="margin-top:20px;">
+                  Booking Date: {{ parkings.parkingdate}}
+                </p>
+                <p>
+                  Booking Time: {{ parkings.starttime }} - {{ parkings.endtime }}
+                </p>
+                <ion-badge color="{{ statusColors[parkings.parkingstatus] }}" [style.margin-top]="'5px'">
+                  {{ parkings.parkingstatus }}
+                </ion-badge>
+              </ion-label>
+              <div class="button-container">
+                <ion-button color="primary" (click)="showParkingDetails(parkings)">Details</ion-button>
+              </div>
+            </ion-item>
+          </ion-card>
+
+          <ng-template #skipItem>
+            <!-- This template is used to skip items that don't meet the condition -->
+          </ng-template>
+
+        </ng-container>
+      </ng-container>
+    </ng-container>
+
+  </ng-template>
+
+  <ng-template #rightColumnTemplate>
+    <ion-col size="12" size-md="4">
+      <!-- ... Right column content ... -->
+      <!-- Booking Details Card content -->
+      <ion-col size="12" size-md="4">
+        <!-- ... Right column content ... -->
+
+        <ion-card>
+          <ion-card-header color="primary">
+            <ion-card-title>Booking Details</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-row class="field-row" style="margin-top: 20px;">
+              <ion-col size="5" class="field-label">Booking ID : </ion-col>
+              <ion-col size="7" class="field-value">{{chosenParkingRecord.APQParkingID}}</ion-col>
+            </ion-row>
+            <ion-row class="field-row">
+              <ion-col size="5" class="field-label">Parking Spot : </ion-col>
+              <ion-col size="7" class="field-value">{{chosenParkingRecord.parkinglocation}} -
+                {{chosenParkingRecord.parkingspotid}}</ion-col>
+            </ion-row>
+            <ion-row class="field-row">
+              <ion-col size="5" class="field-label">Parking Date : </ion-col>
+              <ion-col size="7" class="field-value" *ngIf="chosenParkingRecord.parkingdate !== '---'">
+                {{ chosenParkingRecord.parkingdate | date }}
+              </ion-col>
+              <ion-col size="7" class="field-value" *ngIf="chosenParkingRecord.parkingdate === '---'">
+                {{ chosenParkingRecord.parkingdate }}
+              </ion-col>
+            </ion-row>
+            <ion-row class="field-row">
+              <ion-col size="5" class="field-label">Start Time : </ion-col>
+              <ion-col size="7" class="field-value">{{chosenParkingRecord.starttime }}</ion-col>
+            </ion-row>
+            <ion-row class="field-row">
+              <ion-col size="5" class="field-label">End Time : </ion-col>
+              <ion-col size="7" class="field-value">{{chosenParkingRecord.endtime}}</ion-col>
+            </ion-row>
+            <ion-row class="field-row">
+              <ion-col size="5" class="field-label">Created DateTime : </ion-col>
+              <ion-col size="7" class="field-value">{{chosenParkingRecord.bookingcreateddatetime}}</ion-col>
+            </ion-row>
+            <ion-row class="field-row">
+              <ion-col size="5" class="field-label">ParkingStatus : </ion-col>
+              <ion-col size="7" class="field-value">{{chosenParkingRecord.parkingstatus}}</ion-col>
+            </ion-row>
+
+          </ion-card-content>
+          <br>
+          <!-- Confirm Booking button -->
+          <ion-card-content class="ion-no-padding ion-padding-bottom ion-text-center">
+
+            <div style="display: flex; justify-content: center; gap: 20px;">
+              <ion-button color="success" class="ion-no-margin" (click)="viewInMap(chosenParkingRecord)">
+                View in Map
+              </ion-button>
+
+              <ion-button color="primary" class="ion-no-margin" *ngIf="chosenParkingRecord.parkingstatus === 'CHECKIN'"
+                (click)="checkoutParking(chosenParkingRecord)">
+                CheckOut
+              </ion-button>
+
+              <ion-button class="ion-no-margin" *ngIf="chosenParkingRecord.parkingstatus === 'BOOKED'"
+                (click)="getCheckinOTP(chosenParkingRecord)">
+                Check-In
+              </ion-button>
+
+              <ion-button color="danger" class="ion-no-margin" *ngIf="chosenParkingRecord.parkingstatus === 'BOOKED'"
+                (click)="cancelParking(chosenParkingRecord)">
+                Cancel
+              </ion-button>
+
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+      </ion-col>
+    </ion-col>
+  </ng-template>
+
+  <ng-template #noHolidays>
+    <ion-card class="ion-no-margin">
+      <message-with-svg imageUrl="assets/img/search_not_found.svg" messageTitle="No Holidays Available!" wrapperSize="6"
+        wrapperOffset="3"
+        messageContent="No Holidays available to show. You can try changing the filter option to view other holidays"
+        wrapperMarginTop="20px">
+      </message-with-svg>
+    </ion-card>
+  </ng-template>
+
+
+  <ng-template #loading>
+    <ng-container>
+      <ion-card class="ion-no-margin" *ngFor="let _ of skeleton; let isLast = last"
+        [ngClass]="!isLast ? 'ion-margin-bottom' : undefined">
+        <ion-item lines="none">
+          <ion-icon name="calendar" class="ion-padding-end" size="large"></ion-icon>
+          <ion-label>
+            <ion-skeleton-text animated style="width: 30%; line-height: 15px"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 20%; line-height: 15px"></ion-skeleton-text>
+            <ion-skeleton-text animated style="width: 10%; line-height: 15px"></ion-skeleton-text>
+          </ion-label>
+        </ion-item>
+      </ion-card>
+    </ng-container>
+  </ng-template>
+
+
 </ion-content>

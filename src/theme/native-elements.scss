@@ -12,7 +12,12 @@
 .danger-alert {
   .alert-wrapper {
     .alert-head {
+      color: red;
       border-bottom: 1px solid var(--ion-color-danger);
+
+      .alert-title {
+        color: red;
+      }
     }
 
     .alert-message {
@@ -114,10 +119,10 @@
 // }
 
 // TODO: Remove this once migrated to ionic date picker
-.native-input[type=date]::-webkit-calendar-picker-indicator {
+.native-input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(0.5);
 }
 
-.native-input[type=time]::-webkit-calendar-picker-indicator {
+.native-input[type="time"]::-webkit-calendar-picker-indicator {
   filter: invert(0.5);
 }

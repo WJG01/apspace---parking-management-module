@@ -1,6 +1,8 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>SOS status: {{ sosStatusHeaderDisplay }}</ion-title>
+    <ion-title>
+      <h1><b>SOS status: {{ sosStatusHeaderDisplay }}</b></h1>
+    </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="dismiss()">
         <ion-icon name="close" slot="icon-only"></ion-icon>
@@ -11,27 +13,28 @@
 
 
 <ion-content>
-  <ng-container *ngIf="emergencyDetailsItem.emergencyreportstatus!=='HELPFIND'; else lookingForHelp">
-    <ion-card class="ion-margin">
-      <ion-card-header>
-        <ion-card-title class="details-title">I will be assisting you today !</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <div class="profile-card">
-          <div class="profile-picture">
-            <img [src]="foundSecurityGuard.profilePicture" alt="Profile Picture" class="round-border">
+  <div class="glob-small-margin-top">
+    <ng-container *ngIf="emergencyDetailsItem.emergencyreportstatus!=='HELPFIND'; else lookingForHelp">
+      <ion-card class="ion-margin">
+        <ion-card-header>
+          <ion-card-title class="details-title"><u>I will be assisting you today !</u></ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="profile-card">
+            <div class="profile-picture">
+              <img [src]="foundSecurityGuard.profilePicture" alt="Profile Picture" class="round-border">
+            </div>
+            <div class="profile-details">
+              <h3 class="details-subtitle"><u>Security Guard Details</u></h3>
+              <p><strong>Name:</strong> {{ foundSecurityGuard.securityName }}</p>
+              <p><strong>Gender:</strong> {{ foundSecurityGuard.gender }}</p>
+              <p><strong>Contact Number:</strong> {{ foundSecurityGuard.contactNumber }}</p>
+            </div>
           </div>
-          <div class="profile-details">
-            <h3 class="details-subtitle"><u>Security Guard Details</u></h3>
-            <p><strong>Name:</strong> {{ foundSecurityGuard.securityName }}</p>
-            <p><strong>Gender:</strong> {{ foundSecurityGuard.gender }}</p>
-            <p><strong>Contact Number:</strong> {{ foundSecurityGuard.contactNumber }}</p>
-          </div>
-        </div>
-      </ion-card-content>
-    </ion-card>
+        </ion-card-content>
+      </ion-card>
 
-    <ion-card class="problem-section-card" *ngIf="emergencyDetailsItem.emergencyreportstatus!=='HELPCOMPLETE'">
+      <!-- <ion-card class="problem-section-card" *ngIf="emergencyDetailsItem.emergencyreportstatus!=='HELPCOMPLETE'">
       <ion-card-header>
         <ion-card-title class="problem-section-title">Is your problem solved?</ion-card-title>  
       </ion-card-header>
@@ -40,18 +43,36 @@
           <ion-button expand="block" color="success" (click)="markAsComplete()">Solved</ion-button>
         </div>
       </ion-card-content>
-    </ion-card>
+    </ion-card> -->
 
-  </ng-container>
+    </ng-container>
 
-  <ng-template #lookingForHelp>
-    <ion-card class="ion-no-margin">
-      <div class="ion-margin-top">
-        <message-with-svg messageTitle="Still looking for help"
-          messageContent="We are trying our best to find you help. Please wait a little longer."
-          imageUrl="assets/img/search.svg" wrapperSize="5" wrapperOffset="4">
-        </message-with-svg>
-      </div>
-    </ion-card>
-  </ng-template>
+    <ng-template #lookingForHelp>
+      <ion-card class="ion-no-margin">
+        <div class="ion-margin-top">
+          <message-with-svg messageTitle="Still looking for help"
+            messageContent="We are trying our best to find you help. Please wait a little longer."
+            imageUrl="assets/img/search.svg" wrapperSize="5" wrapperOffset="4">
+          </message-with-svg>
+        </div>
+      </ion-card>
+    </ng-template>
+  </div>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="block" color="danger" (click)="markAsComplete()">
+          Call Him/Her
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="block" color="success" (click)="markAsComplete()">
+          Mark Complete
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

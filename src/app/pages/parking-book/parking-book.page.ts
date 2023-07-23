@@ -139,15 +139,16 @@ export class BookParkingPage implements OnInit {
   }
 
   async openPicker(type: string) {
-    const hourValues = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+    //const hourValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
 
     const modal = await this.modalCtrl.create({
       component: DatePickerComponent,
       componentProps: {
         presentationMode: 'time',
         selected: type,
-        hourValues,
-        hourCycle: 'h23' // TODO: Probably show hour format based on user settings
+        //hourValues,
+        hourCycle: 'h23', // TODO: Probably show hour format based on user settings
+        minuteValues: ['00', '30']
       },
       cssClass: 'date-picker-modal'
     });
@@ -160,7 +161,8 @@ export class BookParkingPage implements OnInit {
       const until = +this.filterObject.endtime.replace(':', '');
 
       if (until < since) {
-        const newUntil = since + 100; // Add 1 Hour
+        let newUntil = since + 100; // Add 1 Hour
+        if (newUntil >= 2400) { newUntil = 0; } // Handle case where newUntil is 00:00
         const hh = ('0' + Math.trunc(newUntil / 100)).slice(-2);
         const mm = ('0' + newUntil % 100).slice(-2);
         this.filterObject.endtime = `${hh}:${mm}`;
@@ -173,7 +175,8 @@ export class BookParkingPage implements OnInit {
       const until = +data.time.replace(':', '');
 
       if (until < since) {
-        const newSince = until - 100; // Minus 1 Hour
+        let newSince = until - 100; // Minus 1 Hour
+        if (newSince < 0) { newSince = 2300; } // Handle case where newSince is 23:00
         const hh = ('0' + Math.trunc(newSince / 100)).slice(-2);
         const mm = ('0' + newSince % 100).slice(-2);
         this.filterObject.starttime = `${hh}:${mm}`;
@@ -205,11 +208,19 @@ export class BookParkingPage implements OnInit {
     // Check if all fields have values
     console.log(this.filterObject);
     if (this.filterObject.parkinglocation && this.filterObject.parkingdate && this.filterObject.starttime && this.filterObject.endtime) {
+      // Validate start and end times
+      const startTime = Number(this.filterObject.starttime.replace(':', ''));
+      const endTime = Number(this.filterObject.endtime.replace(':', ''));
+      if (endTime < startTime) {
+        // Reset the end time to the same value as the start time
+        this.filterObject.endtime = this.filterObject.starttime;
+      }
+
       if (!this.foundExistingBookingByUser()) {
         this.availableParkings = this.loadVacantParking();
         console.log(this.availableParkings);
       } else {
-        this.component.alertMessage('Warning', 'Found an existing booking made by you earlier !', 'danger');
+        this.component.alertMessage('Warning', 'Found an existing booking made by you earlier!', 'danger');
       }
     } else {
       // Clear the available parking spots if filters are not set
