@@ -12,10 +12,13 @@
 <ion-content class="ion-padding">
   <div class="modal-content">
     <ion-col class="ion-text-center" size="12" size-md="12" size-lg="12">
-      <qrcode [qrdata]="otp" [width]="200" [errorCorrectionLevel]="'H'" [colorDark]="'#ffffff'" [colorLight]="'#191919'"
-        [elementType]="'svg'" [margin]="2" [ngClass]="otp === '---' ? 'qrcode' : undefined"></qrcode>
-      <div class="otp-value">{{ otp }}</div>
+      <qrcode [qrdata]="parkingRecord.checkincode" [width]="200" [errorCorrectionLevel]="'H'" [colorDark]="'#ffffff'" [colorLight]="'#191919'"
+        [elementType]="'svg'" [margin]="2" [ngClass]="parkingRecord.checkincode === '---' ? 'qrcode' : undefined"></qrcode>
+      <div class="otp-value">{{ parkingRecord.checkincode }}</div>
       <div class="note">You can check in up to 10 minutes before your booking start time. (Not earlier than that)</div>
+
+      <ion-button (click)="goToCheckIn()" expand="block" color="primary">Go To CheckIn</ion-button>
+
     </ion-col>
   </div>
 </ion-content>

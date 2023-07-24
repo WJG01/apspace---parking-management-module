@@ -1,14 +1,19 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 /* eslint-disable max-len */
 import { Location } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AlertButton, AlertController, Platform } from '@ionic/angular';
+import { Storage } from '@ionic/storage-angular';
 
+import { catchError, EMPTY, finalize, firstValueFrom, tap } from 'rxjs';
+
+import { SubscriptionResult } from 'apollo-angular';
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 
 import { ComponentService, SettingsService } from '../../services';
+import { UpdateAttendanceGQL, UpdateAttendanceMutation } from '../../../generated/graphql';
 import { BookParkingService } from 'src/app/services/parking-book.service';
-import { Storage } from '@ionic/storage-angular';
-
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-parking-checkin',
@@ -22,13 +27,15 @@ export class ParkingCheckinPage implements OnInit {
   isCapacitor: boolean;
   scan = false;
   sending = false;
-
   currentLoginUserID = '';
+  parkingRecord: any;
+
 
   constructor(
     //private updateAttendance: UpdateAttendanceGQL,
     private location: Location,
     public alertCtrl: AlertController,
+    private route: ActivatedRoute,
     public plt: Platform,
     private component: ComponentService,
     private settings: SettingsService,
@@ -37,20 +44,30 @@ export class ParkingCheckinPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      const parkingRecordJSON = params['parkingRecord'];
+      this.parkingRecord = JSON.parse(parkingRecordJSON);
+      console.log(this.parkingRecord);
+    });
     this.getUserData();
     this.isCapacitor = this.plt.is('capacitor');
     // first run and if scan is selected
     if (this.isCapacitor && this.settings.get('scan') !== false) {
       this.swapMode();
     }
+  }
 
-    //console.log('Current Booking', this.getCurrentBookingRecord());
+  async getUserData() {
+    const userData = await this.storage.get('userData');
+    if (userData) {
+      this.currentLoginUserID = userData.parkinguserid;
+      console.log('Current User is ', this.currentLoginUserID);
+    }
   }
 
   ionViewDidEnter() {
     this.otpInput.nativeElement.focus();
   }
-
 
   /** Swap mode between auto scan and manual input. */
   async swapMode() {
@@ -67,7 +84,7 @@ export class ParkingCheckinPage implements OnInit {
           if (this.sending) {
             return;
           } else if (result.content.length === this.digits.length) {
-            this.checkin(result.content);
+            this.sendOtp(result.content);
           } else {
             this.component.alertMessage('Invalid OTP', `Invalid OTP. Code should only be ${this.digits.length} digits`, 'danger');
           }
@@ -77,16 +94,6 @@ export class ParkingCheckinPage implements OnInit {
       BarcodeScanner.stopScan();
     }
   }
-
-  async getUserData() {
-    const userData = await this.storage.get('userData');
-    if (userData) {
-      this.currentLoginUserID = userData.parkinguserid;
-      console.log('Current User is ', this.currentLoginUserID);
-    }
-  }
-
-
 
   onKey(ev: KeyboardEvent) {
     const el = ev.target as HTMLInputElement;
@@ -106,7 +113,7 @@ export class ParkingCheckinPage implements OnInit {
         for (let prev = el; prev != null; prev = prev.previousElementSibling as HTMLInputElement) {
           otp = prev.value + otp;
         }
-        this.checkin(otp).then(() => this.clear(el));
+        this.sendOtp(otp).then(() => this.clear(el));
       }
     } else if (ev.key === 'Backspace') {
       if (ev.type === 'keyup') { // ignore backspace on keyup
@@ -125,93 +132,32 @@ export class ParkingCheckinPage implements OnInit {
     return '0' <= ev.key && ev.key <= '9' && el.value.length === 0;
   }
 
-  getCurrentBookingRecord(): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      //const todayDate = new Date('2023-07-20T12:23'); // Hardcoded current date and time for testing
-      const todayDate = new Date();
+  /** Send OTP. */
+  async sendOtp(otp: string) {
 
-      this.bookps.getAllBookedParkings().subscribe(
-        (response: any) => {
-          const matchingBooking = response.selectParkingResponse.find((booking: any) => {
-            const bookingStartDate = new Date(`${booking.parkingdate}T${booking.starttime}`);
-            const bookingEndDate = new Date(`${booking.parkingdate}T${booking.endtime}`);
+    const body = {
+      userid: this.currentLoginUserID,
+      parkingstatus: 'CHECKIN',
+      checkincode: otp
+    };
+    const headers = { 'Content-Type': 'application/json' };
 
-            // Subtract 10 minutes from the booking start date and time
-            const bookingStartDateMinus10Mins = new Date(bookingStartDate.getTime() - 10 * 60 * 1000);
+    console.log('HELLO checking', this.parkingRecord);
 
-            // Check if the current date and time falls between the booking start date and time,
-            // or is within 10 minutes earlier than the start date and time
-            return (
-              todayDate >= bookingStartDateMinus10Mins &&
-              todayDate <= bookingEndDate &&
-              booking.userid === this.currentLoginUserID &&
-              booking.parkingstatus === 'BOOKED'
-            );
-          });
-
-          if (matchingBooking) {
-            console.log('Matching booking:', matchingBooking);
-            resolve(matchingBooking);
-          } else {
-            console.log('No matching booking found.');
-            resolve(null);
-          }
-        },
-        (error: any) => {
-          console.log('Error retrieving booked parkings:', error);
-          reject(error);
-        }
-      );
-    });
-  }
-
-
-  async checkin(otp: string): Promise<void> {
-    try {
-      const foundParking = await this.getCurrentBookingRecord();
-
-      if (foundParking != null && otp === foundParking.checkincode) {
-
-        const body = {
-          parkingstatus: 'CHECKIN'
-        };
-        const headers = { 'Content-Type': 'application/json' };
-
-        this.bookps.updateParkingBooking(foundParking.APQParkingID, body, headers).subscribe(
-          (response: any) => {
-            console.log('Update Response', response);
-            this.component.alertMessage('Parking Check-In', 'Successfully checked in for parking   ' + foundParking.parkinglocation + '- ' + foundParking.parkingspotid, 'success');
-            this.component.successHaptic();
-            //this.location.back();
-            this.sending = false;
-          },
-          (error: any) => {
-            console.log('Update Error', error);
-            this.component.alertMessage('Parking Check-In Failed', 'Failed to update parking status.', 'danger');
-            this.component.errorHaptic();
-            this.sending = false;
-          },
-          () => {
-            this.sending = false;
-          }
-        );
-
+    this.bookps.updateParkingBooking(this.parkingRecord.APQParkingID, body, headers).subscribe((response) => {
+      if (response.statusCode === 200) {
+        this.component.alertMessage('Parking Check-In', 'You have checked in to your table. Enjoy your meals!', 'success');
+        this.component.successHaptic();
+        this.location.back();
+        console.log(response);
       } else {
-        // Handle the case when the OTP is invalid or no matching booking is found
-        if (!foundParking) {
-          console.log('Booking not found.');
-          this.component.alertMessage('Booking Not Found', 'Booking not found for the provided OTP.', 'danger');
-        } else {
-          console.log('Invalid OTP.');
-          this.component.alertMessage('Invalid OTP', `Invalid OTP. Code should only be ${this.digits.length} digits`, 'danger');
-        }
+        this.component.alertMessage('Parking Check-In Failed', `Failed to check in. ${response.body}`, 'danger');
+        this.component.errorHaptic();
+        console.error(response.body);
       }
-    } catch (error) {
-      // Handle the error case
-      console.log('Error getting current booking:', error);
-    } finally {
       this.sending = false;
-    }
+
+    });
   }
 
 
@@ -247,18 +193,10 @@ export class ParkingCheckinPage implements OnInit {
     });
   }
 
-  swapBack() {
-    // stop scan mode
-    if (this.isCapacitor && this.scan) {
-      this.swapMode();
-    }
-  }
-
   ngOnDestroy() {
     // stop scan mode
     if (this.isCapacitor && this.scan) {
       this.swapMode();
     }
   }
-
 }

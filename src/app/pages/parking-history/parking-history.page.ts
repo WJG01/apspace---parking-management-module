@@ -272,7 +272,8 @@ export class ParkingHistoryPage implements OnInit {
     if (chosenParking.parkingstatus === 'CHECKIN') {
 
       const body = {
-        parkingstatus: 'COMPLETED'
+        parkingstatus: 'COMPLETED',
+        userid: this.currentLoginUserID,
       };
       const headers = { 'Content-Type': 'application/json' };
 
@@ -358,7 +359,7 @@ export class ParkingHistoryPage implements OnInit {
       breakpoints: [0, 1],
       initialBreakpoint: 1,
       componentProps: {
-        otp: chosenParkingRecord.checkincode,
+        parkingRecord: chosenParkingRecord,
       },
       cssClass: 'custom-modal',
     });

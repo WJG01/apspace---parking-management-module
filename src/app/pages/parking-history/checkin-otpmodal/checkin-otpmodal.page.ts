@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 
 @Component({
@@ -8,17 +9,27 @@ import { ModalController } from '@ionic/angular';
 })
 export class CheckinOTPModalPage implements OnInit {
 
-  @Input() otp: string;
+  @Input() parkingRecord: any;
 
   constructor(
-    private modalController: ModalController
+    private modalController: ModalController,
+    private router: Router,
   ) { }
 
   ngOnInit() {
+    console.log(this.parkingRecord);
   }
 
 
   dismissModal() {
     this.modalController.dismiss();
+  }
+
+  goToCheckIn() {
+    this.dismissModal();
+    const parkingRecordJSON = JSON.stringify(this.parkingRecord);
+    this.router.navigate(['/parking-checkin'], {
+      queryParams: { parkingRecord: parkingRecordJSON }
+    });
   }
 }
