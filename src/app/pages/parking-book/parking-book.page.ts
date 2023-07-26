@@ -62,6 +62,7 @@ export class BookParkingPage implements OnInit {
     public modalController: ModalController,
     private storage: Storage,
     private alertController: AlertController,
+    private changeDetectorRef: ChangeDetectorRef,
 
 
   ) { }
@@ -156,34 +157,50 @@ export class BookParkingPage implements OnInit {
 
     const { data } = await modal.onWillDismiss();
 
+    console.log('checking what data passes in modal', data);
+
     if (data?.selected === 'start') {
+      this.filterObject.starttime = data?.time;
+
       const since = +data?.time.replace(':', '');
       const until = +this.filterObject.endtime.replace(':', '');
 
-      if (until < since) {
+      if (until <= since) {
         let newUntil = since + 100; // Add 1 Hour
+        console.log('What is newUntil value', newUntil);
         if (newUntil >= 2400) { newUntil = 0; } // Handle case where newUntil is 00:00
         const hh = ('0' + Math.trunc(newUntil / 100)).slice(-2);
         const mm = ('0' + newUntil % 100).slice(-2);
+        console.log('filterObject.endtime before', `${hh}:${mm}`);
         this.filterObject.endtime = `${hh}:${mm}`;
+        console.log('filterObject.endtime', this.filterObject.endtime);
       }
-      this.filterObject.starttime = data?.time;
+
     }
 
     if (data?.selected === 'to') {
+      this.filterObject.endtime = data?.time;
+      console.log('filterObject.endtime', this.filterObject.endtime);
+
       const since = +this.filterObject.starttime.replace(':', '');
+      console.log('what is inside since huh', since);
       const until = +data.time.replace(':', '');
 
-      if (until < since) {
+      if (until <= since) {
         let newSince = until - 100; // Minus 1 Hour
+        console.log('What is newSince value', newSince);
         if (newSince < 0) { newSince = 2300; } // Handle case where newSince is 23:00
         const hh = ('0' + Math.trunc(newSince / 100)).slice(-2);
         const mm = ('0' + newSince % 100).slice(-2);
         this.filterObject.starttime = `${hh}:${mm}`;
+        console.log('filterObject.starttime', this.filterObject.starttime);
       }
-      this.filterObject.endtime = data?.time;
+
     }
-    this.checkAllFieldsFilled();
+
+    // Manually trigger change detection
+    this.changeDetectorRef.detectChanges();
+    //this.checkAllFieldsFilled();
   }
 
   isFilterSet(): boolean {
