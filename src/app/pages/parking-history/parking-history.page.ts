@@ -147,8 +147,8 @@ export class ParkingHistoryPage implements OnInit {
         });
 
         // Separate records based on status
-        const checkinRecord = this.parkingRecords.find(record => record.parkingstatus === 'CHECKIN');
-        const booked_completedRecords = this.parkingRecords.filter(record => record.parkingstatus === 'BOOKED' || record.parkingstatus === 'COMPLETED');
+        const checkinRecord = this.parkingRecords.find(record => record.parkingstatus === 'CHECKIN' && record.userid === this.currentLoginUserID);
+        const booked_completedRecords = this.parkingRecords.filter(record => (record.parkingstatus === 'BOOKED' || record.parkingstatus === 'COMPLETED') && record.userid === this.currentLoginUserID);
 
         // Create a new property combining parking date and start time as a Date object
         booked_completedRecords.forEach(record => {
