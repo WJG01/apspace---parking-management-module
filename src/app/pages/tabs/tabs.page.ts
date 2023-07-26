@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Keyboard } from '@capacitor/keyboard';
 import { IonContent, IonTabs, ModalController, Platform } from '@ionic/angular';
@@ -38,47 +38,38 @@ export class TabsPage implements OnInit {
     private component: ComponentService,
     private settings: SettingsService,
     private router: Router,
-    private switchUserRole: SwitchUserRoleService
+    private switchUserRole: SwitchUserRoleService,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
     this.checkLogoType();
 
-    this.storage.get('role').then((role: Role) => {
-      if (!role) {
-        // TODO: Logout when no role
-        console.error('Invalid role');
-        return;
-      }
-      // Filter array based on User Role
-      this.tabItems = TabItems.filter(t => t.role & role);
+    // Get the role from localStorage
+    this.currentLoginUserRole = localStorage.getItem('currentLoginUserRole');
 
-      this.onResize();
 
-      // Check if the currentLoginUserRole is available in localStorage
+    this.currentUserRoleSubscription = this.switchUserRole
+      .getCurrentUserRole$()
+      .subscribe((role) => {
+
+        console.log('Load within scope but no checking', this.currentLoginUserRole);
+        if (role) {
+          console.log('Load within scope', this.currentLoginUserRole);
+          localStorage.setItem('currentLoginUserRole', role);
+          this.currentLoginUserRole = role;
+          this.filterOwnRole(role);
+        }
+      });
+
+    console.log('Load outside scope', this.currentLoginUserRole);
+    this.filterOwnRole(this.currentLoginUserRole);
+
+    if (!this.currentLoginUserRole) {
       this.currentLoginUserRole = localStorage.getItem('currentLoginUserRole');
-
-      console.log('initial checking this.currentLoginUserRole', this.currentLoginUserRole);
-
-      // If not available, subscribe to the current user role changes
-      if (!this.currentLoginUserRole) {
-        this.currentUserRoleSubscription = this.switchUserRole
-          .getCurrentUserRole$()
-          .subscribe((role) => {
-            this.currentLoginUserRole = role;
-            console.log('Hi is not available - reset', this.currentLoginUserRole);
-            this.filterOwnRole(role);
-            // Store the currentLoginUserRole in localStorage
-            if (role) {
-              localStorage.setItem('currentLoginUserRole', this.currentLoginUserRole);
-            }
-          });
-      } else {
-        // If available, directly call the filterOwnRole method with the stored value
-        console.log('Hi is available', this.currentLoginUserRole);
-        this.filterOwnRole(this.currentLoginUserRole);
-      }
-    });
+      this.filterOwnRole(this.currentLoginUserRole);
+      console.log('Load in storage scope', this.currentLoginUserRole);
+    }
   }
 
   ngOnDestroy() {
@@ -91,13 +82,19 @@ export class TabsPage implements OnInit {
   }
 
   filterOwnRole(role: any) {
-    console.log('Hi I ran', role);
+    this.tabItems = [];
+    console.log('Hi I ran in filterOwnRole', role);
     if (role === 'SECURITY_GUARD') {
-      this.tabItems = TabItems.filter(t => t.name === 'Assistance' || t.name === 'More');
+      this.tabItems = TabItems.filter(t => t.name !== 'Parking' && t.name !== 'Checkin' && t.name !== 'Emergency');
+      console.log('what inside security tab', this.tabItems);
     } else {
       this.tabItems = TabItems.filter(t => t.name !== 'Assistance');
+      console.log('what inside driver tab', this.tabItems);
+
     }
-    console.log('what inside the tab', this.tabItems);
+    console.log('what inside everyone  tab', this.tabItems);
+    // Manually trigger change detection
+    this.changeDetectorRef.detectChanges();
   }
 
   // async getUserData() {

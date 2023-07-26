@@ -11,6 +11,7 @@ export class SwitchUserRoleService {
   setCurrentUserRole(role: string) {
     console.log('Hi triggered me', role);
     this.currentUserRoleSubject.next(role);
+    localStorage.setItem('currentLoginUserRole', role);
   }
 
   getCurrentUserRole$(): Observable<string> {
