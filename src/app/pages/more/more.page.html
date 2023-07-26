@@ -123,7 +123,7 @@
       <!-- **wjc list of menu -->
       <div>
         <ion-row class="ion-align-items-stretch menu-item-container fav-card-menu">
-          <ion-col size="3" size-lg="3" size-md="4" size-sm="6" size-xs="12">
+          <ion-col *ngIf="currentLoginUserRole !== 'SECURITY_GUARD'" size="3" size-lg="3" size-md="4" size-sm="6" size-xs="12">
             <!-- report incident -->
             <ion-card class="ion-padding ion-no-margin menu-card" (click)="goToParkingIncident()">
               <ion-row class="ion-align-items-center card-menu-item-row">
@@ -138,7 +138,7 @@
           </ion-col>
 
           <!-- parking history -->
-          <ion-col size="3" size-lg="3" size-md="4" size-sm="6" size-xs="12">
+          <ion-col *ngIf="currentLoginUserRole !== 'SECURITY_GUARD'" size="3" size-lg="3" size-md="4" size-sm="6" size-xs="12">
             <!-- report incident -->
             <ion-card class="ion-padding ion-no-margin menu-card" (click)="goToParkingHistory()">
               <ion-row class="ion-align-items-center card-menu-item-row">
@@ -196,7 +196,7 @@
                   <div class="card-label-container">
                     <div class="switch-account-label">Switch Account</div>
                     <div class="current-login">
-                      <ion-note color="danger" mode="ios" style="font-size: 12px; color: red;">{{ currentLoginUser
+                      <ion-note color="danger" mode="ios" style="font-size: 12px; color: red;">{{ currentLoginUserDisplay
                         }}</ion-note>
                     </div>
                   </div>

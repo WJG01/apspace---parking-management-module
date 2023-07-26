@@ -45,14 +45,14 @@ export const parkingPositions = [
                     if (index === 19) {
                         return {
                             parkingspotid: '20',
-                            top: 35,
-                            left: 200
+                            top: 37,
+                            left: 170
                         };
                     }
                     return {
                         parkingspotid: String(index + 1).padStart(2, '0'),
-                        top: 35 + (index * 15) + index * 7,
-                        left: 320
+                        top: 35 + (index * 15) + index * 4,
+                        left: 275
                     };
                 })
             },

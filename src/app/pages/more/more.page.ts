@@ -29,7 +29,8 @@ export class MorePage implements OnInit, ViewWillEnter {
   @ViewChild('switchAccountModal') switchAccountModal: any;
 
   userData: any[] = [];
-  currentLoginUser = '';
+  currentLoginUserRole: any;
+  currentLoginUserDisplay = '';
 
 
   keyIcon: { [key: string]: string; } = {
@@ -199,7 +200,8 @@ export class MorePage implements OnInit, ViewWillEnter {
   async getUserData() {
     const userData = await this.storage.get('userData');
     if (userData) {
-      this.currentLoginUser = '\n' + '\'' + userData.parkinguserid + '\' AS \'' + userData.parkingRole + '\' ROLE';
+      this.currentLoginUserRole = userData.parkingRole;
+      this.currentLoginUserDisplay = '\n' + '\'' + userData.parkinguserid + '\' AS \'' + userData.parkingRole + '\' ROLE';
     }
   }
 }

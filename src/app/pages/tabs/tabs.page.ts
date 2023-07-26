@@ -10,7 +10,8 @@ import { Role } from '../../interfaces';
 import { ComponentService, ConfigurationsService, SettingsService } from '../../services';
 import { SearchMenusModalPage } from './search-menus-modal/search-menus-modal.page';
 import { TabItem } from './tab-item';
-import { Observable, tap } from 'rxjs';
+import { Observable, Subscription, tap } from 'rxjs';
+import { SwitchUserRoleService } from 'src/app/services/switch-user-role.service';
 
 @Component({
   selector: 'app-tabs',
@@ -26,6 +27,8 @@ export class TabsPage implements OnInit {
   smallScreen: boolean;
   logo: string;
   theme$: Observable<string>;
+  currentLoginUserRole: any;
+  currentUserRoleSubscription: Subscription;
 
   constructor(
     private storage: Storage,
@@ -35,6 +38,7 @@ export class TabsPage implements OnInit {
     private component: ComponentService,
     private settings: SettingsService,
     private router: Router,
+    private switchUserRole: SwitchUserRoleService
   ) { }
 
   ngOnInit() {
@@ -50,12 +54,61 @@ export class TabsPage implements OnInit {
       this.tabItems = TabItems.filter(t => t.role & role);
 
       this.onResize();
+
+      // Check if the currentLoginUserRole is available in localStorage
+      this.currentLoginUserRole = localStorage.getItem('currentLoginUserRole');
+
+      console.log('initial checking this.currentLoginUserRole', this.currentLoginUserRole);
+
+      // If not available, subscribe to the current user role changes
+      if (!this.currentLoginUserRole) {
+        this.currentUserRoleSubscription = this.switchUserRole
+          .getCurrentUserRole$()
+          .subscribe((role) => {
+            this.currentLoginUserRole = role;
+            console.log('Hi is not available - reset', this.currentLoginUserRole);
+            this.filterOwnRole(role);
+            // Store the currentLoginUserRole in localStorage
+            if (role) {
+              localStorage.setItem('currentLoginUserRole', this.currentLoginUserRole);
+            }
+          });
+      } else {
+        // If available, directly call the filterOwnRole method with the stored value
+        console.log('Hi is available', this.currentLoginUserRole);
+        this.filterOwnRole(this.currentLoginUserRole);
+      }
     });
+  }
+
+  ngOnDestroy() {
+    // Don't forget to unsubscribe to avoid memory leaks
+    this.currentUserRoleSubscription.unsubscribe();
   }
 
   onChange() {
     this.activeTab = this.tabs.getSelected();
   }
+
+  filterOwnRole(role: any) {
+    console.log('Hi I ran', role);
+    if (role === 'SECURITY_GUARD') {
+      this.tabItems = TabItems.filter(t => t.name === 'Assistance' || t.name === 'More');
+    } else {
+      this.tabItems = TabItems.filter(t => t.name !== 'Assistance');
+    }
+    console.log('what inside the tab', this.tabItems);
+  }
+
+  // async getUserData() {
+  //   const userData = await this.storage.get('userData');
+  //   if (userData) {
+  //     this.currentLoginUserRole = userData.parkingRole;
+  //     this.filterOwnRole();
+  //   }
+  // }
+
+
 
   navigateToTop(tabPath: string) {
     this.config.goToTop(tabPath);
@@ -109,7 +162,7 @@ export class TabsPage implements OnInit {
     this.smallScreen = window.innerWidth <= 720;
   }
 
-  checkLogoType(){
+  checkLogoType() {
     this.theme$ = this.settings.get$('theme').pipe(
       tap(theme => {
         const autoDark = theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches;

@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ComponentService } from 'src/app/services';
 import { Storage } from '@ionic/storage-angular';
+import { SwitchUserRoleService } from 'src/app/services/switch-user-role.service';
 
 @Component({
   selector: 'app-switch-account-modal',
@@ -14,7 +15,8 @@ export class SwitchAccountModalPage implements OnInit {
 
   constructor(private modalCtrl: ModalController,
     private component: ComponentService,
-    private storage: Storage
+    private storage: Storage,
+    private switchUserRole: SwitchUserRoleService
   ) { }
 
   ngOnInit() {
@@ -36,6 +38,7 @@ export class SwitchAccountModalPage implements OnInit {
     };
 
     this.storage.set('userData', cachedUserData);
+    this.switchUserRole.setCurrentUserRole(user.role);
     this.modalCtrl.dismiss(user, 'selected');
   }
 

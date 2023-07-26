@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable no-bitwise */
 import { Role } from '../interfaces/role';
 
 export const TabItems = [
