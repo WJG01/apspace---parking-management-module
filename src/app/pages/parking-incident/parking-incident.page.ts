@@ -6,6 +6,8 @@ import { ParkingIncidentService } from 'src/app/services/parking-incident.servic
 import { Storage } from '@ionic/storage-angular';
 import { DatePipe } from '@angular/common';
 import { ComponentService } from 'src/app/services';
+import { AlertController, LoadingController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-parking-incident',
@@ -14,6 +16,7 @@ import { ComponentService } from 'src/app/services';
 })
 export class ParkingIncidentPage implements OnInit {
 
+  loading: HTMLIonLoadingElement;
   imageValid: boolean = true;
   incidentForm: UntypedFormGroup;
   images: { name: string; file: File; data: any; }[] = [];
@@ -24,6 +27,7 @@ export class ParkingIncidentPage implements OnInit {
     private pIS: ParkingIncidentService,
     private storage: Storage,
     private component: ComponentService,
+    private loadingCtrl: LoadingController,
 
 
   ) { }
@@ -104,17 +108,20 @@ export class ParkingIncidentPage implements OnInit {
     });
 
     if (body) {
+      this.presentLoading();
       this.pIS.createIncidentReport(body, headers).subscribe(async (response) => {
 
         console.log(response);
 
         if (response.statusCode === 200) {
+          this.dismissLoading();
           this.component.toastMessage('Successfully submitted your incident report!', 'success');
 
           // Clear the message form and image list
           this.incidentForm.get('message').reset();
           this.images = [];
         } else {
+          this.dismissLoading();
           this.component.toastMessage('Failed to submit your incident report !', 'danger');
           console.log('Error creating incident report:', response.body);
         }
@@ -124,6 +131,21 @@ export class ParkingIncidentPage implements OnInit {
 
   }
 
+  async presentLoading() {
+    this.loading = await this.loadingCtrl.create({
+      spinner: 'dots',
+      duration: 20000,
+      message: 'Loading ...',
+      translucent: true,
+      animated: true
+    });
+    return await this.loading.present();
+  }
 
+  async dismissLoading() {
+    if (this.loading) {
+      return await this.loading.dismiss();
+    }
+  }
 
 }

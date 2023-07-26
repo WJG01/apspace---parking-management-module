@@ -19,6 +19,7 @@ import { first } from 'rxjs';
 })
 export class ParkingHistoryPage implements OnInit {
 
+  loading: HTMLIonLoadingElement;
   selectedSegment: 'ongoingBooking' | 'completedBooking' = 'ongoingBooking';
   parkingRecords: any[] = [];
   parkingRecordsCopy: any[] = [];
@@ -71,7 +72,6 @@ export class ParkingHistoryPage implements OnInit {
     private router: Router,
     private platform: Platform,
     private cdr: ChangeDetectorRef,
-
 
   ) {
     this.isMobile = this.platform.is('mobile');
@@ -163,7 +163,7 @@ export class ParkingHistoryPage implements OnInit {
 
         // Sort the booked_completedRecords array based on parkingDateTime in ascending order
         booked_completedRecords.sort((a, b) => {
-          return a.parkingDateTime.getTime() - b.parkingDateTime.getTime();
+          return b.parkingDateTime.getTime() - a.parkingDateTime.getTime();
         });
 
         // Check if checkinRecord exists and concatenate it with the sorted booked_completedRecords
@@ -269,6 +269,7 @@ export class ParkingHistoryPage implements OnInit {
   }
 
   async checkoutParking(chosenParking: any) {
+
     if (chosenParking.parkingstatus === 'CHECKIN') {
 
       const body = {
@@ -294,15 +295,18 @@ export class ParkingHistoryPage implements OnInit {
 
               //update emergency report status to HELPFIND, clear security guard id
               if (body) {
+                this.presentLoading();
                 this.bookps.updateParkingBooking(chosenParking.APQParkingID, body, headers).subscribe(
                   (response: any) => {
+                    this.dismissLoading();
                     console.log('Delete Response', response);
-                    this.component.toastMessage('Successfully checkout for parking' + chosenParking.location + '- ' + chosenParking.parkingspotid, 'success').then(() => {
+                    this.component.toastMessage('Successfully checkout for parking' + chosenParking.parkinglocation + '- ' + chosenParking.parkingspotid, 'success').then(() => {
                       this.clearSelectedField();
                       this.doRefresh();
                     });
                   },
                   (error: any) => {
+                    this.dismissLoading();
                     console.log(error);
                   }
 
@@ -319,6 +323,24 @@ export class ParkingHistoryPage implements OnInit {
       await alert.present();
     }
   }
+
+  async presentLoading() {
+    this.loading = await this.loadingCtrl.create({
+      spinner: 'dots',
+      duration: 20000,
+      message: 'Loading ...',
+      translucent: true,
+      animated: true
+    });
+    return await this.loading.present();
+  }
+
+  async dismissLoading() {
+    if (this.loading) {
+      return await this.loading.dismiss();
+    }
+  }
+
 
   async markBookingCompleted(parkingRecord: any) {
     if (parkingRecord.parkingstatus === 'BOOKED') {
@@ -368,6 +390,7 @@ export class ParkingHistoryPage implements OnInit {
   }
 
   async cancelParking(chosenParking: any) {
+
     if (chosenParking.parkingstatus === 'BOOKED') {
 
       const alert = await this.alertController.create({
@@ -384,15 +407,18 @@ export class ParkingHistoryPage implements OnInit {
           {
             text: 'Yes',
             handler: () => {
+              this.presentLoading();
               this.bookps.deleteParkingBooking(chosenParking.APQParkingID).subscribe(
                 (response: any) => {
                   console.log('Delete Response', response);
-                  this.component.toastMessage('Successfully deleted booking for parking' + chosenParking.location + '- ' + chosenParking.parkingspotid, 'success').then(() => {
+                  this.dismissLoading();
+                  this.component.toastMessage('Successfully deleted booking for parking' + chosenParking.parkinglocation + '- ' + chosenParking.parkingspotid, 'success').then(() => {
                     this.clearSelectedField();
                     this.doRefresh();
                   });
                 },
                 (error: any) => {
+                  this.dismissLoading();
                   console.log(error);
                 }
               );

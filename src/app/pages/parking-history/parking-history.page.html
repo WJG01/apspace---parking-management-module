@@ -68,7 +68,7 @@
                       (ngModelChange)="filterParkingRecords()" mode="md" [disabled]="filterObject.isToday">
                       <ion-select-option [value]="-1">All</ion-select-option>
                       <ion-select-option *ngFor="let m of monthList" [value]="m.value">
-                        {{ m.key }} {{ m.value }}
+                        {{ m.key }}
                       </ion-select-option>
                     </ion-select>
                   </ion-item>

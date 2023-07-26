@@ -198,9 +198,11 @@ export class BookParkingPage implements OnInit {
 
     }
 
+    this.checkAllFieldsFilled();
+
     // Manually trigger change detection
     this.changeDetectorRef.detectChanges();
-    this.checkAllFieldsFilled();
+
   }
 
   isFilterSet(): boolean {

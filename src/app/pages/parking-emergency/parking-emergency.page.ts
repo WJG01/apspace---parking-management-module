@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Component, NgZone, OnInit } from '@angular/core';
 import { EmergencyDetailsModalPage } from './emergency-details-modal/emergency-details-modal.page';
-import { ModalController } from '@ionic/angular';
+import { LoadingController, ModalController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import emergencyDummyData from './emergencyDetailsDummy.json';
 import { EmergencyDetails } from 'src/app/interfaces/emergency-details';
@@ -23,6 +23,7 @@ import { BookParkingService } from 'src/app/services/parking-book.service';
 })
 export class ParkingEmergencyPage implements OnInit {
 
+  loading: HTMLIonLoadingElement;
   emergency$: Observable<EmergencyDetails[]>;
   emergencyDetails: any;
   foundEmergencyDetails: EmergencyDetails | null = null;
@@ -40,6 +41,7 @@ export class ParkingEmergencyPage implements OnInit {
 
   private holdTimer: any;
 
+
   constructor(
     private modalCtrl: ModalController,
     private alertController: AlertController,
@@ -48,6 +50,7 @@ export class ParkingEmergencyPage implements OnInit {
     private component: ComponentService,
     private ngZone: NgZone,
     private bookps: BookParkingService,
+    private loadingCtrl: LoadingController,
   ) { }
 
   ngOnInit() {
@@ -164,7 +167,7 @@ export class ParkingEmergencyPage implements OnInit {
             );
 
             if (filteredParkings.length > 0) {
-              const parkingSpotId = `${filteredParkings[0].location}-${filteredParkings[0].parkingspotid}`;
+              const parkingSpotId = `${filteredParkings[0].parkinglocation}-${filteredParkings[0].parkingspotid}`;
               console.log('FOUND parkingspot id', parkingSpotId);
               resolve(parkingSpotId);
             } else {
@@ -184,6 +187,8 @@ export class ParkingEmergencyPage implements OnInit {
     const datePipe = new DatePipe('en-US');
 
     const formattedDateTime = datePipe.transform(currentDate, 'yyyy-MM-ddTHH:mm:ss');
+    const formattedDateTimeWithoutT = formattedDateTime.replace('T', ' ');
+
 
     this.getParkingSpotId().then(
       (parkingSpotId) => {
@@ -200,12 +205,14 @@ export class ParkingEmergencyPage implements OnInit {
         console.log('BODY', body);
 
         if (body) {
+          this.presentLoading();
           this.peS.createNewEmergencyReport(body, headers)
             .pipe(
               finalize(() => {
+                this.dismissLoading();
                 this.component.toastMessage('Initiated SOS Call. Kindly wait for assistance to arrive.', 'success').then(() => {
                   this.sosStatus = 'Looking For Help';
-                  this.latestReportDateTimeDisplay = formattedDateTime;
+                  this.latestReportDateTimeDisplay = formattedDateTimeWithoutT;
                   this.doRefresh();
                 });
               })
@@ -217,6 +224,7 @@ export class ParkingEmergencyPage implements OnInit {
 
               },
               error: (err) => {
+                this.dismissLoading();
                 console.log('Error:', err);
                 this.component.toastMessage(err.message, 'danger');
               }
@@ -224,6 +232,23 @@ export class ParkingEmergencyPage implements OnInit {
         }
       }
     );
+  }
+
+  async presentLoading() {
+    this.loading = await this.loadingCtrl.create({
+      spinner: 'dots',
+      duration: 20000,
+      message: 'Loading ...',
+      translucent: true,
+      animated: true
+    });
+    return await this.loading.present();
+  }
+
+  async dismissLoading() {
+    if (this.loading) {
+      return await this.loading.dismiss();
+    }
   }
 
   ngOnDestroy(): void {
@@ -264,17 +289,20 @@ export class ParkingEmergencyPage implements OnInit {
   }
 
   deleteCurrentSosCall() {
+    this.presentLoading();
     if (this.latestStatusRead === 'HELPFIND' || this.latestStatusRead === 'HELPFOUND') {
       this.peS.deleteEmergencyReport(this.latestEmergencyReportID).subscribe(
         (response: any) => {
           console.log('Delete Response', response);
           this.component.toastMessage('SOS call cancelled successfully', 'success').then(() => {
+            this.dismissLoading();
             this.sosStatus = '- - -';
             this.latestReportDateTimeDisplay = '- - -';
             this.doRefresh();
           });
         },
         (error: any) => {
+          this.dismissLoading();
           console.log(error);
         }
       );

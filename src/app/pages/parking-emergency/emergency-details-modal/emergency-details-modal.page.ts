@@ -72,7 +72,7 @@ export class EmergencyDetailsModalPage implements OnInit {
       if (body) {
         this.peS.updateEmergencyReport(this.emergencyDetailsItem.APQEmergencyID, body, headers).subscribe({
           next: () => {
-            this.component.toastMessage(`Successfully Accepted Emergency Report ${this.emergencyDetailsItem.APQEmergencyID} !`, 'success').then(() => {
+            this.component.toastMessage(`Successfully Marked ${this.emergencyDetailsItem.APQEmergencyID} as Complete !`, 'success').then(() => {
               this.dismiss();
             });
           },
@@ -84,6 +84,7 @@ export class EmergencyDetailsModalPage implements OnInit {
       }
     }
   }
+
 
   callSecurityGuard() {
     if (this.foundSecurityGuard.contactNumber) {

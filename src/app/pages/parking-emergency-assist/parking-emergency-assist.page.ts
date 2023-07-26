@@ -136,6 +136,7 @@ export class ParkingEmergencyAssistPage implements OnInit {
   }
 
   showEmergencyDetails(report: any) {
+    console.log('showEmergencyDetails', report);
     this.chosenEmergencyRecord = report;
     this.chosenEmergencyID = report.APQEmergencyIdDisplay;
     this.chosenReportedDate = report.reportdatetime;
@@ -158,6 +159,7 @@ export class ParkingEmergencyAssistPage implements OnInit {
       const headers = { 'Content-Type': 'application/json' };
 
       if (body) {
+        this.presentLoading();
         this.peS.updateEmergencyReport(this.chosenEmergencyRecord.APQEmergencyID, body, headers).subscribe({
           next: () => {
             this.component.toastMessage(`Successfully Accepted Emergency Report ${this.chosenEmergencyID} !`, 'success').then(() => {

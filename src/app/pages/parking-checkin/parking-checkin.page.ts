@@ -2,7 +2,7 @@
 /* eslint-disable max-len */
 import { Location } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { AlertButton, AlertController, Platform } from '@ionic/angular';
+import { AlertButton, AlertController, LoadingController, Platform } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 
 import { catchError, EMPTY, finalize, firstValueFrom, tap } from 'rxjs';
@@ -22,6 +22,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ParkingCheckinPage implements OnInit {
 
+  loading: HTMLIonLoadingElement;
   digits = new Array(3);
   @ViewChild('otpInput') otpInput: ElementRef<HTMLInputElement>;
   isCapacitor: boolean;
@@ -41,6 +42,7 @@ export class ParkingCheckinPage implements OnInit {
     private settings: SettingsService,
     private bookps: BookParkingService,
     private storage: Storage,
+    private loadingCtrl: LoadingController,
   ) { }
 
   ngOnInit() {
@@ -135,6 +137,7 @@ export class ParkingCheckinPage implements OnInit {
   /** Send OTP. */
   async sendOtp(otp: string) {
 
+    this.presentLoading();
     const body = {
       userid: this.currentLoginUserID,
       parkingstatus: 'CHECKIN',
@@ -146,11 +149,13 @@ export class ParkingCheckinPage implements OnInit {
 
     this.bookps.updateParkingBooking(this.parkingRecord.APQParkingID, body, headers).subscribe((response) => {
       if (response.statusCode === 200) {
-        this.component.alertMessage('Parking Check-In', 'You have checked in to your table. Enjoy your meals!', 'success');
+        this.dismissLoading();
+        this.component.alertMessage('Parking Check-In', `Successfully check-in parking spot. ${this.parkingRecord.parkinglocation} - ${this.parkingRecord.parkingspotid}`, 'success');
         this.component.successHaptic();
-        this.location.back();
+        //this.location.back();
         console.log(response);
       } else {
+        this.dismissLoading();
         this.component.alertMessage('Parking Check-In Failed', `Failed to check in. ${response.body}`, 'danger');
         this.component.errorHaptic();
         console.error(response.body);
@@ -158,6 +163,23 @@ export class ParkingCheckinPage implements OnInit {
       this.sending = false;
 
     });
+  }
+
+  async presentLoading() {
+    this.loading = await this.loadingCtrl.create({
+      spinner: 'dots',
+      duration: 20000,
+      message: 'Loading ...',
+      translucent: true,
+      animated: true
+    });
+    return await this.loading.present();
+  }
+
+  async dismissLoading() {
+    if (this.loading) {
+      return await this.loading.dismiss();
+    }
   }
 
 
