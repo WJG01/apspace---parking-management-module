@@ -10,3 +10,11 @@
 ion-button.ion-margin-start {
   margin-left: 3rem; /* Adjust the value as needed */
 }
+
+/* Media query to adjust the styles in mobile view */
+@media (max-width: 768px) {
+  ion-segment-button {
+    /* Reduce the font size for mobile view */
+    font-size: 10px;
+  }
+}

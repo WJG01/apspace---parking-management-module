@@ -54,43 +54,11 @@
           <ng-template #tabContentTemplate let-emergencyStatus="emergencyStatus">
             <ion-grid>
               <ion-row>
-                <ion-col size-xs="12" size-sm="8">
-                  <!-- Left column -->
-                  <ng-container *ngIf="emergencyReports">
-                    <ng-container *ngFor="let report of emergencyReports; let i = index">
-                      <ng-container *ngIf="report.emergencyreportstatus === emergencyStatus; else skipItem">
-                        <ion-card>
-                          <ion-item lines="none">
-                            <ion-badge slot="start">
-                              {{getDistinctiveIndex(emergencyStatus, i) }}
-                            </ion-badge>
-                            <ion-label class="ion-text-wrap">
-                              <h3 class="glob-fw-600">
-                                Emergency ID: {{ report.APQEmergencyIdDisplay }}
-                              </h3>
-                              <p style="margin-top:20px;">
-                                Reported Date: {{ report.reportdatetime | date}}
-                              </p>
-                              <p>
-                                Requested By: {{ report.userid}}
-                              </p>
-                            </ion-label>
-                            <div class="button-container">
-                              <ion-button color="primary" (click)="showEmergencyDetails(report)">Details</ion-button>
-                            </div>
-                          </ion-item>
-                        </ion-card>
 
-                        <ng-template #skipItem>
-                          <!-- This template is used to skip items that don't meet the condition -->
-                        </ng-template>
 
-                      </ng-container>
-                    </ng-container>
-                  </ng-container>
-                </ion-col>
-                <ion-col size="4">
-                  <!-- Right column -->
+
+                <!-- Right column -->
+                <ion-col size="12" size-md="4" push-md="8">
                   <ion-card>
                     <ion-card-header color="primary">
                       <ion-card-title>More Details</ion-card-title>
@@ -139,6 +107,43 @@
                     </ion-card-content>
                   </ion-card>
                 </ion-col>
+
+                <!-- Left column -->
+                <ion-col size="12" size-md="8" pull-md="4">
+                  <ng-container *ngIf="emergencyReports">
+                    <ng-container *ngFor="let report of emergencyReports; let i = index">
+                      <ng-container *ngIf="report.emergencyreportstatus === emergencyStatus; else skipItem">
+                        <ion-card>
+                          <ion-item lines="none">
+                            <ion-badge slot="start">
+                              {{getDistinctiveIndex(emergencyStatus, i) }}
+                            </ion-badge>
+                            <ion-label class="ion-text-wrap">
+                              <h3 class="glob-fw-600">
+                                Emergency ID: {{ report.APQEmergencyIdDisplay }}
+                              </h3>
+                              <p style="margin-top:20px;">
+                                Reported Date: {{ report.reportdatetime | date}}
+                              </p>
+                              <p>
+                                Requested By: {{ report.userid}}
+                              </p>
+                            </ion-label>
+                            <div class="button-container">
+                              <ion-button color="primary" (click)="showEmergencyDetails(report)">Details</ion-button>
+                            </div>
+                          </ion-item>
+                        </ion-card>
+
+                        <ng-template #skipItem>
+                          <!-- This template is used to skip items that don't meet the condition -->
+                        </ng-template>
+
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </ion-col>
+
               </ion-row>
             </ion-grid>
           </ng-template>

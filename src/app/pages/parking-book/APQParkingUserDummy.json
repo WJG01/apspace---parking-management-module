@@ -14,24 +14,38 @@
     "contactno": "013-9374857"
   },
   {
+    "userid": "TP055356",
+    "displayname": "Student 2",
+    "username": "GOI YI SHEN",
+    "role": "STUDENT",
+    "contactno": "019-7876654"
+  },
+  {
     "userid": "SID1",
     "displayname": "Security Guard 1",
-    "username": "Tandoori",
+    "username": "Rajinder Singh",
     "role": "SECURITY_GUARD",
     "contactno": "013-2460633"
   },
   {
     "userid": "SID2",
     "displayname": "Security Guard 2",
-    "username": "Tankasala",
+    "username": "Tan Ah Kao",
     "role": "SECURITY_GUARD",
-    "contactno": "013-3460633"
+    "contactno": "011-7465473"
   },
   {
-    "userid": "TP999999",
-    "displayname": "Admin 1",
-    "username": "THE_ADMIN",
-    "role": "ADMIN",
-    "contactno": "013-9374857"
+    "userid": "SID3",
+    "displayname": "Security Guard 3",
+    "username": "Nguyen Hoang",
+    "role": "SECURITY_GUARD",
+    "contactno": "012-9384763"
+  },
+  {
+    "userid": "SID4",
+    "displayname": "Security Guard 4",
+    "username": "Saifu Abdullah",
+    "role": "SECURITY_GUARD",
+    "contactno": "014-2983653"
   }
 ]
