@@ -124,9 +124,10 @@ export class ParkingEmergencyPage implements OnInit {
       },
       (error: any) => {
         console.log(error);
-        this.needLoading = false;
       }
-    );
+    ).add(() => {
+      this.needLoading = false;
+    });
   }
 
 

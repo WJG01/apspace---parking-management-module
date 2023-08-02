@@ -44,6 +44,7 @@ export class TabsPage implements OnInit {
 
   ngOnInit() {
     this.checkLogoType();
+    this.onResize();
 
     // Get the role from localStorage
     this.currentLoginUserRole = localStorage.getItem('currentLoginUserRole');

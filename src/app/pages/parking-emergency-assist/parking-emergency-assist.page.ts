@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { ParkingEmergencyService } from 'src/app/services/parking-emergency.service';
 import { Storage } from '@ionic/storage-angular';
 import { ComponentService } from 'src/app/services/component.service';
-import { AlertController, LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController, Platform } from '@ionic/angular';
 
 
 @Component({
@@ -34,6 +34,7 @@ export class ParkingEmergencyAssistPage implements OnInit {
   newRequestIndex: number = 0;
   assignedRequestIndex: number = 0;
   completedRequestIndex: number = 0;
+  isMobile: boolean;
 
 
   constructor(
@@ -42,7 +43,11 @@ export class ParkingEmergencyAssistPage implements OnInit {
     private component: ComponentService,
     private loadingCtrl: LoadingController,
     private alertController: AlertController,
-  ) { }
+    private platform: Platform,
+
+  ) {
+    this.isMobile = this.platform.is('mobile');
+  }
 
   ngOnInit() {
     this.getUserData();
@@ -77,15 +82,20 @@ export class ParkingEmergencyAssistPage implements OnInit {
 
         // Convert and assign the reportdatetime to a new attribute called reportDate
         this.emergencyReports.forEach((record: any) => {
+
+          //process record id
+          const APQEmergencyIdDisplay = record.APQEmergencyID; // Get the APQParkingID from the record
+          const firstPart = '#' + APQEmergencyIdDisplay.split('-')[0]; // Extract the first part before the first hyphen "-"
+          record.APQEmergencyIdDisplay = firstPart;
+
+          //process date
           const reportDateTime = new Date(record.reportdatetime);
           const reportDate = reportDateTime.toISOString().split('T')[0];
           record.reportDate = reportDate;
         });
 
         // Sort date descending based on the new reportDate attribute
-        this.emergencyReports.sort((a, b) => {
-          return new Date(b.reportDate).getTime() - new Date(a.reportDate).getTime();
-        });
+        this.emergencyReports.sort((a, b) => new Date(b.reportDate).getTime() - new Date(a.reportDate).getTime());
 
         this.needLoading = false; // Set loading flag to false when data is loaded
         console.log('result', this.emergencyReports);
