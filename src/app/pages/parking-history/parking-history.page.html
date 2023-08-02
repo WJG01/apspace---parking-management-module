@@ -114,7 +114,7 @@
       <ng-container *ngFor="let parkings of parkingRecords; let i = index">
         <!-- <ng-container *ngIf="report.emergencyreportstatus === parkingStatus; else skipItem"> -->
         <ng-container
-          *ngIf="parkingStatus === 'ongoingBooking' && (parkings.parkingstatus === 'CHECKIN' || parkings.parkingstatus === 'BOOKED') || (parkingStatus === 'completedBooking' && parkings.parkingstatus === 'COMPLETED'); else skipItem">
+          *ngIf="(parkingStatus === 'ongoingBooking' && (parkings.parkingstatus === 'CHECKIN' || parkings.parkingstatus === 'BOOKED')) || (parkingStatus === 'completedBooking' && parkings.parkingstatus === 'COMPLETED'); else skipItem">
           <ion-card>
             <ion-item lines="none">
               <ion-badge slot="start">
@@ -202,22 +202,22 @@
           <!-- Confirm Booking button -->
           <ion-card-content class="ion-no-padding ion-padding-bottom ion-text-center">
 
-            <div style="display: flex; justify-content: center; gap: 20px;">
-              <ion-button color="success" class="ion-no-margin" (click)="viewInMap(chosenParkingRecord)">
+            <div class="buttongroup">
+              <ion-button *ngIf="chosenParkingRecordIsSelected" color="success" class="ion-no-margin mobile-button" (click)="viewInMap(chosenParkingRecord)">
                 View in Map
               </ion-button>
 
-              <ion-button color="primary" class="ion-no-margin" *ngIf="chosenParkingRecord.parkingstatus === 'CHECKIN'"
+              <ion-button color="primary" class="ion-no-margin mobile-button" *ngIf="chosenParkingRecord.parkingstatus === 'CHECKIN'"
                 (click)="checkoutParking(chosenParkingRecord)">
                 CheckOut
               </ion-button>
 
-              <ion-button class="ion-no-margin" *ngIf="chosenParkingRecord.parkingstatus === 'BOOKED'"
+              <ion-button class="ion-no-margin mobile-button" *ngIf="chosenParkingRecord.parkingstatus === 'BOOKED' && !existingCheckinRecord"
                 (click)="getCheckinOTP(chosenParkingRecord)">
                 Check-In
               </ion-button>
 
-              <ion-button color="danger" class="ion-no-margin" *ngIf="chosenParkingRecord.parkingstatus === 'BOOKED'"
+              <ion-button color="danger" class="ion-no-margin mobile-button" *ngIf="chosenParkingRecord.parkingstatus === 'BOOKED'"
                 (click)="cancelParking(chosenParkingRecord)">
                 Cancel
               </ion-button>

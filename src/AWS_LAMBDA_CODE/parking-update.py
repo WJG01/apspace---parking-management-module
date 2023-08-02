@@ -56,3 +56,10 @@ def lambda_handler(event, context):
             'statusCode': 500,
             'body': 'Error: ' + str(e)
         }
+
+# {
+#   "body": $input.json('$'),
+#   "queryStringParameters": {
+#     "APQParkingID": "$input.params('APQParkingID')"
+#   }
+# }

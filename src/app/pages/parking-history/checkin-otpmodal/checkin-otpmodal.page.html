@@ -11,7 +11,7 @@
 
 <ion-content class="ion-padding">
   <div class="modal-content">
-    <ion-col class="ion-text-center" size="12" size-md="12" size-lg="12">
+    <ion-col class="ion-text-center" size="12">
       <qrcode [qrdata]="parkingRecord.checkincode" [width]="200" [errorCorrectionLevel]="'H'" [colorDark]="'#ffffff'" [colorLight]="'#191919'"
         [elementType]="'svg'" [margin]="2" [ngClass]="parkingRecord.checkincode === '---' ? 'qrcode' : undefined"></qrcode>
       <div class="otp-value">{{ parkingRecord.checkincode }}</div>

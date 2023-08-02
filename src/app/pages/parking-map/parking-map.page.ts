@@ -51,33 +51,33 @@ export class ParkingMapPage implements OnInit {
     const parkinglocationType = this.locations.find((location) => location.value === this.chosenParkingZone).key;
     const parkingspot = this.chosenParkingSpot;
 
-    console.log('what spot is chosen', parkingspot);
-    const filteredSpots = parkingPositions
-      .filter(position => position.viewType === viewType)
-      .map(position => position.parkinglocationtype)
-      .flat();
+    if (parkinglocationType && parkingspot) {
+      console.log('what spot is chosen', parkingspot);
+      const filteredSpots = parkingPositions
+        .filter(position => position.viewType === viewType)
+        .map(position => position.parkinglocationtype)
+        .flat();
 
-    console.log('Filtered spots after first .flat():', filteredSpots);
+      console.log('Filtered spots after first .flat():', filteredSpots);
 
-    const filteredLocations = filteredSpots
-      .filter(location => location.parkinglocation === parkinglocationType)
-      .map(location => location.spots)
-      .flat();
+      const filteredLocations = filteredSpots
+        .filter(location => location.parkinglocation === parkinglocationType)
+        .map(location => location.spots)
+        .flat();
 
-    console.log('Filtered locations after second .flat():', filteredLocations);
+      console.log('Filtered locations after second .flat():', filteredLocations);
 
-    const filteredSpotsByID = filteredLocations
-      .filter(spot => spot.parkingspotid === parkingspot);
+      const filteredSpotsByID = filteredLocations
+        .filter(spot => spot.parkingspotid === parkingspot);
 
-    console.log('Filtered spots by ID:', filteredSpotsByID);
+      console.log('Filtered spots by ID:', filteredSpotsByID);
 
-    if (filteredSpotsByID.length > 0) {
-      const spot = filteredSpotsByID[0]; // Assuming we only need the first spot
+      if (filteredSpotsByID.length > 0) {
+        const spot = filteredSpotsByID[0]; // Assuming we only need the first spot
 
-      this.pinpointTop = spot.top;
-      this.pinpointLeft = spot.left;
-    } else {
-      // Handle case when no matching spots found
+        this.pinpointTop = spot.top;
+        this.pinpointLeft = spot.left;
+      }
     }
   }
 

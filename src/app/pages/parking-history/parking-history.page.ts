@@ -15,7 +15,7 @@ import { first } from 'rxjs';
 @Component({
   selector: 'app-parking-history',
   templateUrl: './parking-history.page.html',
-  styleUrls: ['./parking-history.page.scss','../../../theme/custom-library.scss'],
+  styleUrls: ['./parking-history.page.scss', '../../../theme/custom-library.scss'],
 })
 export class ParkingHistoryPage implements OnInit {
 
@@ -28,7 +28,7 @@ export class ParkingHistoryPage implements OnInit {
   isMobile: boolean;
 
   chosenParkingRecord = {
-    APQParkingID: '---',
+    APQParkingIdDisplay: '---',
     parkingdate: '---',
     starttime: '---',
     endtime: '---',
@@ -37,6 +37,8 @@ export class ParkingHistoryPage implements OnInit {
     parkingstatus: '---',
     bookingcreateddatetime: '---',
   };
+
+  chosenParkingRecordIsSelected = false;
 
 
   //filter object data declare
@@ -58,6 +60,7 @@ export class ParkingHistoryPage implements OnInit {
     COMPLETED: 'success'
   };
 
+  existingCheckinRecord = false;
 
 
 
@@ -161,18 +164,28 @@ export class ParkingHistoryPage implements OnInit {
           }
         });
 
-        // Sort the booked_completedRecords array based on parkingDateTime in ascending order
-        booked_completedRecords.sort((a, b) => {
+        // Sort ongoingBooking in ascending order
+        const ongoingBookingRecords = booked_completedRecords.filter(record => record.parkingstatus === 'CHECKIN' || record.parkingstatus === 'BOOKED');
+        ongoingBookingRecords.sort((a, b) => {
+          return a.parkingDateTime.getTime() - b.parkingDateTime.getTime();
+        });
+
+        // Sort completedBooking in descending order
+        const completedBookingRecords = booked_completedRecords.filter(record => record.parkingstatus === 'COMPLETED');
+        completedBookingRecords.sort((a, b) => {
           return b.parkingDateTime.getTime() - a.parkingDateTime.getTime();
         });
 
-        // Check if checkinRecord exists and concatenate it with the sorted booked_completedRecords
+        // Combine both sections
+        this.parkingRecords = [...ongoingBookingRecords, ...completedBookingRecords];
+
+        // Check if checkinRecord exists
         if (checkinRecord) {
+          this.existingCheckinRecord = true;
           checkinRecord.parkingDateTime = new Date(`${checkinRecord.parkingdate} ${checkinRecord.starttime}`);
-          this.parkingRecords = [checkinRecord, ...booked_completedRecords];
+          this.parkingRecords.unshift(checkinRecord);
           this.parkingRecordsCopy = [...this.parkingRecords];
         } else {
-          this.parkingRecords = booked_completedRecords;
           this.parkingRecordsCopy = [...this.parkingRecords];
         }
 
@@ -265,6 +278,7 @@ export class ParkingHistoryPage implements OnInit {
   }
 
   showParkingDetails(parkings: any) {
+    this.chosenParkingRecordIsSelected = true;
     this.chosenParkingRecord = parkings;
   }
 
@@ -376,6 +390,16 @@ export class ParkingHistoryPage implements OnInit {
   }
 
   async getCheckinOTP(chosenParkingRecord: any) {
+    const todayDate = new Date();
+    const bookingDate = new Date(chosenParkingRecord.parkingdate);
+
+    // Check if the booking date is the same as today's date
+    if (bookingDate.toDateString() !== todayDate.toDateString()) {
+      // Show an alert message if the check-in is not allowed on the same day
+      this.component.alertMessage('Warning', 'Only allowed to check-in on the same day as the booking day', 'danger');
+      return; // Return early and do not proceed with the modal creation
+    }
+
     const modal = await this.modalController.create({
       component: CheckinOTPModalPage,
       breakpoints: [0, 1],

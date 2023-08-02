@@ -26,8 +26,12 @@
         <ion-col>
           <ng-container *ngIf="theme$ | async as theme">
             <img [src]="logo" class="large-screen-logo" alt="APSpace Logo" width="110"
-                 [routerLink]="['/tabs/dashboard']" />
+              [routerLink]="['/tabs/dashboard']" />
           </ng-container>
+        </ion-col>
+        <!--Search Bar-->
+        <ion-col class="ion-no-padding">
+          <ion-searchbar placeholder="(S)earch APSpace" class="tabs-searchbar" (click)="openSearch()"></ion-searchbar>
         </ion-col>
       </ion-row>
       <!--Tab Items-->

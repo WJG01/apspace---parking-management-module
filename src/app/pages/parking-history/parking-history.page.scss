@@ -28,3 +28,25 @@
 .red-text {
   color: red;
 }
+
+.buttongroup {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  /* Apply this style to the div containing the buttons in mobile view */
+  .buttongroup {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  /* Apply this style to the buttons in mobile view */
+  .mobile-button {
+    flex-basis: 30%; /* Adjust the value as needed to control the width of the buttons */
+    font-size: 12px; /* Adjust the font size as needed */
+    padding: 5px 10px; /* Adjust the padding as needed to control the button size */
+  }
+}

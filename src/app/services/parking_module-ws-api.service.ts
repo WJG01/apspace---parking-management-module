@@ -13,7 +13,9 @@ import { Storage } from '@ionic/storage-angular';
 })
 export class ParkingWsApiService {
 
-  private apiUrl = 'https://f4h6o2no72.execute-api.us-east-1.amazonaws.com/prod';
+  // private apiUrl = 'https://f4h6o2no72.execute-api.us-east-1.amazonaws.com/prod';
+  private apiUrl = 'https://i4qjljuc5c.execute-api.us-east-1.amazonaws.com/prod';
+
 
   constructor(
     public http: HttpClient,

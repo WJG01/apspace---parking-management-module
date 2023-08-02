@@ -21,11 +21,11 @@ export const parkingPositions = [
             },
             {
                 parkinglocation: 'APU-B',
-                spots: [
-                    { parkingspotid: '01', top: 35, left: 638 },
-                    { parkingspotid: '02', top: 68, left: 638 },
-                    { parkingspotid: '03', top: 101, left: 638 }
-                ]
+                spots: Array.from(Array(20), (_, index) => ({
+                        parkingspotid: String(index + 1).padStart(2, '0'),
+                        top: 150 + (index * 28),
+                        left: 190
+                    }))
             },
             {
                 parkinglocation: 'APIIT-G',

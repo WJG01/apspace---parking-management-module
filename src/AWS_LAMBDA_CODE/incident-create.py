@@ -24,7 +24,9 @@ def lambda_handler(event, context):
                 decoded_image = base64.b64decode(image_data)
                 
                 # Specify the bucket name and key for the uploaded image
-                bucket_name = 'apqincidentimages'  # Replace with your bucket name
+                #bucket_name = 'apqincidentimages'  # Replace with your bucket name
+                bucket_name = 'apqincidentimagesbucket'  # Replace with your bucket name
+
                 key = 'images/' + image['name']  # Replace with the desired key/name for the uploaded image
                 
                 # Upload the image to S3
