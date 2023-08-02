@@ -130,7 +130,7 @@ export class ParkingEmergencyPage implements OnInit {
   }
 
 
-  async onClick(event: MouseEvent) {
+  async onMouseDown(event: MouseEvent) {
     if (this.latestStatusRead === 'HELPFIND' || this.latestStatusRead === 'HELPFOUND') {
       this.component.toastMessage('Existing SOS call in progress !', 'danger');
     } else {
@@ -143,6 +143,23 @@ export class ParkingEmergencyPage implements OnInit {
   }
 
   onMouseUp(): void {
+    clearTimeout(this.holdTimer);
+  }
+
+  async onTouchStart(event: TouchEvent) {
+    event.preventDefault(); // Prevent default touch behavior, such as scrolling
+    if (this.latestStatusRead === 'HELPFIND' || this.latestStatusRead === 'HELPFOUND') {
+      this.component.toastMessage('Existing SOS call in progress !', 'danger');
+    } else {
+      this.holdTimer = setTimeout(() => {
+        this.ngZone.run(() => {
+          this.createEmergency();
+        });
+      }, 3000);
+    }
+  }
+
+  onTouchEnd(): void {
     clearTimeout(this.holdTimer);
   }
 

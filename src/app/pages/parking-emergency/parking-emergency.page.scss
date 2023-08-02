@@ -125,11 +125,11 @@ ion-button + ion-button {
   margin: 10px 0;
 }
 
-@media (max-width: 425px) {
+@media (max-width: 768px) {
   .help-button {
     padding: 10px 20px;
-    width: 250px;
-    height: 250px;
+    width: 300px;
+    height: 300px;
     border-radius: 50% !important;
     background-color: rgba(233, 16, 16, 0.63);
     border: none;
@@ -138,6 +138,10 @@ ion-button + ion-button {
     border-radius: 50%;
     overflow: hidden;
     cursor: pointer;
+  }
+
+  .button-inner {
+    font-size: 70px; /* Adjust the font size for mobile view */
   }
 
   .action-button-container {

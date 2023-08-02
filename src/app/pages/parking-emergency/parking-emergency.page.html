@@ -8,10 +8,25 @@
   </div>
 
   <!-- Help Button -->
-  <div class="button-container">
+  <!-- <div class="button-container">
     <button class="help-button" [ngClass]="{ 'button-hovered': isButtonHovered(), 'disabled-hover-effect': isHoverEffectDisabled() }" (mousedown)="onClick($event)"
       (mouseup)="onMouseUp()">
       <div [ngStyle]="{ 'color': isButtonHovered() ? 'red' : 'white' }" class="button-inner" >SOS</div>
+    </button>
+  </div> -->
+
+  <!-- <div class="button-container">
+    <button class="help-button" [ngClass]="{ 'button-hovered': isButtonHovered(), 'disabled-hover-effect': isHoverEffectDisabled() }"
+      (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd()">
+      <div [ngStyle]="{ 'color': isButtonHovered() ? 'red' : 'white' }" class="button-inner">SOS</div>
+    </button>
+  </div> -->
+
+  <div class="button-container">
+    <button class="help-button"
+      [ngClass]="{ 'button-hovered': isButtonHovered(), 'disabled-hover-effect': isHoverEffectDisabled() }"
+      (mousedown)="onMouseDown($event)" (touchstart)="onTouchStart($event)" (mouseup)="onMouseUp()" (touchend)="onTouchEnd()">
+      <div [ngStyle]="{ 'color': isButtonHovered() ? 'red' : 'white' }" class="button-inner">SOS</div>
     </button>
   </div>
 

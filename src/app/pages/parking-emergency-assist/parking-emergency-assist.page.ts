@@ -75,21 +75,18 @@ export class ParkingEmergencyAssistPage implements OnInit {
       (response: any) => {
         this.emergencyReports = response.selectEmergencyResponse;
 
-        //Concantenate parking IDs for all records
+        // Convert and assign the reportdatetime to a new attribute called reportDate
         this.emergencyReports.forEach((record: any) => {
-          const APQEmergencyIdDisplay = record.APQEmergencyID; // Get the APQParkingID from the record
-          const firstPart = '#' + APQEmergencyIdDisplay.split('-')[0]; // Extract the first part before the first hyphen "-"
-          record.APQEmergencyIdDisplay = firstPart;
+          const reportDateTime = new Date(record.reportdatetime);
+          const reportDate = reportDateTime.toISOString().split('T')[0];
+          record.reportDate = reportDate;
         });
 
-        // sort date descending
+        // Sort date descending based on the new reportDate attribute
         this.emergencyReports.sort((a, b) => {
-          // Convert the reportdatetime strings to Date objects for comparison
-          const dateA = new Date(a.reportdatetime);
-          const dateB = new Date(b.reportdatetime);
-          // Sort in descending order based on reportdatetime
-          return dateB.getTime() - dateA.getTime();
+          return new Date(b.reportDate).getTime() - new Date(a.reportDate).getTime();
         });
+
         this.needLoading = false; // Set loading flag to false when data is loaded
         console.log('result', this.emergencyReports);
       },
