@@ -109,7 +109,6 @@ ion-card-content {
   font-style: normal;
 }
 
-
 ion-footer {
   ion-toolbar {
     ion-row {
@@ -120,6 +119,48 @@ ion-footer {
 
         &:last-child {
           margin-left: 2rem; /* Add margin to the left side of the second button */
+        }
+      }
+    }
+  }
+}
+
+/* Styles for smaller screens (e.g., mobile phones) */
+@media screen and (max-width: 767px) {
+  ion-title h1 {
+    font-size: 20px; /* Adjust the font size as needed */
+  }
+
+  .details-title {
+    font-size: 18px; /* Adjust the font size as needed */
+  }
+
+  .details-subtitle {
+    font-size: 18px; /* Adjust the font size as needed */
+  }
+
+  .profile-details p {
+    font-size: 16px; /* Adjust the font size as needed */
+  }
+
+  /* Custom styles for the ion-button */
+  ion-button {
+    /* Adjust the font-size to change the text size */
+    font-size: 0.9rem; /* You can adjust this value as needed */
+  }
+
+  ion-footer {
+    ion-toolbar {
+      ion-row {
+        /* Remove the margin on smaller screens to keep the buttons on the same line */
+        ion-col {
+          &:first-child {
+            margin-right: 0; /* Remove the right margin on the first button */
+          }
+
+          &:last-child {
+            margin-left: 0; /* Remove the left margin on the second button */
+          }
         }
       }
     }
