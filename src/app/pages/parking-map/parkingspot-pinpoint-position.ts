@@ -22,18 +22,18 @@ export const parkingPositions = [
             {
                 parkinglocation: 'APU-B',
                 spots: Array.from(Array(20), (_, index) => ({
-                        parkingspotid: String(index + 1).padStart(2, '0'),
-                        top: 150 + (index * 28),
-                        left: 190
-                    }))
+                    parkingspotid: String(index + 1).padStart(2, '0'),
+                    top: 150 + (index * 28),
+                    left: 190
+                }))
             },
             {
                 parkinglocation: 'APIIT-G',
-                spots: [
-                    { parkingspotid: '01', top: 35, left: 638 },
-                    { parkingspotid: '02', top: 68, left: 638 },
-                    { parkingspotid: '03', top: 101, left: 638 }
-                ]
+                spots: Array.from(Array(20), (_, index) => ({
+                    parkingspotid: String(index + 1).padStart(2, '0'),
+                    top: 420 + (index * 33) + index * 4,
+                    left: 630
+                }))
             }
         ]
     },
@@ -58,19 +58,19 @@ export const parkingPositions = [
             },
             {
                 parkinglocation: 'APU-B',
-                spots: [
-                    { parkingspotid: '01', top: 35, left: 638 },
-                    { parkingspotid: '02', top: 68, left: 638 },
-                    { parkingspotid: '03', top: 101, left: 638 }
-                ]
+                spots: Array.from(Array(20), (_, index) => ({
+                    parkingspotid: String(index + 1).padStart(2, '0'),
+                    top: 106 + (index * 15) + index * 2,
+                    left: 35
+                }))
             },
             {
                 parkinglocation: 'APIIT-G',
-                spots: [
-                    { parkingspotid: '01', top: 35, left: 638 },
-                    { parkingspotid: '02', top: 68, left: 638 },
-                    { parkingspotid: '03', top: 101, left: 638 }
-                ]
+                spots: Array.from(Array(20), (_, index) => ({
+                    parkingspotid: String(index + 1).padStart(2, '0'),
+                    top: 193 + (index * 14) + index * 0.5,
+                    left: 253
+                }))
             }
         ]
     }
